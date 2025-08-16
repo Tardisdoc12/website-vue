@@ -53,7 +53,9 @@ export default {
     position: relative;  
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
-    text-align: center;
+    display: flex;                /* 🔥 active flex */
+    align-items: center;          /* centre verticalement */
+    justify-content: space-between;
 }
 
 .encadre .btn-close {
