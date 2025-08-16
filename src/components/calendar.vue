@@ -85,7 +85,14 @@ export default {
             
             const hour = arg.timeText
             const wrapper = document.createElement('div');
-            wrapper.innerHTML = `<p>${hour}</p><p><b>${title}</b></p><p><small>${number} slots available</small></p>`;
+            wrapper.innerHTML = `
+                <span>${hour} <b>${title}</b></span><div><small>${number} slots available</small></div>`;
+
+            const bgColor = "lightblue"
+
+            wrapper.style.backgroundColor = bgColor;
+            wrapper.style.padding = "2px 4px";
+            wrapper.style.borderRadius = "4px";
 
             return { domNodes: [wrapper] };
         },
