@@ -59,13 +59,18 @@ export default {
 }
 
 .encadre .btn-close {
-  position: absolute;
-  right: 10px; /* colle à droite */
-  background: none;
-  background-color: rgba(192, 23, 23, 0.8);
-  border: none;
-  color: white;
-  cursor: pointer;
+    all: unset;                  /* reset tous les styles hérités */
+    display: flex;               /* pour centrer l’icône */
+    align-items: center;
+    justify-content: center;
+
+    background-color: rgba(192, 23, 23, 0.8);
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+
+    padding: 4px;                /* padding adaptable */
+    aspect-ratio: 1 / 1;
 }
 
 .encadre .btn-close:hover {
