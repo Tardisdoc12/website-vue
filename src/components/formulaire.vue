@@ -50,9 +50,9 @@
                     required
                 >
                     <option disabled value="">-- Choisir une catégorie --</option>
-                    <option value="seance">Seance</option>
-                    <option value="stage">Stage</option>
-                    <option value="balade">Balade</option>
+                    <option :value="Categories.seance">Seance</option>
+                    <option :value="Categories.stage">Stage</option>
+                    <option :value="Categories.balade">Balade</option>
                 </select>
             </div>
 
@@ -105,6 +105,7 @@
 
 <script>
 import eventsService from '../javascript/axios_events.js';
+import Categories from "../javascript/constants.js"
 
 export default {
 
@@ -115,6 +116,7 @@ export default {
     },
 
     data() {
+        console.log("on a les elements: ",Categories)
         return {
             form: {
                 title: '',
@@ -127,6 +129,7 @@ export default {
                 nonsubscribePlace: 0,
             },
             isChecked:false,
+            Categories,
         }
     },
 

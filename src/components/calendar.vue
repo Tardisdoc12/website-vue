@@ -27,6 +27,7 @@ import interactionPlugin from "@fullcalendar/interaction"
 import ModalEvents from "./subcomponents/modal_event.vue"
 import ModalInscript from "./subcomponents/modal_form_inscription.vue"
 import eventsService from '@/javascript/axios_events.js';
+import Categories from "@/javascript/constants"
 
 export default {
     
@@ -88,7 +89,7 @@ export default {
             wrapper.innerHTML = `
                 <span>${hour} <b>${title}</b></span><div><small>${number} slots available</small></div>`;
 
-            const bgColor = "lightblue"
+            const bgColor = Categories.colorBg(arg.event.extendedProps.categorie)
 
             wrapper.style.backgroundColor = bgColor;
             wrapper.style.padding = "2px 4px";
