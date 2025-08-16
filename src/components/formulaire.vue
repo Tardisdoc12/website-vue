@@ -217,10 +217,24 @@ export default {
                     return
                 }
             }
+            else {
+                this.endDateForm = new Date(this.startDateForm);
+                this.endDateForm.setHours(23, 59, 0, 0);
+            }
             
             console.log("Formulaire soumis :", this.form)
             alert("Événement créé avec succès !")
             const response = await eventsService.createEvent(this.form)
+            this.form = {
+                        title: '',
+                        startDate: '',
+                        endDate: '',
+                        description: '',
+                        place: '',
+                        categorie: '',
+                        subscribePlace: 1,
+                        nonsubscribePlace: 0,
+                    }
         }
     }
 }
