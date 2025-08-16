@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from "./api.js"
 
 const API_URL = 'http://localhost:8000/events/';
 
@@ -34,13 +34,13 @@ function conversion_from_bdd(datas) {
 export default {
     // Récupérer tous les events
     async getAllEvents() {
-        const response = await axios.get(API_URL);
+        const response = await api.get(API_URL);
         return response.data.map(e => conversion_from_bdd(e));
     },
 
     // Récupérer un event par ID
     async getEvent(id) {
-        response = await axios.get(`${API_URL}${id}/`);
+        response = await api.get(`${API_URL}${id}/`);
         if (response.data) {
             return conversion_from_bdd(response.data)
         }
@@ -49,16 +49,16 @@ export default {
 
     // Créer un nouvel event
     async createEvent(eventData) {
-        return await axios.post(API_URL+"create/", conversion_to_bdd(eventData));
+        return await api.post(API_URL+"create/", conversion_to_bdd(eventData));
     },
 
     // Mettre à jour un event
     async updateEvent(id, eventData) {
-        return await axios.put(`${API_URL}${id}/`, eventData);
+        return await api.put(`${API_URL}${id}/`, eventData);
     },
 
     // Supprimer un event
     async deleteEvent(id) {
-        return await axios.delete(`${API_URL}${id}/`);
+        return await api.delete(`${API_URL}${id}/`);
     }
 };
