@@ -8,8 +8,8 @@
         <div class="body">
             <!-- Dates -->
              <div style="margin-bottom: 10px;">
-                <p style="font-weight: bold; text-decoration: underline;">{{ "Date :"}}</p>
-                <p>{{ espaceDate }}</p>
+                <span style="font-weight: bold; text-decoration: underline;">{{ "Date :"}}</span>
+                <span style="padding: 15px">{{ espaceDate }}</span>
             </div>
             <!-- Place -->
             <p style="margin-bottom: 10px;">
@@ -32,7 +32,7 @@
 
             <!-- Description -->
              <div style="margin-bottom: 10px;">
-                <h2 style="font-weight: bold; text-decoration: underline;">{{ "Description :"}}</h2>
+                <span style="font-weight: bold; text-decoration: underline;">{{ "Description :"}}</span>
                 <p>{{ form.description }}</p>
             </div>
             <!-- bouton -->
@@ -80,7 +80,7 @@ export default {
 
     computed: {
         espaceDate() {
-            return formatDate(new Date(this.form.startDate)) + " à " + formatDate(new Date(this.form.endDate))
+            return "De " + formatDate(new Date(this.form.startDate)) + " à " + formatDate(new Date(this.form.endDate))
         }
     },
 
