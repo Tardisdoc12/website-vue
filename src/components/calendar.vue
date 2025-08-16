@@ -77,7 +77,10 @@ export default {
         renderEvent(arg) {
             const title = arg.event.title;
             
-            let number = arg.event.extendedProps.subscribePlace + arg.event.extendedProps.nonsubscribePlace;
+            let number = arg.event.extendedProps.nonsubscribePlace;
+            if (arg.event.extendedProps.subscribePlace > 0) {
+                number += arg.event.extendedProps.subscribePlace
+            }
             number = number - arg.event.extendedProps.users.length;
             
             const hour = arg.timeText

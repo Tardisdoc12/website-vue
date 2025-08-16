@@ -20,7 +20,8 @@
             <!-- Adherent Slots -->
             <p style="margin-bottom: 10px;">
                 <span style="font-weight: bold; text-decoration: underline;">{{ "Nombre de place pour les adhérents :" }}</span>
-                <span style="padding: 15px">{{ form.subscribePlace }}</span>
+                <span style="padding: 15px" v-if="form.subscribePlace > 0">{{ form.subscribePlace }}</span>
+                <span style="padding: 15px" v-if="!(form.subscribePlace > 0)">{{ "illimté" }}</span>
             </p>
 
             <!-- Non Adherent Slots -->

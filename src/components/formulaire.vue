@@ -67,8 +67,15 @@
             />
         </div>
 
+
+        <!-- limité dans le nombre de place -->
+        <div class="flex items-center space-x-2">
+            <label class="font-medium" style="padding: 2px;">Nombre de place limité pour les adhérents :</label>
+            <input type="checkbox" v-model="isChecked"/>
+        </div>
+
         <!-- Nombre de places -->
-        <div>
+        <div v-if="isChecked">
             <label class="block font-medium">Nombre de places pour les adhérents</label>
             <input v-model.number="subscribePlaceForm" type="number" min="1" class="w-full border p-1 rounded" required />
         </div>
@@ -118,7 +125,8 @@ export default {
                 categorie: '',
                 subscribePlace: 1,
                 nonsubscribePlace: 0,
-            }
+            },
+            isChecked:false,
         }
     },
 
@@ -199,6 +207,10 @@ export default {
 
     methods: {
         async handleSubmit() {
+            if (!this.isChecked){
+                this.subscribePlaceForm = -1
+            }
+
             if (this.endDateForm !== '') {
                 if (new Date(this.startDateForm) >= new Date(this.endDateForm)) {
                     alert("La date de fin doit être après la date de début.")
