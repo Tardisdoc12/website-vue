@@ -1,106 +1,106 @@
 <template>
-<div class="max-w-md mx-auto p-4 bg-white shadow rounded">
-    <h2 class="text-xl font-bold mb-4">Créer un événement</h2>
-    <form @submit.prevent="handleSubmit" class="space-y-4">
+    <div class="max-w-md mx-auto p-4 bg-white shadow rounded">
+        <h2 class="text-xl font-bold mb-4">Créer un événement</h2>
+        <form @submit.prevent="handleSubmit" class="space-y-4">
 
-        <!-- Titre -->
-        <div class="flex flex-col gap-1">
-            <label class="block font-medium">
-                Titre
-            </label>
-            <input
-                v-model="titleForm"
-                type="text"
-                class="w-full border p-1 rounded"
-                required
-            />
+            <!-- Titre -->
+            <div class="flex flex-col gap-1">
+                <label class="block font-medium">
+                    Titre
+                </label>
+                <input
+                    v-model="titleForm"
+                    type="text"
+                    class="w-full border p-1 rounded"
+                    required
+                />
+            </div>
+
+            <!-- Date de début -->
+            <div>
+                <label class="block font-medium">
+                    Date et heure de début
+                </label>
+                <input
+                    v-model="startDateForm"
+                    type="datetime-local"
+                    class="w-full border p-1 rounded"
+                    required 
+                />
         </div>
 
-        <!-- Date de début -->
-        <div>
-            <label class="block font-medium">
-                Date et heure de début
-            </label>
-            <input
-                v-model="startDateForm"
-                type="datetime-local"
-                class="w-full border p-1 rounded"
-                required 
-            />
-      </div>
+            <!-- Date de fin -->
+            <div>
+                <label class="block font-medium">Date et heure de fin</label>
+                <input v-model="endDateForm" type="datetime-local" class="w-full border p-1 rounded"/>
+            </div>
 
-        <!-- Date de fin -->
-        <div>
-            <label class="block font-medium">Date et heure de fin</label>
-            <input v-model="endDateForm" type="datetime-local" class="w-full border p-1 rounded"/>
-        </div>
+            <!-- Description -->
+            <div>
+                <label class="block font-medium">Description</label>
+                <textarea v-model="descriptionForm" class="w-full border p-1 rounded" rows="4" required></textarea>
+            </div>
 
-        <!-- Description -->
-        <div>
-            <label class="block font-medium">Description</label>
-            <textarea v-model="descriptionForm" class="w-full border p-1 rounded" rows="4" required></textarea>
-        </div>
+            <!-- Catégorie -->
+            <div>
+                <label class="block font-medium">Catégorie</label>
+                <select
+                    v-model="categorieForm"
+                    class="w-full border p-1 rounded"
+                    required
+                >
+                    <option disabled value="">-- Choisir une catégorie --</option>
+                    <option value="seance">Seance</option>
+                    <option value="stage">Stage</option>
+                    <option value="balade">Balade</option>
+                </select>
+            </div>
 
-        <!-- Catégorie -->
-        <div>
-            <label class="block font-medium">Catégorie</label>
-            <select
-                v-model="categorieForm"
-                class="w-full border p-1 rounded"
-                required
-            >
-                <option disabled value="">-- Choisir une catégorie --</option>
-                <option value="seance">Seance</option>
-                <option value="stage">Stage</option>
-                <option value="balade">Balade</option>
-            </select>
-        </div>
-
-      <!-- Lieu -->
-        <div>
-            <label class="block font-medium">Lieu</label>
-            <input
-                v-model="placeForm"
-                type="text"
-                class="w-full border p-1 rounded"
-                required
-            />
-        </div>
+        <!-- Lieu -->
+            <div>
+                <label class="block font-medium">Lieu</label>
+                <input
+                    v-model="placeForm"
+                    type="text"
+                    class="w-full border p-1 rounded"
+                    required
+                />
+            </div>
 
 
-        <!-- limité dans le nombre de place -->
-        <div class="flex items-center space-x-2">
-            <label class="font-medium" style="padding: 2px;">Nombre de place limité pour les adhérents :</label>
-            <input type="checkbox" v-model="isChecked"/>
-        </div>
+            <!-- limité dans le nombre de place -->
+            <div class="flex items-center space-x-2">
+                <label class="font-medium" style="padding: 2px;">Nombre de place limité pour les adhérents :</label>
+                <input type="checkbox" v-model="isChecked"/>
+            </div>
 
-        <!-- Nombre de places -->
-        <div v-if="isChecked">
-            <label class="block font-medium">Nombre de places pour les adhérents</label>
-            <input v-model.number="subscribePlaceForm" type="number" min="1" class="w-full border p-1 rounded" required />
-        </div>
+            <!-- Nombre de places -->
+            <div v-if="isChecked">
+                <label class="block font-medium">Nombre de places pour les adhérents</label>
+                <input v-model.number="subscribePlaceForm" type="number" min="1" class="w-full border p-1 rounded" required />
+            </div>
 
-        <!-- Nombre de places -->
-        <div>
-            <label class="block font-medium">Nombre de places pour les non-adhérents</label>
-            <input v-model.number="nonsubscribePlaceForm" type="number" min="0" class="w-full border p-1 rounded" required />
-        </div>
+            <!-- Nombre de places -->
+            <div>
+                <label class="block font-medium">Nombre de places pour les non-adhérents</label>
+                <input v-model.number="nonsubscribePlaceForm" type="number" min="0" class="w-full border p-1 rounded" required />
+            </div>
 
-        <!-- Bouton -->
-        <div class="flex justify-between items-center">
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                Créer l'événement
-            </button>
-            <button
-                type="button"
-                class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-                @click="$emit('updateCancelBool', !cancelBool)"
-            >
-                Annuler
-            </button>
-        </div>
-    </form>
-  </div>
+            <!-- Bouton -->
+            <div class="flex justify-between items-center">
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    Créer l'événement
+                </button>
+                <button
+                    type="button"
+                    class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                    @click="$emit('updateCancelBool', !cancelBool)"
+                >
+                    Annuler
+                </button>
+            </div>
+        </form>
+    </div>
 </template>
 
 <script>
