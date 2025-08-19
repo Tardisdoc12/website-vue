@@ -12,6 +12,16 @@ export default defineConfig({
     vueDevTools(),
     tailwindcss()
   ],
+  build: {
+    rollupOptions: {
+        input: {
+            app: path.resolve(__dirname,"index.html"),
+            login: path.resolve(__dirname, 'src/main-login.js'),
+            calendar: path.resolve(__dirname, 'src/main-calendar.js'),
+            events: path.resolve(__dirname, 'src/main-events.js')
+        }
+    }
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
