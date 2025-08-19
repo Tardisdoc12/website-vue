@@ -1,6 +1,6 @@
 import api from "./api.js"
 
-const API_URL = 'http://localhost:8000/events/';
+const API_URL = 'https://localhost:8000/events/';
 
 function conversion_to_bdd(datas) {
     return {

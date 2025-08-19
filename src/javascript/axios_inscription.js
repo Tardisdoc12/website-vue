@@ -1,6 +1,6 @@
 import api from "./api.js"
 
-const API_URL = 'http://localhost:8000/events/inscrit';
+const API_URL = 'https://localhost:8000/events/inscrit';
 
 export default {
     async create_inscrit(event_id, userForm) {

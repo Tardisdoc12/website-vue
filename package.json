@@ -8,7 +8,10 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build:login": "ENTRY=login vite build",
+    "build:calendar": "ENTRY=calendar vite build",
+    "build:events": "ENTRY=events vite build",
+    "build:all": "npm run build:login && npm run build:calendar && npm run build:events",
     "preview": "vite preview"
   },
   "dependencies": {

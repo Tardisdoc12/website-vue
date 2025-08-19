@@ -1,6 +1,6 @@
 import api from "./api.js"
 
-const url = "http://localhost:8000"
+const url = "https://localhost:8000"
 
 export default {
     async create_user(body) {

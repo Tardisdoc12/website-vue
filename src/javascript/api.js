@@ -18,7 +18,7 @@ function getCookie(name) {
 
 // Crée ton instance axios
 const api = axios.create({
-  baseURL: "http://localhost:8000", // ton backend
+  baseURL: "https://localhost:8000", // ton backend
   withCredentials: true,            // 👈 nécessaire pour envoyer cookies/session
 })
 

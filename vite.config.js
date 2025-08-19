@@ -6,7 +6,20 @@ import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import tailwindcss from "@tailwindcss/vite"
 
-// https://vite.dev/config/
+// Récupère l'argument --entry
+const customEntry = process.env.ENTRY
+
+// Définit une map des entrées possibles
+const entries = {
+  login: path.resolve(__dirname, 'src/main-login.js'),
+  calendar: path.resolve(__dirname, 'src/main-calendar.js'),
+  events: path.resolve(__dirname, 'src/main-events.js')
+}
+
+// Si un ENTRY est passé → build seulement celle-là
+// Sinon → build la première par défaut
+const input = customEntry ? { [customEntry]: entries[customEntry] } : { login: entries.login }
+
 export default defineConfig({
   plugins: [
     vue(),
@@ -15,12 +28,13 @@ export default defineConfig({
   ],
   build: {
     rollupOptions: {
-        input: {
-            app: path.resolve(__dirname,"index.html"),
-            login: path.resolve(__dirname, 'src/main-login.js'),
-            calendar: path.resolve(__dirname, 'src/main-calendar.js'),
-            events: path.resolve(__dirname, 'src/main-events.js')
-        }
+      input,
+      output: {
+        manualChunks: undefined, // ⛔ empêche index.js
+        entryFileNames: `[name].js`,
+        chunkFileNames: `[name].js`,
+        assetFileNames: `[name].[ext]`
+      }
     }
   },
   resolve: {
