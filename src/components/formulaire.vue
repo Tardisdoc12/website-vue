@@ -87,16 +87,9 @@
             </div>
 
             <!-- Bouton -->
-            <div class="flex justify-between items-center">
+            <div class="flex justify-center items-center">
                 <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                     Créer l'événement
-                </button>
-                <button
-                    type="button"
-                    class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-                    @click="$emit('updateCancelBool', !cancelBool)"
-                >
-                    Annuler
                 </button>
             </div>
         </form>
@@ -108,15 +101,7 @@ import eventsService from '../javascript/axios_events.js';
 import Categories from "../javascript/constants.js"
 
 export default {
-
-    props:{
-        cancelBool: {
-            required: true
-        }
-    },
-
     data() {
-        console.log("on a les elements: ",Categories)
         return {
             form: {
                 title: '',
@@ -225,19 +210,18 @@ export default {
                 this.endDateForm.setHours(23, 59, 0, 0);
             }
             
-            console.log("Formulaire soumis :", this.form)
             alert("Événement créé avec succès !")
             const response = await eventsService.createEvent(this.form)
             this.form = {
-                        title: '',
-                        startDate: '',
-                        endDate: '',
-                        description: '',
-                        place: '',
-                        categorie: '',
-                        subscribePlace: 1,
-                        nonsubscribePlace: 0,
-                    }
+                title: '',
+                startDate: '',
+                endDate: '',
+                description: '',
+                place: '',
+                categorie: '',
+                subscribePlace: 1,
+                nonsubscribePlace: 0,
+            }
         }
     }
 }

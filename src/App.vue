@@ -7,8 +7,6 @@
     </button>
     <formulaire
         v-if="isActive"
-        :cancelBool.sync="isActive"
-        @updateCancelBool="(value) => isActive=value"
     />
     <calendar
         v-if="!isActive"
