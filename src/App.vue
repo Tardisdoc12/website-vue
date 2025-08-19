@@ -13,11 +13,13 @@
     <calendar
         v-if="!isActive"
     />
+    <Login></Login>
 </template>
 
 <script>
 import formulaire from "./components/formulaire.vue"
 import calendar from "./components/calendar.vue"
+import Login from "./components/Login.vue"
 
 export default {
     data() {
@@ -29,7 +31,8 @@ export default {
     
     components: {
         formulaire,
-        calendar
+        calendar,
+        Login,
     }
 }
 </script>
