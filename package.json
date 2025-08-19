@@ -11,7 +11,8 @@
     "build:login": "ENTRY=login vite build",
     "build:calendar": "ENTRY=calendar vite build",
     "build:events": "ENTRY=events vite build",
-    "build:all": "npm run build:login && npm run build:calendar && npm run build:events",
+    "build:connexion": "ENTRY=connexion vite build",
+    "build:all": "npm run build:login && npm run build:calendar && npm run build:events && npm run build:connexion",
     "preview": "vite preview"
   },
   "dependencies": {

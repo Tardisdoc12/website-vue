@@ -6,7 +6,7 @@ OUTDIR="./vue-app"
 mkdir -p "$OUTDIR"
 
 # Liste des entrées à builder
-ENTRIES=("login" "events" "calendar")
+ENTRIES=("login" "events" "calendar" "connexion")
 
 # Boucle sur chaque entrée
 for entry in "${ENTRIES[@]}"; do

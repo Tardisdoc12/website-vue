@@ -60,3 +60,20 @@ function vue_events_shortcode() {
     return '<div id="events-form"></div>';
 }
 add_shortcode('events', 'vue_events_shortcode');
+
+/**
+ * Shortcode [connexion]
+ */
+function vue_connexion_shortcode() {
+    $plugin_url = plugin_dir_url(__FILE__);
+
+    if (file_exists(plugin_dir_path(__FILE__) . 'connexion.css')) {
+        wp_enqueue_style('vue-connexion-css', $plugin_url . 'connexion.css');
+    }
+
+    wp_enqueue_script('vue-connexion-js', $plugin_url . 'connexion.js', [], null, true);
+    wp_script_add_data('vue-connexion-js', 'type', 'module');
+
+    return '<div id="connexion-form"></div>';
+}
+add_shortcode('connexion', 'vue_connexion_shortcode');
