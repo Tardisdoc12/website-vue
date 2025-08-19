@@ -1,6 +1,7 @@
 <template>
     <div class="calendar-wrapper">
         <FullCalendar
+            ref="fullCalendar"
             :options="calendarOptions"
         />
     </div>
@@ -17,6 +18,7 @@
         :isSeance="eventSelected.categorie === 'seance'"
         :event_id="eventSelected.event_id"
         @cancelSignal="(e) => {inscribe=e; eventSelected={}}"
+        @inscritValid="(e) => {inscribe=e; eventSelected={}}"
     />
 </template>
 
@@ -62,9 +64,7 @@ export default {
             return {
                 plugins: [dayGridPlugin, interactionPlugin],
                 initialView: 'dayGridMonth',
-                events: [
-                    ...this.eventsList
-                ],
+                events: this.eventsList,
                 selectable:true,
                 eventClick: this.handleSelect,
                 locale: 'fr',
