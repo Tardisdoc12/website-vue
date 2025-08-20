@@ -9,71 +9,33 @@
 if (!defined('ABSPATH')) exit;
 
 /**
- * Shortcode [login]
+ * Fonction générique pour créer un shortcode Vue
  */
-function vue_login_shortcode() {
+function vue_shortcode($atts, $content, $tag) {
     $plugin_url = plugin_dir_url(__FILE__);
+    $plugin_path = plugin_dir_path(__FILE__);
 
-    // CSS spécifique (si généré)
-    if (file_exists(plugin_dir_path(__FILE__) . 'login.css')) {
-        wp_enqueue_style('vue-login-css', $plugin_url . 'login.css');
+    // Nom des fichiers CSS/JS basés sur le shortcode
+    $css_file = $tag . '.css';
+    $js_file  = $tag . '.js';
+
+    // CSS
+    if (file_exists($plugin_path . $css_file)) {
+        wp_enqueue_style("vue-{$tag}-css", $plugin_url . $css_file);
     }
 
     // JS
-    wp_enqueue_script('vue-login-js', $plugin_url . 'login.js', [], null, true);
-    wp_script_add_data('vue-login-js', 'type', 'module');
+    wp_enqueue_script("vue-{$tag}-js", $plugin_url . $js_file, [], null, true);
+    wp_script_add_data("vue-{$tag}-js", 'type', 'module');
 
-    return '<div id="login-app"></div>';
+    // Div ID basé sur le shortcode
+    $div_id = str_replace('_', '-', $tag);
+    return "<div id=\"{$div_id}\"></div>";
 }
-add_shortcode('login', 'vue_login_shortcode');
 
-/**
- * Shortcode [calendar]
- */
-function vue_calendar_shortcode() {
-    $plugin_url = plugin_dir_url(__FILE__);
+// Enregistrer les shortcodes
+$shortcodes = ['login', 'calendar', 'events', 'connexion'];
 
-    if (file_exists(plugin_dir_path(__FILE__) . 'calendar.css')) {
-        wp_enqueue_style('vue-calendar-css', $plugin_url . 'calendar.css');
-    }
-
-    wp_enqueue_script('vue-calendar-js', $plugin_url . 'calendar.js', [], null, true);
-    wp_script_add_data('vue-calendar-js', 'type', 'module');
-
-    return '<div id="calendar"></div>';
+foreach ($shortcodes as $sc) {
+    add_shortcode($sc, 'vue_shortcode');
 }
-add_shortcode('calendar', 'vue_calendar_shortcode');
-
-/**
- * Shortcode [events]
- */
-function vue_events_shortcode() {
-    $plugin_url = plugin_dir_url(__FILE__);
-
-    if (file_exists(plugin_dir_path(__FILE__) . 'events.css')) {
-        wp_enqueue_style('vue-events-css', $plugin_url . 'events.css');
-    }
-
-    wp_enqueue_script('vue-events-js', $plugin_url . 'events.js', [], null, true);
-    wp_script_add_data('vue-events-js', 'type', 'module');
-
-    return '<div id="events-form"></div>';
-}
-add_shortcode('events', 'vue_events_shortcode');
-
-/**
- * Shortcode [connexion]
- */
-function vue_connexion_shortcode() {
-    $plugin_url = plugin_dir_url(__FILE__);
-
-    if (file_exists(plugin_dir_path(__FILE__) . 'connexion.css')) {
-        wp_enqueue_style('vue-connexion-css', $plugin_url . 'connexion.css');
-    }
-
-    wp_enqueue_script('vue-connexion-js', $plugin_url . 'connexion.js', [], null, true);
-    wp_script_add_data('vue-connexion-js', 'type', 'module');
-
-    return '<div id="connexion-form"></div>';
-}
-add_shortcode('connexion', 'vue_connexion_shortcode');

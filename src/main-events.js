@@ -19,4 +19,4 @@ library.add(fas, far, fab)
 const app = createApp(Events)
 
 app.component('font-awesome-icon', FontAwesomeIcon)
-app.mount('#events-form')
+app.mount('#events')

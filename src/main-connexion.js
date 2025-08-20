@@ -19,4 +19,4 @@ library.add(fas, far, fab)
 const app = createApp(Connexion)
 
 app.component('font-awesome-icon', FontAwesomeIcon)
-app.mount('#connexion-form')
+app.mount('#connexion')

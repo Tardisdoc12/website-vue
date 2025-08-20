@@ -19,4 +19,4 @@ library.add(fas, far, fab)
 const app = createApp(Login)
 
 app.component('font-awesome-icon', FontAwesomeIcon)
-app.mount('#login-app')
+app.mount('#login')
