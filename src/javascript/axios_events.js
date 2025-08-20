@@ -16,7 +16,6 @@ function conversion_to_bdd(datas) {
 }
 
 function conversion_from_bdd(datas) {
-    console.log(datas.users)
     return {
         id: datas["id"],
         title: datas['title'],

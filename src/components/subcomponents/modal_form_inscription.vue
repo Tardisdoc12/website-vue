@@ -130,7 +130,6 @@ export default {
         },
 
         async handleSubmit() {
-            console.log("Formulaire soumis :", this.formUser)
             await inscritAPI.create_inscrit(this.event_id, this.formUser)
             alert("Inscription enregistrée avec succès !")
             this.$emit('inscritValid', !this.isOpen)

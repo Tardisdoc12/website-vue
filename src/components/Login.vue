@@ -145,11 +145,6 @@ export default {
         }
     },
 
-    async mounted() {
-        const response = await api.get_users()
-        console.log(response)
-    },
-
     methods:{
         passwordMatch() {
             const pwd = (this.formUser.password || '').trim();
@@ -170,7 +165,6 @@ export default {
                     moto: this.formUser.bike,
                 })
             const response = await api.create_user(body)
-            console.log(response)
         }
     },
 
