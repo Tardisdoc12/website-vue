@@ -18,8 +18,8 @@ function getCookie(name) {
 
 // Crée ton instance axios
 const api = axios.create({
-  baseURL: "https://localhost:8000", // ton backend
-  withCredentials: true,            // 👈 nécessaire pour envoyer cookies/session
+  baseURL: "https://localhost:8000",
+  withCredentials: true,
 })
 
 // Ajoute le token CSRF automatiquement

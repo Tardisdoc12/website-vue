@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import apiWP from "../javascript/users_wp"
 
 export default {
     data() {
@@ -53,8 +54,13 @@ export default {
     },
     
     methods: {
-        handleSubmit() {
-            console.log("Tu es connecter")
+        async handleSubmit() {
+            try {
+                const data = await apiWP.verify_connexion(this.formUser.email, this.formUser.password)
+                sessionStorage.setItem("mps_moto", data.token)
+            }catch (err) {
+                console.error("❌ Erreur login:", err)
+            }
         }
     }
 }
