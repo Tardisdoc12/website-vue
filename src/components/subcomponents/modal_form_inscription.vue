@@ -106,6 +106,10 @@ export default {
         event_id:{
             type: Number,
             required: true
+        },
+        user: {
+            type: Object,
+            required:true
         }
     },
 
@@ -114,13 +118,35 @@ export default {
             title: "Inscription",
             isOpen: true,
             formUser: {
-                name:"",
-                phone:"",
-                bike:"",
-                email:"",
+                name: this.user?.firstName && this.user?.lastName 
+                    ? `${this.user.firstName} ${this.user.lastName}` 
+                    : "",
+                phone: this.user?.telephone ?? "",
+                bike: this.user?.moto ?? "",
+                email: this.user?.email ?? "",
                 experience:"",
                 goal:"",
             },
+        }
+    },
+
+    watch: {
+        user: {
+            immediate: true,
+            deep: true,
+            handler(newUser) {
+                if (newUser) {
+                    this.formUser = {
+                    ...this.formUser,
+                    name: newUser.firstName && newUser.lastName 
+                        ? `${newUser.firstName} ${newUser.lastName}` 
+                        : "",
+                    phone: newUser.telephone ?? "",
+                    bike: newUser.moto ?? "",
+                    email: newUser.email ?? "",
+                    }
+                }
+            }
         }
     },
 

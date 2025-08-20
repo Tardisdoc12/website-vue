@@ -22,6 +22,17 @@ const api = axios.create({
   withCredentials: true,
 })
 
+api.interceptors.request.use(config => {
+    const token = sessionStorage.getItem("mps_moto")
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+    } else {
+        delete config.headers.Authorization
+    }
+    return config
+})
+
+
 // Ajoute le token CSRF automatiquement
 async function initApi() {
   try {

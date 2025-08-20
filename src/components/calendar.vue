@@ -17,6 +17,7 @@
         v-if="inscribe"
         :isSeance="eventSelected.categorie === 'seance'"
         :event_id="eventSelected.event_id"
+        :user="user.wordpress"
         @cancelSignal="(e) => {inscribe=e; eventSelected={}}"
         @inscritValid="(e) => {inscribe=e; eventSelected={}}"
     />
@@ -30,6 +31,8 @@ import ModalEvents from "./subcomponents/modal_event.vue"
 import ModalInscript from "./subcomponents/modal_form_inscription.vue"
 import eventsService from '@/javascript/axios_events.js';
 import Categories from "@/javascript/constants"
+import { jwtDecode } from "jwt-decode"
+import api from "../javascript/users_wp.js"
 
 export default {
     
@@ -38,13 +41,21 @@ export default {
             seeModalEvent: false,
             inscribe: false,
             eventSelected: {},
-            events: []
+            events: [],
+            user:{},
         }
     },
 
     async mounted() {
         this.events = await eventsService.getAllEvents();
         this.events = [...this.events]
+        const token = sessionStorage.getItem("mps_moto")
+        if (token) {
+            const decoded = jwtDecode(token)
+            const user_id = decoded.data.user.id
+            const user_info = await api.get_user(user_id)
+            this.user = user_info
+        }
     },
 
     computed: {
