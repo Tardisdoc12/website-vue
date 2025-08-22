@@ -119,8 +119,14 @@ export default {
             const wrapper = document.createElement('div');
             wrapper.innerHTML = `
                 <span>${hour} <b>${title}</b></span><div><small>${number} slots available</small></div>`;
-
-            const bgColor = Categories.colorBg(arg.event.extendedProps.categorie)
+            
+            let bgColor;
+            if(new Date() < arg.event.start) {
+                bgColor = Categories.colorBg(arg.event.extendedProps.categorie)
+            }
+            else {
+                bgColor = '#D3D3D3'
+            }
 
             wrapper.style.backgroundColor = bgColor;
             wrapper.style.padding = "2px 4px";
