@@ -58,6 +58,7 @@ export default {
             try {
                 const data = await apiWP.verify_connexion(this.formUser.email, this.formUser.password)
                 sessionStorage.setItem("mps_moto", data.token)
+                alert("Connecté avec succès !")
             }catch (err) {
                 console.error("❌ Erreur login:", err)
             }

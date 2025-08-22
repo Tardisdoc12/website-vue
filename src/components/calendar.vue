@@ -79,13 +79,33 @@ export default {
                 selectable:true,
                 eventClick: this.handleSelect,
                 locale: 'fr',
+                showNonCurrentDates: false,
                 firstDay: 1,
+                contentHeight: 'auto',
+                aspectRatio: 1.2,
                 eventContent: this.renderEvent,
-                height: 650
+                buttonText: {
+                    today: "Aujourd'hui",
+                    month: "Mois",
+                    week: "Semaine",
+                    day: "Jour",
+                    list: "Liste",
+                },
+                dayCellDidMount: this.dayRender,
             }
         },
     },
     methods: {
+        dayRender(arg) {
+            arg.isDisabled = arg.isPast
+            if (arg.isPast) {
+                let inner = arg.el.querySelector('.fc-daygrid-day-number')
+                if (inner) {
+                    inner.style.color = '#808080'
+                }
+            }
+        },
+
         renderEvent(arg) {
             const title = arg.event.title;
             
@@ -110,11 +130,16 @@ export default {
         },
 
         handleSelect(e){
-           this.seeModalEvent = !this.seeModalEvent
-           this.eventSelected = {
+            const today = new Date();
+            if (e.event.start < today)
+            {
+                return;
+            }
+            this.seeModalEvent = !this.seeModalEvent
+            this.eventSelected = {
                 ...e.event.extendedProps,
                 title:e.event.title
-           }
+            }
         }
     },
     components: { FullCalendar, ModalEvents, ModalInscript },
@@ -122,6 +147,14 @@ export default {
 </script>
 
 <style>
+.fc-day-disabled {
+    color: rgba(241, 241, 241, 0.2)
+}
+
+.fc-toolbar-title {
+  text-transform: capitalize; /* met juste la 1ère lettre en majuscule */
+}
+
 .calendar-wrapper {
   display: flex;
   justify-content: center; /* centre horizontalement */
