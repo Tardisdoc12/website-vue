@@ -11,13 +11,13 @@ export default {
 
     colorBg(categorie) {
         if (categorie === seance) {
-            return "lightblue"
+            return ["rgba(109, 159, 175, 1)","rgba(109, 159, 175,0.2)"]
         }
         if (categorie === stage) {
-            return "lightgreen"
+            return ["rgba(37, 158, 77, 1)","rgba(37, 158, 77, 0.32)"]
         }
         if (categorie === balade) {
-            return "lightcoral"
+            return ["rgba(153, 91, 82, 1)","rgba(153, 91, 82, 0.49)"]
         }
     },
 }

@@ -118,19 +118,40 @@ export default {
             const hour = arg.timeText
             const wrapper = document.createElement('div');
             wrapper.innerHTML = `
-                <span>${hour} <b>${title}</b></span><div><small>${number} slots available</small></div>`;
+            <div class="background-card">
+                <div class="event-row">
+                    <div class="event-card"></div>
+                    <div class="event-content">
+                        <span>
+                            ${hour}
+                        </span>
+                        <div>
+                            <b>${title}</b>
+                        </div>
+                        <div>
+                            <small>
+                                ${number} slots available
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `;
             
             let bgColor;
+            let backgroundColorCard;
             if(new Date() < arg.event.start) {
-                bgColor = Categories.colorBg(arg.event.extendedProps.categorie)
+                const duoColor = Categories.colorBg(arg.event.extendedProps.categorie)
+                bgColor = duoColor[0]
+                backgroundColorCard = duoColor[1] 
             }
             else {
-                bgColor = '#D3D3D3'
+                bgColor = 'rgba(211, 211, 211, 1)'
+                backgroundColorCard = 'rgba(211, 211, 211, 0.2)'
             }
 
-            wrapper.style.backgroundColor = bgColor;
-            wrapper.style.padding = "2px 4px";
-            wrapper.style.borderRadius = "4px";
+            wrapper.querySelector('.background-card').style.backgroundColor = backgroundColorCard;
+            wrapper.querySelector('.event-card').style.backgroundColor = bgColor;
 
             return { domNodes: [wrapper] };
         },
@@ -153,6 +174,31 @@ export default {
 </script>
 
 <style>
+.background-card {
+  background-color: rgba(50,255,255,0.2);
+  border-radius: 4px;
+  display: inline-block;
+  padding: 2px 4px;
+}
+
+.event-row {
+  display: flex;
+  align-items: stretch; 
+}
+
+.event-card {
+  background-color: aqua;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+  width: 8px;
+}
+
+.event-content {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 8px;
+}
+
 .fc-day-disabled {
     color: rgba(241, 241, 241, 0.2)
 }
