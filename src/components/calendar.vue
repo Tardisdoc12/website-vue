@@ -122,7 +122,7 @@ export default {
                 <div class="event-row">
                     <div class="event-card"></div>
                     <div class="event-content">
-                        <span>
+                        <span class="event-font">
                             ${hour}
                         </span>
                         <div>
@@ -130,7 +130,7 @@ export default {
                         </div>
                         <div>
                             <small>
-                                ${number} slots available
+                                ${number} places disponibles
                             </small>
                         </div>
                     </div>
@@ -140,18 +140,21 @@ export default {
             
             let bgColor;
             let backgroundColorCard;
+            let colorWritting = "rgba(0, 0, 0, 1)";
             if(new Date() < arg.event.start) {
                 const duoColor = Categories.colorBg(arg.event.extendedProps.categorie)
                 bgColor = duoColor[0]
-                backgroundColorCard = duoColor[1] 
+                backgroundColorCard = duoColor[1]
             }
             else {
                 bgColor = 'rgba(211, 211, 211, 1)'
                 backgroundColorCard = 'rgba(211, 211, 211, 0.2)'
+                colorWritting = "rgba(12, 12, 12, 0.68)"
             }
 
             wrapper.querySelector('.background-card').style.backgroundColor = backgroundColorCard;
             wrapper.querySelector('.event-card').style.backgroundColor = bgColor;
+            wrapper.querySelector('.event-content').style.color = colorWritting;
 
             return { domNodes: [wrapper] };
         },
@@ -174,6 +177,10 @@ export default {
 </script>
 
 <style>
+.event-font {
+    font-size: 10px;
+}
+
 .background-card {
   background-color: rgba(50,255,255,0.2);
   border-radius: 4px;
@@ -197,6 +204,7 @@ export default {
   padding-top: 2px;
   padding-bottom: 2px;
   padding-left: 8px;
+  line-height: 1.2; 
 }
 
 .fc-day-disabled {

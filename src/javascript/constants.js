@@ -14,10 +14,10 @@ export default {
             return ["rgba(109, 159, 175, 1)","rgba(109, 159, 175,0.2)"]
         }
         if (categorie === stage) {
-            return ["rgba(37, 158, 77, 1)","rgba(37, 158, 77, 0.32)"]
+            return ["rgba(37, 158, 77, 1)","rgba(37, 158, 77, 0.2)"]
         }
         if (categorie === balade) {
-            return ["rgba(153, 91, 82, 1)","rgba(153, 91, 82, 0.49)"]
+            return ["rgba(164, 46, 194, 1)","rgba(164, 46, 194, 0.2)"]
         }
     },
 }
