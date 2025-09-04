@@ -190,12 +190,13 @@ add_action('rest_api_init', function () {
 
 function monplugin_delete_events(WP_REST_Request $request) {
     global $wpdb;
-    $table = $wpdb->prefix . "events";
+    $table_events = $wpdb->prefix . "events";
+    $table_inscrits = $wpdb->prefix . "inscrits";
     $event_id = intval($request['id']);
 
     // Vérifier si l'événement existe
     $exists = $wpdb->get_var($wpdb->prepare(
-        "SELECT COUNT(*) FROM $table WHERE id = %d",
+        "SELECT COUNT(*) FROM $table_events WHERE id = %d",
         $event_id
     ));
 
@@ -206,8 +207,11 @@ function monplugin_delete_events(WP_REST_Request $request) {
             ['status' => 404]
         );
     }
+
+    //supprimer les inscrits
+    $wpdb->delete($table_inscrits, ['event_id' => $event_id]);
     // Supprimer l’événement
-    $wpdb->delete($table, ['id' => $event_id]);
+    $wpdb->delete($table_events, ['id' => $event_id]);
     return [
         'success' => true,
         'deleted_event_id' => $event_id
