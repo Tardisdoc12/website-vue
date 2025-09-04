@@ -94,3 +94,65 @@ add_action('rest_api_init', function() {
         ],
     ]);
 });
+
+//-----------------------------------------------------------------------------------
+//Tables
+
+register_activation_hook(__FILE__, 'mon_plugin_creer_table');
+
+function mon_plugin_creer_tables() {
+    global $wpdb;
+    $charset_collate = $wpdb->get_charset_collate();
+
+    $table_events = $wpdb->prefix . "events";
+    $sql1 = "CREATE TABLE $table_events (
+        id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+        title VARCHAR(200) NOT NULL,
+        start_date DATETIME NOT NULL,
+        end_date DATETIME NOT NULL,
+        description TEXT NOT NULL,
+        place VARCHAR(200) NOT NULL,
+        category VARCHAR(100) NOT NULL,
+        subscribe_places INT NOT NULL,
+        nonsubscribe_places INT UNSIGNED NOT NULL,
+        PRIMARY KEY (id)
+    ) $charset_collate;";
+
+    $table_inscrits = $wpdb->prefix . "inscrits";
+    $sql2 = "CREATE TABLE $table_inscrits (
+        id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+        user_id BIGINT(20) UNSIGNED NOT NULL,
+        event_id BIGINT(20) UNSIGNED NOT NULL,
+        date_inscription DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+        bike VARCHAR(200) NULL,
+        goal VARCHAR(200) NULL,
+        PRIMARY KEY (id),
+        FOREIGN KEY (user_id) REFERENCES {$wpdb->prefix}users(ID) ON DELETE CASCADE,
+        FOREIGN KEY (event_id) REFERENCES $table_events(id) ON DELETE CASCADE
+    ) $charset_collate;";
+
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta($sql1);
+    dbDelta($sql2);
+}
+
+//-----------------------------------------------------------------------------------
+
+add_action('rest_api_init', function () {
+    register_rest_route('monplugin/v1', '/events', [
+        'methods' => 'GET',
+        'callback' => 'monplugin_get_events',
+        'permission_callback' => '__return_true'
+    ]);
+});
+
+function monplugin_get_events(WP_REST_Request $request) {
+    global $wpdb;
+    $table = $wpdb->prefix . "events";
+    $events = $wpdb->get_results("SELECT * FROM $table");
+    return $events;
+}
+
+//-----------------------------------------------------------------------------------
+// End of File
+//-----------------------------------------------------------------------------------
