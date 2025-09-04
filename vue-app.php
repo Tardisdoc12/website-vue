@@ -28,6 +28,11 @@ function vue_shortcode($atts, $content, $tag) {
     wp_enqueue_script("vue-{$tag}-js", $plugin_url . $js_file, [], null, true);
     wp_script_add_data("vue-{$tag}-js", 'type', 'module');
 
+    // Localize le nonce **après** l’enqueue du script
+    wp_localize_script("vue-{$tag}-js", 'vueAppData', [
+        'nonce' => wp_create_nonce('wp_rest'),
+    ]);
+
     // Div ID basé sur le shortcode
     $div_id = str_replace('_', '-', $tag);
     return "<div id=\"{$div_id}\"></div>";

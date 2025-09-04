@@ -33,6 +33,7 @@ import eventsService from '@/javascript/axios_events.js';
 import Categories from "@/javascript/constants"
 import { jwtDecode } from "jwt-decode"
 import api from "../javascript/users_wp.js"
+import { toRaw } from 'vue';
 
 export default {
     
@@ -48,7 +49,7 @@ export default {
 
     async mounted() {
         this.events = await eventsService.getAllEvents();
-        this.events = [...this.events]
+
         const token = sessionStorage.getItem("mps_moto")
         if (token) {
             const decoded = jwtDecode(token)
@@ -108,12 +109,11 @@ export default {
 
         renderEvent(arg) {
             const title = arg.event.title;
-            
-            let number = arg.event.extendedProps.nonsubscribePlace;
-            if (arg.event.extendedProps.subscribePlace > 0) {
-                number += arg.event.extendedProps.subscribePlace
+            let number = parseInt(arg.event.extendedProps.nonsubscribePlace);
+            if (parseInt(arg.event.extendedProps.subscribePlace) > 0) {
+                number += parseInt(arg.event.extendedProps.subscribePlace)
             }
-            number = number - arg.event.extendedProps.users.length;
+            number = number - Array.from(arg.event.extendedProps.users).length;
             
             const hour = arg.timeText
             const wrapper = document.createElement('div');
@@ -126,10 +126,10 @@ export default {
                             ${hour}
                         </span>
                         <div>
-                            <b>${title}</b>
+                            <b class="event-font">${title}</b>
                         </div>
                         <div>
-                            <small>
+                            <small class="event-font">
                                 ${number} places disponibles
                             </small>
                         </div>
@@ -137,7 +137,6 @@ export default {
                 </div>
             </div>
             `;
-            
             let bgColor;
             let backgroundColorCard;
             let colorWritting = "rgba(0, 0, 0, 1)";
@@ -177,34 +176,55 @@ export default {
 </script>
 
 <style>
-.event-font {
+.fc .event-font {
     font-size: 10px;
 }
 
-.background-card {
+.fc .background-card {
   background-color: rgba(50,255,255,0.2);
   border-radius: 4px;
-  display: inline-block;
+  display: block;
   padding: 2px 4px;
+  max-width: 100% !important;
+  overflow: hidden;
 }
 
-.event-row {
-  display: flex;
-  align-items: stretch; 
+.fc .event-row {
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
 }
 
-.event-card {
+.fc .event-card {
   background-color: aqua;
   border-top-right-radius: 12px;
   border-bottom-right-radius: 12px;
   width: 8px;
 }
 
-.event-content {
+.fc .event-content {
+  flex: 1;
   padding-top: 2px;
   padding-bottom: 2px;
   padding-left: 8px;
-  line-height: 1.2; 
+  line-height: 1.2;
+  min-width: 0;
+}
+
+.fc .event-content b {
+  white-space: nowrap;       /* Pas de retour à la ligne */
+  overflow: hidden;          /* Cache le surplus */
+  text-overflow: ellipsis;   /* Ajoute ... */
+  display: block;
+  max-width: 100%;
+}
+
+.fc .event-content small {
+  white-space: nowrap;       /* Pas de retour à la ligne */
+  overflow: hidden;          /* Cache le surplus */
+  text-overflow: ellipsis;   /* Ajoute ... */
+  display: block;
+  max-width: 100%;
 }
 
 .fc-day-disabled {

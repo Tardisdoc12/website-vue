@@ -18,34 +18,25 @@ function getCookie(name) {
 
 // Crée ton instance axios
 const api = axios.create({
-  baseURL: "https://localhost:8000",
+  baseURL: "https://mps-moto.fr/wp-json/vue-plugin/v1",
   withCredentials: true,
 })
 
+
 api.interceptors.request.use(config => {
-    const token = sessionStorage.getItem("mps_moto")
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`
-    } else {
-        delete config.headers.Authorization
-    }
+    // const token = sessionStorage.getItem("mps_moto")
+    // if (token) {
+    //     config.headers.Authorization = `Bearer ${token}`
+    // } else {
+    //     delete config.headers.Authorization
+    // }
     return config
 })
 
-
-// Ajoute le token CSRF automatiquement
-async function initApi() {
-  try {
-    await api.get("/csrf/") // 👉 appelle la route Django qui set le cookie
-    const token = getCookie("csrftoken")
-    if (token) {
-      api.defaults.headers.common["X-CSRFToken"] = token
-    }
-  } catch (err) {
-    console.error("Erreur récupération CSRF:", err)
-  }
-}
-
-initApi()
+api.interceptors.request.use(config => {
+    config.headers["X-WP-Nonce"] = window.vueAppData.nonce
+    console.log(window.vueAppData.nonce)
+    return config
+})
 
 export default api

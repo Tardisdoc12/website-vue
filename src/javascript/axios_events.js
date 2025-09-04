@@ -33,8 +33,11 @@ function conversion_from_bdd(datas) {
 export default {
     // Récupérer tous les events
     async getAllEvents() {
-        const response = await api.get(API_URL);
-        return response.data.map(e => conversion_from_bdd(e));
+        // await initApi();
+        const response = await api.get("/events/");
+        const events = Array.from(Object.values({...response.data.events}))
+        console.log("events:",events)
+        return events.map(e => conversion_from_bdd(e));
     },
 
     // Récupérer un event par ID
