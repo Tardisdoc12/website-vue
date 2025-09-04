@@ -205,6 +205,65 @@ function monplugin_get_events(WP_REST_Request $request) {
 //------------------------------------------------------------------------------
 
 add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1', '/events/(?P<id>\d+)', [
+        'methods'             => 'GET',
+        'callback'            => 'monplugin_get_event_id',
+        'permission_callback' => 'monplugin_verify_csrf'
+    ]);
+});
+
+function monplugin_get_event_id(WP_REST_Request $request) {
+    global $wpdb;
+    $table_events   = $wpdb->prefix . "events";
+    $table_inscrits = $wpdb->prefix . "inscrits";
+    $table_users    = $wpdb->prefix . "users";
+
+    $event_id = intval($request['id']);
+
+    // Récupérer un seul événement
+    $event = $wpdb->get_row(
+        $wpdb->prepare("SELECT * FROM $table_events WHERE id = %d", $event_id)
+    );
+
+    if (!$event) {
+        return new WP_Error(
+            'event_not_found',
+            'Aucun événement trouvé avec cet ID',
+            ['status' => 404]
+        );
+    }
+
+    // Récupérer les utilisateurs inscrits
+    $users = $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT u.ID, u.user_login, u.user_email 
+             FROM $table_inscrits i
+             JOIN $table_users u ON u.ID = i.user_id
+             WHERE i.event_id = %d",
+            $event->id
+        )
+    );
+
+    // Construire la réponse
+    $result = [
+        'id'                  => $event->id,
+        'title'               => $event->title,
+        'start_date'          => $event->start_date,
+        'end_date'            => $event->end_date,
+        'description'         => $event->description,
+        'place'               => $event->place,
+        'category'            => $event->category,
+        'subscribe_places'    => $event->subscribe_places,
+        'nonsubscribe_places' => $event->nonsubscribe_places,
+        'users'               => $users
+    ];
+
+    return $result;
+}
+
+//------------------------------------------------------------------------------
+
+add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1','/events',[
         'methods' => 'POST',
         'callback' => 'monplugin_create_events',

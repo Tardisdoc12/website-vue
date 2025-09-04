@@ -42,7 +42,7 @@ export default {
 
     // Récupérer un event par ID
     async getEvent(id) {
-        response = await api.get(`${API_URL}${id}/`);
+        response = await api.get(`/events/${id}/`);
         if (response.data) {
             return conversion_from_bdd(response.data)
         }
@@ -51,7 +51,7 @@ export default {
 
     // Créer un nouvel event
     async createEvent(eventData) {
-        return await api.post(API_URL+"create/", conversion_to_bdd(eventData));
+        return await api.post("/events/", conversion_to_bdd(eventData));
     },
 
     // Mettre à jour un event
@@ -61,6 +61,6 @@ export default {
 
     // Supprimer un event
     async deleteEvent(id) {
-        return await api.delete(`${API_URL}${id}/`);
+        return await api.delete(`events/${id}/`);
     }
 };
