@@ -98,7 +98,7 @@ add_action('rest_api_init', function() {
 //-----------------------------------------------------------------------------------
 //Tables
 
-register_activation_hook(__FILE__, 'mon_plugin_creer_table');
+register_activation_hook(__FILE__, 'mon_plugin_creer_tables');
 
 function mon_plugin_creer_tables() {
     global $wpdb;
@@ -127,8 +127,6 @@ function mon_plugin_creer_tables() {
         bike VARCHAR(200) NULL,
         goal VARCHAR(200) NULL,
         PRIMARY KEY (id),
-        FOREIGN KEY (user_id) REFERENCES {$wpdb->prefix}users(ID) ON DELETE CASCADE,
-        FOREIGN KEY (event_id) REFERENCES $table_events(id) ON DELETE CASCADE
     ) $charset_collate;";
 
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -139,7 +137,7 @@ function mon_plugin_creer_tables() {
 //-----------------------------------------------------------------------------------
 
 add_action('rest_api_init', function () {
-    register_rest_route('monplugin/v1', '/events', [
+    register_rest_route('vue-plugin/v1', '/events', [
         'methods' => 'GET',
         'callback' => 'monplugin_get_events',
         'permission_callback' => '__return_true'
