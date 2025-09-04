@@ -179,5 +179,41 @@ function monplugin_create_events(WP_REST_Request $request) {
 }
 
 //-----------------------------------------------------------------------------------
+
+add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1','/events/(?P<id>\d+)',[
+        'methods' => 'DELETE',
+        'callback' => 'monplugin_delete_events',
+        'permission_callback' => '__return_true'
+    ]);
+});
+
+function monplugin_delete_events(WP_REST_Request $request) {
+    global $wpdb;
+    $table = $wpdb->prefix . "events";
+    $event_id = intval($request['id']);
+
+    // Vérifier si l'événement existe
+    $exists = $wpdb->get_var($wpdb->prepare(
+        "SELECT COUNT(*) FROM $table WHERE id = %d",
+        $event_id
+    ));
+
+    if (!$exists) {
+        return new WP_Error(
+            'event_not_found',
+            'Cet événement n’existe pas.',
+            ['status' => 404]
+        );
+    }
+    // Supprimer l’événement
+    $wpdb->delete($table, ['id' => $event_id]);
+    return [
+        'success' => true,
+        'deleted_event_id' => $event_id
+    ];
+}
+
+//-----------------------------------------------------------------------------------
 // End of File
 //-----------------------------------------------------------------------------------
