@@ -151,6 +151,33 @@ function monplugin_get_events(WP_REST_Request $request) {
     return $events;
 }
 
+//------------------------------------------------------------------------------
+
+add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1','/events',[
+        'methods' => 'POST',
+        'callback' => 'monplugin_create_events',
+        'permission_callback' => '__return_true'
+    ]);
+});
+
+function monplugin_create_events(WP_REST_Request $request) {
+    global $wpdb;
+    $table = $wpdb->prefix . "events";
+    $wpdb->insert($table, [
+        'title' => sanitize_text_field($request['title']),
+        'start_date' => sanitize_text_field($request['start_date']),
+        'end_date' => sanitize_text_field($request['end_date']),
+        'description' => sanitize_textarea_field($request['description']),
+        'place' => sanitize_text_field($request['place']),
+        'category' => sanitize_text_field($request['category']),
+        'subscribe_places' => intval($request['subscribe_places']),
+        'nonsubscribe_places' => intval($request['nonsubscribe_places']),
+    ]);
+
+    return ['id' => $wpdb->insert_id];
+}
+
 //-----------------------------------------------------------------------------------
 // End of File
 //-----------------------------------------------------------------------------------
