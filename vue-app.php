@@ -126,7 +126,7 @@ function mon_plugin_creer_tables() {
         date_inscription DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
         bike VARCHAR(200) NULL,
         goal VARCHAR(200) NULL,
-        PRIMARY KEY (id),
+        PRIMARY KEY (id)
     ) $charset_collate;";
 
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -217,6 +217,69 @@ function monplugin_delete_events(WP_REST_Request $request) {
         'deleted_event_id' => $event_id
     ];
 }
+
+//-----------------------------------------------------------------------------------
+
+add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1','/subscribe',[
+        'methods' => 'POST',
+        'callback' => 'monplugin_create_subscribe',
+        'permission_callback' => '__return_true'
+    ]);
+});
+
+function monplugin_create_subscribe(WP_REST_Request $request) {
+    global $wpdb;
+    $event_id = intval($request['event_id']);
+    $user_id = intval($request['user_id']);
+
+    // Vérifier si l’événement existe
+    $event = $wpdb->get_row($wpdb->prepare(
+        "SELECT * FROM $table_events WHERE id = %d",
+        $event_id
+    ));
+
+    if (!$event) {
+        return new WP_Error(
+            'event_not_found',
+            'Cet événement n’existe pas.',
+            ['status' => 404]
+        );
+    }
+
+    // verifier si l'utilisateur existe
+    $user = $wpdb->get_row($wpdb->prepare(
+        "SELECT * FROM $table_events WHERE id = %d",
+        $user_id
+    ));
+
+    if (!$user) {
+        return new WP_Error(
+            'user_not_found',
+            'Cet utilisateur n’existe pas.',
+            ['status' => 404]
+        );
+    }
+
+    $wpdb->insert($table_inscrits, [
+        'user_id' => $user_id,
+        'event_id' => $event_id,
+        'date_inscription' => sanitize_text_field($request['date_inscription']),
+        'bike' => sanitize_text_field($request['bike']),
+        'goal'=> sanitize_textarea_field($request['goal']),
+    ]);
+
+    return [
+        'success' => true,
+        'event_id' => $event_id,
+        'user_id' => $user_id,
+        'message' => 'Inscription réussie.'
+    ];
+}
+
+//-----------------------------------------------------------------------------------
+
+
 
 //-----------------------------------------------------------------------------------
 // End of File
