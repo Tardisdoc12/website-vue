@@ -136,19 +136,65 @@ function mon_plugin_creer_tables() {
 
 //-----------------------------------------------------------------------------------
 
+function monplugin_verify_csrf(WP_REST_Request $request) {
+    $nonce = $request->get_header('X-WP-Nonce');
+    if (!wp_verify_nonce($nonce, 'wp_rest')) {
+        return new WP_Error(
+            'invalid_csrf_token',
+            'Token CSRF invalide ou expiré.',
+            ['status' => 403]
+        );
+    }
+    return true;
+}
+
+//-----------------------------------------------------------------------------------
+
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/events', [
         'methods' => 'GET',
         'callback' => 'monplugin_get_events',
-        'permission_callback' => '__return_true'
+        'permission_callback' => 'monplugin_verify_csrf'
     ]);
 });
 
 function monplugin_get_events(WP_REST_Request $request) {
     global $wpdb;
-    $table = $wpdb->prefix . "events";
-    $events = $wpdb->get_results("SELECT * FROM $table");
-    return $events;
+    $table_events   = $wpdb->prefix . "events";
+    $table_inscrits = $wpdb->prefix . "inscrits";
+    $table_users    = $wpdb->prefix . "users";
+
+    // Récupérer tous les événements
+    $events = $wpdb->get_results("SELECT * FROM $table_events");
+
+    $result = [];
+
+    foreach ($events as $event) {
+        // Récupérer les utilisateurs inscrits pour cet événement
+        $users = $wpdb->get_results($wpdb->prepare(
+            "SELECT u.ID, u.user_login, u.user_email 
+             FROM $table_inscrits i
+             JOIN $table_users u ON u.ID = i.user_id
+             WHERE i.event_id = %d",
+            $event->id
+        ));
+
+        // Ajouter l’événement dans la réponse avec ses utilisateurs
+        $result[$event->id] = [
+            'id'          => $event->id,
+            'title'       => $event->title,
+            'start_date'  => $event->start_date,
+            'end_date'    => $event->end_date,
+            'description' => $event->description,
+            'place'       => $event->place,
+            'category'    => $event->category,
+            'subscribe_places'   => $event->subscribe_places,
+            'nonsubscribe_places'=> $event->nonsubscribe_places,
+            'users'       => $users
+        ];
+    }
+
+    return [ 'events' => $result ];
 }
 
 //------------------------------------------------------------------------------
@@ -157,7 +203,7 @@ add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1','/events',[
         'methods' => 'POST',
         'callback' => 'monplugin_create_events',
-        'permission_callback' => '__return_true'
+        'permission_callback' => 'monplugin_verify_csrf'
     ]);
 });
 
@@ -184,7 +230,7 @@ add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1','/events/(?P<id>\d+)',[
         'methods' => 'DELETE',
         'callback' => 'monplugin_delete_events',
-        'permission_callback' => '__return_true'
+        'permission_callback' => 'monplugin_verify_csrf'
     ]);
 });
 
@@ -224,7 +270,7 @@ add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1','/subscribe',[
         'methods' => 'POST',
         'callback' => 'monplugin_create_subscribe',
-        'permission_callback' => '__return_true'
+        'permission_callback' => 'monplugin_verify_csrf'
     ]);
 });
 
@@ -279,7 +325,18 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
 
 //-----------------------------------------------------------------------------------
 
+add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1','/csrf', [
+        'methods' => 'GET',
+        'callback' => 'monplugin_get_csrf_token',
+        'permission_callback' => '__return_true'
+    ]);
+});
 
+function monplugin_get_csrf_token(WP_REST_Request $request) {
+    $nonce = wp_create_nonce('wp_rest'); 
+    return ['csrf_token' => $nonce];
+}
 
 //-----------------------------------------------------------------------------------
 // End of File
