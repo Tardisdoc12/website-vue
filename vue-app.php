@@ -153,15 +153,37 @@ function mon_plugin_creer_tables() {
 //-----------------------------------------------------------------------------------
 
 function monplugin_verify_csrf(WP_REST_Request $request) {
+    // Vérification via X-WP-Nonce (classique WordPress)
     $nonce = $request->get_header('X-WP-Nonce');
-    if (!wp_verify_nonce($nonce, 'wp_rest')) {
+    if ($nonce && wp_verify_nonce($nonce, 'wp_rest')) {
+        return true;
+    }
+
+    // Vérification via JWT
+    $auth_header = $request->get_header('Authorization');
+    if ($auth_header && preg_match('/Bearer\s(\S+)/', $auth_header, $matches)) {
+        $token = $matches[1];
+
+        // Vérifier le token via le hook du plugin JWT
+        $user = apply_filters('jwt_auth_token_before_dispatch', $token);
+
+        if ($user && !is_wp_error($user)) {
+            return true;
+        }
+
         return new WP_Error(
-            'invalid_csrf_token',
-            'Token CSRF invalide ou expiré.',
+            'invalid_jwt_token',
+            'JWT token invalide ou expiré.',
             ['status' => 403]
         );
     }
-    return true;
+
+    // Aucun token fourni
+    return new WP_Error(
+        'missing_auth',
+        'Aucun CSRF token ou JWT token fourni.',
+        ['status' => 403]
+    );
 }
 
 //-----------------------------------------------------------------------------------

@@ -23,20 +23,30 @@ const api = axios.create({
 })
 
 
-api.interceptors.request.use(config => {
-    // const token = sessionStorage.getItem("mps_moto")
-    // if (token) {
-    //     config.headers.Authorization = `Bearer ${token}`
-    // } else {
-    //     delete config.headers.Authorization
-    // }
-    return config
-})
+function isJwtExpired(token) {
+    try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        const now = Math.floor(Date.now() / 1000);
+        return payload.exp < now;
+    } catch (e) {
+        return true; // si le token est cassé, on le considère invalide
+    }
+}
 
 api.interceptors.request.use(config => {
-    config.headers["X-WP-Nonce"] = window.vueAppData.nonce
-    console.log(window.vueAppData.nonce)
-    return config
-})
+    const token = sessionStorage.getItem("mps_moto");
+
+    if (token && !isJwtExpired(token)) {
+        config.headers.Authorization = `Bearer ${token}`;
+        delete config.headers["X-WP-Nonce"];
+    } else {
+        // fallback CSRF
+        sessionStorage.removeItem("mps_moto"); // nettoyer l'expiré
+        delete config.headers.Authorization;
+        config.headers["X-WP-Nonce"] = window.vueAppData.nonce;
+    }
+
+    return config;
+});
 
 export default api
