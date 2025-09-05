@@ -51,13 +51,10 @@ export default {
         this.events = await eventsService.getAllEvents();
 
         const token = sessionStorage.getItem("mps_moto")
-        console.log(token)
         if (token) {
             const decoded = jwtDecode(token)
             const user_id = decoded.data.user.id
-            console.log(user_id)
             const user_info = await api.get_user(user_id)
-            console.log(user_info)
             this.user = user_info.user
         }
     },

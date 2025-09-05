@@ -36,7 +36,6 @@ export default {
         // await initApi();
         const response = await api.get("/events/");
         const events = Array.from(Object.values({...response.data.events}))
-        console.log("events:",events)
         return events.map(e => conversion_from_bdd(e));
     },
 

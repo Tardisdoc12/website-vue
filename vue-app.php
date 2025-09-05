@@ -39,7 +39,7 @@ function vue_shortcode($atts, $content, $tag) {
 }
 
 // Enregistrer les shortcodes
-$shortcodes = ['login', 'calendar', 'events', 'connexion'];
+$shortcodes = ['login', 'calendar', 'events', 'connexion', 'account'];
 
 foreach ($shortcodes as $sc) {
     add_shortcode($sc, 'vue_shortcode');

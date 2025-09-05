@@ -44,6 +44,12 @@
 import apiWP from "../javascript/users_wp"
 
 export default {
+    props: {
+        onSuccess: {
+            type: Function,
+            default: null
+        }
+    },
     data() {
         return {
             formUser: {
@@ -59,6 +65,9 @@ export default {
                 const data = await apiWP.verify_connexion(this.formUser.email, this.formUser.password)
                 sessionStorage.setItem("mps_moto", data.token)
                 alert("Connecté avec succès !")
+                if (this.onSuccess) {
+                    this.onSuccess(data.token)
+                }
             }catch (err) {
                 console.error("❌ Erreur login:", err)
             }
