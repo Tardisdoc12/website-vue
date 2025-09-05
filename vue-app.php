@@ -425,5 +425,70 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
 }
 
 //-----------------------------------------------------------------------------------
+
+add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1','/users',[
+        'methods' => 'GET',
+        'callback' => 'monplugin_get_users',
+        'permission_callback' => 'monplugin_verify_csrf'
+    ]);
+});
+
+function monplugin_get_users(WP_REST_Request $request) {
+    global $wpdb;
+    $table = $wpdb->prefix . "users";
+    $users = $wpdb->get_results("SELECT ID FROM $table");
+
+    foreach ($users as &$user) {
+        $user->firstName  = get_user_meta($user->ID, 'firstName', true);
+        $user->lastName   = get_user_meta($user->ID, 'lastName', true);
+        $user->telephone  = get_user_meta($user->ID, 'telephone', true);
+        $user->moto       = get_user_meta($user->ID, 'moto', true);
+    }
+
+    return [
+        "message" => "Success",
+        "users"   => $users
+    ];
+}
+
+//------------------------------------------------------------------------------
+
+add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1','/users/(?P<id>\d+)',[
+        'methods' => 'GET',
+        'callback' => 'monplugin_get_user',
+        'permission_callback' => 'monplugin_verify_csrf'
+    ]);
+});
+
+function monplugin_get_user(WP_REST_Request $request) {
+    global $wpdb;
+    $table = $wpdb->prefix . "users";
+    $user_id = intval($request['id']);
+    $user = $wpdb->get_row(
+        $wpdb->prepare("SELECT ID FROM $table WHERE ID = %d", $user_id)
+    );
+
+    if (!$user) {
+        return [
+            "message" => "Utilisateur non trouvé",
+            "user"    => null
+        ];
+    }
+
+    // Ajout des métadonnées
+    $user->firstName  = get_user_meta($user->ID, 'firstName', true);
+    $user->lastName   = get_user_meta($user->ID, 'lastName', true);
+    $user->telephone  = get_user_meta($user->ID, 'telephone', true);
+    $user->moto       = get_user_meta($user->ID, 'moto', true);
+
+    return [
+        "message" => "Success",
+        "user"    => $user
+    ];
+}
+
+//-----------------------------------------------------------------------------------
 // End of File
 //-----------------------------------------------------------------------------------
