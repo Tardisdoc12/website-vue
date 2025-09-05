@@ -1,6 +1,7 @@
 import api from "./api.js"
 
 const url = "https://mps-moto.fr/wp-json/wp/v2/users"
+const url_connect = "https://mps-moto.fr/wp-json/jwt-auth/v1/token"
 
 export default {
     async create_user(body) {
@@ -14,7 +15,7 @@ export default {
     },
 
     async get_user(id) {
-        const response = await api.get(`${url}/${id}`)
+        const response = await api.get(`users/${id}`)
         return response.data
     },
 
@@ -23,7 +24,7 @@ export default {
             username: email,
             password: password,
         }
-        const response = await api.post(`${url}/connect/`, JSON.stringify(body))
+        const response = await api.post(url_connect, body)
         return response.data
     },
 }

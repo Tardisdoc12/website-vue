@@ -467,7 +467,7 @@ function monplugin_get_user(WP_REST_Request $request) {
     $table = $wpdb->prefix . "users";
     $user_id = intval($request['id']);
     $user = $wpdb->get_row(
-        $wpdb->prepare("SELECT ID FROM $table WHERE ID = %d", $user_id)
+        $wpdb->prepare("SELECT ID, user_email FROM $table WHERE ID = %d", $user_id)
     );
 
     if (!$user) {
@@ -482,6 +482,7 @@ function monplugin_get_user(WP_REST_Request $request) {
     $user->lastName   = get_user_meta($user->ID, 'lastName', true);
     $user->telephone  = get_user_meta($user->ID, 'telephone', true);
     $user->moto       = get_user_meta($user->ID, 'moto', true);
+    $user->email = $user->user_email;
 
     return [
         "message" => "Success",
