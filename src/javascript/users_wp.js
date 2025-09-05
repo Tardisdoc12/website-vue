@@ -1,20 +1,20 @@
 import api from "./api.js"
 
-const url = "https://localhost:8000"
+const url = "https://mps-moto.fr/wp-json/wp/v2/users"
 
 export default {
     async create_user(body) {
-        const response = await api.post(url+"/register/", body)
+        const response = await api.post(url, body)
         return response.data
     },
 
     async get_users() {
-        const response = await api.get(url+"/users/")
+        const response = await api.get(url)
         return response.data
     },
 
     async get_user(id) {
-        const response = await api.get(`${url}/users/${id}`)
+        const response = await api.get(`${url}/${id}`)
         return response.data
     },
 

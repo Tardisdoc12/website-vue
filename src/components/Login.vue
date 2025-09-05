@@ -156,14 +156,15 @@ export default {
             if (!this.passwordMatch()) {
                 return
             }
-            const body = JSON.stringify({
+            const body = {
+                    username:this.formUser.firstName + "." + this.formUser.lastName,
                     firstName:this.formUser.firstName,
                     lastName: this.formUser.lastName,
                     email: this.formUser.email,
                     password: this.formUser.password,
                     telephone: this.formUser.phone,
                     moto: this.formUser.bike,
-                })
+                }
             const response = await api.create_user(body)
         }
     },

@@ -134,9 +134,20 @@ function mon_plugin_creer_tables() {
         PRIMARY KEY (id)
     ) $charset_collate;";
 
+    $table_users_inscrits = $wpdb->prefix . "users_inscrits";
+    $sql3= "CREATE TABLE $table_users_inscrits (
+        id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+        user_name VARCHAR(200) NOT NULL,
+        phone VARCHAR(10) NOT NULL,
+        email VARCHAR(200) NOT NULL,
+        experience VARCHAR(200) NOT NULL,
+        PRIMARY KEY (id)
+    ) $charset_collate;";
+
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($sql1);
     dbDelta($sql2);
+    dbDelta($sql3);
 }
 
 //-----------------------------------------------------------------------------------
@@ -167,7 +178,7 @@ function monplugin_get_events(WP_REST_Request $request) {
     global $wpdb;
     $table_events   = $wpdb->prefix . "events";
     $table_inscrits = $wpdb->prefix . "inscrits";
-    $table_users    = $wpdb->prefix . "users";
+    $table_users    = $wpdb->prefix . "users_inscrits";
 
     // Récupérer tous les événements
     $events = $wpdb->get_results("SELECT * FROM $table_events");
@@ -177,9 +188,9 @@ function monplugin_get_events(WP_REST_Request $request) {
     foreach ($events as $event) {
         // Récupérer les utilisateurs inscrits pour cet événement
         $users = $wpdb->get_results($wpdb->prepare(
-            "SELECT u.ID, u.user_login, u.user_email 
+            "SELECT u.id, u.user_name, u.email, u.phone, u.experience 
              FROM $table_inscrits i
-             JOIN $table_users u ON u.ID = i.user_id
+             JOIN $table_users u ON u.id = i.user_id
              WHERE i.event_id = %d",
             $event->id
         ));
@@ -216,7 +227,7 @@ function monplugin_get_event_id(WP_REST_Request $request) {
     global $wpdb;
     $table_events   = $wpdb->prefix . "events";
     $table_inscrits = $wpdb->prefix . "inscrits";
-    $table_users    = $wpdb->prefix . "users";
+    $table_users    = $wpdb->prefix . "users_inscrits";
 
     $event_id = intval($request['id']);
 
@@ -236,9 +247,9 @@ function monplugin_get_event_id(WP_REST_Request $request) {
     // Récupérer les utilisateurs inscrits
     $users = $wpdb->get_results(
         $wpdb->prepare(
-            "SELECT u.ID, u.user_login, u.user_email 
+            "SELECT u.id, u.user_name, u.email, u.phone, u.experience  
              FROM $table_inscrits i
-             JOIN $table_users u ON u.ID = i.user_id
+             JOIN $table_users u ON u.id = i.user_id
              WHERE i.event_id = %d",
             $event->id
         )
@@ -340,8 +351,11 @@ add_action('rest_api_init', function () {
 
 function monplugin_create_subscribe(WP_REST_Request $request) {
     global $wpdb;
-    $event_id = intval($request['event_id']);
-    $user_id = intval($request['user_id']);
+    $table_events   = $wpdb->prefix . "events";
+    $table_inscrits = $wpdb->prefix . "inscrits";
+    $table_users    = $wpdb->prefix . "users_inscrits";
+    $event_id = $request->get_param('event_id'); 
+    $user_d = $request->get_param('user');
 
     // Vérifier si l’événement existe
     $event = $wpdb->get_row($wpdb->prepare(
@@ -359,25 +373,48 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
 
     // verifier si l'utilisateur existe
     $user = $wpdb->get_row($wpdb->prepare(
-        "SELECT * FROM $table_events WHERE id = %d",
-        $user_id
+        "SELECT * FROM $table_users WHERE email = %s",
+        $user_d["email"]
     ));
 
     if (!$user) {
-        return new WP_Error(
-            'user_not_found',
-            'Cet utilisateur n’existe pas.',
-            ['status' => 404]
-        );
+        $wpdb->insert($table_users, [
+            "user_name" => isset($user_d['name']) ? sanitize_text_field($user_d['name']) : '',
+            "phone" => isset($user_d['phone']) ? sanitize_text_field($user_d['phone']) : '',
+            "email" => isset($user_d['email']) ? sanitize_text_field($user_d['email']) : '',
+            "experience" => isset($user_d['experience']) ? sanitize_text_field($user_d['experience']) : ''
+        ]);
+        if ($wpdb->last_error) {
+            return new WP_Error('db_insert_error', 'Erreur SQL (users) : ' . $wpdb->last_error, ['status' => 500]);
+        }
+        $user_id = $wpdb->insert_id;
+    } else {
+        $user_id = intval($user->id);
+    }
+
+    // Vérifier si l’utilisateur est déjà inscrit à cet event
+    $already = $wpdb->get_var($wpdb->prepare(
+        "SELECT COUNT(*) FROM $table_inscrits WHERE event_id = %d AND user_id = %d",
+        $event_id, $user_id
+    ));
+
+    if ($already > 0) {
+        return [
+            'success' => false,
+            'message' => 'Utilisateur déjà inscrit à cet événement.'
+        ];
     }
 
     $wpdb->insert($table_inscrits, [
         'user_id' => $user_id,
         'event_id' => $event_id,
-        'date_inscription' => sanitize_text_field($request['date_inscription']),
         'bike' => sanitize_text_field($request['bike']),
         'goal'=> sanitize_textarea_field($request['goal']),
     ]);
+
+    if ($wpdb->last_error) {
+        return new WP_Error('db_insert_error', 'Erreur SQL (inscrits) : ' . $wpdb->last_error, ['status' => 500]);
+    }
 
     return [
         'success' => true,
@@ -385,21 +422,6 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
         'user_id' => $user_id,
         'message' => 'Inscription réussie.'
     ];
-}
-
-//-----------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1','/csrf', [
-        'methods' => 'GET',
-        'callback' => 'monplugin_get_csrf_token',
-        'permission_callback' => '__return_true'
-    ]);
-});
-
-function monplugin_get_csrf_token(WP_REST_Request $request) {
-    $nonce = wp_create_nonce('wp_rest'); 
-    return ['csrf_token' => $nonce];
 }
 
 //-----------------------------------------------------------------------------------
