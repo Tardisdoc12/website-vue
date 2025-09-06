@@ -553,7 +553,18 @@ function myplugin_register_user(WP_REST_Request $request) {
         return new WP_Error('missing_fields', 'Tous les champs sont obligatoires', ['status' => 400]);
     }
 
-    if (username_exists($username) || email_exists($email)) {
+    if (username_exists($username)){
+        $username .= "." . substr($telephone, -4);
+    }
+
+    $existing_users = get_users([
+        'meta_key' => 'telephone',
+        'meta_value' => $telephone,
+        'number' => 1,
+    ]);
+
+
+    if (username_exists($username) || email_exists($email) || !empty($existing_users)) {
         return new WP_Error('user_exists', 'Utilisateur déjà existant', ['status' => 400]);
     }
 
