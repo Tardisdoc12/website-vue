@@ -55,11 +55,7 @@ api.interceptors.response.use(
     return response
   },
   error => {
-    console.error("❌ Interceptor déclenché !")
-    console.error("   ↳ error:", error)
-    console.error("   ↳ error.response:", error.response)
-    console.error("   ↳ error.message:", error.message)
-    return error.response.data.message
+    return Promise.reject(error)
   }
 )
 

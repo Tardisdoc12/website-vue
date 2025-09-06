@@ -21,12 +21,30 @@ function vue_shortcode($atts, $content, $tag) {
 
     // CSS
     if (file_exists($plugin_path . $css_file)) {
-        wp_enqueue_style("vue-{$tag}-css", $plugin_url . $css_file);
+        wp_enqueue_style(
+            "vue-{$tag}-css",
+            $plugin_url . $css_file,
+            [],
+            filemtime($plugin_path . $css_file) // ✅ version dynamique
+        );
     }
 
     // JS
-    wp_enqueue_script("vue-{$tag}-js", $plugin_url . $js_file, [], null, true);
-    wp_script_add_data("vue-{$tag}-js", 'type', 'module');
+    if (file_exists($plugin_path . $js_file)) {
+        wp_enqueue_script(
+            "vue-{$tag}-js",
+            $plugin_url . $js_file,
+            [],
+            filemtime($plugin_path . $js_file), // ✅ version dynamique
+            true
+        );
+        wp_script_add_data("vue-{$tag}-js", 'type', 'module');
+
+        // Localize le nonce **après** l’enqueue du script
+        wp_localize_script("vue-{$tag}-js", 'vueAppData', [
+            'nonce' => wp_create_nonce('wp_rest'),
+        ]);
+    }
 
     // Localize le nonce **après** l’enqueue du script
     wp_localize_script("vue-{$tag}-js", 'vueAppData', [

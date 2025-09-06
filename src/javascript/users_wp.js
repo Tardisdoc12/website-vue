@@ -4,8 +4,12 @@ const url_connect = "https://mps-moto.fr/wp-json/jwt-auth/v1/token"
 
 export default {
     async create_user(body) {
-        const response = await api.post("/register/", body)
-        return response
+        try {
+            const response = await api.post("/register/", body)
+            return response
+        } catch (err) {
+            throw err
+        }
     },
 
     async get_users() {

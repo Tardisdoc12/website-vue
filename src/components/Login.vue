@@ -164,10 +164,9 @@ export default {
                     password: this.formUser.password,
                     telephone: this.formUser.phone,
                     moto: this.formUser.bike,
-                }
-            const response = await api.create_user(body)
-            console.log(response)
-            if(response.data) {
+            }
+            try{
+                const response = await api.create_user(body)
                 this.formUser= {
                     firstName:"",
                     lastName:"",
@@ -177,8 +176,8 @@ export default {
                     password:"",
                     confirmPassword:"",
                 }
-            } else {
-                alert(response.message)
+            } catch (err) {
+                alert(err.response.data.message)
             }
         }
     },
