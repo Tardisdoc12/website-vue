@@ -49,4 +49,18 @@ api.interceptors.request.use(config => {
     return config;
 });
 
+api.interceptors.response.use(
+  response => {
+    console.log("✅ Réponse succès :", response)
+    return response
+  },
+  error => {
+    console.error("❌ Interceptor déclenché !")
+    console.error("   ↳ error:", error)
+    console.error("   ↳ error.response:", error.response)
+    console.error("   ↳ error.message:", error.message)
+    return error.response.data.message
+  }
+)
+
 export default api

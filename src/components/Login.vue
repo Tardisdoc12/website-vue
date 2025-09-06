@@ -166,6 +166,20 @@ export default {
                     moto: this.formUser.bike,
                 }
             const response = await api.create_user(body)
+            console.log(response)
+            if(response.data) {
+                this.formUser= {
+                    firstName:"",
+                    lastName:"",
+                    phone:"",
+                    bike:"",
+                    email:"",
+                    password:"",
+                    confirmPassword:"",
+                }
+            } else {
+                alert(response.message)
+            }
         }
     },
 

@@ -82,7 +82,7 @@ export default {
     inset: 0px;
 
     z-index: 2;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(100,100,100,0.9); /* derrière la modal */
 
     display: flex;
     align-items: center;

@@ -2,11 +2,11 @@
     <div v-if="user && user.firstName" class="user-profile">
         <h2>Profil utilisateur</h2>
         <ul>
-        <li><strong>Nom :</strong> {{ user.lastName }}</li>
-        <li><strong>Prénom :</strong> {{ user.firstName }}</li>
-        <li><strong>Email :</strong> {{ user.email }}</li>
-        <li><strong>Téléphone :</strong> {{ user.telephone }}</li>
-        <li><strong>Moto :</strong> {{ user.moto }}</li>
+            <li><strong>Nom :</strong> {{ user.lastName }}</li>
+            <li><strong>Prénom :</strong> {{ user.firstName }}</li>
+            <li><strong>Email :</strong> {{ user.email }}</li>
+            <li><strong>Téléphone :</strong> {{ user.telephone }}</li>
+            <li><strong>Moto :</strong> {{ user.moto }}</li>
         </ul>
     </div>
 
