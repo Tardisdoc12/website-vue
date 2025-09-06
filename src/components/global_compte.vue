@@ -17,8 +17,8 @@
         </div>
         
         <!-- Sate Account -->
-        <CreateAccount v-if="!isAuthenticated && !hasAccount" />
-        <ConnectAccount v-else-if="!isAuthenticated && hasAccount" :onSuccess="loginSuccess"/>
+        <CreateAccount v-if="(!isAuthenticated && !hasAccount)" :onSuccess="createAccountSuccess"/>
+        <ConnectAccount v-else-if="(!isAuthenticated && hasAccount)" :onSuccess="loginSuccess"/>
         <DrawAccount v-else />
 
     </div>
@@ -64,6 +64,9 @@ export default {
         loginSuccess(token) {
             this.token = token
         },
+        createAccountSuccess() {
+            this.hasAccount=true
+        }
     },
 
     components: {

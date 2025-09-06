@@ -51,7 +51,6 @@ api.interceptors.request.use(config => {
 
 api.interceptors.response.use(
   response => {
-    console.log("✅ Réponse succès :", response)
     return response
   },
   error => {

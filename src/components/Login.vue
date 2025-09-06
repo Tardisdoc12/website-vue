@@ -131,6 +131,13 @@
 import api from "../javascript/users_wp"
 
 export default {
+    props: {
+        onSuccess: {
+            type: Function,
+            default: null
+        }
+    },
+
     data() {
         return {
             formUser: {
@@ -175,6 +182,9 @@ export default {
                     email:"",
                     password:"",
                     confirmPassword:"",
+                }
+                if (this.onSuccess) {
+                    this.onSuccess()
                 }
             } catch (err) {
                 alert(err.response.data.message)
