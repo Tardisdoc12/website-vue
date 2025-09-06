@@ -1,5 +1,6 @@
 <template>
     <button
+        v-if="allowedCreateEvent"
         type="button"
         class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
         @click="cancelCreateEvent = true"
@@ -47,7 +48,6 @@ import eventsService from '@/javascript/axios_events.js';
 import Categories from "@/javascript/constants"
 import { jwtDecode } from "jwt-decode"
 import api from "../javascript/users_wp.js"
-import { toRaw } from 'vue';
 
 export default {
     
@@ -59,6 +59,7 @@ export default {
             eventSelected: {},
             events: [],
             user:{},
+            allowedCreateEvent:false,
         }
     },
 
@@ -71,6 +72,9 @@ export default {
             const user_id = decoded.data.user.id
             const user_info = await api.get_user(user_id)
             this.user = user_info.user
+            listB = this.user.roles
+            listA = ['bureau', 'administrator']
+            this.allowedCreateEvent = listB.some(el => listA.includes(el));
         }
     },
 
