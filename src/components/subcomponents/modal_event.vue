@@ -35,6 +35,7 @@
                 <span style="font-weight: bold; text-decoration: underline;">{{ "Description :"}}</span>
                 <p>{{ form.description }}</p>
             </div>
+            
             <!-- bouton -->
             <div class="flex items-center justify-center">
                 <button
@@ -44,6 +45,17 @@
                 >
                     Inscription
                 </button>
+
+                <!-- Suppression de l'event -->
+                <button
+                    v-if="showDeleteButton"
+                    type="button"
+                    class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 ml-5"
+                    @click="RemoveEvent"
+                    style="margin-left: 20px;"
+                >
+                    Supprimer l'event
+                </button>
             </div>
         </div>
     </Modal>
@@ -52,6 +64,7 @@
 <script>
 
 import Modal from "./unitary_elements/modalComponent.vue"
+import api from "@/javascript/axios_events"
 
 function formatDate(d) {
     const year = d.getFullYear();
@@ -65,6 +78,11 @@ function formatDate(d) {
 export default {
 
     props: {
+        showDeleteButton: {
+            type: Boolean,
+            required: true,
+        },
+
         form: {
             type: Object,
             required: true,
@@ -85,6 +103,11 @@ export default {
     },
 
     methods: {
+        async RemoveEvent() {
+            this.$emit('cancelSignal', !this.isOpen)
+            const response = await api.deleteEvent(this.form.event_id)
+        },
+
         Cancel() {
             this.$emit('cancelSignal', !this.isOpen)
         },

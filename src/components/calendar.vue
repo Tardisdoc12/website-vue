@@ -22,8 +22,9 @@
 
     <ModalEvents 
         v-if="seeModalEvent"
+        :showDeleteButton="allowedCreateEvent"
         :form="eventSelected"
-        @cancelSignal="(e) => {seeModalEvent=e; eventSelected={}}"
+        @cancelSignal="closeEvent"
         @inscriptWanted="(e) => {inscribe=e; seeModalEvent=!seeModalEvent}"
     />
 
@@ -116,6 +117,11 @@ export default {
         },
     },
     methods: {
+        async closeEvent(e) {
+            this.seeModalEvent=e;
+            this.eventSelected={};
+            this.events = await eventsService.getAllEvents();
+        },
 
         async creationSuccess() {
             this.cancelCreateEvent=false
