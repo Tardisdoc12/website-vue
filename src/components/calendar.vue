@@ -1,4 +1,11 @@
 <template>
+    <button
+        type="button"
+        class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+        @click="cancelCreateEvent = true"
+    >
+        Créer un évènement
+    </button>
     <div class="calendar-wrapper">
         <FullCalendar
             ref="fullCalendar"
@@ -6,6 +13,11 @@
         />
     </div>
     
+    <ModalCreateEvent
+        v-if="cancelCreateEvent"
+        @cancelSignal="cancelCreateEvent=false"
+    />
+
     <ModalEvents 
         v-if="seeModalEvent"
         :form="eventSelected"
@@ -27,6 +39,7 @@
 import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction"
+import ModalCreateEvent from "@/components/formulaire.vue"
 import ModalEvents from "./subcomponents/modal_event.vue"
 import ModalInscript from "./subcomponents/modal_form_inscription.vue"
 import eventsService from '@/javascript/axios_events.js';
@@ -41,6 +54,7 @@ export default {
         return {
             seeModalEvent: false,
             inscribe: false,
+            cancelCreateEvent:false,
             eventSelected: {},
             events: [],
             user:{},
@@ -171,7 +185,7 @@ export default {
             }
         }
     },
-    components: { FullCalendar, ModalEvents, ModalInscript },
+    components: { FullCalendar, ModalEvents, ModalInscript, ModalCreateEvent },
 };
 </script>
 
