@@ -16,6 +16,7 @@
     <ModalCreateEvent
         v-if="cancelCreateEvent"
         @cancelSignal="cancelCreateEvent=false"
+        :onSuccess="creationSuccess"
     />
 
     <ModalEvents 
@@ -111,6 +112,12 @@ export default {
         },
     },
     methods: {
+
+        async creationSuccess() {
+            this.cancelCreateEvent=false
+            this.events = await eventsService.getAllEvents();
+        },
+
         dayRender(arg) {
             arg.isDisabled = arg.isPast
             if (arg.isPast) {

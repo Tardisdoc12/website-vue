@@ -106,6 +106,13 @@ import eventsService from '../javascript/axios_events.js';
 import Categories from "../javascript/constants.js"
 
 export default {
+    props: {
+        onSuccess: {
+            type: Function,
+            default: null,
+        }
+    },
+
     data() {
         return {
             form: {
@@ -233,6 +240,9 @@ export default {
                 categorie: '',
                 subscribePlace: 1,
                 nonsubscribePlace: 0,
+            }
+            if (this.onSuccess) {
+                await this.onSuccess()
             }
         }
     },
