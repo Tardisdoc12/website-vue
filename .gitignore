@@ -141,3 +141,4 @@ vite.config.ts.timestamp-*
 vue-app/
 cert.pem
 key.pem
+*.zip
