@@ -1,5 +1,6 @@
 <template>
     <Modal
+        v-if="!visualiseInscrit"
         :title="form.title"
         :isCancel="isOpen"
         @changeBool="Cancel"
@@ -67,14 +68,32 @@
                 >
                     Supprimer l'event
                 </button>
+
+                <!-- visualisation -->
+                <button
+                    v-if="showDeleteButton"
+                    type="button"
+                    class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 ml-5"
+                    @click="VisualizeInscrit"
+                    style="margin-left: 20px;"
+                >
+                    Voir les inscrits
+                </button>
             </div>
         </div>
     </Modal>
+
+    <ModalInscrit
+        v-if="visualiseInscrit"
+        :userRegister="form.users"
+        @cancelSignal="Cancel"
+    />
 </template>
 
 <script>
 
 import Modal from "./unitary_elements/modalComponent.vue"
+import ModalInscrit from "./modal_inscrits.vue"
 import api from "@/javascript/axios_events"
 
 function formatDate(d) {
@@ -98,6 +117,7 @@ export default {
             type: Object,
             required: true,
         },
+
         roles: {
             type: Array,
             required: false
@@ -108,7 +128,12 @@ export default {
         return {
             isWantedInscript: false,
             isOpen: true,
+            visualiseInscrit: false,
         }
+    },
+
+    mounted() {
+        console.log(this.form)
     },
 
     computed: {
@@ -148,6 +173,10 @@ export default {
     },
 
     methods: {
+        VisualizeInscrit() {
+            this.visualiseInscrit = true
+        },
+
         async RemoveEvent() {
             this.$emit('cancelSignal', !this.isOpen)
             const response = await api.deleteEvent(this.form.event_id)
@@ -163,7 +192,8 @@ export default {
     },
 
     components: {
-        Modal
+        Modal,
+        ModalInscrit
     }
 }
 </script>

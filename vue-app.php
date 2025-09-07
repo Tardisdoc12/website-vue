@@ -228,7 +228,7 @@ function monplugin_get_events(WP_REST_Request $request) {
     foreach ($events as $event) {
         // Récupérer les utilisateurs inscrits pour cet événement
         $users = $wpdb->get_results($wpdb->prepare(
-            "SELECT u.id, u.user_name, u.email, u.phone, u.experience 
+            "SELECT u.id, u.user_name, u.email, u.phone, u.experience, i.goal
              FROM $table_inscrits i
              JOIN $table_users u ON u.id = i.user_id
              WHERE i.event_id = %d",
@@ -287,7 +287,7 @@ function monplugin_get_event_id(WP_REST_Request $request) {
     // Récupérer les utilisateurs inscrits
     $users = $wpdb->get_results(
         $wpdb->prepare(
-            "SELECT u.id, u.user_name, u.email, u.phone, u.experience  
+            "SELECT u.id, u.user_name, u.email, u.phone, u.experience, i.goal
              FROM $table_inscrits i
              JOIN $table_users u ON u.id = i.user_id
              WHERE i.event_id = %d",
@@ -472,8 +472,8 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
     $wpdb->insert($table_inscrits, [
         'user_id' => $user_id,
         'event_id' => $event_id,
-        'bike' => sanitize_text_field($request['bike']),
-        'goal'=> sanitize_textarea_field($request['goal']),
+        'bike' => sanitize_textarea_field($request->get_param('bike')),
+        'goal'=> sanitize_textarea_field($request->get_param('goal')),
     ]);
 
     if ($wpdb->last_error) {
