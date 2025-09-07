@@ -24,6 +24,7 @@
         v-if="seeModalEvent"
         :showDeleteButton="allowedCreateEvent"
         :form="eventSelected"
+        :roles="user?.roles"
         @cancelSignal="closeEvent"
         @inscriptWanted="(e) => {inscribe=e; seeModalEvent=!seeModalEvent}"
     />
@@ -141,33 +142,53 @@ export default {
         renderEvent(arg) {
             const title = arg.event.title;
             let number = parseInt(arg.event.extendedProps.nonsubscribePlace);
-            if (parseInt(arg.event.extendedProps.subscribePlace) > 0) {
-                number += parseInt(arg.event.extendedProps.subscribePlace)
+            if (this.user?.roles) {
+                if(!this.user.roles.includes("non_adherent")) {
+                    number = parseInt(arg.event.extendedProps.subscribePlace);
+                }
             }
-            number = number - Array.from(arg.event.extendedProps.users).length;
             
             const hour = arg.timeText
             const wrapper = document.createElement('div');
-            wrapper.innerHTML = `
-            <div class="background-card">
-                <div class="event-row">
-                    <div class="event-card"></div>
-                    <div class="event-content">
-                        <span class="event-font">
-                            ${hour}
-                        </span>
-                        <div>
-                            <b class="event-font">${title}</b>
-                        </div>
-                        <div>
-                            <small class="event-font">
-                                ${number} places disponibles
-                            </small>
+            if (number >= 0) {
+                wrapper.innerHTML = `
+                <div class="background-card">
+                    <div class="event-row">
+                        <div class="event-card"></div>
+                        <div class="event-content">
+                            <span class="event-font">
+                                ${hour}
+                            </span>
+                            <div>
+                                <b class="event-font">${title}</b>
+                            </div>
+                            <div>
+                                <small class="event-font">
+                                    ${number} places disponibles
+                                </small>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            `;
+                `;
+            }
+            else {
+                wrapper.innerHTML = `
+                <div class="background-card">
+                    <div class="event-row">
+                        <div class="event-card"></div>
+                        <div class="event-content">
+                            <span class="event-font">
+                                ${hour}
+                            </span>
+                            <div>
+                                <b class="event-font">${title}</b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }
             let bgColor;
             let backgroundColorCard;
             let colorWritting = "rgba(0, 0, 0, 1)";

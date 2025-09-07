@@ -132,7 +132,7 @@ function mon_plugin_creer_tables() {
         id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
         title VARCHAR(200) NOT NULL,
         start_date DATETIME NOT NULL,
-        end_date DATETIME NOT NULL,
+        end_date DATETIME NULL,
         description TEXT NOT NULL,
         place VARCHAR(200) NOT NULL,
         category VARCHAR(100) NOT NULL,
@@ -396,6 +396,7 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
     $table_users    = $wpdb->prefix . "users_inscrits";
     $event_id = $request->get_param('event_id'); 
     $user_d = $request->get_param('user');
+    $roles    = isset($user_d['roles']) && is_array($user_d['roles']) ? array_map('sanitize_text_field', $user_d['roles']) : [];
 
     // Vérifier si l’événement existe
     $event = $wpdb->get_row($wpdb->prepare(
@@ -444,6 +445,29 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
             'message' => 'Utilisateur déjà inscrit à cet événement.'
         ];
     }
+
+    // Décider quelle colonne décrémenter
+    if (empty($roles) || in_array('nonadherent', $roles, true)) {
+        $column = 'nonsubscribe_places';
+        // Vérifier s'il reste des places
+        if ($event->$column <= 0) {
+            return new WP_Error('no_places', 'Plus de places disponibles pour ce type.', ['status' => 400]);
+        }
+    } else {
+        $column = 'subscribe_places';
+        // Vérifier s'il reste des places
+        if ($event->$column == 0) {
+            return new WP_Error('no_places', 'Plus de places disponibles pour ce type.', ['status' => 400]);
+        }
+    }
+
+
+
+    // Décrémenter le nombre de places
+    $wpdb->query($wpdb->prepare(
+        "UPDATE $table_events SET $column = $column - 1 WHERE id = %d",
+        $event_id
+    ));
 
     $wpdb->insert($table_inscrits, [
         'user_id' => $user_id,

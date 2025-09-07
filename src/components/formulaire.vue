@@ -225,8 +225,7 @@ export default {
                 }
             }
             else {
-                this.endDateForm = new Date(this.startDateForm);
-                this.endDateForm.setHours(23, 59, 0, 0);
+                this.endDateForm = null;
             }
             
             alert("Événement créé avec succès !")

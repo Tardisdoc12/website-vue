@@ -126,6 +126,7 @@ export default {
                 email: this.user?.email ?? "",
                 experience:"",
                 goal:"",
+                roles: this.user?.roles ?? []
             },
         }
     },

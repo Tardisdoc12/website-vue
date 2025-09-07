@@ -18,15 +18,15 @@
             </p>
 
             <!-- Adherent Slots -->
-            <p style="margin-bottom: 10px;">
-                <span style="font-weight: bold; text-decoration: underline;">{{ "Nombre de place pour les adhérents :" }}</span>
+            <p style="margin-bottom: 10px;" v-if="isAdherent">
+                <span style="font-weight: bold; text-decoration: underline;">{{ "Nombre de place :" }}</span>
                 <span style="padding: 15px" v-if="form.subscribePlace > 0">{{ form.subscribePlace }}</span>
                 <span style="padding: 15px" v-if="!(form.subscribePlace > 0)">{{ "illimté" }}</span>
             </p>
 
             <!-- Non Adherent Slots -->
-            <p  style="margin-bottom: 10px;">
-                <span style="font-weight: bold; text-decoration: underline;">{{ "Nombre de place pour les non adhérents :" }}</span>
+            <p  style="margin-bottom: 10px;" v-else>
+                <span style="font-weight: bold; text-decoration: underline;">{{ "Nombre de place :" }}</span>
                 <span style="padding: 15px">{{ form.nonsubscribePlace }}</span>
             </p>
 
@@ -39,8 +39,19 @@
             <!-- bouton -->
             <div class="flex items-center justify-center">
                 <button
+                    :disabled="disableSubscribe"
                     type="button"
-                    class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                    class="appearance-none focus:outline-none px-4 py-2 rounded 
+                    text-white 
+                    bg-green-500 hover:bg-green-600 
+                    disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    :style="{
+                        display: inline-block,
+                        color: white,
+                        padding: '0.5rem 1rem',
+                        borderRadius: '0.375rem',
+                        backgroundColor: disableSubscribe ? '#9ca3af' : '#22c55e'
+                    }"
                     @click="Register"
                 >
                     Inscription
@@ -72,7 +83,7 @@ function formatDate(d) {
     const day = String(d.getDate()).padStart(2, '0');
     const hours = String(d.getHours()).padStart(2, '0');
     const minutes = String(d.getMinutes()).padStart(2, '0');
-    return `${hours}:${minutes} le ${day}/${month}/${year}`;
+    return `le ${day}/${month}/${year} à ${hours}:${minutes}`;
 }
 
 export default {
@@ -86,6 +97,10 @@ export default {
         form: {
             type: Object,
             required: true,
+        },
+        roles: {
+            type: Array,
+            required: false
         }
     },
 
@@ -97,8 +112,38 @@ export default {
     },
 
     computed: {
+        isAdherent() {
+            if (this.roles) {
+                return !this.roles.includes("non_adherent")
+            }
+            return false
+        },
+
+        disableSubscribe() {
+            if (this.roles) {
+                if (!this.roles.includes("non_adherent") && (this.form.subscribePlace != 0))
+                {
+                    return false
+                }
+                else if (this.roles.includes("non_adherent") && (this.form.nonsubscribePlace > 0))
+                {
+                    return false
+                }
+                return true
+            }
+            if (this.form.nonsubscribePlace > 0) {
+                return false
+            }
+            return true
+        },
+
         espaceDate() {
-            return "De " + formatDate(new Date(this.form.startDate)) + " à " + formatDate(new Date(this.form.endDate))
+            if (this.form.endDate) {
+                return formatDate(new Date(this.form.startDate)) + " jusqu'à " + formatDate(new Date(this.form.endDate))
+            } else {
+                return formatDate(new Date(this.form.startDate))
+            }
+            
         }
     },
 
