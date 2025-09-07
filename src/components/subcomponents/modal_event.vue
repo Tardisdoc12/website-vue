@@ -7,6 +7,9 @@
     >
         <!-- Corps de l'annonce -->
         <div class="body">
+            <div v-if="showDeleteButton" style="margin-bottom: 10px;">
+                <small @click="RemoveEvent">Supprimer l'évènement</small>
+            </div>
             <!-- Dates -->
              <div style="margin-bottom: 10px;">
                 <span style="font-weight: bold; text-decoration: underline;">{{ "Date :"}}</span>
@@ -58,22 +61,18 @@
                     Inscription
                 </button>
 
-                <!-- Suppression de l'event -->
-                <button
-                    v-if="showDeleteButton"
-                    type="button"
-                    class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 ml-5"
-                    @click="RemoveEvent"
-                    style="margin-left: 20px;"
-                >
-                    Supprimer l'event
-                </button>
-
                 <!-- visualisation -->
                 <button
                     v-if="showDeleteButton || isEncadrant"
                     type="button"
-                    class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 ml-5"
+                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600 ml-5"
+                    :style="{
+                        display: inline-block,
+                        color: white,
+                        padding: '0.5rem 1rem',
+                        borderRadius: '0.375rem',
+                        backgroundColor: '#2563EB'
+                    }"
                     @click="VisualizeInscrit"
                     style="margin-left: 20px;"
                 >
