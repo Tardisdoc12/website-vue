@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="flex flex-col items-center justify-center space-y-2">
         <!-- Ligne cliquable -->
         <div class="switch-link" v-if="!isAuthenticated">
             <p v-if="!hasAccount" @click="hasAccount = true">
