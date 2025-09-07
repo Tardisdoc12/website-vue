@@ -1,12 +1,4 @@
 <template>
-    <button
-        v-if="allowedCreateEvent"
-        type="button"
-        class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-        @click="cancelCreateEvent = true"
-    >
-        Créer un évènement
-    </button>
     <div class="calendar-wrapper">
         <FullCalendar
             ref="fullCalendar"
@@ -83,9 +75,10 @@ export default {
     computed: {
         eventsList() {
                 return this.events.map((e) => {
+                    let endDate = e.endDate || e.startDate;
                     return {
                         start: e.startDate,
-                        end: e.endDate,
+                        end: endDate,
                         event_id:e.id,
                         ...e
                     }
@@ -94,6 +87,17 @@ export default {
         },
 
         calendarOptions() {
+            // Créer customButtons seulement si nécessaire
+            const customButtons = this.allowedCreateEvent ? {
+                myCustomButton: {
+                    text: 'Créer un évènement',
+                    click: () => {
+                        this.cancelCreateEvent = true;
+                    }
+                }
+            } : {};
+            const rightToolbar = this.allowedCreateEvent ? 'today myCustomButton prev,next' : 'today prev,next';
+
             return {
                 plugins: [dayGridPlugin, interactionPlugin],
                 initialView: 'dayGridMonth',
@@ -104,7 +108,6 @@ export default {
                 showNonCurrentDates: false,
                 firstDay: 1,
                 contentHeight: 'auto',
-                aspectRatio: 1.2,
                 eventContent: this.renderEvent,
                 buttonText: {
                     today: "Aujourd'hui",
@@ -114,6 +117,12 @@ export default {
                     list: "Liste",
                 },
                 dayCellDidMount: this.dayRender,
+                customButtons,
+                // Configurer la toolbar pour inclure le bouton
+                headerToolbar: {
+                    right: rightToolbar, // le bouton apparaît à côté de "today"
+                    left: 'title'
+                }
             }
         },
     },
@@ -150,6 +159,11 @@ export default {
             
             const hour = arg.timeText
             const wrapper = document.createElement('div');
+
+            wrapper.style.width = "100%";        // prend toute la largeur
+            wrapper.style.boxSizing = "border-box"; // évite les débordements
+            wrapper.style.overflow = "hidden";   // coupe si trop long
+            wrapper.style.display = "block"; // étendre comme un block
             if (number >= 0) {
                 wrapper.innerHTML = `
                 <div class="background-card">
@@ -183,6 +197,11 @@ export default {
                             </span>
                             <div>
                                 <b class="event-font">${title}</b>
+                            </div>
+                            <div>
+                                <small class="event-font">
+                                    inscriptions ouvertes
+                                </small>
                             </div>
                         </div>
                     </div>
@@ -228,55 +247,49 @@ export default {
 </script>
 
 <style>
-.fc .event-font {
+.event-font {
     font-size: 10px;
 }
 
-.fc .background-card {
+.background-card {
   background-color: rgba(50,255,255,0.2);
   border-radius: 4px;
-  display: block;
-  padding: 2px 4px;
-  max-width: 100% !important;
-  overflow: hidden;
+  padding: 4px 2px;
 }
 
-.fc .event-row {
-  align-items: stretch;
-  width: 100%;
-  min-width: 0;
+.event-row {
+    display:flex;
+    align-items: stretch;
+    
 }
 
-.fc .event-card {
-  background-color: aqua;
-  border-top-right-radius: 12px;
-  border-bottom-right-radius: 12px;
-  width: 8px;
+.event-card {
+    background-color: aqua;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    width: 8px;
+    min-width: 8px;   /* 👈 empêche la compression */
+    flex-shrink: 0;
 }
 
-.fc .event-content {
+.event-content {
   flex: 1;
   padding-top: 2px;
   padding-bottom: 2px;
   padding-left: 8px;
   line-height: 1.2;
-  min-width: 0;
 }
 
-.fc .event-content b {
+.event-content b {
   white-space: nowrap;       /* Pas de retour à la ligne */
   overflow: hidden;          /* Cache le surplus */
-  text-overflow: ellipsis;   /* Ajoute ... */
-  display: block;
-  max-width: 100%;
+  text-overflow: ellipsis;
 }
 
-.fc .event-content small {
+.event-content small {
   white-space: nowrap;       /* Pas de retour à la ligne */
   overflow: hidden;          /* Cache le surplus */
-  text-overflow: ellipsis;   /* Ajoute ... */
-  display: block;
-  max-width: 100%;
+  text-overflow: ellipsis;
 }
 
 .fc-day-disabled {
@@ -293,8 +306,5 @@ export default {
   padding: 20px;
 }
 
-.calendar-wrapper .fc {
-  max-width: 900px; /* largeur max du calendrier */
-  width: 100%;      /* occupe toute la largeur disponible */
-}
+
 </style>
