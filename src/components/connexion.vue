@@ -42,6 +42,7 @@
 
 <script>
 import apiWP from "../javascript/users_wp"
+import { jwtDecode } from "jwt-decode"
 
 export default {
     props: {
@@ -64,6 +65,9 @@ export default {
             try {
                 const data = await apiWP.verify_connexion(this.formUser.email, this.formUser.password)
                 sessionStorage.setItem("mps_moto", data.token)
+                const decoded = jwtDecode(data.token)
+                const user_id = decoded.data.user.id
+                const setUserWP = await apiWP.connect_user(user_id)
                 alert("Connecté avec succès !")
                 if (this.onSuccess) {
                     this.onSuccess(data.token)

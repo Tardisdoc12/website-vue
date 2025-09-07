@@ -30,4 +30,9 @@ export default {
         const response = await api.post(url_connect, body)
         return response.data
     },
+
+    async connect_user(user_id) {
+        const response = await api.post("/connect",{"user_id": user_id})
+        return response
+    }
 }
