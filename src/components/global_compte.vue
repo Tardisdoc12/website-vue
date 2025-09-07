@@ -34,7 +34,7 @@ export default {
     
     data() {
         return {
-            hasAccount: false,
+            hasAccount: true,
             token: sessionStorage.getItem("mps_moto"),
         }
     },
