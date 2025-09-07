@@ -71,7 +71,7 @@
 
                 <!-- visualisation -->
                 <button
-                    v-if="showDeleteButton"
+                    v-if="showDeleteButton || isEncadrant"
                     type="button"
                     class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 ml-5"
                     @click="VisualizeInscrit"
@@ -140,6 +140,13 @@ export default {
         isAdherent() {
             if (this.roles) {
                 return !this.roles.includes("non_adherent")
+            }
+            return false
+        },
+
+        isEncadrant() {
+            if(this.roles) {
+                return roles.includes("encadrant")
             }
             return false
         },
