@@ -11,6 +11,7 @@
                 <div class="flex flex-col gap-1">
                     <label class="block font-medium">
                         Prénom et Nom
+                        <span style="color: red;">*</span>
                     </label>
                     <input
                         v-model="formUser.name"
@@ -24,6 +25,7 @@
                 <div class="flex flex-col gap-1">
                     <label class="block font-medium">
                         E-mail
+                        <span style="color: red;">*</span>
                     </label>
                     <input
                         v-model="formUser.email"
@@ -37,6 +39,7 @@
                 <div class="flex flex-col gap-1">
                     <label class="block font-medium">
                         Téléphone
+                        <span style="color: red;">*</span>
                     </label>
                     <input
                         v-model="formUser.phone"
@@ -50,7 +53,7 @@
                 <!-- Moto/Cylindré -->
                 <div class="flex flex-col gap-1">
                     <label class="block font-medium">
-                        Moto/Cylindré
+                        Moto/Cylindré <span style="color: red;">*</span>
                     </label>
                     <input
                         v-model="formUser.bike"
@@ -61,9 +64,9 @@
                 </div>
 
                 <!-- experience -->
-                <div class="flex flex-col gap-1">
+                <div class="flex flex-col gap-1" v-if="!isAdherent">
                     <label class="block font-medium">
-                        Quel est votre expérience à moto?
+                        Quelle est votre expérience à moto? <span style="color: red;">*</span>
                     </label>
                     <textarea v-model="formUser.experience" class="w-full border p-1 rounded" rows="4" required></textarea>
                 </div>
@@ -73,7 +76,7 @@
                     <label class="block font-medium">
                         Souhaitez-vous travailler un thème particulier?
                     </label>
-                    <textarea v-model="formUser.goal" class="w-full border p-1 rounded" rows="4" required></textarea>
+                    <textarea v-model="formUser.goal" class="w-full border p-1 rounded" rows="4"></textarea>
                 </div>
 
             </div>
@@ -148,6 +151,15 @@ export default {
                     }
                 }
             }
+        }
+    },
+
+    computed: {
+        isAdherent() {
+            if(this.user?.roles) {
+                return !this.user.roles.includes("non_adherent")
+            }
+            return false
         }
     },
 

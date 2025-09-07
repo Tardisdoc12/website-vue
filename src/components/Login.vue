@@ -8,6 +8,7 @@
                 <div class="flex flex-col gap-1">
                     <label class="block font-medium">
                         Prénom
+                        <span style="color: red;">*</span>
                     </label>
                     <input
                         v-model="formUser.firstName"
@@ -20,6 +21,7 @@
                 <div class="flex flex-col gap-1">
                     <label class="block font-medium">
                         Nom
+                        <span style="color: red;">*</span>
                     </label>
                     <input
                         v-model="formUser.lastName"
@@ -34,6 +36,7 @@
                 <div class="flex flex-col gap-1">
                     <label class="block font-medium">
                         E-mail
+                        <span style="color: red;">*</span>
                     </label>
                     <input
                         v-model="formUser.email"
@@ -47,6 +50,7 @@
                 <div class="flex flex-col gap-1">
                     <label class="block font-medium">
                         Téléphone
+                        <span style="color: red;">*</span>
                     </label>
                     <input
                         v-model="formUser.phone"
@@ -61,6 +65,7 @@
                 <div class="flex flex-col gap-1">
                     <label class="block font-medium">
                         Moto/Cylindrée
+                        <span style="color: red;">*</span>
                     </label>
                     <input
                         v-model="formUser.bike"
@@ -74,14 +79,25 @@
                 <div class="flex flex-col gap-1">
                     <label class="block font-medium">
                         Mot de passe
+                        <span style="color: red;">*</span>
                     </label>
                     <input
                         v-model="formUser.password"
-                        type="password"
+                        :type="showPassword ? 'text' : 'password'"
                         class="w-full border p-1 rounded"
                         minlength="8"
                         required
                     />
+
+                    <!-- Bouton œil à l'intérieur de l'input -->
+                    <button
+                        type="button"
+                        @click="showPassword = !showPassword"
+                        tabindex="-1"
+                    >
+                        <span v-if="showPassword">👁️</span>
+                        <span v-else>🙈</span>
+                    </button>
 
                     <ul class="text-xs mt-1 space-y-1">
                         <span>{{ "Doit contenir :" }}</span>
@@ -100,6 +116,7 @@
                 <div class="flex flex-col gap-1">
                     <label class="block font-medium">
                         Confirmer le mot de passe
+                        <span style="color: red;">*</span>
                     </label>
                     <input
                         v-model="formUser.confirmPassword"
@@ -140,6 +157,7 @@ export default {
 
     data() {
         return {
+            showPassword: false,
             formUser: {
                 firstName:"",
                 lastName:"",
@@ -201,7 +219,7 @@ export default {
                 { text: "Au moins 1 majuscule", valid: /[A-Z]/.test(pwd) },
                 { text: "Au moins 1 minuscule", valid: /[a-z]/.test(pwd) },
                 { text: "Au moins 1 chiffre", valid: /[0-9]/.test(pwd) },
-                { text: "Au moins 1 caractère spécial (*!/@.)", valid: /[*!/@.]/.test(pwd) },
+                { text: `Au moins 1 caractère spécial (*!/@.'"#;?&)`, valid: /[*!/@.'"#;?&]/.test(pwd) },
             ];
         },
     }
