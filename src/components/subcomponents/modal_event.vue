@@ -21,19 +21,6 @@
                 <span style="padding: 15px">{{ form.place }}</span>
             </p>
 
-            <!-- Adherent Slots -->
-            <p style="margin-bottom: 10px;" v-if="isAdherent">
-                <span style="font-weight: bold; text-decoration: underline;">{{ "Nombre de place :" }}</span>
-                <span style="padding: 15px" v-if="form.subscribePlace > 0">{{ form.subscribePlace }}</span>
-                <span style="padding: 15px" v-if="!(form.subscribePlace > 0)">{{ "illimté" }}</span>
-            </p>
-
-            <!-- Non Adherent Slots -->
-            <p  style="margin-bottom: 10px;" v-else>
-                <span style="font-weight: bold; text-decoration: underline;">{{ "Nombre de place :" }}</span>
-                <span style="padding: 15px">{{ form.nonsubscribePlace }}</span>
-            </p>
-
             <!-- Description -->
              <div style="margin-bottom: 10px;">
                 <span style="font-weight: bold; text-decoration: underline;">{{ "Description :"}}</span>

@@ -46,13 +46,8 @@ function vue_shortcode($atts, $content, $tag) {
         ]);
     }
 
-    // Localize le nonce **après** l’enqueue du script
-    wp_localize_script("vue-{$tag}-js", 'vueAppData', [
-        'nonce' => wp_create_nonce('wp_rest'),
-    ]);
-
     // Div ID basé sur le shortcode
-    $div_id = str_replace('_', '-', $tag);
+    $div_id = $tag;
     return "<div id=\"{$div_id}\"></div>";
 }
 
@@ -417,9 +412,15 @@ function monplugin_delete_subscribe(WP_REST_Request $request) {
     );
 
     if ($isAdherent) {
-        $wpdb->query(
-            $wpdb->prepare("UPDATE $table_events SET subscribe_places = subscribe_places + 1 WHERE id = %d", $event_id)
+        $subscribe_places = $wpdb->get_var(
+            $wpdb->prepare("SELECT subscribe_places FROM $table_events WHERE id = %d", $event_id)
         );
+        if($subscribe_places >= 0) {
+            $wpdb->query(
+                $wpdb->prepare("UPDATE $table_events SET subscribe_places = subscribe_places + 1 WHERE id = %d", $event_id)
+            );
+        }
+
     } else {
         $wpdb->query(
             $wpdb->prepare("UPDATE $table_events SET nonsubscribe_places = nonsubscribe_places + 1 WHERE id = %d", $event_id)

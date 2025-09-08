@@ -159,9 +159,19 @@ export default {
         renderEvent(arg) {
             const title = arg.event.title;
             let number = parseInt(arg.event.extendedProps.nonsubscribePlace);
+            let places_available = "inscriptions ouvertes"
+            if (number <= 0) {
+                places_available = "complet"
+            }
             if (this.user?.roles) {
                 if(!this.user.roles.includes("non_adherent")) {
                     number = parseInt(arg.event.extendedProps.subscribePlace);
+                    if(number === 0){
+                        places_avalaible = "complet"
+                    }
+                    else {
+                        places_available = "inscriptions ouvertes"
+                    }
                 }
             }
             
@@ -172,8 +182,8 @@ export default {
             wrapper.style.boxSizing = "border-box"; // évite les débordements
             wrapper.style.overflow = "hidden";   // coupe si trop long
             wrapper.style.display = "block"; // étendre comme un block
-            if (number >= 0) {
-                wrapper.innerHTML = `
+            
+            wrapper.innerHTML = `
                 <div class="background-card">
                     <div class="event-row">
                         <div class="event-card"></div>
@@ -186,36 +196,14 @@ export default {
                             </div>
                             <div>
                                 <small class="event-font">
-                                    ${number} places disponibles
+                                    ${places_available}
                                 </small>
                             </div>
                         </div>
                     </div>
                 </div>
-                `;
-            }
-            else {
-                wrapper.innerHTML = `
-                <div class="background-card">
-                    <div class="event-row">
-                        <div class="event-card"></div>
-                        <div class="event-content">
-                            <span class="event-font">
-                                ${hour}
-                            </span>
-                            <div>
-                                <b class="event-font">${title}</b>
-                            </div>
-                            <div>
-                                <small class="event-font">
-                                    inscriptions ouvertes
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                `;
-            }
+            `;
+           
             let bgColor;
             let backgroundColorCard;
             let colorWritting = "rgba(0, 0, 0, 1)";
