@@ -13,14 +13,6 @@
     <div v-else>
         <p>Aucun utilisateur connecté.</p>
     </div>
-
-    <div v-if="isAdherent" class="adhesion-container">
-        <h2>Pour devenir Adherent</h2>
-        <iframe class="adhesion-iframe" src="https://www.helloasso.com/associations/mps-moto/adhesions/devenir-adherent/widget"></iframe>
-    </div>
-    <div v-else>
-        <p>{{ "WIP" }}</p>
-    </div>
 </template>
 
 <script>
@@ -43,17 +35,6 @@ export default {
             this.user = user_info.user
         }
     },
-
-    computed: {
-        isAdherent() {
-            if(this.user?.roles) {
-                if (!this.user.roles.includes("non_adherent")) {
-                    return true
-                }
-            }
-            return false
-        }
-    }
 }
 
 </script>
@@ -77,16 +58,4 @@ export default {
   margin-bottom: 0.5rem;
 }
 
-.adhesion-container {
-  max-width: 900px;   /* largeur max du bloc */
-  margin: 2rem auto;  /* centré horizontalement */
-}
-
-.adhesion-iframe {
-  width: 100%;
-  height: 800px;   /* 👈 hauteur fixée pour afficher tout le widget */
-  border: none;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
 </style>

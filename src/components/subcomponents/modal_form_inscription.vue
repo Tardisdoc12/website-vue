@@ -78,7 +78,6 @@
                     </label>
                     <textarea v-model="formUser.goal" class="w-full border p-1 rounded" rows="4"></textarea>
                 </div>
-
             </div>
 
             <!-- bouton -->

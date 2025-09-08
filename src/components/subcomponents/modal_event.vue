@@ -85,6 +85,7 @@
     <ModalInscrit
         v-if="visualiseInscrit"
         :userRegister="form.users"
+        :event_id="form.event_id"
         @cancelSignal="Cancel"
     />
 </template>
@@ -131,10 +132,6 @@ export default {
         }
     },
 
-    mounted() {
-        console.log(this.form)
-    },
-
     computed: {
         isAdherent() {
             if (this.roles) {
@@ -145,7 +142,7 @@ export default {
 
         isEncadrant() {
             if(this.roles) {
-                return roles.includes("encadrant")
+                return this.roles.includes("encadrant")
             }
             return false
         },

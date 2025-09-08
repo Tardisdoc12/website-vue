@@ -27,7 +27,11 @@
         :event_id="eventSelected.event_id"
         :user="user"
         @cancelSignal="(e) => {inscribe=e; eventSelected={}}"
-        @inscritValid="(e) => {inscribe=e; eventSelected={}}"
+        @inscritValid="(e) => {inscribe=e; payement=true;}"
+    />
+    <ModalPayement
+        v-if="payement && eventSelected.categorie === 'seance'"
+        @cancelSignal="(e) => {payement=false; eventSelected={}}"
     />
 </template>
 
@@ -38,6 +42,7 @@ import interactionPlugin from "@fullcalendar/interaction"
 import ModalCreateEvent from "@/components/formulaire.vue"
 import ModalEvents from "./subcomponents/modal_event.vue"
 import ModalInscript from "./subcomponents/modal_form_inscription.vue"
+import ModalPayement from "./subcomponents/modal_payement.vue"
 import eventsService from '@/javascript/axios_events.js';
 import Categories from "@/javascript/constants"
 import { jwtDecode } from "jwt-decode"
@@ -54,6 +59,7 @@ export default {
             events: [],
             user:{},
             allowedCreateEvent:false,
+            payement:false,
         }
     },
 
@@ -244,7 +250,7 @@ export default {
             }
         }
     },
-    components: { FullCalendar, ModalEvents, ModalInscript, ModalCreateEvent },
+    components: { FullCalendar, ModalEvents, ModalInscript, ModalCreateEvent, ModalPayement },
 };
 </script>
 

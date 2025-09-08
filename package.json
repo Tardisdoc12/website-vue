@@ -13,7 +13,8 @@
     "build:events": "ENTRY=events vite build",
     "build:connexion": "ENTRY=connexion vite build",
     "build:account": "ENTRY=account vite build",
-    "build:all": "npm run build:login && npm run build:calendar && npm run build:events && npm run build:connexion && npm run build:account",
+    "build:form_adhesion": "ENTRY=form_adhesion vite build",
+    "build:all": "npm run build:login && npm run build:calendar && npm run build:events && npm run build:connexion && npm run build:account && npm run build:form_adhesion",
     "preview": "vite preview"
   },
   "dependencies": {

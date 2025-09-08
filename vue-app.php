@@ -57,7 +57,7 @@ function vue_shortcode($atts, $content, $tag) {
 }
 
 // Enregistrer les shortcodes
-$shortcodes = ['login', 'calendar', 'events', 'connexion', 'account'];
+$shortcodes = ['login', 'calendar', 'events', 'connexion', 'account', 'form_adhesion'];
 
 foreach ($shortcodes as $sc) {
     add_shortcode($sc, 'vue_shortcode');
@@ -159,6 +159,7 @@ function mon_plugin_creer_tables() {
         phone VARCHAR(10) NOT NULL,
         email VARCHAR(200) NOT NULL,
         experience VARCHAR(200) NOT NULL,
+        is_adherent TINYINT(1) NOT NULL DEFAULT 0,
         PRIMARY KEY (id)
     ) $charset_collate;";
 
@@ -380,6 +381,54 @@ function monplugin_delete_events(WP_REST_Request $request) {
 }
 
 //-----------------------------------------------------------------------------------
+add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1','/subscribe/(?P<user_id>\d+)/(?P<event_id>\d+)',[
+        'methods' => 'DELETE',
+        'callback' => 'monplugin_delete_subscribe',
+        'permission_callback' => 'monplugin_verify_csrf'
+    ]);
+});
+
+function monplugin_delete_subscribe(WP_REST_Request $request) {
+    global $wpdb;
+    $table_events   = $wpdb->prefix . "events";
+    $table_inscrits = $wpdb->prefix . "inscrits";
+    $table_users    = $wpdb->prefix . "users_inscrits";
+    $user_id = intval($request['user_id']);
+    $event_id = intval($request['event_id']);
+
+    $inscription = $wpdb->get_row(
+        $wpdb->prepare("SELECT * FROM $table_inscrits WHERE user_id = %d and event_id = %d", $user_id, $event_id)
+    );
+
+    if (!$inscription) {
+        return new WP_Error('not_found', 'Inscription non trouvée', ['status' => 404]);
+    }
+
+    $wpdb->delete($table_inscrits, ['user_id' => $user_id, 'event_id' => $event_id]);
+
+    $isAdherent = $wpdb->get_var(
+        $wpdb->prepare(
+            "SELECT is_adherent
+             FROM $table_users
+             WHERE id = %d",
+            $user_id
+        )
+    );
+
+    if ($isAdherent) {
+        $wpdb->query(
+            $wpdb->prepare("UPDATE $table_events SET subscribe_places = subscribe_places + 1 WHERE id = %d", $event_id)
+        );
+    } else {
+        $wpdb->query(
+            $wpdb->prepare("UPDATE $table_events SET nonsubscribe_places = nonsubscribe_places + 1 WHERE id = %d", $event_id)
+        );
+    }
+    return ['success' => true, 'message' => 'Inscription supprimée et place libérée'];
+}
+
+//-----------------------------------------------------------------------------------
 
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1','/subscribe',[
@@ -419,11 +468,13 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
     ));
 
     if (!$user) {
+        $isAdherent = in_array('non_adherent', $roles, true) ? 0 : 1;
         $wpdb->insert($table_users, [
             "user_name" => isset($user_d['name']) ? sanitize_text_field($user_d['name']) : '',
             "phone" => isset($user_d['phone']) ? sanitize_text_field($user_d['phone']) : '',
             "email" => isset($user_d['email']) ? sanitize_text_field($user_d['email']) : '',
-            "experience" => isset($user_d['experience']) ? sanitize_text_field($user_d['experience']) : ''
+            "experience" => isset($user_d['experience']) ? sanitize_text_field($user_d['experience']) : '',
+            "is_adherent" => $isAdherent
         ]);
         if ($wpdb->last_error) {
             return new WP_Error('db_insert_error', 'Erreur SQL (users) : ' . $wpdb->last_error, ['status' => 500]);
