@@ -8,7 +8,7 @@
             Aucun utilisateur
         </div>
 
-        <div v-else>
+        <div v-else style="max-height: 300px; overflow-y: auto;">
             <div style="margin-top: 10px;"></div>
             <div 
                 v-for="(user, index) in userRegister" 

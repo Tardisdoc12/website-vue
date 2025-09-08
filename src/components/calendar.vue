@@ -27,7 +27,7 @@
         :event_id="eventSelected.event_id"
         :user="user"
         @cancelSignal="(e) => {inscribe=e; eventSelected={}}"
-        @inscritValid="(e) => {inscribe=e; payement=true;}"
+        @inscritValid="inscribeEnd"
     />
     <ModalPayement
         v-if="payement && eventSelected.categorie === 'seance'"
@@ -60,6 +60,7 @@ export default {
             user:{},
             allowedCreateEvent:false,
             payement:false,
+            isAdherent:false,
         }
     },
 
@@ -75,6 +76,7 @@ export default {
             listB = this.user.roles
             listA = ['bureau', 'administrator']
             this.allowedCreateEvent = listB.some(el => listA.includes(el));
+            this.isAdherent = !listB.includes("non_adherent")
         }
     },
 
@@ -135,6 +137,17 @@ export default {
         },
     },
     methods: {
+        inscribeEnd(e) {
+            if(!this.isAdherent){
+                this.inscribe=e;
+                this.payement=true;
+            }
+            else {
+                this.inscribe=e;
+                this.eventSelected={}
+            }
+        },
+
         async closeEvent(e) {
             this.seeModalEvent=e;
             this.eventSelected={};
