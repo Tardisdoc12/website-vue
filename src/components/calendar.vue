@@ -80,6 +80,8 @@ export default {
                         start: e.startDate,
                         end: endDate,
                         event_id:e.id,
+                        backgroundColor: 'transparent',
+                        borderColor: 'transparent',
                         ...e
                     }
                 }

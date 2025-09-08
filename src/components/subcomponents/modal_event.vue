@@ -169,7 +169,8 @@ export default {
         },
 
         espaceDate() {
-            if (this.form.endDate) {
+            const invalidDates = [null, undefined, "", "0000-00-00 00:00:00"];
+            if (!invalidDates.includes(this.form.endDate) && !isNaN(new Date(this.form.endDate).getTime())) {
                 return formatDate(new Date(this.form.startDate)) + " jusqu'à " + formatDate(new Date(this.form.endDate))
             } else {
                 return formatDate(new Date(this.form.startDate))
