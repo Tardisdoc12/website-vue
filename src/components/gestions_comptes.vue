@@ -13,6 +13,16 @@
     <div v-else>
         <p>Aucun utilisateur connecté.</p>
     </div>
+
+    <div v-if="!isAdherent">
+        <div>
+            <h2>Pour devenir Adherent</h2>
+            <iframe style="width: 100%;" src="https://www.helloasso.com/associations/mps-moto/adhesions/devenir-adherent/widget"></iframe>
+        </div>
+    </div>
+    <div v-else>
+        {{ "WIP" }}
+    </div>
 </template>
 
 <script>
@@ -35,6 +45,17 @@ export default {
             this.user = user_info.user
         }
     },
+
+    computed: {
+        isAdherent() {
+            if(this.user?.roles) {
+                if (!this.user.roles.includes("non_adherent")) {
+                    return true
+                }
+            }
+            return false
+        }
+    }
 }
 
 </script>
