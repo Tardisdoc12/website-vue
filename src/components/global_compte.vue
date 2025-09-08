@@ -19,7 +19,7 @@
         <!-- Sate Account -->
         <CreateAccount v-if="(!isAuthenticated && !hasAccount)" :onSuccess="createAccountSuccess"/>
         <ConnectAccount v-else-if="(!isAuthenticated && hasAccount)" :onSuccess="loginSuccess"/>
-        <DrawAccount v-else />
+        <DrawAccount v-else class="w-full max-w-md"/>
 
     </div>
 </template>

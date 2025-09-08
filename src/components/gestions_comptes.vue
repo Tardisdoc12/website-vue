@@ -14,14 +14,12 @@
         <p>Aucun utilisateur connecté.</p>
     </div>
 
-    <div v-if="!isAdherent">
-        <div>
-            <h2>Pour devenir Adherent</h2>
-            <iframe style="width: 100%;" src="https://www.helloasso.com/associations/mps-moto/adhesions/devenir-adherent/widget"></iframe>
-        </div>
+    <div v-if="isAdherent" class="adhesion-container">
+        <h2>Pour devenir Adherent</h2>
+        <iframe class="adhesion-iframe" src="https://www.helloasso.com/associations/mps-moto/adhesions/devenir-adherent/widget"></iframe>
     </div>
     <div v-else>
-        {{ "WIP" }}
+        <p>{{ "WIP" }}</p>
     </div>
 </template>
 
@@ -77,5 +75,18 @@ export default {
 }
 .user-profile li {
   margin-bottom: 0.5rem;
+}
+
+.adhesion-container {
+  max-width: 900px;   /* largeur max du bloc */
+  margin: 2rem auto;  /* centré horizontalement */
+}
+
+.adhesion-iframe {
+  width: 100%;
+  height: 800px;   /* 👈 hauteur fixée pour afficher tout le widget */
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 </style>
