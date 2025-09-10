@@ -4,7 +4,17 @@
         :isCancel="isOpen"
         @changeBool="Cancel"
     >
-        <div v-if="userRegister.length === 0">
+        <button
+            v-if="userRegister.length !== 0"
+            style="margin-top: 10px;"
+            type="button"
+            class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+            @click="downloadCSV"
+        >
+            <font-awesome-icon icon="fa-solid fa-download" />
+        </button>
+
+        <div v-if="userRegister.length === 0" style="margin-top: 10px;">
             Aucun utilisateur
         </div>
 
@@ -47,13 +57,42 @@ export default {
         return {
             title: "Visualisation des Inscrits",
             isOpen: true,
+            fields_csv: ["Nom", "Email", "Téléphone", "Thème demandé", "Experience"],
         }
     },
 
     methods: {
+        downloadCSV() {
+            const headers = this.fields_csv.map(h => `"${h}"`);
+            
+            const rows = this.userRegister.map(obj => {
+                const values = [
+                    obj.user_name,
+                    obj.email,
+                    obj.phone,
+                    obj.goal,
+                    obj.experience
+                ].map(value => `"${String(value).replace(/"/g, '""')}"`); // Échappe les guillemets
+                return values.join(",");
+            });
+
+            const csv = "\uFEFF" + [headers.join(","), ...rows].join("\n"); // BOM UTF-8
+
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;"})
+            const url = URL.createObjectURL(blob)
+            const link = document.createElement("a")
+
+            link.href = url
+            link.setAttribute("download","inscrits.csv")
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+        },
+
         Cancel() {
             this.$emit('cancelSignal')
         },
+
         async DeleteUser(user) {
             const response = await api.delete_inscrit(this.event_id, user.id)
             alert("la personne à était retirer des inscrits veuillez recharger la liste pour voir la modification")
