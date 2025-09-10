@@ -138,7 +138,9 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
-vue-app/
+vue-app/*css
+vue-app/*.js
+vue-app/*.json
 cert.pem
 key.pem
 *.zip
