@@ -39,6 +39,7 @@
 import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction"
+import listPlugin from '@fullcalendar/list';
 import ModalCreateEvent from "@/components/formulaire.vue"
 import ModalEvents from "./subcomponents/modal_event.vue"
 import ModalInscript from "./subcomponents/modal_form_inscription.vue"
@@ -108,19 +109,31 @@ export default {
         },
 
         calendarOptions() {
-            // Créer customButtons seulement si nécessaire
-            const customButtons = this.allowedCreateEvent ? {
-                myCustomButton: {
-                    text: 'Créer un évènement',
-                    click: () => {
-                        this.cancelCreateEvent = true;
-                    }
+            const customButtons = {
+                ...(
+                    this.allowedCreateEvent
+                        ? {
+                            myCustomButton: {
+                                text: 'Créer un évènement',
+                                click: () => {
+                                    this.cancelCreateEvent = true;
+                                }
+                            }
+                        }
+                        : {}
+                ),
+                toggleView: {
+                    text: "Liste d'évènements",
+                    click: this.toggleViewClick
                 }
-            } : {};
-            const rightToolbar = this.allowedCreateEvent ? 'today myCustomButton prev,next' : 'today prev,next';
+            };
+
+            const rightToolbar = this.allowedCreateEvent
+                ? 'today myCustomButton toggleView prev,next'
+                : 'today toggleView prev,next';
 
             return {
-                plugins: [dayGridPlugin, interactionPlugin],
+                plugins: [dayGridPlugin, interactionPlugin, listPlugin],
                 initialView: 'dayGridMonth',
                 events: this.eventsList,
                 selectable:true,
@@ -148,6 +161,32 @@ export default {
         },
     },
     methods: {
+        toggleViewClick() {
+            const calendarApi = this.$refs.fullCalendar.getApi();
+            const currentView = calendarApi.view.type;
+            const buttons = calendarApi.getOption('customButtons');
+            if (currentView === 'dayGridMonth') {
+                calendarApi.changeView('listMonth');
+                // mettre à jour le texte du bouton
+                calendarApi.setOption('customButtons', {
+                    ...buttons,
+                    toggleView: {
+                        ...buttons.toggleView,
+                        text: "Calendrier"
+                    }
+                });
+            } else {
+                calendarApi.changeView('dayGridMonth');
+                calendarApi.setOption('customButtons', {
+                    ...buttons,
+                    toggleView: {
+                        ...buttons.toggleView,
+                        text: "Liste d'évènements"
+                    }
+                });
+            }
+        },
+
         inscribeEnd(e) {
             if(!this.isAdherent){
                 this.inscribe=e;
