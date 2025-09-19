@@ -198,6 +198,9 @@ export default {
                     }
                 }
             }
+            if (isOutdated(arg.event)) {
+                places_available = "inscriptions fermées"
+            }
             
             const hour = arg.timeText
             const wrapper = document.createElement('div');
