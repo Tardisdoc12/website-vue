@@ -18,20 +18,40 @@
             Aucun utilisateur
         </div>
 
-        <div v-else style="max-height: 300px; overflow-y: auto;">
-            <div style="margin-top: 10px;"></div>
-            <div 
-                v-for="(user, index) in userRegister" 
-                :key="user.id || index" 
-                class="p-2 mb-2 border rounded shadow"
-            >
-                <p @click="DeleteUser(user)">{{ "Supprimer l'inscrit" }}</p>
-                <p><strong>Nom :</strong> {{ user.user_name }}</p>
-                <p><strong>Email :</strong> {{ user.email }}</p>
-                <p><strong>Téléphone :</strong> {{ user.phone }}</p>
-                <p><strong>thème demandé :</strong> {{ user.goal }}</p>
-                <p><strong>Expérience :</strong> {{ user.experience }}</p>
-            </div>
+        <div v-else class="overflow-auto max-h-[300px] max-w-full border border-gray-300">
+            <table class="min-w-full border-collapse border border-gray-300 mt-2">
+                <thead>
+                    <tr class="bg-gray-100">
+                    <th class="border border-gray-300 p-2 text-left">Nom</th>
+                    <th class="border border-gray-300 p-2 text-left">Email</th>
+                    <th class="border border-gray-300 p-2 text-left">Téléphone</th>
+                    <th class="border border-gray-300 p-2 text-left">Thème demandé</th>
+                    <th class="border border-gray-300 p-2 text-left">Expérience</th>
+                    <th class="border border-gray-300 p-2 text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr 
+                    v-for="(user, index) in userRegister" 
+                    :key="user.id || index"
+                    class="hover:bg-gray-50"
+                    >
+                    <td class="border border-gray-300 p-2">{{ user.user_name }}</td>
+                    <td class="border border-gray-300 p-2">{{ user.email }}</td>
+                    <td class="border border-gray-300 p-2">{{ user.phone }}</td>
+                    <td class="border border-gray-300 p-2">{{ user.goal }}</td>
+                    <td class="border border-gray-300 p-2">{{ user.experience }}</td>
+                    <td class="border border-gray-300 p-2 text-center">
+                        <button 
+                        @click="DeleteUser(user)"
+                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                        >
+                            Supprimer l'inscrit
+                        </button>
+                    </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </Modal>
 </template>
