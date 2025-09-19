@@ -79,21 +79,21 @@ export default {
 
 .modal {
     position: fixed;
-    inset: 0px;
-
+    inset: 0;
     z-index: 2;
-    background-color: rgba(100,100,100,0.9); /* derrière la modal */
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background-color: rgba(100, 100, 100, 0.9);
+
+    display: block;       /* plus de flex centering */
+    overflow-y: auto;     /* scroll sur toute la page si besoin */
+    padding: 2rem;        /* espace autour de la fenêtre */
 }
 
 .modal-content {
-    flex-basis: 600px;
+    margin: auto;
+    max-width: 600px;
     background: #fff;
     border-radius: 8px;
     padding: 0;
-    overflow: hidden;  
 }
 </style>
