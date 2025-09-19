@@ -48,6 +48,17 @@ import Categories from "@/javascript/constants"
 import { jwtDecode } from "jwt-decode"
 import api from "../javascript/users_wp.js"
 
+function isOutdated(event) {
+    const now = new Date();
+    // Ajoute 1 heure à l'heure actuelle
+    const limit = new Date(now.getTime() + 60 * 60 * 1000);
+
+    if (event.start < limit) {
+        return true; // Bloque seulement si on est à moins d'une heure
+    }
+    return false
+}
+
 export default {
     
     data() {
@@ -239,11 +250,14 @@ export default {
         },
 
         handleSelect(e){
-            const today = new Date();
-            if (e.event.start < today)
-            {
-                return;
+            const isBureau = this.user?.roles ? this.user.roles.includes("bureau") : false
+
+            if (isOutdated(e.event)) {
+                if (!isBureau) {
+                    return;
+                } 
             }
+
             this.seeModalEvent = !this.seeModalEvent
             this.eventSelected = {
                 ...e.event.extendedProps,
