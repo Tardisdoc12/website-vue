@@ -147,6 +147,44 @@ function monplugin_create_events(WP_REST_Request $request) {
 
     return ['id' => $wpdb->insert_id];
 }
+//------------------------------------------------------------------------------
+// Modifie un évènement
+
+add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1', '/events/(?P<id>\d+)', [
+        'methods' => 'PUT',
+        'callback' => 'monplugin_update_event',
+        'permission_callback' => 'monplugin_verify_csrf',
+    ]);
+});
+
+// Fonction pour modifier l'événement
+function monplugin_update_event(WP_REST_Request $request) {
+    global $wpdb;
+    $table = $wpdb->prefix . "events";
+    $id = intval($request['id']);
+
+    $data = [
+        'title' => sanitize_text_field($request['title']),
+        'start_date' => sanitize_text_field($request['start_date']),
+        'end_date' => sanitize_text_field($request['end_date']),
+        'description' => sanitize_textarea_field($request['description']),
+        'place' => sanitize_text_field($request['place']),
+        'category' => sanitize_text_field($request['category']),
+        'subscribe_places' => intval($request['subscribe_places']),
+        'nonsubscribe_places' => intval($request['nonsubscribe_places']),
+    ];
+
+    $where = ['id' => $id];
+
+    $updated = $wpdb->update($table, $data, $where);
+
+    if ($updated === false) {
+        return new WP_Error('db_error', 'Impossible de mettre à jour l’événement', ['status' => 500]);
+    }
+
+    return ['id' => $id, 'updated' => $updated];
+}
 
 //-----------------------------------------------------------------------------------
 // Supprime un event

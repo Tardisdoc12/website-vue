@@ -1,6 +1,6 @@
 <template>
     <Modal
-        :title="title"
+        :title="titleName"
         :isCancel="isOpen"
         @changeBool="Cancel"
     >
@@ -38,6 +38,45 @@
                     <input v-model="endDateForm" type="datetime-local" class="w-full border p-1 rounded"/>
                 </div>
 
+                <!-- Ajouter des dates -->
+                <div>
+                    <label class="block font-medium">
+                        Cloner l'évènement pour les dates :
+                        <button 
+                            type="button" 
+                            :style="{
+                                display: inline-block,
+                                color: white,
+                                padding: '0.5rem 1rem',
+                                borderRadius: '0.375rem',
+                                backgroundColor: '#00BFFF'
+                            }"
+                            @click="addRange" 
+                            class="mt-1 text-blue-500"
+                        >
+                             <font-awesome-icon icon="fa-solid fa-plus" />
+                        </button>
+                    </label>
+                    <div v-for="(range, index) in cloneDates" :key="index" class="flex gap-2 items-center" style="margin-bottom: 5px;">
+                        <input type="datetime-local" v-model="range.start_date" class="border p-1" />
+                        <input type="datetime-local" v-model="range.end_date" class="border p-1" />
+                        <button
+                            type="button"
+                            :style="{
+                                display: inline-block,
+                                color: white,
+                                padding: '0.5rem 1rem',
+                                borderRadius: '0.375rem',
+                                backgroundColor: '#FF0000'
+                            }"
+                            @click="removeRange(index)" 
+                            class="text-red-500"
+                        >
+                            <font-awesome-icon icon="fa-solid fa-trash" />
+                        </button>
+                    </div>
+                </div>
+
                 <!-- Description -->
                 <div style="margin-bottom:10px;">
                     <label class="block font-medium">Description</label>
@@ -70,7 +109,6 @@
                     />
                 </div>
 
-
                 <!-- limité dans le nombre de place -->
                 <div class="flex items-center space-x-2" style="margin-bottom:10px;">
                     <label class="font-medium" style="padding: 2px;">Nombre de place limité pour les adhérents :</label>
@@ -92,7 +130,7 @@
                 <!-- Bouton -->
                 <div class="flex justify-center items-center" style="margin-bottom:10px;">
                     <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" >
-                        Créer l'événement
+                        {{ buttonName }}
                     </button>
                 </div>
             </div>
@@ -110,6 +148,17 @@ export default {
         onSuccess: {
             type: Function,
             default: null,
+        },
+        eventSelected: {
+            type: Object,
+            default: null,
+        }
+    },
+
+    mounted() {
+        if (this.eventSelected) {
+            this.form = {...this.eventSelected}
+            this.isUpdate = true
         }
     },
 
@@ -127,12 +176,23 @@ export default {
             },
             isChecked:false,
             Categories,
+            cloneDates: [
+            ],
+            isUpdate:false,
             isOpen: true,
             title: "Création d'évènement",
         }
     },
 
     computed: {
+        buttonName() {
+            return this.isUpdate ? "Modifier l'évènement" : "Créer l'événement"
+        },
+
+        titleName() {
+            return this.isUpdate ? "Modification d'évènement" : "Création d'évènement"
+        },
+
         descriptionForm: {
             get() {
                 return this.form.description
@@ -208,40 +268,77 @@ export default {
     },
 
     methods: {
-
+        addRange() {
+            this.cloneDates.push({ start_date: '', end_date: '' });
+        },
+        removeRange(index) {
+            this.cloneDates.splice(index, 1);
+        },
         Cancel() {
             this.$emit('cancelSignal', !this.isOpen)
+        },
+
+        async createEvent(form) {
+            if (form.endDate !== '') {
+                    if (new Date(form.startDate) >= new Date(form.endDate)) {
+                        alert("La date de fin doit être après la date de début.")
+                        return
+                    }
+                }
+                else {
+                    form.endDate = null;
+                }
+
+                const response = await eventsService.createEvent(form)
+                return response;
         },
 
         async handleSubmit() {
             if (!this.isChecked){
                 this.subscribePlaceForm = -1
             }
+            
+            if (!this.isUpdate){
+                
+                const response = await this.createEvent(this.form)
+                if (this.cloneDates.length > 0) {
+                    for (const range of this.cloneDates) {
+                        await this.createEvent({
+                            ...this.form,
+                            startDate: range.start_date,
+                            endDate: range.end_date
+                        });
+                    }
+                }
+                alert("Événement(s) créé avec succès !")
 
-            if (this.endDateForm !== '') {
-                if (new Date(this.startDateForm) >= new Date(this.endDateForm)) {
-                    alert("La date de fin doit être après la date de début.")
-                    return
+                this.form = {
+                    title: '',
+                    startDate: '',
+                    endDate: '',
+                    description: '',
+                    place: '',
+                    categorie: '',
+                    subscribePlace: 1,
+                    nonsubscribePlace: 0,
+                }
+                if (this.onSuccess) {
+                    await this.onSuccess()
                 }
             }
             else {
-                this.endDateForm = null;
-            }
-            
-            alert("Événement créé avec succès !")
-            const response = await eventsService.createEvent(this.form)
-            this.form = {
-                title: '',
-                startDate: '',
-                endDate: '',
-                description: '',
-                place: '',
-                categorie: '',
-                subscribePlace: 1,
-                nonsubscribePlace: 0,
-            }
-            if (this.onSuccess) {
-                await this.onSuccess()
+                const response = await eventsService.updateEvent(this.form.event_id, this.form)
+                if (this.cloneDates.length > 0) {
+                    for (const range of this.cloneDates) {
+                        await this.createEvent({
+                            ...this.form,
+                            startDate: range.start_date,
+                            endDate: range.end_date
+                        });
+                    }
+                }
+                alert("Évènement modifié avec succés !")
+                this.$emit('cancelSignal', !this.isOpen)
             }
         }
     },

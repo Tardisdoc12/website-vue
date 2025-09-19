@@ -65,6 +65,24 @@
                 >
                     Voir les inscrits
                 </button>
+
+                <!-- events -->
+                <button
+                    v-if="showDeleteButton"
+                    type="button"
+                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600 ml-5"
+                    :style="{
+                        display: inline-block,
+                        color: white,
+                        padding: '0.5rem 1rem',
+                        borderRadius: '0.375rem',
+                        backgroundColor: '#2563EB'
+                    }"
+                    @click="updateEvent"
+                    style="margin-left: 20px;"
+                >
+                    Modifier l'évènement
+                </button>
             </div>
         </div>
     </Modal>
@@ -75,12 +93,19 @@
         :event_id="form.event_id"
         @cancelSignal="Cancel"
     />
+
+    <ModalEvent
+        v-if="toUpdateEvent"
+        :eventSelected="form"
+        @cancelSignal="CancelUpdate"
+    />
 </template>
 
 <script>
 
 import Modal from "./unitary_elements/modalComponent.vue"
 import ModalInscrit from "./modal_inscrits.vue"
+import ModalEvent from "../formulaire.vue"
 import api from "@/javascript/axios_events"
 
 function formatDate(d) {
@@ -116,6 +141,7 @@ export default {
             isWantedInscript: false,
             isOpen: true,
             visualiseInscrit: false,
+            toUpdateEvent: false,
         }
     },
 
@@ -164,6 +190,10 @@ export default {
     },
 
     methods: {
+        updateEvent() {
+            this.toUpdateEvent = true
+        },
+
         VisualizeInscrit() {
             this.visualiseInscrit = true
         },
@@ -177,6 +207,10 @@ export default {
             this.$emit('cancelSignal', !this.isOpen)
         },
 
+        CancelUpdate(e) {
+            this.$emit('cancelSignal', !this.isOpen)
+        },
+
         Register() {
             this.$emit('inscriptWanted', !this.isWantedInscript)
         }
@@ -184,7 +218,8 @@ export default {
 
     components: {
         Modal,
-        ModalInscrit
+        ModalInscrit,
+        ModalEvent
     }
 }
 </script>

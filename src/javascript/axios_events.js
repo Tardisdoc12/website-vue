@@ -55,7 +55,7 @@ export default {
 
     // Mettre à jour un event
     async updateEvent(id, eventData) {
-        return await api.put(`${API_URL}${id}/`, eventData);
+        return await api.put(`/events/${id}/`, conversion_to_bdd(eventData));
     },
 
     // Supprimer un event
