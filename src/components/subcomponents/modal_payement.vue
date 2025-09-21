@@ -5,7 +5,7 @@
         @changeBool="Cancel"
     >
         <p style="margin-bottom: 10px; margin-top: 10px;">{{  "Votre inscription ne sera validé qu'après payement" }}</p>
-        <iframe src="https://www.helloasso.com/associations/mps-moto/evenements/inscription-seance/widget" style="width: 100%; height: 100%;">
+        <iframe src="https://www.helloasso.com/associations/mps-moto/evenements/inscription-seance/widget" style="width: 80vw; height: 80vh; border: none;">
         </iframe>
     </Modal>
 </template>
