@@ -128,7 +128,7 @@ export default {
                 email: this.user?.email ?? "",
                 experience:"",
                 goal:"",
-                roles: this.user?.roles ?? []
+                roles: this.user?.roles ?? ["non_adherent"]
             },
         }
     },

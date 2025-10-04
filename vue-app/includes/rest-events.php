@@ -35,7 +35,7 @@ function monplugin_get_events(WP_REST_Request $request) {
     foreach ($events as $event) {
         // Récupérer les utilisateurs inscrits pour cet événement
         $users = $wpdb->get_results($wpdb->prepare(
-            "SELECT u.id, u.user_name, u.email, u.phone, u.experience, i.goal
+            "SELECT u.id, u.user_name, u.email, u.phone, u.experience, i.goal, u.is_adherent
              FROM $table_inscrits i
              JOIN $table_users u ON u.id = i.user_id
              WHERE i.event_id = %d",
@@ -95,7 +95,7 @@ function monplugin_get_event_id(WP_REST_Request $request) {
     // Récupérer les utilisateurs inscrits
     $users = $wpdb->get_results(
         $wpdb->prepare(
-            "SELECT u.id, u.user_name, u.email, u.phone, u.experience, i.goal
+            "SELECT u.id, u.user_name, u.email, u.phone, u.experience, i.goal, u.is_adherent
              FROM $table_inscrits i
              JOIN $table_users u ON u.id = i.user_id
              WHERE i.event_id = %d",

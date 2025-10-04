@@ -49,21 +49,21 @@ function monplugin_delete_subscribe(WP_REST_Request $request) {
         )
     );
 
-    if ($isAdherent) {
-        $subscribe_places = $wpdb->get_var(
-            $wpdb->prepare("SELECT subscribe_places FROM $table_events WHERE id = %d", $event_id)
-        );
-        if($subscribe_places >= 0) {
-            $wpdb->query(
-                $wpdb->prepare("UPDATE $table_events SET subscribe_places = subscribe_places + 1 WHERE id = %d", $event_id)
-            );
-        }
+    // if ($isAdherent) {
+    //     $subscribe_places = $wpdb->get_var(
+    //         $wpdb->prepare("SELECT subscribe_places FROM $table_events WHERE id = %d", $event_id)
+    //     );
+    //     if($subscribe_places >= 0) {
+    //         $wpdb->query(
+    //             $wpdb->prepare("UPDATE $table_events SET subscribe_places = subscribe_places + 1 WHERE id = %d", $event_id)
+    //         );
+    //     }
 
-    } else {
-        $wpdb->query(
-            $wpdb->prepare("UPDATE $table_events SET nonsubscribe_places = nonsubscribe_places + 1 WHERE id = %d", $event_id)
-        );
-    }
+    // } else {
+    //     $wpdb->query(
+    //         $wpdb->prepare("UPDATE $table_events SET nonsubscribe_places = nonsubscribe_places + 1 WHERE id = %d", $event_id)
+    //     );
+    // }
     return ['success' => true, 'message' => 'Inscription supprimée et place libérée'];
 }
 
@@ -154,10 +154,10 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
 
 
     // Décrémenter le nombre de places
-    $wpdb->query($wpdb->prepare(
-        "UPDATE $table_events SET $column = $column - 1 WHERE id = %d",
-        $event_id
-    ));
+    //$wpdb->query($wpdb->prepare(
+    //    "UPDATE $table_events SET $column = $column - 1 WHERE id = %d",
+    //    $event_id
+    //));
 
     $wpdb->insert($table_inscrits, [
         'user_id' => $user_id,

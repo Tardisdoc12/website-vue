@@ -120,6 +120,16 @@ function formatDate(d) {
 export default {
 
     props: {
+        placeSubscribe: {
+            type: Number,
+            required: true
+        },
+
+        placeNonSubscribe: {
+            type: Number,
+            required: true
+        },
+
         showDeleteButton: {
             type: Boolean,
             required: true,
@@ -161,21 +171,18 @@ export default {
         },
 
         disableSubscribe() {
-            if (this.roles) {
-                if (!this.roles.includes("non_adherent") && (this.form.subscribePlace != 0))
-                {
-                    return false
+            if (this.isAdherent) {
+                if (this.form.subscribePlace === 0) {
+                    return true
                 }
-                else if (this.roles.includes("non_adherent") && (this.form.nonsubscribePlace > 0))
-                {
-                    return false
-                }
-                return true
-            }
-            if (this.form.nonsubscribePlace > 0) {
                 return false
             }
-            return true
+            else {
+                if (this.form.nonsubscribePlace <= 0) {
+                    return true
+                }
+                return false
+            }
         },
 
         espaceDate() {

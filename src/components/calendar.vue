@@ -48,6 +48,7 @@ import eventsService from '@/javascript/axios_events.js';
 import Categories from "@/javascript/constants"
 import { jwtDecode } from "jwt-decode"
 import api from "../javascript/users_wp.js"
+import { computed } from 'vue'
 
 function isOutdated(event) {
     const now = new Date();
@@ -73,12 +74,13 @@ export default {
             allowedCreateEvent:false,
             payement:false,
             isAdherent:false,
+            placeSubscribe:0,
+            placeNonSubscribe:0,
         }
     },
 
     async mounted() {
         this.events = await eventsService.getAllEvents();
-
         const token = sessionStorage.getItem("mps_moto")
         if (token) {
             const decoded = jwtDecode(token)
@@ -93,6 +95,7 @@ export default {
     },
 
     computed: {
+
         eventsList() {
                 return this.events.map((e) => {
                     let endDate = e.endDate || e.startDate;
@@ -221,14 +224,20 @@ export default {
 
         renderEvent(arg) {
             const title = arg.event.title;
-            let number = parseInt(arg.event.extendedProps.nonsubscribePlace);
+            const nonAdherentsCount = computed(() =>
+                {
+                    if (!arg.event.extendedProps.users.length) return 0;
+                    return arg.event.extendedProps.users.filter(u => u.is_adherent === "1").length
+                }
+            )
+            let number = parseInt(arg.event.extendedProps.nonsubscribePlace) - nonAdherentsCount.value;
             let places_available = "inscriptions ouvertes"
             if (number <= 0) {
                 places_available = "complet"
             }
             if (this.user?.roles) {
                 if(!this.user.roles.includes("non_adherent")) {
-                    number = parseInt(arg.event.extendedProps.subscribePlace);
+                    number = parseInt(arg.event.extendedProps.subscribePlace) - arg.event.extendedProps.users.length + nonAdherentsCount.value;
                     if(number === 0){
                         places_avalaible = "complet"
                     }
@@ -299,10 +308,17 @@ export default {
                     return;
                 } 
             }
+            const nonAdherentsCount = computed(() =>{
+                if (!e.event.extendedProps.users.length) return 0;
+                return e.event.extendedProps.users.filter(u => u.is_adherent === "1").length
+            })
 
+            
             this.seeModalEvent = !this.seeModalEvent
             this.eventSelected = {
                 ...e.event.extendedProps,
+                nonsubscribePlace: e.event.extendedProps.nonsubscribePlace - nonAdherentsCount.value,
+                subscribePlace: e.event.extendedProps.subscribePlace - e.event.extendedProps.users.length + nonAdherentsCount.value,
                 title:e.event.title
             }
         }
