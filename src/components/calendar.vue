@@ -48,8 +48,8 @@ import eventsService from '@/javascript/axios_events.js';
 import Categories from "@/javascript/constants"
 import { jwtDecode } from "jwt-decode"
 import api from "../javascript/users_wp.js"
+import apiEvents from "../javascript/axios_events"
 import { computed } from 'vue'
-import { list } from "postcss";
 
 function isOutdated(event) {
     const now = new Date();
@@ -77,6 +77,7 @@ export default {
             isAdherent:false,
             isEncadrant: false,
             placeSubscribe:0,
+            userEvents:[],
             placeNonSubscribe:0,
         }
     },
@@ -88,7 +89,11 @@ export default {
             const decoded = jwtDecode(token)
             const user_id = decoded.data.user.id
             const user_info = await api.get_user(user_id)
-            this.user = user_info.user
+            this.user = {...user_info.user}
+
+            const eventsInscript = await apiEvents.getEventUser(user_id, this.user.email)
+            this.userEvents = eventsInscript.results
+
             listB = this.user.roles
             listA = ['bureau', 'administrator']
             this.allowedCreateEvent = listB.some(el => listA.includes(el));
@@ -252,11 +257,16 @@ export default {
             if (isOutdated(arg.event)) {
                 places_available = "inscriptions fermées"
             }
+
+            const alreadyInscript = this.userEvents?.some(obj => obj.event_id === arg.event.extendedProps.event_id) ?? false
+            if(alreadyInscript) {
+                places_available = "déjà inscrit"
+            }
             
             if(this.isEncadrant) {
                 places_available = `${arg.event.extendedProps.users.length} inscrits`    
             }
-
+            
             const hour = arg.timeText
             const wrapper = document.createElement('div');
 
@@ -322,8 +332,10 @@ export default {
 
             
             this.seeModalEvent = !this.seeModalEvent
+            const alreadyInscript = this.userEvents.some(obj => obj.event_id === e.event.extendedProps.event_id)
             this.eventSelected = {
                 ...e.event.extendedProps,
+                isInscript: alreadyInscript,
                 nonsubscribePlace: e.event.extendedProps.nonsubscribePlace - nonAdherentsCount.value,
                 subscribePlace: e.event.extendedProps.subscribePlace - e.event.extendedProps.users.length + nonAdherentsCount.value,
                 title:e.event.title

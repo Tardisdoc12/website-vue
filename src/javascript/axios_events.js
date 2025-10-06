@@ -48,6 +48,12 @@ export default {
         return response.data
     },
 
+    // Récupérer un event par l'userID et l'email
+    async getEventUser(user_id, email) {
+        response = await api.post(`/events/${user_id}`,{"email": email})
+        return response.data
+    },
+
     // Créer un nouvel event
     async createEvent(eventData) {
         return await api.post("/events/", conversion_to_bdd(eventData));

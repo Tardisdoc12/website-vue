@@ -61,7 +61,42 @@ function monplugin_get_events(WP_REST_Request $request) {
 }
 
 //------------------------------------------------------------------------------
-// Récupère un event en particulier
+// Récupère un event en particulier via l'email de l'user
+
+add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1', '/events/(?P<user_id>\d+)', [
+        'methods'             => 'POST',
+        'callback'            => 'monplugin_get_event_by_user_id',
+        'permission_callback' => 'monplugin_verify_csrf'
+    ]);
+});
+
+function monplugin_get_event_by_user_id(WP_REST_Request $request) {
+    global $wpdb;
+    $table_events   = $wpdb->prefix . "events";
+    $table_inscrits = $wpdb->prefix . "inscrits";
+    $table_users    = $wpdb->prefix . "users_inscrits";
+    $email          = $request->get_param('email');
+
+    $events = $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT i.event_id
+             FROM $table_inscrits i
+             JOIN $table_users u ON u.id = i.user_id
+             WHERE u.email = %s",
+            $email
+        )
+    );
+
+    return [
+        "success" => 200,
+        "results" => $events
+    ];
+}
+
+
+//------------------------------------------------------------------------------
+// Récupère un event en particulier via l'id de l'event
 
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/events/(?P<id>\d+)', [

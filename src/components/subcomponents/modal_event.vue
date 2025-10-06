@@ -171,6 +171,9 @@ export default {
         },
 
         disableSubscribe() {
+            if (this.form.isInscript) {
+                return true
+            }
             if (this.isAdherent) {
                 if (this.form.subscribePlace === 0) {
                     return true
