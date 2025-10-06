@@ -263,10 +263,6 @@ export default {
                 places_available = "déjà inscrit"
             }
             
-            if(this.isEncadrant) {
-                places_available = `${arg.event.extendedProps.users.length} inscrits`    
-            }
-            
             const hour = arg.timeText
             const wrapper = document.createElement('div');
 
@@ -291,6 +287,7 @@ export default {
                                     ${places_available}
                                 </small>
                             </div>
+                            ${this.isEncadrant ? `<div><p class="event-font">${arg.event.extendedProps.users.length} inscrits</p></div>` : ''}
                         </div>
                     </div>
                 </div>

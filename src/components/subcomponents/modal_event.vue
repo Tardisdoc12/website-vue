@@ -45,7 +45,7 @@
                     }"
                     @click="Register"
                 >
-                    Inscription
+                    {{ this.form.isInscript ? "Déjà Inscrit" : "Inscription"}}
                 </button>
 
                 <!-- visualisation -->
