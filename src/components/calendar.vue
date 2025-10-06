@@ -49,6 +49,7 @@ import Categories from "@/javascript/constants"
 import { jwtDecode } from "jwt-decode"
 import api from "../javascript/users_wp.js"
 import { computed } from 'vue'
+import { list } from "postcss";
 
 function isOutdated(event) {
     const now = new Date();
@@ -74,6 +75,7 @@ export default {
             allowedCreateEvent:false,
             payement:false,
             isAdherent:false,
+            isEncadrant: false,
             placeSubscribe:0,
             placeNonSubscribe:0,
         }
@@ -91,6 +93,7 @@ export default {
             listA = ['bureau', 'administrator']
             this.allowedCreateEvent = listB.some(el => listA.includes(el));
             this.isAdherent = !listB.includes("non_adherent")
+            this.isEncadrant = !listB.includes("non_adherent") && !listB.includes("adherent")
         }
     },
 
@@ -250,6 +253,10 @@ export default {
                 places_available = "inscriptions fermées"
             }
             
+            if(this.isEncadrant) {
+                places_available = `${arg.event.extendedProps.users.length} inscrits`    
+            }
+
             const hour = arg.timeText
             const wrapper = document.createElement('div');
 
