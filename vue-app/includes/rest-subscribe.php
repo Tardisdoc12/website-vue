@@ -162,8 +162,8 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
     $wpdb->insert($table_inscrits, [
         'user_id' => $user_id,
         'event_id' => $event_id,
-        'bike' => sanitize_textarea_field($request->get_param('bike')),
-        'goal'=> sanitize_textarea_field($request->get_param('goal')),
+        'bike' => isset($user_d['bike']) ? sanitize_text_field($user_d['bike']) : '',
+        'goal'=> isset($user_d['goal']) ? sanitize_text_field($user_d['goal']) : '',
     ]);
 
     if ($wpdb->last_error) {

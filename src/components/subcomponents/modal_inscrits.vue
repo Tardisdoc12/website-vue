@@ -26,6 +26,7 @@
                     <th class="border border-gray-300 p-2 text-left">Email</th>
                     <th class="border border-gray-300 p-2 text-left">Téléphone</th>
                     <th class="border border-gray-300 p-2 text-left">Thème demandé</th>
+                    <th class="border border-gray-300 p-2 text-left">Moto</th>
                     <th class="border border-gray-300 p-2 text-left">Expérience</th>
                     <th class="border border-gray-300 p-2 text-center">Actions</th>
                     </tr>
@@ -40,6 +41,7 @@
                     <td class="border border-gray-300 p-2">{{ user.email }}</td>
                     <td class="border border-gray-300 p-2">{{ user.phone }}</td>
                     <td class="border border-gray-300 p-2">{{ user.goal }}</td>
+                    <td class="border border-gray-300 p-2">{{ user.bike }}</td>
                     <td class="border border-gray-300 p-2">{{ user.experience }}</td>
                     <td class="border border-gray-300 p-2 text-center">
                         <button 
@@ -77,7 +79,7 @@ export default {
         return {
             title: "Visualisation des Inscrits",
             isOpen: true,
-            fields_csv: ["Nom", "Email", "Téléphone", "Thème demandé", "Experience"],
+            fields_csv: ["Nom", "Email", "Téléphone", "Thème demandé", "Moto", "Experience"],
         }
     },
 
@@ -91,6 +93,7 @@ export default {
                     obj.email,
                     obj.phone,
                     obj.goal,
+                    obj.bike,
                     obj.experience
                 ].map(value => `"${String(value).replace(/"/g, '""')}"`); // Échappe les guillemets
                 return values.join(",");

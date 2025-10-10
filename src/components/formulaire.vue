@@ -271,9 +271,11 @@ export default {
         addRange() {
             this.cloneDates.push({ start_date: '', end_date: '' });
         },
+
         removeRange(index) {
             this.cloneDates.splice(index, 1);
         },
+        
         Cancel() {
             this.$emit('cancelSignal', !this.isOpen)
         },
