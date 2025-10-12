@@ -15,12 +15,18 @@ function vue_shortcode($atts, $content, $tag) {
     $css_file = $tag . '.css';
     $js_file  = $tag . '.js';
 
+    $deps = [];
+    if (wp_script_is('elementor-frontend', 'registered')) {
+        $deps[] = 'elementor-frontend';
+    }
+
+
     // CSS
     if (file_exists($plugin_path . $css_file)) {
         wp_enqueue_style(
             "vue-{$tag}-css",
             $plugin_url . $css_file,
-            [],
+            $deps,
             filemtime($plugin_path . $css_file) // ✅ version dynamique
         );
     }
@@ -30,7 +36,7 @@ function vue_shortcode($atts, $content, $tag) {
         wp_enqueue_script(
             "vue-{$tag}-js",
             $plugin_url . $js_file,
-            [],
+            $deps,
             filemtime($plugin_path . $js_file), // ✅ version dynamique
             true
         );

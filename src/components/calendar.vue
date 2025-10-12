@@ -94,8 +94,8 @@ export default {
             const eventsInscript = await apiEvents.getEventUser(user_id, this.user.email)
             this.userEvents = eventsInscript.results
 
-            listB = this.user.roles
-            listA = ['bureau', 'administrator']
+            const listB = this.user.roles
+            const listA = ['bureau', 'administrator']
             this.allowedCreateEvent = listB.some(el => listA.includes(el));
             this.isAdherent = !listB.includes("non_adherent")
             this.isEncadrant = !listB.includes("non_adherent") && !listB.includes("adherent")

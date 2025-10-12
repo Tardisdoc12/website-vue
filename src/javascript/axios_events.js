@@ -50,7 +50,7 @@ export default {
 
     // Récupérer un event par l'userID et l'email
     async getEventUser(user_id, email) {
-        response = await api.post(`/events/${user_id}`,{"email": email})
+        const response = await api.post(`/events/${user_id}`,{"email": email})
         return response.data
     },
 
