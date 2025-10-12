@@ -8,11 +8,11 @@
   },
   "scripts": {
     "dev": "vite",
-    "build:login": "ENTRY=login vite build",
-    "build:calendar": "ENTRY=calendar vite build",
-    "build:events": "ENTRY=events vite build",
-    "build:connexion": "ENTRY=connexion vite build",
-    "build:account": "ENTRY=account vite build",
+    "build:login": "cross-env ENTRY=login vite build",
+    "build:calendar": "cross-env ENTRY=calendar vite build",
+    "build:events": "cross-env ENTRY=events vite build",
+    "build:connexion": "cross-env ENTRY=connexion vite build",
+    "build:account": "cross-env ENTRY=account vite build",
     "build:form_adhesion": "ENTRY=form_adhesion vite build",
     "build:all": "npm run build:login && npm run build:calendar && npm run build:events && npm run build:connexion && npm run build:account && npm run build:form_adhesion",
     "preview": "vite preview"
@@ -35,6 +35,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",
     "autoprefixer": "^10.4.21",
+    "cross-env": "^10.1.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.11",
     "vite": "^7.0.6",

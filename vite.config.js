@@ -34,6 +34,8 @@ export default defineConfig({
       input,
       output: {
         manualChunks: undefined, // ⛔ empêche index.js
+        format: 'iife', // 👈 crée une IIFE isolée
+        inlineDynamicImports: true,
         entryFileNames: `[name].js`,
         chunkFileNames: `[name].js`,
         assetFileNames: `[name].[ext]`
