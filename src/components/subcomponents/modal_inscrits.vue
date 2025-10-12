@@ -3,16 +3,46 @@
         :title="title"
         :isCancel="isOpen"
         @changeBool="Cancel"
-    >
-        <button
-            v-if="userRegister.length !== 0"
-            style="margin-top: 10px;"
-            type="button"
-            class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-            @click="downloadCSV"
+    >   
+        <!-- Les boutons de gestions des comptes -->
+        <div
+            class="flex items-center justify-start space-x-4"
         >
-            <font-awesome-icon icon="fa-solid fa-download" />
-        </button>
+            <!-- bouton pour copier téléphone des inscrits -->
+            <bouton
+                style="margin-top: 10px;"
+                type="button"
+                class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                @click="CopyPhoneOrEmail(true)"
+            >
+                <font-awesome-icon icon="fa-solid fa-phone-volume" v-if="!isPhoneCopied && !isPhoneError"/>
+                <font-awesome-icon icon="fa-solid fa-check" v-if="isPhoneCopied"/>
+                <font-awesome-icon icon="fa-solid fa-xmark" v-if="isPhoneError"/>
+            </bouton>
+
+            <!-- bouton pour copier mail inscrits -->
+            <bouton
+                style="margin-top: 10px;"
+                type="button"
+                class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                @click="CopyPhoneOrEmail(false)"
+            >
+                <font-awesome-icon icon="fa-solid fa-envelope" v-if="!isEmailCopied && !isEmailError"/>
+                <font-awesome-icon icon="fa-solid fa-check" v-if="isEmailCopied"/>
+                <font-awesome-icon icon="fa-solid fa-xmark" v-if="isEmailError"/>
+            </bouton>
+
+            <!-- Le bouton d'export en csv -->
+            <button
+                v-if="userRegister.length !== 0"
+                style="margin-top: 10px;"
+                type="button"
+                class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                @click="downloadCSV"
+            >
+                <font-awesome-icon icon="fa-solid fa-download" />
+            </button>
+        </div>
 
         <div v-if="userRegister.length === 0" style="margin-top: 10px;">
             Aucun utilisateur
@@ -80,10 +110,40 @@ export default {
             title: "Visualisation des Inscrits",
             isOpen: true,
             fields_csv: ["Nom", "Email", "Téléphone", "Thème demandé", "Moto", "Experience"],
+            isPhoneCopied: false,
+            isEmailCopied: false,
+            isPhoneError: false,
+            isEmailError: false,
         }
     },
 
     methods: {
+        async CopyPhoneOrEmail(isPhone) {
+            try {
+                let TextToCopy = "";
+                this.userRegister.forEach(user => {
+                    if (isPhone) {
+                        TextToCopy += `${user.phone} `;
+                    } else {
+                        TextToCopy += `${user.email} `;
+                    }
+                });
+                await navigator.clipboard.writeText(TextToCopy);
+                if (isPhone) {
+                    this.isPhoneCopied = true;
+                } else {
+                    this.isEmailCopied = true;
+                }
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                if (isPhone) {
+                    this.isPhoneError = true;
+                } else {
+                    this.isEmailError = true;
+                }
+            }
+        },
+
         downloadCSV() {
             const headers = this.fields_csv.map(h => `"${h}"`);
             
