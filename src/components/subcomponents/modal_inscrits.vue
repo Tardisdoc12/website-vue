@@ -123,9 +123,9 @@ export default {
                 let TextToCopy = "";
                 this.userRegister.forEach(user => {
                     if (isPhone) {
-                        TextToCopy += `${user.phone} `;
+                        TextToCopy += `${user.phone}, `;
                     } else {
-                        TextToCopy += `${user.email} `;
+                        TextToCopy += `${user.email}, `;
                     }
                 });
                 await navigator.clipboard.writeText(TextToCopy);
