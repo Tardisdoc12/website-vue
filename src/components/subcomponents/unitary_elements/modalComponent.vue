@@ -84,7 +84,10 @@ export default {
 
     background-color: rgba(100, 100, 100, 0.9);
 
-    display: block;       /* plus de flex centering */
+    
+    display: flex;              /* ✅ flex pour centrer */
+    align-items: center;        /* ✅ centrage vertical */
+    justify-content: center;      /* plus de flex centering */
     overflow-y: auto;     /* scroll sur toute la page si besoin */
     padding: 2rem;        /* espace autour de la fenêtre */
 }

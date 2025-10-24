@@ -45,6 +45,25 @@ function mon_plugin_creer_tables() {
         email VARCHAR(200) NOT NULL,
         experience VARCHAR(200) NOT NULL,
         is_adherent TINYINT(1) NOT NULL DEFAULT 0,
+        blood VARCHAR(10),
+        urgence_phone VARCHAR(10),
+        PRIMARY KEY (id)
+    ) $charset_collate;";
+
+    $table_subcategories = $wpdb->prefix . "subcategories";
+    $sql4 = "CREATE TABLE $table_subcategories (
+        id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+        id_categorie BIGINT(20) UNSIGNED NOT NULL,
+        title VARCHAR(200) NOT NULL,
+        PRIMARY KEY (id)
+    ) $charset_collate;";
+
+    $table_source = $wpdb->prefix . "source";
+    $sql5 = "CREATE TABLE $table_source (
+        id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+        id_subcategorie BIGINT(20) UNSIGNED NOT NULL,
+        path_file VARCHAR(200),
+        url_file VARCHAR(200),
         PRIMARY KEY (id)
     ) $charset_collate;";
 
@@ -52,4 +71,6 @@ function mon_plugin_creer_tables() {
     dbDelta($sql1);
     dbDelta($sql2);
     dbDelta($sql3);
+    dbDelta($sql4);
+    dbDelta($sql5);
 }

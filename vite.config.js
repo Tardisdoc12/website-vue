@@ -16,7 +16,8 @@ const entries = {
   events: path.resolve(__dirname, 'src/main-events.js'),
   connexion: path.resolve(__dirname, 'src/main-connexion.js'),
   account: path.resolve(__dirname, 'src/main-global-account.js'),
-  form_adhesion: path.resolve(__dirname, 'src/main-adherent.js')
+  form_adhesion: path.resolve(__dirname, 'src/main-adherent.js'),
+  test: path.resolve(__dirname, 'src/main-test.js'),
 }
 
 // Si un ENTRY est passé → build seulement celle-là

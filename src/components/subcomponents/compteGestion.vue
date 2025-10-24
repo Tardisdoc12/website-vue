@@ -1,0 +1,165 @@
+<template>
+    <DepliantWindow
+        :title="titleInformations"
+    >
+        <div style="margin-left:25px;margin-top: 10px;margin-bottom: 10px;">
+            <div v-if="!isInformationsChange">
+                <li><strong>Nom :</strong> {{ user.lastName }}</li>
+                <li><strong>Prénom :</strong> {{ user.firstName }}</li>
+                <li><strong>Email :</strong> {{ user.email }}</li>
+                <li><strong>Téléphone :</strong> {{ user.telephone }}</li>
+                <li><strong>Moto :</strong> {{ user.moto }}</li>
+            </div>
+            <div v-if="isInformationsChange">
+                <li>
+                    <label><strong>Nom :</strong></label>
+                    <input
+                        v-model="user.lastName"
+                        class="oval-input"
+                    />
+                </li>
+                <li>
+                    <label><strong>Prénom :</strong></label>
+                    <input
+                        v-model="user.firstName"
+                        class="oval-input"
+                    />
+                </li>
+                <li>
+                    <label><strong>Email :</strong></label>
+                    <input
+                        v-model="user.email"
+                        class="oval-input"
+                    />
+                </li>
+                <li>
+                    <label><strong>Téléphone :</strong></label>
+                    <input
+                        v-model="user.telephone"
+                        class="oval-input"
+                    />
+                </li>
+                <li>
+                    <label><strong>Moto :</strong></label>
+                    <input
+                        v-model="user.moto"
+                        class="oval-input"
+                    />
+                </li>
+            </div>
+            
+        </div>
+        <div class="button-container">
+            <button v-if="isInformationsChange" @click="validationChangement">Sauvegarder les changements</button>
+            <button v-else @click="modifierInformations">Modifier mes informations</button>
+        </div>
+    </DepliantWindow>
+
+    <DepliantWindow
+        :title="titleUrgences"
+    >
+        <div style="margin-left:25px;margin-top: 5px;">
+            <div v-if="!isUrgencesChange">
+                <p><strong>Groupe sanguin :</strong> {{ user.groupeSanguin || "—" }}</p>
+                <p><strong>Contact d’urgence :</strong> {{ user.contactUrgence || "—" }}</p>
+            </div>
+            <div v-else>
+                <li>
+                    <label><strong>Groupe sanguin :</strong></label>
+                    <input
+                        v-model="user.groupeSanguin"
+                        class="oval-input"
+                    />
+                </li>
+                <li>
+                    <label><strong>Contact d’urgence :</strong></label>
+                    <input
+                        v-model="user.contactUrgence"
+                        class="oval-input"
+                    />
+                </li>
+            </div>
+        </div>
+        <div class="button-container">
+            <button v-if="isUrgencesChange" @click="validationChangement">Sauvegarder les changements</button>
+            <button v-else @click="modifierUrgences">Modifier mes informations</button>
+        </div>
+    </DepliantWindow>
+</template>
+
+<script>
+import DepliantWindow from './unitary_elements/depliantWindow.vue';
+
+export default {
+
+    props: {
+        DataUser: {
+            required: false,
+            type: Object
+        }
+    },
+
+    data() {
+        return {
+            titleInformations: "Mes Informations",
+            titleUrgences: "Urgences",
+            isInformationsChange: false,
+            isUrgencesChange: false,
+            user: {
+                ...this.DataUser
+            }
+        }
+    },
+
+
+    methods: {
+        validationChangement() {
+            if(this.isInformationsChange)
+            {
+                this.isInformationsChange = !this.isInformationsChange
+            }
+            if(this.isUrgencesChange)
+            {
+                this.isUrgencesChange = !this.isUrgencesChange
+            }
+            this.$emit("userChange", this.user)
+        },
+
+        modifierInformations() {
+            this.isInformationsChange = !this.isInformationsChange
+        },
+
+        modifierUrgences() {
+            this.isUrgencesChange = !this.isUrgencesChange
+        }
+    },
+
+    components: {
+        DepliantWindow
+    }
+}
+
+</script>
+
+<style>
+.oval-input {
+  flex: 1;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 9999px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.oval-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.4);
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+</style>
