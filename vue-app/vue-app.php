@@ -17,11 +17,14 @@ $includes = [
     'includes/rest-subscribe.php',
     'includes/rest-users.php',
     'includes/rest-auth.php',
+    'includes/rest-source.php',
 ];
 
 foreach ($includes as $file) {
     require_once plugin_dir_path(__FILE__) . $file;
 }
+
+register_activation_hook(__FILE__, 'mon_plugin_creer_tables');
 
 //------------------------------------------------------------------------------
 // End of File

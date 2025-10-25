@@ -6,7 +6,7 @@
 */
 if (!defined('ABSPATH')) exit;
 
-register_activation_hook(__FILE__, 'mon_plugin_creer_tables');
+// register_activation_hook(__FILE__, 'mon_plugin_creer_tables');
 
 function mon_plugin_creer_tables() {
     global $wpdb;

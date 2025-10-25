@@ -130,6 +130,7 @@
 </template>
 
 <script>
+import apiSource from '@/javascript/axios_sources';
 import ModalComponent from './unitary_elements/modalComponent.vue';
 
 export default {
@@ -181,8 +182,26 @@ export default {
             }
         },
 
-        handleSubmit() {
-            this.$emit('newCategorie', this.sousCategorieSelected)
+        async handleSubmit() {
+            let subcategorieToSend = {
+                "id_categorie": this.categories.indexOf(this.categorieSelected) + 1,
+                "title" : this.sousCategorieSelected,
+            }
+            const results = await apiSource.add_subcategorie(subcategorieToSend)
+            
+            if (results.status !== 200) {
+                this.$emit('newCategorie', this.sousCategorieSelected)
+            }
+            
+            if(this.typeAdd !== "Aucun") {
+                const source = {
+                    "path_file":this.pdfFile?.name,
+                    "url_file": this.pdfUrl,
+                    "id_subcategorie": results.data.id,
+                }
+                const results_2 = await apiSource.add_source(source)
+                console.log(results_2)
+            }
         }
     },
 

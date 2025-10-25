@@ -52,8 +52,16 @@
 import ProfilInformation from "./subcomponents/compteGestion.vue"
 import RessourceGestion from "./subcomponents/ressourceGestion.vue";
 import ModalCategories from "./subcomponents/modal_categories.vue";
+import apiSources from "@/javascript/axios_sources"
 
 export default {
+    async mounted() {
+        const results = await apiSources.get_subcategorie()
+        console.log(results.data)
+        const results_2 = await apiSources.get_sources()
+        console.log(results_2.data)
+    },
+
     data() {
         return {
             labels: ['Mon Profil', 'Ressources', 'Média'],
