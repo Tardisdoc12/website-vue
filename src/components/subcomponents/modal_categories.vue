@@ -278,7 +278,6 @@ export default {
                     "tag": this.tag,
                 }
                 const results_2 = await apiSource.add_source(source)
-                console.log(results_2)
             }
         }
     },

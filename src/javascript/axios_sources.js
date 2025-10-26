@@ -12,13 +12,11 @@ export default {
     },
 
     async add_subcategorie(subcategories) {
-        console.log(subcategories)
         const results = await api.post("/subcategories/", subcategories)
         return results
     },
 
     async add_source(source) {
-        console.log(source)
         const results = api.post("/sources/", source)
         return results
     },

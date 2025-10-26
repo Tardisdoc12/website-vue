@@ -57,12 +57,10 @@ import apiSources from "@/javascript/axios_sources"
 export default {
     async mounted() {
         const results_2 = await apiSources.get_sources()
-        console.log(results_2.data)
         const data = results_2.data
 
         data.forEach(item => {
             const { categorie_id, subcat_id, source_id, subcat_title, path_file, url_file, tag } = item;
-            console.log(tag)
             // Si la catégorie n’existe pas encore, on la crée
             // if (!this.structuresRessources[categorie_id]) {
             //     return
@@ -81,7 +79,6 @@ export default {
                 this.structuresRessources[categorie_id]["subcats"][subcat_id].files.push({ path_file, url_file, source_id, tag });
             }
         });
-        console.log(this.structuresRessources)
     },
 
     data() {
