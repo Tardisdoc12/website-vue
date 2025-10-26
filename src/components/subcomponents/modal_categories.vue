@@ -79,59 +79,78 @@
                     </div>
                 </div>
 
-                <div class="flex flex-col gap-1">
-                    <label>{{ "Fichier ou url" }}</label>
-                    <select v-model="typeAdd">
-                        <option disabled value="">Choisissez</option>
-                        <option>{{ "Fichier" }}</option>
-                        <option>{{ "Url" }}</option>
-                        <option>{{ "Aucun" }}</option>
-                    </select>
-                </div>
-
+                <!-- Le type de fichier qu'on veut ajouter -->
                 <div
-                    v-if="typeAdd === 'Fichier'"
-                    class="flex flex-col gap-1"
-                    style="margin-top: 10px;"
+                    v-if="sousCategorieSelected"
                 >
-                    <label>{{ "Fichier à uploader (PDF seulement)" }}</label>
-                    <div class="border border-gray-300 rounded-lg p-3 flex items-center justify-between">
+                    <div class="flex flex-col gap-1">
+                        <label>{{ "Fichier ou url" }}</label>
+                        <select v-model="typeAdd">
+                            <option disabled value="">Choisissez</option>
+                            <option>{{ "Fichier" }}</option>
+                            <option>{{ "Url" }}</option>
+                            <option>{{ "Aucun" }}</option>
+                        </select>
+                    </div>
+
+                    <div
+                        v-if="typeAdd === 'Fichier'"
+                        class="flex flex-col gap-1"
+                        style="margin-top: 10px;"
+                    >
+                        <label>{{ "Fichier à uploader (PDF seulement)" }}</label>
+                        <div class="border border-gray-300 rounded-lg p-3 flex items-center justify-between">
+                            <input
+                                id="pdfFile"
+                                type="file"
+                                accept="application/pdf"
+                                @change="handleFileUpload"
+                            />
+                        </div>
+                    </div>
+
+                    <div
+                        v-if="typeAdd === 'Fichier'"
+                        class="flex flex-col gap-1"
+                        style="margin-top: 10px;"
+                    >
+                        <label>{{ "Url à ajouter (visualisation)" }}</label>
                         <input
-                            id="pdfFile"
-                            type="file"
-                            accept="application/pdf"
-                            @change="handleFileUpload"
+                            type="url"
+                            v-model="pdfUrl"
+                            placeholder="https://exemple.com/mon-document.pdf"
+                            class="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
                         />
                     </div>
-                </div>
 
-                <div
-                    v-if="typeAdd === 'Url'"
-                    class="flex flex-col gap-1"
-                    style="margin-top: 10px;"
-                >
-                    <label>{{ "Url à ajouter" }}</label>
-                    <input
-                        type="url"
-                        v-model="pdfUrl"
-                        placeholder="https://exemple.com"
-                        class="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
-                    />
-                </div>
+                    <div
+                        v-if="typeAdd === 'Url'"
+                        class="flex flex-col gap-1"
+                        style="margin-top: 10px;"
+                    >
+                        <label>{{ "Url à ajouter" }}</label>
+                        <input
+                            type="url"
+                            v-model="pdfUrl"
+                            placeholder="https://exemple.com"
+                            class="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
+                        />
+                    </div>
 
-                <!-- Tag Name -->
-                <div
-                    v-if="typeAdd !== 'Aucun' && typeAdd"
-                    class="flex flex-col gap-1"
-                    style="margin-top: 10px;"
-                >
-                    <label>{{ "Nom à afficher pour le fichier" }}</label>
-                    <input
-                        v-model="tag"
-                        type="text"
-                        class="w-full border p-1 rounded"
-                        required
-                    />
+                    <!-- Tag Name -->
+                    <div
+                        v-if="typeAdd !== 'Aucun' && typeAdd"
+                        class="flex flex-col gap-1"
+                        style="margin-top: 10px;"
+                    >
+                        <label>{{ "Nom à afficher pour le fichier" }}</label>
+                        <input
+                            v-model="tag"
+                            type="text"
+                            class="w-full border p-1 rounded"
+                            required
+                        />
+                    </div>
                 </div>
 
                 <!-- Le Bouton de validation -->
