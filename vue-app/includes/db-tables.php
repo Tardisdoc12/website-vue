@@ -64,6 +64,7 @@ function mon_plugin_creer_tables() {
         id_subcategorie BIGINT(20) UNSIGNED NOT NULL,
         path_file VARCHAR(200),
         url_file VARCHAR(200),
+        tag VARCHAR(200) NOT NULL,
         PRIMARY KEY (id)
     ) $charset_collate;";
 

@@ -15,7 +15,7 @@
                     </label>
                     <select v-model="categorieSelected">
                         <option disabled value="">Choisissez</option>
-                        <option :key="categorie" v-for="categorie in categories">{{ categorie }}</option>
+                        <option :key="key" v-for="(categorie, key) in subCategoriesAndSources" :value="key">{{ categorie.categorie_title }}</option>
                     </select>
                 </div>
 
@@ -51,7 +51,13 @@
                             v-model="sousCategorieSelected"
                         >
                             <option disabled value="">Choisissez</option>
-                            <option :key="sousCategorie" v-for="sousCategorie in sousCategories">{{ sousCategorie }}</option>
+                            <option
+                                :key="keySub"
+                                v-for="(sousCategorie, keySub) in subCategoriesAndSources[categorieSelected].subcats"
+                                :value="sousCategorie.subcat_title"
+                            >
+                                {{ sousCategorie.subcat_title }}
+                            </option>
                         </select>
                     </div>
 
@@ -113,6 +119,21 @@
                     />
                 </div>
 
+                <!-- Tag Name -->
+                <div
+                    v-if="typeAdd !== 'Aucun' && typeAdd"
+                    class="flex flex-col gap-1"
+                    style="margin-top: 10px;"
+                >
+                    <label>{{ "Nom à afficher pour le fichier" }}</label>
+                    <input
+                        v-model="tag"
+                        type="text"
+                        class="w-full border p-1 rounded"
+                        required
+                    />
+                </div>
+
                 <!-- Le Bouton de validation -->
                 <div class="flex items-center justify-center " style="margin-bottom:10px;margin-top: 15px;">
                     <button
@@ -135,8 +156,8 @@ import ModalComponent from './unitary_elements/modalComponent.vue';
 
 export default {
     props: {
-        sousCategories: {
-            type: String,
+        subCategoriesAndSources: {
+            type: Object,
             required: true
         }
     },
@@ -155,6 +176,7 @@ export default {
             typeAdd: "",
             pdfFile: null,
             pdfUrl: null,
+            tag: null,
         }
     },
 
@@ -164,6 +186,9 @@ export default {
                 return true
             }
             if( (!this.pdfFile && !this.pdfUrl) && this.typeAdd !== "Aucun") {
+                return true
+            }
+            if(!this.tag) {
                 return true
             }
             return false
@@ -183,21 +208,32 @@ export default {
         },
 
         async handleSubmit() {
-            let subcategorieToSend = {
-                "id_categorie": this.categories.indexOf(this.categorieSelected) + 1,
-                "title" : this.sousCategorieSelected,
+            const obj = this.subCategoriesAndSources[this.categorieSelected].subcats
+            let keyFound = Object.keys(obj).find(
+                key => obj[key].subcat_title === this.sousCategorieSelected
+            )
+            if(keyFound) {
+                console.log(keyFound)
             }
-            const results = await apiSource.add_subcategorie(subcategorieToSend)
-            
-            if (results.status !== 200) {
-                this.$emit('newCategorie', this.sousCategorieSelected)
+            else{
+                let subcategorieToSend = {
+                    "id_categorie": this.categories.indexOf(this.categorieSelected) + 1,
+                    "title" : this.sousCategorieSelected,
+                }
+                const results = await apiSource.add_subcategorie(subcategorieToSend)
+                
+                if (results.status !== 200) {
+                    this.$emit('newCategorie', this.sousCategorieSelected)
+                }
+                keyFound = results.data.id
             }
-            
+
             if(this.typeAdd !== "Aucun") {
                 const source = {
                     "path_file":this.pdfFile?.name,
                     "url_file": this.pdfUrl,
-                    "id_subcategorie": results.data.id,
+                    "id_subcategorie": keyFound,
+                    "tag": this.tag,
                 }
                 const results_2 = await apiSource.add_source(source)
                 console.log(results_2)

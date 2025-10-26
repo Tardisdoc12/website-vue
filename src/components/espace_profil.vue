@@ -25,7 +25,7 @@
         <RessourceGestion
             v-if="activeIndex === 1"
             class="mt-4 w-full"
-            :categories="sousCategorie"
+            :subCategoriesAndSources="structuresRessources"
         />
     </div>
     
@@ -41,7 +41,7 @@
     <!-- Modals -->
     <ModalCategories
         v-if="isAddingCategories"
-        :sousCategories="sousCategorie"
+        :subCategoriesAndSources="structuresRessources"
         @cancelSignal="(e)=>{isAddingCategories=e;}"
         @newCategorie="(e) => {sousCategorie.push(e); isAddingCategories=!isAddingCategories;}"
     />
@@ -56,15 +56,49 @@ import apiSources from "@/javascript/axios_sources"
 
 export default {
     async mounted() {
-        const results = await apiSources.get_subcategorie()
-        console.log(results.data)
         const results_2 = await apiSources.get_sources()
         console.log(results_2.data)
+        const data = results_2.data
+
+        data.forEach(item => {
+            const { categorie_id, subcat_id, source_id, subcat_title, path_file, url_file, tag } = item;
+            console.log(tag)
+            // Si la catégorie n’existe pas encore, on la crée
+            // if (!this.structuresRessources[categorie_id]) {
+            //     return
+            // }
+
+            // Si la sous-catégorie n’existe pas encore, on la crée
+            if (!this.structuresRessources[categorie_id]["subcats"][subcat_id]) {
+                    this.structuresRessources[categorie_id]["subcats"][subcat_id] = {
+                    subcat_title,
+                    files: [],
+                };
+            }
+
+            // On ajoute le fichier à la liste si il existe
+            if ((path_file && path_file.trim() !== "") || (url_file && url_file.trim() !== "")){
+                this.structuresRessources[categorie_id]["subcats"][subcat_id].files.push({ path_file, url_file, source_id, tag });
+            }
+        });
+        console.log(this.structuresRessources)
     },
 
     data() {
+        const RessourcesCategories= [
+            "Feuille de Suivi",
+            "Fiches et Exercices",
+            "Parcours d'entrainement",
+            "Liens Utiles"
+        ]
         return {
             labels: ['Mon Profil', 'Ressources', 'Média'],
+            
+            structuresRessources: {
+                1:{"categorie_title":RessourcesCategories[1],"subcats":{}},
+                2:{"categorie_title":RessourcesCategories[2],"subcats":{}},
+                3:{"categorie_title":RessourcesCategories[3],"subcats":{}},
+            },
             activeIndex: 0,
             user: {
                 firstName: "Toto",
@@ -75,9 +109,6 @@ export default {
                 groupeSanguin: "A+",
                 contactUrgence: "0659875412",
             },
-            sousCategorie: [
-                "Maitriser l'Embrayage",
-            ],
             isAddingCategories: false,
         }
     },

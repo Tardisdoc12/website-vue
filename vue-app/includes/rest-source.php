@@ -51,7 +51,7 @@ function myplugin_get_sources(WP_REST_Request $request) {
 
     $sql = "
         SELECT s.id AS subcat_id, s.title AS subcat_title, s.id_categorie AS categorie_id,
-               src.id AS source_id, src.path_file, src.url_file
+               src.id AS source_id, src.path_file, src.url_file, src.tag
         FROM $table_subcategories s
         LEFT JOIN $table_source src
             ON s.id = src.id_subcategorie
@@ -118,11 +118,12 @@ function myplugin_add_sources(WP_REST_Request $request) {
     $path_file = sanitize_text_field($params['path_file'] ?? '');
     $id_subcategorie = intval($params['id_subcategorie'] ?? 0);
     $url_file = sanitize_text_field($params['url_file'] ?? '');
+    $tag = sanitize_text_field($params['tag'] ?? ''); 
 
     $inserted = $wpdb->insert(
         $table_source,
-        ['id_subcategorie' => $id_subcategorie, 'path_file' => $path_file,'url_file' => $url_file ],
-        ['%d','%s','%s']
+        ['id_subcategorie' => $id_subcategorie, 'path_file' => $path_file,'url_file' => $url_file, 'tag' => $tag ],
+        ['%d','%s','%s', '%s']
     );
 
     if (!$inserted) {
