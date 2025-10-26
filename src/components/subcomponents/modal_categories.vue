@@ -153,6 +153,7 @@
 <script>
 import apiSource from '@/javascript/axios_sources';
 import ModalComponent from './unitary_elements/modalComponent.vue';
+import apiUpload from '@/javascript/axios_upload'
 
 export default {
     props: {
@@ -229,8 +230,30 @@ export default {
             }
 
             if(this.typeAdd !== "Aucun") {
+                // on gère le pdf pour l'upload
+                let pathPdf = ""
+                if (this.pdfFile) {
+                    const formData = new FormData();
+                    formData.append("file", this.pdfFile);
+                    try {
+                        const response = await apiUpload.upload_file(formData)
+                        if (response.data.source_url) {
+                            pathPdf = response.data.source_url
+                        }
+                        else {
+                            console.log("Soucis lors de la récupération du path du fichier")
+                            console.log(response.data)
+                            return
+                        }
+                    }
+                    catch (error) {
+                        console.log(error)
+                        return
+                    }
+                }
+
                 const source = {
-                    "path_file":this.pdfFile?.name,
+                    "path_file": pathPdf,
                     "url_file": this.pdfUrl,
                     "id_subcategorie": keyFound,
                     "tag": this.tag,
