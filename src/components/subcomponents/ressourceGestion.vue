@@ -1,11 +1,4 @@
 <template>
-
-    <!-- Feuille de Suivi -->
-    <DepliantWindow
-        :title="titleFeuille"
-    >
-    </DepliantWindow>
-
     <!-- Le reste -->
     <DepliantWindow
         :key="key"
@@ -80,7 +73,6 @@ export default {
 
     data(){
         return {
-            titleFeuille: "Feuille de Suivi",
             titleFicheExo: "Fiches et Exercices",
             titleParcours: "Parcours d'entrainement",
             titleLink: "Liens Utiles",
@@ -96,10 +88,7 @@ export default {
     },
 
     methods:{
-        isSuivi(label) {
-            if(label === this.titleFeuille) {
-                return true
-            }
+        isSuivi(_label) {
             return false
         },
 
