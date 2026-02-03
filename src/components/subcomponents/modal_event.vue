@@ -24,7 +24,11 @@
             <!-- Description -->
              <div style="margin-bottom: 10px;">
                 <span style="font-weight: bold; text-decoration: underline;">{{ "Description :"}}</span>
-                <p>{{ form.description }}</p>
+                <p
+                    style="white-space: pre-line;"
+                >
+                    {{ form.description }}
+                </p>
             </div>
             
             <!-- bouton -->
