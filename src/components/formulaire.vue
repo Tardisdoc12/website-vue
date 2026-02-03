@@ -174,7 +174,7 @@ export default {
                 subscribePlace: 1,
                 nonsubscribePlace: 0,
             },
-            isChecked:false,
+            isChecked:false || this?.eventSelected?.subscribePlace >= 0,
             Categories,
             cloneDates: [
             ],

@@ -68,7 +68,6 @@ export default {
                 const decoded = jwtDecode(data.token)
                 const user_id = decoded.data.user.id
                 const setUserWP = await apiWP.connect_user(user_id)
-                alert("Connecté avec succès !")
                 if (this.onSuccess) {
                     this.onSuccess(data.token)
                 }

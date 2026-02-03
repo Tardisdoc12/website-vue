@@ -86,7 +86,7 @@
                     type="submit"
                     class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
                 >
-                    Valider l'inscription
+                    Confirmer l'inscription
                 </button>
             </div>
         
@@ -169,7 +169,6 @@ export default {
 
         async handleSubmit() {
             await inscritAPI.create_inscrit(this.event_id, this.formUser)
-            alert("Inscription enregistrée avec succès !")
             this.$emit('inscritValid', !this.isOpen)
             
         }
