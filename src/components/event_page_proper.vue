@@ -2,31 +2,35 @@
 <template>
   <div v-if="eventData">
     <h1>{{ eventData.title }}</h1>
-    <p>{{ eventData.description }}</p>
+    <p style="white-space: pre-line;">{{ eventData.description }}</p>
   </div>
   <div v-else>Chargement...</div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue'
-import axios from 'axios'
+<script>
+import axiosEvent from '../javascript/axios_events.js'
 
-const props = defineProps({
-  postId: {
-    type: String,
-    required: true
-  }
-})
+export default {
+  props:{
+      postId: {
+          type: String,
+          required: true
+      }
+  },
 
-const eventData = ref(null)
+  data() {
+      return {
+          eventData: [],
+      }
+  },
 
-onMounted(async () => {
-    console.log('Fetching event data for postId:', props.postId)
-    try {
-        const res = await axios.get(`/wp-json/vue-plugin/v1/events/${props.postId}`)
-        eventData.value = res.data
-    } catch (e) {
-        console.error(e)
-    }
-})
+  async mounted() {
+      try {
+          const res = await axiosEvent.getEventByPostId(this.postId)
+          this.eventData = res
+      } catch (e) {
+          console.error(e)
+      }
+  },
+}
 </script>

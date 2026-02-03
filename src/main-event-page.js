@@ -16,20 +16,7 @@ import { fab } from '@fortawesome/free-brands-svg-icons'
 /* add icons to the library */
 library.add(fas, far, fab)
 
-const initVueApp = () => {
-    console.log("Initialisation de l'application Vue pour la page d'événement");
-    const el = document.getElementById('event-page');
-    if (!el) return;
-
-    const postId = el.dataset.postId;
-    const app = createApp(EventPage, { postId });
-    app.component('font-awesome-icon', FontAwesomeIcon);
-    app.mount(el);
-};
-
-
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Initialisation de l'application Vue pour la page d'événement");
     const el = document.getElementById('event-page');
     if (!el) return;
 

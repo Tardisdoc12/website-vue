@@ -37,14 +37,22 @@ export default {
     async getAllEvents() {
         // await initApi();
         const response = await api.get("/events/");
-        console.log(response);
         const events = Array.from(Object.values({...response.data.events}))
         return events.map(e => conversion_from_bdd(e));
     },
 
     // Récupérer un event par ID
     async getEvent(id) {
-        response = await api.get(`/events/${id}/`);
+        const response = await api.get(`/events/${id}/`);
+        if (response.data) {
+            return conversion_from_bdd(response.data)
+        }
+        return response.data
+    },
+
+    // Récupérer un event par post Id
+    async getEventByPostId(id) {
+        const response = await api.get(`/events/post/${id}/`);
         if (response.data) {
             return conversion_from_bdd(response.data)
         }

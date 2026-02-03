@@ -176,6 +176,67 @@ function monplugin_get_event_id(WP_REST_Request $request) {
 }
 
 //------------------------------------------------------------------------------
+// Récupère un event en particulier via l'id de l'event
+
+add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1', '/events/post/(?P<id>\d+)', [
+        'methods'             => 'GET',
+        'callback'            => 'monplugin_get_event_post_id',
+        'permission_callback' => 'monplugin_verify_csrf'
+    ]);
+});
+
+function monplugin_get_event_post_id(WP_REST_Request $request) {
+    global $wpdb;
+    $table_events   = $wpdb->prefix . "events";
+    $table_inscrits = $wpdb->prefix . "inscrits";
+    $table_users    = $wpdb->prefix . "users_inscrits";
+
+    $event_post_id = intval($request['id']);
+
+    // Récupérer un seul événement
+    $event = $wpdb->get_row(
+        $wpdb->prepare("SELECT * FROM $table_events WHERE post_id = %d", $event_post_id)
+    );
+
+    if (!$event) {
+        return new WP_Error(
+            'event_not_found',
+            'Aucun événement trouvé avec cet ID',
+            ['status' => 404]
+        );
+    }
+
+    // Récupérer les utilisateurs inscrits
+    $users = $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT u.id, u.user_name, u.email, u.phone, u.experience, i.goal, u.is_adherent, i.bike
+             FROM $table_inscrits i
+             JOIN $table_users u ON u.id = i.user_id
+             WHERE i.event_id = %d",
+            $event->id
+        )
+    );
+
+    // Construire la réponse
+    $result = [
+        'id'                  => $event->id,
+        'post_id'             => $event->post_id,
+        'title'               => $event->title,
+        'start_date'          => $event->start_date,
+        'end_date'            => $event->end_date,
+        'description'         => $event->description,
+        'place'               => $event->place,
+        'category'            => $event->category,
+        'subscribe_places'    => $event->subscribe_places,
+        'nonsubscribe_places' => $event->nonsubscribe_places,
+        'users'               => $users
+    ];
+
+    return $result;
+}
+
+//------------------------------------------------------------------------------
 // Créer un event
 
 add_action('rest_api_init', function () {
