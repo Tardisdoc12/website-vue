@@ -204,6 +204,7 @@ function monplugin_create_events(WP_REST_Request $request) {
         $wpdb->prefix . 'events',
         [
             'post_id' => $post_id,
+            'title' => sanitize_text_field($request['title']),
             'start_date' => sanitize_text_field($request['start_date']),
             'end_date' => sanitize_text_field($request['end_date']),
             'description' => sanitize_textarea_field($request['description']),
