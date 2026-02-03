@@ -11,6 +11,24 @@ $file = "functions.php";
 require_once plugin_dir_path(__FILE__) . $file;
 
 //------------------------------------------------------------------------------
+// Enregistre le Custom Post Type "event"
+
+add_action('init', 'monplugin_register_event_cpt');
+
+function monplugin_register_event_cpt() {
+    register_post_type('event', [
+        'labels' => [
+            'name' => 'Événements',
+            'singular_name' => 'Événement'
+        ],
+        'public' => true,
+        'rewrite' => ['slug' => 'evenement'],
+        'supports' => ['title', 'editor'],
+        'show_in_rest' => true
+    ]);
+}
+
+//------------------------------------------------------------------------------
 // Récupère tous les events
 
 add_action('rest_api_init', function () {
@@ -45,6 +63,7 @@ function monplugin_get_events(WP_REST_Request $request) {
         // Ajouter l’événement dans la réponse avec ses utilisateurs
         $result[$event->id] = [
             'id'          => $event->id,
+            'post_id'     => $event->post_id,
             'title'       => $event->title,
             'start_date'  => $event->start_date,
             'end_date'    => $event->end_date,
@@ -141,6 +160,7 @@ function monplugin_get_event_id(WP_REST_Request $request) {
     // Construire la réponse
     $result = [
         'id'                  => $event->id,
+        'post_id'             => $event->post_id,
         'title'               => $event->title,
         'start_date'          => $event->start_date,
         'end_date'            => $event->end_date,
@@ -168,19 +188,41 @@ add_action('rest_api_init', function () {
 
 function monplugin_create_events(WP_REST_Request $request) {
     global $wpdb;
-    $table = $wpdb->prefix . "events";
-    $wpdb->insert($table, [
-        'title' => sanitize_text_field($request['title']),
-        'start_date' => sanitize_text_field($request['start_date']),
-        'end_date' => sanitize_text_field($request['end_date']),
-        'description' => sanitize_textarea_field($request['description']),
-        'place' => sanitize_text_field($request['place']),
-        'category' => sanitize_text_field($request['category']),
-        'subscribe_places' => intval($request['subscribe_places']),
-        'nonsubscribe_places' => intval($request['nonsubscribe_places']),
-    ]);
 
-    return ['id' => $wpdb->insert_id];
+    $post_id = wp_insert_post([
+        'post_type'   => 'event',
+        'post_title'  => sanitize_text_field($request['title']),
+        'post_status' => 'publish',
+        'post_content'=> sanitize_textarea_field($request['description']),
+    ], true);
+
+    if (is_wp_error($post_id)) {
+        return new WP_Error('post_error', 'Erreur création page');
+    }
+
+    $wpdb->insert(
+        $wpdb->prefix . 'events',
+        [
+            'post_id' => $post_id,
+            'start_date' => sanitize_text_field($request['start_date']),
+            'end_date' => sanitize_text_field($request['end_date']),
+            'description' => sanitize_textarea_field($request['description']),
+            'place' => sanitize_text_field($request['place']),
+            'category' => sanitize_text_field($request['category']),
+            'subscribe_places' => intval($request['subscribe_places']),
+            'nonsubscribe_places' => intval($request['nonsubscribe_places']),
+        ]
+    );
+
+    if ($wpdb->last_error) {
+        wp_delete_post($post_id, true);
+        return new WP_Error('db_error', 'Erreur DB');
+    }
+
+    return [
+        'id'   => $wpdb->insert_id,
+        'url'  => get_permalink($post_id)
+    ];
 }
 //------------------------------------------------------------------------------
 // Modifie un évènement
@@ -250,6 +292,15 @@ function monplugin_delete_events(WP_REST_Request $request) {
             'Cet événement n’existe pas.',
             ['status' => 404]
         );
+    }
+
+    //supprimer le post lié à l'événement
+    $post_id = $wpdb->get_var($wpdb->prepare(
+        "SELECT post_id FROM $table_events WHERE id = %d",
+        $event_id
+    ));
+    if ($post_id) {
+        wp_delete_post($post_id, true);
     }
 
     //supprimer les inscrits

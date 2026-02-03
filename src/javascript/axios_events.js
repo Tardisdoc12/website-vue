@@ -5,6 +5,7 @@ const API_URL = 'https://localhost:8000/events/';
 function conversion_to_bdd(datas) {
     return {
         title: datas['title'],
+        post_id: datas['post_id'],
         start_date: datas['startDate'],
         end_date: datas['endDate'],
         description: datas['description'],
@@ -18,6 +19,7 @@ function conversion_to_bdd(datas) {
 function conversion_from_bdd(datas) {
     return {
         id: datas["id"],
+        post_id: datas['post_id'],
         title: datas['title'],
         startDate: datas['start_date'],
         endDate: datas['end_date'],
@@ -35,6 +37,7 @@ export default {
     async getAllEvents() {
         // await initApi();
         const response = await api.get("/events/");
+        console.log(response);
         const events = Array.from(Object.values({...response.data.events}))
         return events.map(e => conversion_from_bdd(e));
     },

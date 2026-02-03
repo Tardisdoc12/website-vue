@@ -15,6 +15,7 @@ function mon_plugin_creer_tables() {
     $table_events = $wpdb->prefix . "events";
     $sql1 = "CREATE TABLE $table_events (
         id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+        post_id BIGINT(20) UNSIGNED NOT NULL,
         title VARCHAR(200) NOT NULL,
         start_date DATETIME NOT NULL,
         end_date DATETIME NULL,

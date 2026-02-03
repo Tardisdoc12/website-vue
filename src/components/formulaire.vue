@@ -303,6 +303,7 @@ export default {
             if (!this.isUpdate){
                 
                 const response = await this.createEvent(this.form)
+                console.log(response)
                 if (this.cloneDates.length > 0) {
                     for (const range of this.cloneDates) {
                         await this.createEvent({

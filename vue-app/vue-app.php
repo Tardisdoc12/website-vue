@@ -18,6 +18,7 @@ $includes = [
     'includes/rest-users.php',
     'includes/rest-auth.php',
     'includes/rest-source.php',
+    'includes/migrations.php',
 ];
 
 foreach ($includes as $file) {
@@ -25,6 +26,7 @@ foreach ($includes as $file) {
 }
 
 register_activation_hook(__FILE__, 'mon_plugin_creer_tables');
+register_activation_hook(__FILE__, 'monplugin_run_migrations');
 
 //------------------------------------------------------------------------------
 // End of File
