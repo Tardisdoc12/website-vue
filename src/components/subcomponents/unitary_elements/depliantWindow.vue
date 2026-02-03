@@ -97,7 +97,7 @@ export default {
 
 <style scoped>
 .accordion {
-  width: 320px;
+  width: 80%;
   border: 1px solid #ccc;
   border-radius: 6px;
   background-color: white;

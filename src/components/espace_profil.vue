@@ -1,14 +1,23 @@
 <template>
-    <div class="flex flex-wrap justify-center gap-2 md:flex-nowrap">
+    <div class="flex w-[80%] mx-auto gap-4 justify-center">
         <button
             v-for="(label, i) in labels"
             :key="i"
             :class="['btn', { pressed: activeIndex === i }]"
+            class="flex-1 text-center"
             @click="activate(i)"
             @keydown.enter.prevent="activate(i)"
             @keydown.space.prevent="activate(i)"
             :aria-pressed="activeIndex === i ? 'true' : 'false'"
             type="button"
+            :style="{
+                display: inline-block,
+                color: activeIndex === i ? '#FFFFFF' : '#245473',
+                padding: '1.5rem 1.5rem',
+                borderRadius: '9999px',
+                backgroundColor: activeIndex === i ? '#245473' : '#FFFFFF',
+                border: '2px solid #245473',
+            }"
         >
             {{ label }}
         </button>
