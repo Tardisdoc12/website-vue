@@ -17,6 +17,7 @@ import { fab } from '@fortawesome/free-brands-svg-icons'
 library.add(fas, far, fab)
 
 const initVueApp = () => {
+    console.log("Initialisation de l'application Vue pour la page d'événement");
     const el = document.getElementById('event-page');
     if (!el) return;
 
@@ -27,12 +28,13 @@ const initVueApp = () => {
 };
 
 
-// Si Elementor est présent
-if (typeof elementorFrontend !== 'undefined' && elementorFrontend.hooks) {
-    elementorFrontend.hooks.addAction('frontend/element_ready/global', () => {
-        initVueApp();
-    });
-} else {
-    // Fallback : attendre que le DOM soit prêt
-    document.addEventListener('DOMContentLoaded', initVueApp);
-}
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("Initialisation de l'application Vue pour la page d'événement");
+    const el = document.getElementById('event-page');
+    if (!el) return;
+
+    const postId = el.dataset.postId;
+    const app = createApp(EventPage, { postId });
+    app.component('font-awesome-icon', FontAwesomeIcon);
+    app.mount(el);
+});

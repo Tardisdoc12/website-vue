@@ -20,7 +20,6 @@ $includes = [
     'includes/rest-source.php',
     'includes/migrations.php',
     'includes/events_template.php',
-    'includes/elementor-fix.php',
 ];
 
 foreach ($includes as $file) {
