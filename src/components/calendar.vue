@@ -30,7 +30,8 @@
         @inscritValid="inscribeEnd"
     />
     <ModalPayement
-        v-if="payement && eventSelected.categorie === 'seance'"
+        v-if="payement"
+        :Date="eventSelected.startDate"
         @cancelSignal="(e) => {payement=false; eventSelected={}}"
     />
 </template>
@@ -199,9 +200,13 @@ export default {
         },
 
         inscribeEnd(e) {
-            if(!this.isAdherent){
-                this.inscribe=e;
+            if (this.eventSelected.categorie === 'stage') {
                 this.payement=true;
+                this.inscribe=e;
+            }
+            else if (this.eventSelected.categorie === 'seance' && !this.isAdherent) {
+                this.payement=true;
+                this.inscribe=e;
             }
             else {
                 this.inscribe=e;
