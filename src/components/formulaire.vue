@@ -40,7 +40,7 @@
 
                 <!-- Ajouter des dates -->
                 <div>
-                    <label class="block font-medium">
+                    <div class="block font-medium">
                         Cloner l'évènement pour les dates :
                         <button 
                             type="button" 
@@ -56,7 +56,8 @@
                         >
                              <font-awesome-icon icon="fa-solid fa-plus" />
                         </button>
-                    </label>
+                    </div>
+                    
                     <div v-for="(range, index) in cloneDates" :key="index" class="flex gap-2 items-center" style="margin-bottom: 5px;">
                         <input type="datetime-local" v-model="range.start_date" class="border p-1" />
                         <input type="datetime-local" v-model="range.end_date" class="border p-1" />
