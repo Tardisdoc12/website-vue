@@ -18,6 +18,7 @@ const entries = {
   account: path.resolve(__dirname, 'src/main-global-account.js'),
   form_adhesion: path.resolve(__dirname, 'src/main-adherent.js'),
   test: path.resolve(__dirname, 'src/main-test.js'),
+  "event-page" : path.resolve(__dirname, 'src/main-event-page.js'),
 }
 
 // Si un ENTRY est passé → build seulement celle-là

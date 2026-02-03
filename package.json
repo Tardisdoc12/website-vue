@@ -13,8 +13,9 @@
     "build:events": "cross-env ENTRY=events vite build",
     "build:connexion": "cross-env ENTRY=connexion vite build",
     "build:account": "cross-env ENTRY=account vite build",
-    "build:form_adhesion": "ENTRY=form_adhesion vite build",
-    "build:test": "cross-env Entry=test vite build",
+    "build:form_adhesion": "cross-env ENTRY=form_adhesion vite build",
+    "build:test": "cross-env ENTRY=test vite build",
+    "build:event-page": "cross-env ENTRY=event-page vite build",
     "build:all": "npm run build:login && npm run build:calendar && npm run build:events && npm run build:connexion && npm run build:account && npm run build:form_adhesion && npm run build:test",
     "preview": "vite preview"
   },
