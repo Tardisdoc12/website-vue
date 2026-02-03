@@ -4,8 +4,8 @@
         :isCancel="isOpen"
         @changeBool="Cancel"
     >
-        <p style="margin-bottom: 10px; margin-top: 10px;">{{  "Votre inscription ne sera validée qu'après paiement. Merci de Cliquer sur le Bouton pour procéderr au payement" }}</p>
-        <iframe class="center-helloasso" :src="getBilleterieURL" style="width: 80vw; height: 80vh; border: none;">
+        <p style="margin-bottom: 10px; margin-top: 10px; margin-left: 10px;margin-right: 10px;">{{  "Votre inscription ne sera validée qu'après paiement. Merci de Cliquer sur le Bouton pour procéderr au payement" }}</p>
+        <iframe class="center-helloasso" :src="getBilleterieURL" style="border: none;">
         </iframe>
     </Modal>
 </template>
