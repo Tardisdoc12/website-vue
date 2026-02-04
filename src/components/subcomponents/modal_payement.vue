@@ -33,7 +33,6 @@ export default {
     },
 
     computed: {
-
         getBilleterieURL() {
             if (this.compareDate(this.Date, 1, 22, 2026)) {
                 return "https://www.helloasso.com/associations/mps-moto/evenements/stage-reprise-de-guidon/widget-bouton"

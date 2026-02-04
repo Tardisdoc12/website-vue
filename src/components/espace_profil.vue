@@ -1,5 +1,5 @@
 <template>
-    <div class="flex w-[80%] mx-auto gap-4 justify-center">
+    <div class="flex flex-wrap w-[80%] mx-auto gap-4 justify-center">
         <button
             v-for="(label, i) in labels"
             :key="i"
