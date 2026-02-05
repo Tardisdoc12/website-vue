@@ -60,21 +60,29 @@
     >
         <div style="margin-left:25px;margin-top: 5px;">
             <div v-if="!isUrgencesChange">
-                <p><strong>Groupe sanguin :</strong> {{ user.groupeSanguin || "—" }}</p>
-                <p><strong>Contact d’urgence :</strong> {{ user.contactUrgence || "—" }}</p>
+                <p><strong>Groupe sanguin :</strong> {{ user.blood || "—" }}</p>
+                <p><strong>Nom et Prénom du contact d’urgence :</strong> {{ user.urgence_name || "—" }}</p>
+                <p><strong>Téléphone du contact d’urgence :</strong> {{ user.urgence_phone || "—" }}</p>
             </div>
             <div v-else>
                 <li>
-                    <label><strong>Groupe sanguin :</strong></label>
+                    <label><strong> Groupe sanguin :</strong></label>
                     <input
-                        v-model="user.groupeSanguin"
+                        v-model="user.blood"
                         class="oval-input"
                     />
                 </li>
                 <li>
-                    <label><strong>Contact d’urgence :</strong></label>
+                    <label><strong> Nom et Prénom du contact d’urgence :</strong></label>
                     <input
-                        v-model="user.contactUrgence"
+                        v-model="user.urgence_name"
+                        class="oval-input"
+                    />
+                </li>
+                <li>
+                    <label><strong> Téléphone du contact d’urgence :</strong></label>
+                    <input
+                        v-model="user.urgence_phone"
                         class="oval-input"
                     />
                 </li>
@@ -88,13 +96,14 @@
 </template>
 
 <script>
+import api_user from "@/javascript/users_wp.js"
 import DepliantWindow from './unitary_elements/depliantWindow.vue';
 
 export default {
 
     props: {
         DataUser: {
-            required: false,
+            required: true,
             type: Object
         }
     },
@@ -105,15 +114,17 @@ export default {
             titleUrgences: "Urgences",
             isInformationsChange: false,
             isUrgencesChange: false,
-            user: {
-                ...this.DataUser
-            }
         }
     },
 
+    computed: {
+        user() {
+            return this.DataUser
+        }
+    },
 
     methods: {
-        validationChangement() {
+        async validationChangement() {
             if(this.isInformationsChange)
             {
                 this.isInformationsChange = !this.isInformationsChange
@@ -122,7 +133,16 @@ export default {
             {
                 this.isUrgencesChange = !this.isUrgencesChange
             }
-            this.$emit("userChange", this.user)
+
+            try {
+                const response = await api_user.update_user(this.user)
+                if (response.data.success) {
+                    this.$emit("userChange", this.user)
+                }
+            } catch (err) {
+                console.error(err)
+                return
+            }
         },
 
         modifierInformations() {

@@ -48,6 +48,7 @@ function mon_plugin_creer_tables() {
         is_adherent TINYINT(1) NOT NULL DEFAULT 0,
         blood VARCHAR(10),
         urgence_phone VARCHAR(10),
+        urgence_name VARCHAR(200),
         PRIMARY KEY (id)
     ) $charset_collate;";
 

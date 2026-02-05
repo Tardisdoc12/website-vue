@@ -12,6 +12,15 @@ export default {
         }
     },
 
+    async update_user(user) {
+        try {
+            const response = await api.post(`/user/update`, user)
+            return response
+        } catch (err) {
+            throw err
+        }
+    },
+
     async get_users() {
         const response = await api.get('/users/')
         return response.data

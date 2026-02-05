@@ -11,6 +11,9 @@ add_action('rest_api_init', function() {
         'adherentNumber',
         'telephone',
         'moto',
+        'blood',
+        'urgence_phone',
+        'urgence_name'
     ];
 
     foreach ($custom_fields as $field) {

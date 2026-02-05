@@ -33,6 +33,9 @@ function monplugin_get_users(WP_REST_Request $request) {
         $user->lastName   = get_user_meta($user->ID, 'lastName', true);
         $user->telephone  = get_user_meta($user->ID, 'telephone', true);
         $user->moto       = get_user_meta($user->ID, 'moto', true);
+        $user->blood      = get_user_meta($user->ID, 'blood', true);
+        $user->urgence_phone = get_user_meta($user->ID, 'urgence_phone', true);
+        $user->urgence_name  = get_user_meta($user->ID, 'urgence_name', true);
     }
 
     return [
@@ -71,6 +74,9 @@ function monplugin_get_user(WP_REST_Request $request) {
         "telephone" => get_user_meta($user->ID, 'telephone', true),
         "moto"      => get_user_meta($user->ID, 'moto', true),
         "roles"     => $user->roles,
+        "blood"     => get_user_meta($user->ID, 'blood', true),
+        "urgence_phone" => get_user_meta($user->ID, 'urgence_phone', true),
+        "urgence_name"  => get_user_meta($user->ID, 'urgence_name', true),
     ];
 
     return [
@@ -97,6 +103,9 @@ function myplugin_register_user(WP_REST_Request $request) {
     $lastName  = sanitize_text_field($request->get_param('lastName'));
     $telephone  = sanitize_text_field($request->get_param('telephone'));
     $moto       = sanitize_text_field($request->get_param('moto'));
+    $blood      = sanitize_text_field($request->get_param('blood'));
+    $urgence_name  = sanitize_text_field($request->get_param('urgence_name'));
+    $urgence_phone = sanitize_text_field($request->get_param('urgence_phone'));
 
     if (empty($username) || empty($email) || empty($password)) {
         return new WP_Error('missing_fields', 'Tous les champs sont obligatoires', ['status' => 400]);
@@ -127,6 +136,9 @@ function myplugin_register_user(WP_REST_Request $request) {
     update_user_meta($user_id, 'telephone', $telephone);
     update_user_meta($user_id, 'firstName', $firstName);
     update_user_meta($user_id, 'lastName', $lastName);
+    update_user_meta($user_id, 'blood', $blood);
+    update_user_meta($user_id, 'urgence_name', $urgence_name);
+    update_user_meta($user_id, 'urgence_phone', $urgence_phone);
 
     return [
         'success' => true,
@@ -135,6 +147,69 @@ function myplugin_register_user(WP_REST_Request $request) {
     ];
 }
 
+//------------------------------------------------------------------------------
+
+add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1', '/user/update', [
+        'methods'  => 'POST',
+        'callback' => 'myplugin_update_user',
+        'permission_callback' => 'monplugin_verify_csrf',
+    ]);
+});
+
+function myplugin_update_user(WP_REST_Request $request) {
+
+    // 🔐 utilisateur connecté obligatoire
+    $user_id = get_current_user_id();
+    if (!$user_id) {
+        return new WP_Error('not_logged_in', 'Utilisateur non connecté', ['status' => 401]);
+    }
+
+    // Données de base
+    $email         = sanitize_email($request->get_param('email'));
+    $firstName     = sanitize_text_field($request->get_param('firstName'));
+    $lastName      = sanitize_text_field($request->get_param('lastName'));
+    $telephone     = sanitize_text_field($request->get_param('telephone'));
+    $moto          = sanitize_text_field($request->get_param('moto'));
+    $blood         = sanitize_text_field($request->get_param('blood'));
+    $urgence_phone = sanitize_text_field($request->get_param('urgence_phone'));
+    $urgence_name  = sanitize_text_field($request->get_param('urgence_name'));
+
+    // Validation minimale
+    if (empty($email)) {
+        return new WP_Error('missing_email', 'Email obligatoire', ['status' => 400]);
+    }
+
+    // Vérifier email déjà utilisé par un autre utilisateur
+    $existing_user = get_user_by('email', $email);
+    if ($existing_user && $existing_user->ID !== $user_id) {
+        return new WP_Error('email_exists', 'Email déjà utilisé', ['status' => 400]);
+    }
+
+    // Mise à jour du user WP
+    $user_update = wp_update_user([
+        'ID'         => $user_id,
+        'user_email' => $email,
+        'first_name' => $firstName,
+        'last_name'  => $lastName,
+    ]);
+
+    if (is_wp_error($user_update)) {
+        return $user_update;
+    }
+
+    // Mise à jour des metas
+    update_user_meta($user_id, 'telephone', $telephone);
+    update_user_meta($user_id, 'moto', $moto);
+    update_user_meta($user_id, 'blood', $blood);
+    update_user_meta($user_id, 'urgence_phone', $urgence_phone);
+    update_user_meta($user_id, 'urgence_name', $urgence_name);
+
+    return [
+        'success' => true,
+        'user_id' => $user_id,
+    ];
+}
 //------------------------------------------------------------------------------
 // End of File
 //------------------------------------------------------------------------------

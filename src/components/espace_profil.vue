@@ -90,6 +90,8 @@ import ModalCategories from "./subcomponents/modal_categories.vue";
 import ModalFilesAccount from "./subcomponents/modal_files_account.vue";
 import ModalRemoveSubcategorie from "./subcomponents/modal_remove_subcategorie.vue";
 import apiSources from "@/javascript/axios_sources"
+import { jwtDecode } from "jwt-decode"
+import api from "../javascript/users_wp.js"
 
 export default {
     async mounted() {
@@ -111,6 +113,15 @@ export default {
                 this.structuresRessources[categorie_id]["subcats"][subcat_id].files.push({ path_file, url_file, source_id, tag, id_wp });
             }
         });
+        // On recherche qui est l'utilisateur connecté pour afficher les bonnes informations
+        const token = sessionStorage.getItem("mps_moto")
+        if (token) {
+            const decoded = jwtDecode(token)
+            const user_id = decoded.data.user.id
+            const user_info = await api.get_user(user_id)
+            this.user = user_info.user
+        }
+
     },
 
     data() {
@@ -128,15 +139,7 @@ export default {
                 2:{"categorie_title":RessourcesCategories[2],"subcats":{}},
             },
             activeIndex: 0,
-            user: {
-                firstName: "Toto",
-                lastName: "Tutu",
-                email: "test@gmail.com",
-                telephone: "0624523551",
-                moto: "450",
-                groupeSanguin: "A+",
-                contactUrgence: "0659875412",
-            },
+            user: {},
             isAddingFiles: false,
             isAddingCategories: false,
             isRemovingCategories: false,
