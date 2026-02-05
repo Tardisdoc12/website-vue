@@ -46,6 +46,17 @@
         <button
             @click="() => {isAddingFiles=true;}"
         >{{ "Ajouter un fichier" }}</button>
+        <button
+            @click="() => {isRemovingCategories=true;}"
+            class="appearance-none"
+            :style="{
+                display: 'inline-block',
+                color: 'white',
+                padding: '1rem 1rem',
+                borderRadius: '0.375rem',
+                backgroundColor: '#FF0000',
+            }"
+        >{{ "Supprimer une Catégorie" }}</button>
     </div>
 
     <!-- Modals -->
@@ -63,6 +74,13 @@
         @newFile="handleNewFile"
     />
 
+    <ModalRemoveSubcategorie
+        v-if="isRemovingCategories"
+        :subCategoriesAndSources="structuresRessources"
+        @cancelSignal="(e)=>{isRemovingCategories=e;}"
+        @deleteSubcategorie="handleDeleteSubcategorie"
+     />
+
 </template>
 
 <script>
@@ -70,6 +88,7 @@ import ProfilInformation from "./subcomponents/compteGestion.vue"
 import RessourceGestion from "./subcomponents/ressourceGestion.vue";
 import ModalCategories from "./subcomponents/modal_categories.vue";
 import ModalFilesAccount from "./subcomponents/modal_files_account.vue";
+import ModalRemoveSubcategorie from "./subcomponents/modal_remove_subcategorie.vue";
 import apiSources from "@/javascript/axios_sources"
 
 export default {
@@ -121,6 +140,7 @@ export default {
             },
             isAddingFiles: false,
             isAddingCategories: false,
+            isRemovingCategories: false,
         }
     },
 
@@ -131,6 +151,15 @@ export default {
                 files: []
             }
             this.isAddingCategories = false
+        },
+        handleDeleteSubcategorie(idSubcategorie) {
+            for (const catKey in this.structuresRessources) {
+                const cat = this.structuresRessources[catKey];
+                if (cat.subcats[idSubcategorie]) {
+                    delete cat.subcats[idSubcategorie];
+                    break;
+                }
+            }
         },
         handleNewFile(newFile) {
             const { id_categorie, id_subcat } = newFile;
@@ -152,6 +181,7 @@ export default {
         RessourceGestion,
         ModalFilesAccount,
         ModalCategories,
+        ModalRemoveSubcategorie,
     }
 }
 </script>
