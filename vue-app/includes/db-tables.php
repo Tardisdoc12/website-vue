@@ -66,6 +66,7 @@ function mon_plugin_creer_tables() {
         path_file VARCHAR(200),
         url_file VARCHAR(200),
         tag VARCHAR(200) NOT NULL,
+        id_wp BIGINT(20) UNSIGNED NOT NULL,
         PRIMARY KEY (id)
     ) $charset_collate;";
 

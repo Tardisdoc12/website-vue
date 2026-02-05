@@ -97,8 +97,7 @@ export default {
         const data = results_2.data
 
         data.forEach(item => {
-            const { categorie_id, subcat_id, source_id, subcat_title, path_file, url_file, tag } = item;
-
+            const { categorie_id, subcat_id, source_id, subcat_title, path_file, url_file, tag, id_wp } = item;
             // Si la sous-catégorie n’existe pas encore, on la crée
             if (!this.structuresRessources[categorie_id]["subcats"][subcat_id]) {
                     this.structuresRessources[categorie_id]["subcats"][subcat_id] = {
@@ -109,7 +108,7 @@ export default {
 
             // On ajoute le fichier à la liste si il existe
             if ((path_file && path_file.trim() !== "") || (url_file && url_file.trim() !== "")){
-                this.structuresRessources[categorie_id]["subcats"][subcat_id].files.push({ path_file, url_file, source_id, tag });
+                this.structuresRessources[categorie_id]["subcats"][subcat_id].files.push({ path_file, url_file, source_id, tag, id_wp });
             }
         });
     },

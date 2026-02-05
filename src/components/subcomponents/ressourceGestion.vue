@@ -78,6 +78,7 @@
 <script>
 import axios_sources from "../../javascript/axios_sources.js";
 import DepliantWindow from './unitary_elements/depliantWindow.vue';
+import api_upload from '@/javascript/axios_upload'
 
 export default {
 
@@ -121,6 +122,9 @@ export default {
         async DeleteFile(file) {
             if (confirm("Êtes-vous sûr de vouloir supprimer ce fichier ?")) {
                 const response = await axios_sources.delete_source(file.source_id);
+                if (file.id_wp) {
+                    const res = await api_upload.delete_file(file.id_wp);
+                }
                 if (response.data.success) {
                     // Supprimer le fichier de la structure locale
                     for (const catKey in this.structuresRessources) {
@@ -128,7 +132,7 @@ export default {
                         for (const subcatKey in cat.subcats) {
                             const subcat = cat.subcats[subcatKey];
                             const fileIndex = subcat.files.findIndex(f => f.source_id === file.source_id);
-                            if (fileIndex !== -1) {
+                            if (fileIndex !== -1) {               
                                 subcat.files.splice(fileIndex, 1);
                                 return; // Sortir une fois que le fichier est trouvé et supprimé
                             }

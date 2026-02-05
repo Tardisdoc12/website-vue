@@ -188,6 +188,7 @@ export default{
 
         async handleSubmit() {
             let pathPdf = ""
+            let pdfIDWP = null
             const obj = this.subCategoriesAndSources[this.categorieSelected].subcats
             let keyFound = Object.keys(obj).find(
                 key => obj[key].subcat_title === this.sousCategorieSelected
@@ -199,6 +200,7 @@ export default{
                     const response = await apiUpload.upload_file(formData)
                     if (response.data.source_url) {
                         pathPdf = response.data.source_url
+                        pdfIDWP = response.data.id
                     }
                     else {
                         console.log("Soucis lors de la récupération du path du fichier")
@@ -217,6 +219,7 @@ export default{
                 "url_file": this.pdfUrl,
                 "id_subcategorie": keyFound,
                 "tag": this.tag,
+                "id_wp": pdfIDWP
             }
             const results_2 = await apiSource.add_source(source)
             source.id_categorie = this.categorieSelected
