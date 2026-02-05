@@ -212,13 +212,15 @@ export default{
                 }
             }
 
-            const source = {
+            let source = {
                 "path_file": pathPdf,
                 "url_file": this.pdfUrl,
                 "id_subcategorie": keyFound,
                 "tag": this.tag,
             }
             const results_2 = await apiSource.add_source(source)
+            source.id_categorie = this.categorieSelected
+            this.$emit('newFile', source)
         }
     },
 

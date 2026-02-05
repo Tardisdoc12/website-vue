@@ -53,14 +53,14 @@
         v-if="isAddingCategories"
         :subCategoriesAndSources="structuresRessources"
         @cancelSignal="(e)=>{isAddingCategories=e;}"
-        @newCategorie="(e) => {sousCategorie.push(e); isAddingCategories=!isAddingCategories;}"
+        @newCategorie="handleNewCategorie"
     />
 
     <ModalFilesAccount
         v-if="isAddingFiles"
         :subCategoriesAndSources="structuresRessources"
         @cancelSignal="(e)=>{isAddingFiles=e;}"
-        @newFile="(e) => {isAddingFiles=!isAddingFiles;}"
+        @newFile="handleNewFile"
     />
 
 </template>
@@ -78,7 +78,6 @@ export default {
         const data = results_2.data
 
         data.forEach(item => {
-            console.log(item)
             const { categorie_id, subcat_id, source_id, subcat_title, path_file, url_file, tag } = item;
 
             // Si la sous-catégorie n’existe pas encore, on la crée
@@ -94,7 +93,6 @@ export default {
                 this.structuresRessources[categorie_id]["subcats"][subcat_id].files.push({ path_file, url_file, source_id, tag });
             }
         });
-        console.log(this.structuresRessources)
     },
 
     data() {
@@ -127,6 +125,20 @@ export default {
     },
 
     methods: {
+        handleNewCategorie(newCategorie) {
+            this.structuresRessources[newCategorie.id_categorie].subcats[newCategorie.id] = {
+                subcat_title: newCategorie.title,
+                files: []
+            }
+            this.isAddingCategories = false
+        },
+        handleNewFile(newFile) {
+            const { id_categorie, id_subcat } = newFile;
+            if (this.structuresRessources[id_categorie] && this.structuresRessources[id_categorie].subcats[id_subcat]) {
+                this.structuresRessources[id_categorie].subcats[id_subcat].files.push(newFile);
+            }
+            this.isAddingFiles = false
+        },
         activate(index) {
             if (this.activeIndex === index) {
                 return

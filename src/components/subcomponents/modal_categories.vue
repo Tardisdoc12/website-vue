@@ -105,9 +105,9 @@ export default {
                 }
                 console.log("Subcategorie to send:", subcategorieToSend)
                 const results = await apiSource.add_subcategorie(subcategorieToSend)
-                
+                subcategorieToSend.id = results.data.id
                 if (results.status !== 200) {
-                    this.$emit('newCategorie', this.sousCategorieSelected)
+                    this.$emit('newCategorie', subcategorieToSend)
                 }
                 keyFound = results.data.id
             }
