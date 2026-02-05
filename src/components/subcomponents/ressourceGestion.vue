@@ -63,7 +63,6 @@
                                 padding: '0.5rem 1rem',
                                 borderRadius: '0.375rem',
                                 backgroundColor: '#000000',
-                                marginLeft: '5px',
                             }"
                         >
                             <font-awesome-icon icon="fa-solid fa-arrow-up-from-bracket"/>
