@@ -26,7 +26,20 @@
                         <font-awesome-icon style="margin-right:5px;" icon="fa-solid fa-file-lines"/>
                         {{ (file.tag !== "") ? file.tag : file.url_file }}
                     </label>
-                    <div>
+                    <div class="flex items-center justify-between gap-2">
+                        <button
+                            @click="DeleteFile(file)"
+                            class="appearance-none"
+                            :style="{
+                                display: 'inline-block',
+                                color: 'white',
+                                padding: '0.5rem 1rem',
+                                borderRadius: '0.375rem',
+                                backgroundColor: '#FF0000',
+                            }"
+                        >
+                            <font-awesome-icon icon="fa-solid fa-trash"/>
+                        </button>
                         <button
                             @click="openUrl(file.url_file, file.path_file)"
                             class="appearance-none"
@@ -63,6 +76,7 @@
 </template>
 
 <script>
+import axios_sources from "../../javascript/axios_sources.js";
 import DepliantWindow from './unitary_elements/depliantWindow.vue';
 
 export default {
@@ -103,6 +117,27 @@ export default {
                 window.open(file_path,"_blank");
             }
             
+        },
+        async DeleteFile(file) {
+            if (confirm("Êtes-vous sûr de vouloir supprimer ce fichier ?")) {
+                const response = await axios_sources.delete_source(file.source_id);
+                if (response.data.success) {
+                    // Supprimer le fichier de la structure locale
+                    for (const catKey in this.structuresRessources) {
+                        const cat = this.structuresRessources[catKey];
+                        for (const subcatKey in cat.subcats) {
+                            const subcat = cat.subcats[subcatKey];
+                            const fileIndex = subcat.files.findIndex(f => f.source_id === file.source_id);
+                            if (fileIndex !== -1) {
+                                subcat.files.splice(fileIndex, 1);
+                                return; // Sortir une fois que le fichier est trouvé et supprimé
+                            }
+                        }
+                    }
+                } else {
+                    alert("Une erreur est survenue lors de la suppression du fichier.");
+                }
+            }
         },
         DownloadUrl(file) {
             const link = document.createElement('a');

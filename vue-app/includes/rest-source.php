@@ -139,7 +139,7 @@ add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/subcategories/(?P<id>\d+)', [
         'methods' => 'DELETE',
         'callback' => 'myplugin_rm_subcategories',
-        'permission_callback' => '__return_true', // même remarque
+        'permission_callback' => 'monplugin_verify_csrf', // même remarque
     ]);
 });
 
@@ -166,7 +166,7 @@ add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/sources/(?P<id>\d+)', [
         'methods' => 'DELETE',
         'callback' => 'myplugin_rm_sources',
-        'permission_callback' => '__return_true', // même remarque
+        'permission_callback' => 'monplugin_verify_csrf', // même remarque
     ]);
 });
 
@@ -181,7 +181,7 @@ function myplugin_rm_sources(WP_REST_Request $request) {
     }
 
     if ($deleted === 0) {
-        return new WP_Error('not_found', "Aucune sous-catégorie trouvée avec l'ID $id.", ['status' => 404]);
+        return new WP_Error('not_found', "Aucune source trouvée avec l'ID $id.", ['status' => 404]);
     }
 
     return rest_ensure_response(['success' => true, 'deleted_id' => $id]);

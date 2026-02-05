@@ -20,4 +20,12 @@ export default {
         const results = api.post("/sources/", source)
         return results
     },
+    async delete_source(id) {
+        const results = await api.delete(`/sources/${id}`)
+        return results
+    },
+    async delete_subcategorie(id) {
+        const results = await api.delete(`/subcategories/${id}`)
+        return results
+    }
 }
