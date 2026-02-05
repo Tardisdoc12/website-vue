@@ -146,11 +146,15 @@ export default {
 
     methods: {
         handleNewCategorie(newCategorie) {
-            this.structuresRessources[newCategorie.id_categorie].subcats[newCategorie.id] = {
+            let cat = this.structuresRessources[newCategorie.id_categorie]
+            
+            cat.subcats = {
+                ...cat.subcats,
+                [newCategorie.id]: {
                 subcat_title: newCategorie.title,
                 files: []
-            }
-            this.isAddingCategories = false
+                }
+            };
         },
         handleDeleteSubcategorie(idSubcategorie) {
             for (const catKey in this.structuresRessources) {
@@ -163,10 +167,11 @@ export default {
         },
         handleNewFile(newFile) {
             const { id_categorie, id_subcat } = newFile;
-            if (this.structuresRessources[id_categorie] && this.structuresRessources[id_categorie].subcats[id_subcat]) {
-                this.structuresRessources[id_categorie].subcats[id_subcat].files.push(newFile);
-            }
-            this.isAddingFiles = false
+            const subcat = this.structuresRessources[id_categorie]?.subcats[id_subcat];
+
+            if (!subcat) return;
+
+            subcat.files = [...subcat.files, newFile];
         },
         activate(index) {
             if (this.activeIndex === index) {

@@ -110,6 +110,7 @@ export default {
                     this.$emit('newCategorie', subcategorieToSend)
                 }
                 keyFound = results.data.id
+                this.$emit('cancelSignal', !this.isOpen)
             }
         }
     },
