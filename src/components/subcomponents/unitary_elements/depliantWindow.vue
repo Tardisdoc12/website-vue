@@ -1,5 +1,8 @@
 <template>
-  <div class="accordion">
+  <div
+    class="accordion"
+    :style="{ width: width }"
+  >
     <div :style="AccordionHeader" @click="toggle">
       <div :style="AccordionTitle">{{ title }}</div>
       <span :style="AccordionArrow">{{ isOpen ? "▲" : "▼" }}</span>
@@ -30,6 +33,18 @@ export default {
         required: false,
         type: String
     },
+    writenColor: {
+        required: false,
+        type: String
+    },
+    writenColorOpen: {
+        required: false,
+        type: String
+    },
+    width: {
+      type: String,
+      default: '80%'
+    },
   },
   data() {
     return {
@@ -39,13 +54,15 @@ export default {
 
   computed: {
     AccordionHeader() {
-      let color = this.backgroundColor ? this.backgroundColor : "#2d5c7f"  
+      let color = this.backgroundColor ? this.backgroundColor : "#2d5c7f"
+      let borderColor = this.writenColor ? this.writenColor : "#FFFFFF"
       if (this.isOpen) {
         color = this.backgroundColorOpen ? this.backgroundColorOpen : "#FFFFFF"
+        borderColor = this.writenColorOpen ? this.writenColorOpen : "#2d5c7f"
       }
       return {
         "background-color": color,
-        "border": "1px solid " + (this.backgroundColor ? this.backgroundColor : "#2d5c7f"),
+        "border": "1px solid " + (borderColor),
         "color": "white",
         "padding": "10px 15px",
         "cursor": "pointer",
@@ -61,7 +78,16 @@ export default {
         if (this.isOpen) {
             color = this.backgroundColor ? this.backgroundColor : "#2d5c7f"
         }
-        if ( this.backgroundColor && this.backgroundColorOpen && this.backgroundColor === this.backgroundColorOpen) {
+
+        if (this.writenColorOpen) {
+            color = this.writenColorOpen
+        }
+
+        if (this.writenColor && this.isOpen) {
+            color = this.writenColor
+        }
+
+        if ( this.backgroundColor && this.backgroundColorOpen && this.backgroundColor === this.backgroundColorOpen && !this?.writenColor && !this?.writenColorOpen) {
             color = "white"
         }
         return {
@@ -75,7 +101,16 @@ export default {
         if (this.isOpen) {
             color = this.backgroundColor ? this.backgroundColor : "#2d5c7f"
         }
-        if ( this.backgroundColor && this.backgroundColorOpen && this.backgroundColor === this.backgroundColorOpen) {
+
+        if (this.writenColorOpen) {
+            color = this.writenColorOpen
+        }
+
+        if (this.writenColor && this.isOpen) {
+            color = this.writenColor
+        }
+
+        if ( this.backgroundColor && this.backgroundColorOpen && this.backgroundColor === this.backgroundColorOpen && !this?.writenColor && !this?.writenColorOpen) {
             color = "white"
         }
         return {
@@ -97,7 +132,6 @@ export default {
 
 <style scoped>
 .accordion {
-  width: 80%;
   border: 1px solid #ccc;
   border-radius: 6px;
   background-color: white;

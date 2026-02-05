@@ -39,12 +39,13 @@
     </div>
     
     <!-- Sous-Boutons de chaque Boutons -->
-    <div class="flex items-center justify-center" style="margin-top: 20px;">
-        <div v-if="activeIndex === 1">
-            <button
-                @click="() => {isAddingCategories=true;}"
-            >{{ "Ajouter une catégorie" }}</button>
-        </div>
+    <div class="flex items-center justify-center gap-4" style="margin-top: 20px;" v-if="activeIndex === 1">
+        <button
+            @click="() => {isAddingCategories=true;}"
+        >{{ "Ajouter une catégorie" }}</button>
+        <button
+            @click="() => {isAddingFiles=true;}"
+        >{{ "Ajouter un fichier" }}</button>
     </div>
 
     <!-- Modals -->
@@ -55,12 +56,20 @@
         @newCategorie="(e) => {sousCategorie.push(e); isAddingCategories=!isAddingCategories;}"
     />
 
+    <ModalFilesAccount
+        v-if="isAddingFiles"
+        :subCategoriesAndSources="structuresRessources"
+        @cancelSignal="(e)=>{isAddingFiles=e;}"
+        @newFile="(e) => {isAddingFiles=!isAddingFiles;}"
+    />
+
 </template>
 
 <script>
 import ProfilInformation from "./subcomponents/compteGestion.vue"
 import RessourceGestion from "./subcomponents/ressourceGestion.vue";
 import ModalCategories from "./subcomponents/modal_categories.vue";
+import ModalFilesAccount from "./subcomponents/modal_files_account.vue";
 import apiSources from "@/javascript/axios_sources"
 
 export default {
@@ -69,11 +78,8 @@ export default {
         const data = results_2.data
 
         data.forEach(item => {
+            console.log(item)
             const { categorie_id, subcat_id, source_id, subcat_title, path_file, url_file, tag } = item;
-            // Si la catégorie n’existe pas encore, on la crée
-            // if (!this.structuresRessources[categorie_id]) {
-            //     return
-            // }
 
             // Si la sous-catégorie n’existe pas encore, on la crée
             if (!this.structuresRessources[categorie_id]["subcats"][subcat_id]) {
@@ -88,11 +94,11 @@ export default {
                 this.structuresRessources[categorie_id]["subcats"][subcat_id].files.push({ path_file, url_file, source_id, tag });
             }
         });
+        console.log(this.structuresRessources)
     },
 
     data() {
         const RessourcesCategories= [
-            "Feuille de Suivi",
             "Fiches et Exercices",
             "Parcours d'entrainement",
             "Liens Utiles"
@@ -101,9 +107,9 @@ export default {
             labels: ['Mon Profil', 'Ressources', 'Média'],
             
             structuresRessources: {
+                0:{"categorie_title":RessourcesCategories[0],"subcats":{}},
                 1:{"categorie_title":RessourcesCategories[1],"subcats":{}},
                 2:{"categorie_title":RessourcesCategories[2],"subcats":{}},
-                3:{"categorie_title":RessourcesCategories[3],"subcats":{}},
             },
             activeIndex: 0,
             user: {
@@ -115,6 +121,7 @@ export default {
                 groupeSanguin: "A+",
                 contactUrgence: "0659875412",
             },
+            isAddingFiles: false,
             isAddingCategories: false,
         }
     },
@@ -131,6 +138,7 @@ export default {
     components: {
         ProfilInformation,
         RessourceGestion,
+        ModalFilesAccount,
         ModalCategories,
     }
 }

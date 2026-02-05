@@ -9,8 +9,11 @@
             v-for="(subcats, subkey) in cats.subcats"
             :title="subcats.subcat_title"
             :key="subkey"
-            :background-color="'#4897ff'"
-            :background-color-open="'#4897ff'"
+            :width="'100%'"
+            :background-color="'#d4e3ed'"
+            :background-color-open="'#d4e3ed'"
+            :writenColor="'#245473'"
+            :writenColorOpen="'#245473'"
         >
             <div :key="file.source_id" v-for="file in subcats.files">
                 <div 

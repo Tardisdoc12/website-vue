@@ -82,7 +82,7 @@ function myplugin_add_subcategories(WP_REST_Request $request) {
     $title = sanitize_text_field($params['title'] ?? '');
     $id_categorie = intval($params['id_categorie'] ?? 0);
 
-    if (empty($title) || $id_categorie <= 0) {
+    if (empty($title) || $id_categorie < 0) {
         return new WP_Error('invalid_data', 'Titre ou catégorie invalide', ['status' => 400]);
     }
 
