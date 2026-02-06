@@ -204,6 +204,75 @@ function myplugin_update_user(WP_REST_Request $request) {
         'user_id' => $user_id,
     ];
 }
+
+//------------------------------------------------------------------------------
+
+add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1', '/psswd/reset', [
+        'methods'  => 'POST',
+        'callback' => 'myplugin_reset_password',
+        'permission_callback' => 'monplugin_verify_csrf',
+    ]);
+});
+
+function myplugin_reset_password(WP_REST_Request $request) {
+    $email = sanitize_email($request->get_param('email'));
+
+    if (empty($email)) {
+        return new WP_Error('missing_email', 'Email obligatoire', ['status' => 400]);
+    }
+
+    $user = get_user_by('email', $email);
+    if (!$user) {
+        return new WP_Error('user_not_found', 'Utilisateur non trouvé', ['status' => 404]);
+    }
+
+    // Générer une key pour le lien de réinitialisation (optionnel, peut être utilisé pour vérifier la validité du reset)
+    $key = get_password_reset_key($user);
+
+
+    $reset_url = add_query_arg([
+        'key'   => $key,
+        'login' => rawurlencode($user->user_login),
+    ], site_url('/reset-password'));
+
+    // Envoyer un email à l'utilisateur avec le nouveau mot de passe
+    $subject = 'Votre nouveau mot de passe';
+    wp_mail(
+        $user->user_email,
+        $subject,
+        "Cliquez ici pour réinitialiser votre mot de passe :\n\n$reset_url\n\nSi vous n'avez pas demandé cette réinitialisation, ignorez cet email."
+    );
+
+    return [
+        'success' => true,
+        'message' => 'Un email de réinitialisation a été envoyé si l\'adresse existe dans notre système.',
+    ];
+}
+
+//------------------------------------------------------------------------------
+
+add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1', '/check-reset-key', [
+        'methods' => 'POST',
+        'callback' => 'myplugin_check_reset_key',
+        'permission_callback' => '__return_true',
+    ]);
+});
+
+function myplugin_check_reset_key(WP_REST_Request $request) {
+    $key = $request->get_param('key');
+    $login = $request->get_param('login');
+
+    $user = check_password_reset_key($key, $login);
+
+    if (is_wp_error($user)) {
+        return new WP_Error('invalid', 'Lien invalide ou expiré', ['status' => 400]);
+    }
+
+    return ['success' => true];
+}
+
 //------------------------------------------------------------------------------
 // End of File
 //------------------------------------------------------------------------------

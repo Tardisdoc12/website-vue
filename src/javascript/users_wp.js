@@ -43,5 +43,10 @@ export default {
     async connect_user(user_id) {
         const response = await api.post("/connect",{"user_id": user_id})
         return response
+    },
+
+    async request_reset_password(email) {
+        const response = await api.post("/psswd/reset",{"email": email})
+        return response
     }
 }

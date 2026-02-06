@@ -20,14 +20,24 @@
         <CreateAccount v-if="(!isAuthenticated && !hasAccount)" :onSuccess="createAccountSuccess"/>
         <ConnectAccount v-else-if="(!isAuthenticated && hasAccount)" :onSuccess="loginSuccess"/>
         <DrawAccount v-else class="w-full max-w-md"/>
-
+        <div class="flex flex-col items-center justify-center space-y-2">
+            <bouton
+                v-if="(!isAuthenticated && hasAccount)"
+                @click="isForgetPassword = true"
+            >
+                J'ai oublié mon mot de passe
+            </bouton>
+        </div>
     </div>
+
+    <ModalResetPassword v-if="isForgetPassword" @cancelSignal="isForgetPassword = false"/>
 </template>
 
 <script>
 import CreateAccount from "@/components/Login.vue"
 import ConnectAccount from "@/components/connexion.vue"
 import DrawAccount from "@/components/gestions_comptes.vue"
+import ModalResetPassword from "@/components/subcomponents/modal_reinitialisation.vue"
 import { jwtDecode } from "jwt-decode"
 
 export default {
@@ -36,6 +46,7 @@ export default {
         return {
             hasAccount: true,
             token: sessionStorage.getItem("mps_moto"),
+            isForgetPassword: false,
         }
     },
 
@@ -72,7 +83,8 @@ export default {
     components: {
         CreateAccount,
         ConnectAccount,
-        DrawAccount
+        DrawAccount,
+        ModalResetPassword
     }
 }
 
