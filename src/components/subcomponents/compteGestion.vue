@@ -50,8 +50,36 @@
             
         </div>
         <div class="button-container">
-            <button v-if="isInformationsChange" @click="validationChangement">Sauvegarder les changements</button>
-            <button v-else @click="modifierInformations">Modifier mes informations</button>
+            <button
+                v-if="isInformationsChange"
+                class="appearance-none"
+                :style="{
+                    display: 'inline-block',
+                    color: '#245473',
+                    border: '2px solid #245473',
+                    padding: '0.3rem 0.3rem',
+                    borderRadius: '0.375rem',
+                    backgroundColor: 'white',
+                }"
+                @click="validationChangement"
+            >
+                Sauvegarder les changements
+            </button>
+            <button
+                v-else
+                class="appearance-none"
+                :style="{
+                    display: 'inline-block',
+                    color: '#245473',
+                    border: '2px solid #245473',
+                    padding: '0.3rem 0.3rem',
+                    borderRadius: '0.375rem',
+                    backgroundColor: 'white',
+                }"
+                @click="modifierInformations"
+            >
+                Modifier mes informations
+            </button>
         </div>
     </DepliantWindow>
 
@@ -89,8 +117,36 @@
             </div>
         </div>
         <div class="button-container">
-            <button v-if="isUrgencesChange" @click="validationChangement">Sauvegarder les changements</button>
-            <button v-else @click="modifierUrgences">Modifier mes informations</button>
+            <button
+                v-if="isUrgencesChange"
+                class="appearance-none"
+                :style="{
+                    display: 'inline-block',
+                    color: '#245473',
+                    border: '2px solid #245473',
+                    padding: '0.3rem 0.3rem',
+                    borderRadius: '0.375rem',
+                    backgroundColor: 'white',
+                }"
+                @click="validationChangement"
+            >
+                Sauvegarder les changements
+            </button>
+            <button
+                v-else
+                class="appearance-none"
+                :style="{
+                    display: 'inline-block',
+                    color: '#245473',
+                    border: '2px solid #245473',
+                    padding: '0.3rem 0.3rem',
+                    borderRadius: '0.375rem',
+                    backgroundColor: 'white',
+                }"
+                @click="modifierUrgences"
+            >
+                Modifier mes informations
+            </button>
         </div>
     </DepliantWindow>
 </template>

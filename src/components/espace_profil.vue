@@ -1,86 +1,129 @@
 <template>
-    <div class="flex flex-wrap w-[80%] mx-auto gap-4 justify-center">
+    <div v-if="!isInMyFollowPage">
+        <div class="flex flex-wrap w-[80%] mx-auto gap-4 justify-center">
+            <button
+                v-for="(label, i) in labels"
+                :key="i"
+                :class="['btn', { pressed: activeIndex === i }]"
+                class="flex-1 text-center"
+                @click="activate(i)"
+                @keydown.enter.prevent="activate(i)"
+                @keydown.space.prevent="activate(i)"
+                :aria-pressed="activeIndex === i ? 'true' : 'false'"
+                type="button"
+                :style="{
+                    display: inline-block,
+                    color: activeIndex === i ? '#FFFFFF' : '#245473',
+                    padding: '1.0rem 1.0rem',
+                    borderRadius: '9999px',
+                    backgroundColor: activeIndex === i ? '#245473' : '#FFFFFF',
+                    border: '2px solid #245473',
+                }"
+            >
+                {{ label }}
+            </button>
+        </div>
+        
+        <!-- Contenue de chaque Bouton -->
+        <div class="page-container">
+            <ProfilInformation
+                v-if="activeIndex === 0"
+                class="mt-4 w-full"
+                :DataUser="user"
+                @userChange="e => {user = e}"
+            />
+            <RessourceGestion
+                v-if="activeIndex === 1"
+                class="mt-4 w-full"
+                :subCategoriesAndSources="structuresRessources"
+            />
+        </div>
+        
+        <!-- Sous-Boutons de chaque Boutons -->
+        <div class="flex items-center justify-center gap-4" style="margin-top: 20px;" v-if="activeIndex === 1">
+            <button
+                class="appearance-none"
+                :style="{
+                    display: 'inline-block',
+                    color: 'white',
+                    padding: '0.85rem 1rem',
+                    borderRadius: '0.375rem',
+                    backgroundColor: '#245473',
+                }"
+                @click="() => {isAddingCategories=true;}"
+            >{{ "Ajouter une catégorie" }}</button>
+            <button
+                class="appearance-none"
+                :style="{
+                    display: 'inline-block',
+                    color: 'white',
+                    padding: '0.85rem 1rem',
+                    borderRadius: '0.375rem',
+                    backgroundColor: '#245473',
+                }"
+                @click="() => {isAddingFiles=true;}"
+            >{{ "Ajouter un fichier" }}</button>
+            <button
+                @click="() => {isRemovingCategories=true;}"
+                class="appearance-none"
+                :style="{
+                    display: 'inline-block',
+                    color: 'white',
+                    padding: '0.85rem 1rem',
+                    borderRadius: '0.375rem',
+                    backgroundColor: '#FF0000',
+                }"
+            >{{ "Supprimer une Catégorie" }}</button>
+        </div>
+
+        <div class="flex items-center justify-center gap-4" style="margin-top: 20px;" v-if="activeIndex === 0">
+            <button
+                class="appearance-none"
+                :style="{
+                    display: 'inline-block',
+                    color: 'white',
+                    padding: '0.85rem 1rem',
+                    borderRadius: '0.375rem',
+                    backgroundColor: '#245473',
+                }"
+                @click="() => {isInMyFollowPage=true;}"
+            >
+                {{ "Accéder à ma fiche de suivie" }}
+            </button>
+        </div>
+
+        <!-- Modals -->
+        <ModalCategories
+            v-if="isAddingCategories"
+            :subCategoriesAndSources="structuresRessources"
+            @cancelSignal="(e)=>{isAddingCategories=e;}"
+            @newCategorie="handleNewCategorie"
+        />
+
+        <ModalFilesAccount
+            v-if="isAddingFiles"
+            :subCategoriesAndSources="structuresRessources"
+            @cancelSignal="(e)=>{isAddingFiles=e;}"
+            @newFile="handleNewFile"
+        />
+
+        <ModalRemoveSubcategorie
+            v-if="isRemovingCategories"
+            :subCategoriesAndSources="structuresRessources"
+            @cancelSignal="(e)=>{isRemovingCategories=e;}"
+            @deleteSubcategorie="handleDeleteSubcategorie"
+        />
+    </div>
+    <div v-else>
+        <h1 class="text-2xl font-bold mb-4">Ma fiche de suivie</h1>
+        <p>Cette page est en cours de développement. Elle permettra d'afficher les informations de suivi de l'utilisateur, telles que les progrès réalisés, les objectifs atteints, et d'autres données pertinentes pour le suivi de sa progression.</p>
         <button
-            v-for="(label, i) in labels"
-            :key="i"
-            :class="['btn', { pressed: activeIndex === i }]"
-            class="flex-1 text-center"
-            @click="activate(i)"
-            @keydown.enter.prevent="activate(i)"
-            @keydown.space.prevent="activate(i)"
-            :aria-pressed="activeIndex === i ? 'true' : 'false'"
-            type="button"
-            :style="{
-                display: inline-block,
-                color: activeIndex === i ? '#FFFFFF' : '#245473',
-                padding: '1.5rem 1.5rem',
-                borderRadius: '9999px',
-                backgroundColor: activeIndex === i ? '#245473' : '#FFFFFF',
-                border: '2px solid #245473',
-            }"
+            @click="() => {isInMyFollowPage=false;}"
+            class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
-            {{ label }}
+            {{ "Retour à mon profil" }}
         </button>
     </div>
-    
-    <!-- Contenue de chaque Bouton -->
-    <div class="page-container">
-        <ProfilInformation
-            v-if="activeIndex === 0"
-            class="mt-4 w-full"
-            :DataUser="user"
-            @userChange="e => {user = e}"
-        />
-        <RessourceGestion
-            v-if="activeIndex === 1"
-            class="mt-4 w-full"
-            :subCategoriesAndSources="structuresRessources"
-        />
-    </div>
-    
-    <!-- Sous-Boutons de chaque Boutons -->
-    <div class="flex items-center justify-center gap-4" style="margin-top: 20px;" v-if="activeIndex === 1">
-        <button
-            @click="() => {isAddingCategories=true;}"
-        >{{ "Ajouter une catégorie" }}</button>
-        <button
-            @click="() => {isAddingFiles=true;}"
-        >{{ "Ajouter un fichier" }}</button>
-        <button
-            @click="() => {isRemovingCategories=true;}"
-            class="appearance-none"
-            :style="{
-                display: 'inline-block',
-                color: 'white',
-                padding: '1rem 1rem',
-                borderRadius: '0.375rem',
-                backgroundColor: '#FF0000',
-            }"
-        >{{ "Supprimer une Catégorie" }}</button>
-    </div>
-
-    <!-- Modals -->
-    <ModalCategories
-        v-if="isAddingCategories"
-        :subCategoriesAndSources="structuresRessources"
-        @cancelSignal="(e)=>{isAddingCategories=e;}"
-        @newCategorie="handleNewCategorie"
-    />
-
-    <ModalFilesAccount
-        v-if="isAddingFiles"
-        :subCategoriesAndSources="structuresRessources"
-        @cancelSignal="(e)=>{isAddingFiles=e;}"
-        @newFile="handleNewFile"
-    />
-
-    <ModalRemoveSubcategorie
-        v-if="isRemovingCategories"
-        :subCategoriesAndSources="structuresRessources"
-        @cancelSignal="(e)=>{isRemovingCategories=e;}"
-        @deleteSubcategorie="handleDeleteSubcategorie"
-     />
-
 </template>
 
 <script>
@@ -143,6 +186,7 @@ export default {
             isAddingFiles: false,
             isAddingCategories: false,
             isRemovingCategories: false,
+            isInMyFollowPage: false,
         }
     },
 

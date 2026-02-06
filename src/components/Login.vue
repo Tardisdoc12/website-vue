@@ -84,7 +84,6 @@
                         v-model="formUser.blood"
                         type="text"
                         class="w-full border p-1 rounded"
-                        required
                     />
                 </div>
 
