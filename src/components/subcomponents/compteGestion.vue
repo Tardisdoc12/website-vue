@@ -6,7 +6,7 @@
         :border-color="'#2d5c7f'"
         :border-color-open="'#2d5c7f'"
     >
-        <div style="margin-left:25px;margin-top: 10px;margin-bottom: 10px;">
+        <div style="margin-left:25px;margin-top: 10px;">
             <div v-if="!isInformationsChange">
                 <li><strong>Nom :</strong> {{ user.lastName }}</li>
                 <li><strong>Prénom :</strong> {{ user.firstName }}</li>

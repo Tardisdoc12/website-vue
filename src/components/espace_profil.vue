@@ -262,8 +262,8 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center; /* centré horizontalement */
-  gap: 30px; /* espace vertical entre les deux DepliantWindow */
-  margin-top: 40px;
+  gap: 2px; /* espace vertical entre les deux DepliantWindow */
+  margin-top: 10px;
 }
 
 .btn-group {

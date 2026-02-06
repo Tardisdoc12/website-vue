@@ -8,16 +8,21 @@
         :writenColorOpen="'#FFFFFF'"
         :border-color="'#2d5c7f'"
         :border-color-open="'#2d5c7f'"
+        :borderWindowColor="'#2d5c7f'"
     >
         <DepliantWindow
             v-for="(subcats, subkey) in cats.subcats"
             :title="subcats.subcat_title"
             :key="subkey"
             :width="'100%'"
-            :background-color="'#d4e3ed'"
-            :background-color-open="'#d4e3ed'"
+            :backgroundColor="'#d4e3ed'"
+            :borderColorOpen="'#2d5c7f'"
+            :borderColor="'#2d5c7f'"
+            :backgroundColorOpen="'#d4e3ed'"
             :writenColor="'#245473'"
             :writenColorOpen="'#245473'"
+            :showBorder="false"
+            :borderRadius="'0px'"
         >
             <div :key="file.source_id" v-for="file in getSortedFiles(subcats.files)">
                 <div 

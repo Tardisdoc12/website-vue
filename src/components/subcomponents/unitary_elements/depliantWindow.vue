@@ -1,7 +1,6 @@
 <template>
   <div
-    class="accordion"
-    :style="{ width: width }"
+    :style="{ width: width, ...Accordion }"
   >
     <div :style="AccordionHeader" @click="toggle">
       <div :style="AccordionTitle">{{ title }}</div>
@@ -10,7 +9,7 @@
     </div>
 
     <transition name="slide-fade">
-      <div v-if="isOpen">
+      <div v-if="isOpen" class="accordion-content">
         <slot></slot>
       </div>
     </transition>
@@ -52,6 +51,22 @@ export default {
     width: {
       type: String,
       default: '80%'
+    },
+    showBorder: {
+      type: Boolean,
+      default: true
+    },
+    borderRadius: {
+      type: String,
+      default: '6px'
+    },
+    borderWindowColor: {
+      type: String,
+      default: '#ccc'
+    },
+    sizeBorder: {
+      type: String,
+      default: '1px'
     },
   },
   data() {
@@ -126,6 +141,15 @@ export default {
             "left": "15px",
             "color":color,
         }
+    },
+    Accordion() {
+      return {
+        "border": this.showBorder ? `${this.sizeBorder} solid ${this.borderWindowColor}` : "none",
+        "border-radius": this.borderRadius,
+        "background-color": "white",
+        "overflow": "hidden",
+        "font-family": "Arial, sans-serif",
+      }
     }
   },
 
@@ -139,18 +163,14 @@ export default {
 </script>
 
 <style scoped>
-.accordion {
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background-color: white;
-  overflow: hidden;
-  font-family: Arial, sans-serif;
-}
-
 /* Centrer le titre */
 .accordion-title {
   flex: 1;
   text-align: center;
+}
+
+.accordion-content {
+  margin: 0;
 }
 
 /* Placer la flèche à droite */
