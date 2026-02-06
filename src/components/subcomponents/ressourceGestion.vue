@@ -15,7 +15,7 @@
             :writenColor="'#245473'"
             :writenColorOpen="'#245473'"
         >
-            <div :key="file.source_id" v-for="file in subcats.files">
+            <div :key="file.source_id" v-for="file in getSortedFiles(subcats.files)">
                 <div 
                     style="padding: 5px;"
                     class="flex items-center justify-between"
@@ -65,7 +65,7 @@
                                 backgroundColor: '#000000',
                             }"
                         >
-                            <font-awesome-icon icon="fa-solid fa-arrow-up-from-bracket"/>
+                            <font-awesome-icon icon="fa-solid fa-download"/>
                         </button>
                     </div>
                 </div>
@@ -108,7 +108,16 @@ export default {
         isSuivi(_label) {
             return false
         },
+        getSortedFiles(files) {
+            if (!files) return []
 
+            return [...files].sort((a, b) =>
+            a.tag.localeCompare(b.tag, 'fr', {
+                numeric: true,
+                sensitivity: 'base'
+            })
+            )
+        },
         openUrl(url, file_path) {
             if (url!== "") {
                 window.open(url, "_blank");
