@@ -75,46 +75,6 @@
                     />
                 </div>
 
-                <!-- Groupe Sanguin -->
-                <div class="flex flex-col gap-1">
-                    <label class="block font-medium">
-                        Groupe sanguin
-                    </label>
-                    <input
-                        v-model="formUser.blood"
-                        type="text"
-                        class="w-full border p-1 rounded"
-                    />
-                </div>
-
-                <!-- Nom et prénom du contact d’urgence -->
-                <div class="flex flex-col gap-1">
-                    <label class="block font-medium">
-                        Nom et Prénom du contact d’urgence
-                        <span style="color: red;">*</span>
-                    </label>
-                    <input
-                        v-model="formUser.urgence_name"
-                        type="text"
-                        class="w-full border p-1 rounded"
-                        required
-                    />
-                </div>
-
-                <!-- Téléphone du contact d’urgence -->
-                <div class="flex flex-col gap-1">
-                    <label class="block font-medium">
-                        Téléphone du contact d’urgence
-                        <span style="color: red;">*</span>
-                    </label>
-                    <input
-                        v-model="formUser.urgence_phone"
-                        type="text"
-                        class="w-full border p-1 rounded"
-                        required
-                    />
-                </div>
-
                 <!-- Password -->
                 <div class="flex flex-col gap-1">
                     <label class="block font-medium">
@@ -204,9 +164,6 @@ export default {
                 phone:"",
                 bike:"",
                 email:"",
-                blood:"",
-                urgence_name:"",
-                urgence_phone:"",
                 password:"",
                 confirmPassword:"",
             },
@@ -232,9 +189,6 @@ export default {
                     password: this.formUser.password,
                     telephone: this.formUser.phone,
                     moto: this.formUser.bike,
-                    blood: this.formUser.blood,
-                    urgence_name: this.formUser.urgence_name,
-                    urgence_phone: this.formUser.urgence_phone,
             }
             try{
                 const response = await api.create_user(body)
@@ -246,9 +200,6 @@ export default {
                     email:"",
                     password:"",
                     confirmPassword:"",
-                    blood:"",
-                    urgence_name:"",
-                    urgence_phone:"",
                 }
                 if (this.onSuccess) {
                     this.onSuccess()

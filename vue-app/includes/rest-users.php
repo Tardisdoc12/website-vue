@@ -103,9 +103,6 @@ function myplugin_register_user(WP_REST_Request $request) {
     $lastName  = sanitize_text_field($request->get_param('lastName'));
     $telephone  = sanitize_text_field($request->get_param('telephone'));
     $moto       = sanitize_text_field($request->get_param('moto'));
-    $blood      = sanitize_text_field($request->get_param('blood'));
-    $urgence_name  = sanitize_text_field($request->get_param('urgence_name'));
-    $urgence_phone = sanitize_text_field($request->get_param('urgence_phone'));
 
     if (empty($username) || empty($email) || empty($password)) {
         return new WP_Error('missing_fields', 'Tous les champs sont obligatoires', ['status' => 400]);
@@ -136,9 +133,6 @@ function myplugin_register_user(WP_REST_Request $request) {
     update_user_meta($user_id, 'telephone', $telephone);
     update_user_meta($user_id, 'firstName', $firstName);
     update_user_meta($user_id, 'lastName', $lastName);
-    update_user_meta($user_id, 'blood', $blood);
-    update_user_meta($user_id, 'urgence_name', $urgence_name);
-    update_user_meta($user_id, 'urgence_phone', $urgence_phone);
 
     return [
         'success' => true,
