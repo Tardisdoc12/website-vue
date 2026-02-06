@@ -36,6 +36,7 @@
                 v-if="activeIndex === 1"
                 class="mt-4 w-full"
                 :subCategoriesAndSources="structuresRessources"
+                @updateSubCategoriesAndSources="(e) => {structuresRessources = {...e}}"
             />
             <MediaSpace
                 v-if="activeIndex === 2"
@@ -172,6 +173,15 @@ export default {
 
     },
 
+    watch: {
+        structuresRessources: {
+            deep: true,
+            handler() {
+                console.log('Structure modifiée')
+            }
+        }
+    },
+
     data() {
         const RessourcesCategories= [
             "Fiches et Exercices",
@@ -197,16 +207,18 @@ export default {
 
     methods: {
         handleNewCategorie(newCategorie) {
-            let cat = this.structuresRessources[newCategorie.id_categorie]
-            
+
+            const cat = this.structuresRessources[newCategorie.id_categorie]
+
             cat.subcats = {
                 ...cat.subcats,
                 [newCategorie.id]: {
                 subcat_title: newCategorie.title,
                 files: []
                 }
-            };
+            }
         },
+
         handleDeleteSubcategorie(idSubcategorie) {
             for (const catKey in this.structuresRessources) {
                 const cat = this.structuresRessources[catKey];
@@ -217,11 +229,9 @@ export default {
             }
         },
         handleNewFile(newFile) {
-            const { id_categorie, id_subcat } = newFile;
-            const subcat = this.structuresRessources[id_categorie]?.subcats[id_subcat];
-
+            const { id_categorie, id_subcategorie } = newFile;
+            const subcat = this.structuresRessources[id_categorie]?.subcats[id_subcategorie];
             if (!subcat) return;
-
             subcat.files = [...subcat.files, newFile];
         },
         activate(index) {

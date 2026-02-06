@@ -223,6 +223,7 @@ export default{
             }
             const results_2 = await apiSource.add_source(source)
             source.id_categorie = this.categorieSelected
+            source.source_id = results_2.data.id
             this.$emit('newFile', source)
             this.$emit('cancelSignal', !this.isOpen)
         }
