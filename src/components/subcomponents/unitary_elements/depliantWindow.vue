@@ -20,6 +20,10 @@
 
 export default {
   props: {
+    isOpoenForced: {
+      type: Boolean,
+      default: false
+    },
     title: {
       required: true,
       type: String
@@ -71,7 +75,7 @@ export default {
   },
   data() {
     return {
-      isOpen: false,
+      isOpen: this.isOpoenForced,
     }
   },
 

@@ -19,6 +19,7 @@ const entries = {
   form_adhesion: path.resolve(__dirname, 'src/main-adherent.js'),
   test: path.resolve(__dirname, 'src/main-test.js'),
   "event-page" : path.resolve(__dirname, 'src/main-event-page.js'),
+  reinitialisation: path.resolve(__dirname, 'src/main-password.js'),
 }
 
 // Si un ENTRY est passé → build seulement celle-là

@@ -5,7 +5,7 @@ set -e  # stoppe en cas d'erreur
 OUTDIR="./vue-app"
 
 # Liste des entrées à builder
-ENTRIES=("login" "events" "calendar" "connexion" "account" "form_adhesion" "test" "event-page")
+ENTRIES=("login" "events" "calendar" "connexion" "account" "form_adhesion" "test" "event-page" "reinitialisation")
 
 # Boucle sur chaque entrée
 for entry in "${ENTRIES[@]}"; do

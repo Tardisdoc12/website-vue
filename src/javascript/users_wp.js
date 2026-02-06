@@ -48,5 +48,15 @@ export default {
     async request_reset_password(email) {
         const response = await api.post("/psswd/reset",{"email": email})
         return response
+    },
+
+    async verify_reset(key,login) {
+        const response = await api.post("/check-reset-key",{"key": key, "login": login})
+        return response
+    },
+    
+    async reset_password(key, login, password) {
+        const response = await api.post("/password",{"key": key, "login": login, "password": password})
+        return response
     }
 }

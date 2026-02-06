@@ -5,6 +5,7 @@
         :writenColorOpen="'#FFFFFF'"
         :border-color="'#2d5c7f'"
         :border-color-open="'#2d5c7f'"
+        :is-opoen-forced="true"
     >
         <div style="margin-left:25px;margin-top: 10px;">
             <div v-if="!isInformationsChange">
@@ -93,6 +94,7 @@
         :writenColorOpen="'#FFFFFF'"
         :border-color="'#2d5c7f'"
         :border-color-open="'#2d5c7f'"
+        :is-opoen-forced="true"
     >
         <div style="margin-left:25px;margin-top: 5px;">
             <div v-if="!isUrgencesChange">

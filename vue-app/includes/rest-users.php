@@ -274,5 +274,45 @@ function myplugin_check_reset_key(WP_REST_Request $request) {
 }
 
 //------------------------------------------------------------------------------
+
+add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1', '/password', [
+        'methods' => 'POST',
+        'callback' => 'myplugin_reset_password_properly',
+        'permission_callback' => '__return_true',
+    ]);
+});
+
+function myplugin_reset_password_properly(WP_REST_Request $request) {
+    $login    = sanitize_user($request->get_param('login'));
+    $key      = sanitize_text_field($request->get_param('key'));
+    $password = $request->get_param('password');
+
+    if (!$login || !$key || !$password) {
+        return new WP_Error('missing_fields', 'Champs manquants', ['status' => 400]);
+    }
+
+    if (strlen($password) < 8) {
+        return new WP_Error('weak_password', 'Mot de passe trop court', ['status' => 400]);
+    }
+
+    // 🔐 Vérification officielle WordPress
+    $user = check_password_reset_key($key, $login);
+
+    if (is_wp_error($user)) {
+        return new WP_Error('invalid_key', 'Lien invalide ou expiré', ['status' => 400]);
+    }
+
+    // ✅ Reset sécurisé
+    reset_password($user, $password);
+
+    return [
+        'success' => true,
+        'message' => 'Mot de passe mis à jour avec succès',
+    ];
+}
+
+
+//------------------------------------------------------------------------------
 // End of File
 //------------------------------------------------------------------------------
