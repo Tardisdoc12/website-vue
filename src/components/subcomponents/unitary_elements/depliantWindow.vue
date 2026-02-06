@@ -41,6 +41,14 @@ export default {
         required: false,
         type: String
     },
+    borderColor: {
+        required: false,
+        type: String
+    },
+    borderColorOpen: {
+        required: false,
+        type: String
+    },
     width: {
       type: String,
       default: '80%'
@@ -55,10 +63,10 @@ export default {
   computed: {
     AccordionHeader() {
       let color = this.backgroundColor ? this.backgroundColor : "#2d5c7f"
-      let borderColor = this.writenColor ? this.writenColor : "#FFFFFF"
+      let borderColor = this.borderColor ? this.borderColor : "#FFFFFF"
       if (this.isOpen) {
         color = this.backgroundColorOpen ? this.backgroundColorOpen : "#FFFFFF"
-        borderColor = this.writenColorOpen ? this.writenColorOpen : "#2d5c7f"
+        borderColor = this.borderColorOpen ? this.borderColorOpen : "#2d5c7f"
       }
       return {
         "background-color": color,

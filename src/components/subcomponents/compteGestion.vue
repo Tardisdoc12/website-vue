@@ -1,6 +1,10 @@
 <template>
     <DepliantWindow
         :title="titleInformations"
+        :backgroundColorOpen="'#2d5c7f'"
+        :writenColorOpen="'#FFFFFF'"
+        :border-color="'#2d5c7f'"
+        :border-color-open="'#2d5c7f'"
     >
         <div style="margin-left:25px;margin-top: 10px;margin-bottom: 10px;">
             <div v-if="!isInformationsChange">
@@ -85,6 +89,10 @@
 
     <DepliantWindow
         :title="titleUrgences"
+        :backgroundColorOpen="'#2d5c7f'"
+        :writenColorOpen="'#FFFFFF'"
+        :border-color="'#2d5c7f'"
+        :border-color-open="'#2d5c7f'"
     >
         <div style="margin-left:25px;margin-top: 5px;">
             <div v-if="!isUrgencesChange">
@@ -176,7 +184,7 @@ export default {
     computed: {
         user() {
             return this.DataUser
-        }
+        },
     },
 
     methods: {

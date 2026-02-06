@@ -2,8 +2,12 @@
     <!-- Le reste -->
     <DepliantWindow
         :key="key"
-        v-for="(cats, key) in subCategoriesAndSources"
+        v-for="(cats, key) in filteredSubcats"
         :title="cats.categorie_title"
+        :backgroundColorOpen="'#2d5c7f'"
+        :writenColorOpen="'#FFFFFF'"
+        :border-color="'#2d5c7f'"
+        :border-color-open="'#2d5c7f'"
     >
         <DepliantWindow
             v-for="(subcats, subkey) in cats.subcats"
@@ -86,6 +90,10 @@ export default {
         subCategoriesAndSources: {
             required: true,
             type: Object
+        },
+        isBureau: {
+            required: true,
+            type: Boolean
         }
     },
 
@@ -97,6 +105,17 @@ export default {
 
     mounted() {
         this.subCategoriesAndSourcesCopy = structuredClone(toRaw(this.subCategoriesAndSources));
+    },
+
+    computed: {
+        filteredSubcats() {
+            return Object.fromEntries(
+                Object.entries(this.subCategoriesAndSources || {}).filter(
+                    ([_, subcat]) =>
+                        subcat?.subcat_title !== "Gestion" || this.isBureau
+                )
+            );
+        }  
     },
 
     methods:{

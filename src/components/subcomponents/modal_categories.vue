@@ -96,7 +96,6 @@ export default {
                 key => obj[key].subcat_title === this.sousCategorieSelected
             )
             if(keyFound) {
-                console.log(keyFound)
                 this.$emit('cancelSignal', !this.isOpen)
             }
             else{
@@ -104,7 +103,6 @@ export default {
                     "id_categorie": this.categories.indexOf(this.categorieSelected) + 1,
                     "title" : this.sousCategorieSelected,
                 }
-                console.log("Subcategorie to send:", subcategorieToSend)
                 const results = await apiSource.add_subcategorie(subcategorieToSend)
                 subcategorieToSend.id = results.data.id
                 if (results.status === 200) {

@@ -36,6 +36,7 @@
                 v-if="activeIndex === 1"
                 class="mt-4 w-full"
                 :subCategoriesAndSources="structuresRessources"
+                :isBureau="isBureau"
                 @updateSubCategoriesAndSources="(e) => {structuresRessources = {...e}}"
             />
             <MediaSpace
@@ -45,7 +46,7 @@
         </div>
         
         <!-- Sous-Boutons de chaque Boutons -->
-        <div class="flex items-center justify-center gap-4" style="margin-top: 20px;" v-if="activeIndex === 1">
+        <div class="flex items-center justify-center gap-4" style="margin-top: 20px;" v-if="activeIndex === 1 && isBureau">
             <button
                 class="appearance-none"
                 :style="{
@@ -169,6 +170,9 @@ export default {
             const user_id = decoded.data.user.id
             const user_info = await api.get_user(user_id)
             this.user = user_info.user
+            if (this.user.roles.includes("administrator") || this.user.roles.includes("bureau")) {
+                this.isBureau = true
+            }
         }
 
     },
@@ -176,9 +180,6 @@ export default {
     watch: {
         structuresRessources: {
             deep: true,
-            handler() {
-                console.log('Structure modifiée')
-            }
         }
     },
 
@@ -204,6 +205,7 @@ export default {
             isAddingCategories: false,
             isRemovingCategories: false,
             isInMyFollowPage: false,
+            isBureau: false,
         }
     },
 
