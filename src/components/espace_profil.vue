@@ -37,6 +37,10 @@
                 class="mt-4 w-full"
                 :subCategoriesAndSources="structuresRessources"
             />
+            <MediaSpace
+                v-if="activeIndex === 2"
+                class="mt-4 w-full"
+            />
         </div>
         
         <!-- Sous-Boutons de chaque Boutons -->
@@ -132,6 +136,7 @@ import RessourceGestion from "./subcomponents/ressourceGestion.vue";
 import ModalCategories from "./subcomponents/modal_categories.vue";
 import ModalFilesAccount from "./subcomponents/modal_files_account.vue";
 import ModalRemoveSubcategorie from "./subcomponents/modal_remove_subcategorie.vue";
+import MediaSpace from "./subcomponents/media_space.vue";
 import apiSources from "@/javascript/axios_sources"
 import { jwtDecode } from "jwt-decode"
 import api from "../javascript/users_wp.js"
@@ -174,7 +179,7 @@ export default {
             "Liens Utiles"
         ]
         return {
-            labels: ['Mon Profil', 'Ressources', 'Média'],
+            labels: ['Mon Profil', 'Ressources', 'Médias'],
             
             structuresRessources: {
                 0:{"categorie_title":RessourcesCategories[0],"subcats":{}},
@@ -233,6 +238,7 @@ export default {
         ModalFilesAccount,
         ModalCategories,
         ModalRemoveSubcategorie,
+        MediaSpace,
     }
 }
 </script>
