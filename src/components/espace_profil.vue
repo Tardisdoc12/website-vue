@@ -186,7 +186,8 @@ export default {
         const RessourcesCategories= [
             "Fiches et Exercices",
             "Parcours d'entrainement",
-            "Liens Utiles"
+            "Liens Utiles",
+            "Gestion",
         ]
         return {
             labels: ['Mon Profil', 'Ressources', 'Médias'],
@@ -195,6 +196,7 @@ export default {
                 0:{"categorie_title":RessourcesCategories[0],"subcats":{}},
                 1:{"categorie_title":RessourcesCategories[1],"subcats":{}},
                 2:{"categorie_title":RessourcesCategories[2],"subcats":{}},
+                3:{"categorie_title":RessourcesCategories[3],"subcats":{}},
             },
             activeIndex: 0,
             user: {},

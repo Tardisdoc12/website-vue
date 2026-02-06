@@ -91,10 +91,7 @@ export default {
 
     data(){
         return {
-            titleFicheExo: "Fiches et Exercices",
-            titleParcours: "Parcours d'entrainement",
             subCategoriesAndSourcesCopy : null,
-            titleLink: "Liens Utiles",
         }
     },
 

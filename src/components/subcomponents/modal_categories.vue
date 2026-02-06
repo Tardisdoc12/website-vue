@@ -68,7 +68,8 @@ export default {
             categories: [
                 "Fiches et Exos",
                 "Parcours d'entrainement",
-                "Liens Utiles"
+                "Liens Utiles",
+                "Gestion",
             ],
             categorieSelected: null,
             sousCategorieSelected: "",

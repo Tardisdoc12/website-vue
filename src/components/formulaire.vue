@@ -41,7 +41,7 @@
                 <!-- Ajouter des dates -->
                 <div>
                     <div class="block font-medium">
-                        Cloner l'évènement pour les dates :
+                        Dupliquer l'évènement pour les dates :
                         <button 
                             type="button" 
                             :style="{
