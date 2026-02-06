@@ -9,6 +9,7 @@
         :border-color="'#2d5c7f'"
         :border-color-open="'#2d5c7f'"
         :borderWindowColor="'#2d5c7f'"
+        :width="'95%'"
     >
         <DepliantWindow
             v-for="(subcats, subkey) in cats.subcats"

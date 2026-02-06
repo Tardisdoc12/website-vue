@@ -1,6 +1,6 @@
 <template>
     <div v-if="!isInMyFollowPage">
-        <div class="flex flex-wrap w-[80%] mx-auto gap-4 justify-center">
+        <div class="flex flex-wrap w-[95%] mx-auto gap-4 justify-center">
             <button
                 v-for="(label, i) in labels"
                 :key="i"
@@ -191,7 +191,7 @@ export default {
             "Gestion",
         ]
         return {
-            labels: ['Mon Profil', 'Ressources', 'Médias'],
+            labels: ['Profil', 'Ressources', 'Médias'],
             
             structuresRessources: {
                 0:{"categorie_title":RessourcesCategories[0],"subcats":{}},

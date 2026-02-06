@@ -6,6 +6,7 @@
         :border-color="'#2d5c7f'"
         :border-color-open="'#2d5c7f'"
         :is-opoen-forced="true"
+        :width="'95%'"
     >
         <div style="margin-left:25px;margin-top: 10px;">
             <div v-if="!isInformationsChange">
@@ -95,6 +96,7 @@
         :border-color="'#2d5c7f'"
         :border-color-open="'#2d5c7f'"
         :is-opoen-forced="true"
+        :width="'95%'"
     >
         <div style="margin-left:25px;margin-top: 5px;">
             <div v-if="!isUrgencesChange">
