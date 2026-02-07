@@ -100,18 +100,10 @@
     >
         <div style="margin-left:25px;margin-top: 5px;">
             <div v-if="!isUrgencesChange">
-                <p><strong>Groupe sanguin :</strong> {{ user.blood || "—" }}</p>
                 <p><strong>Nom et Prénom du contact d’urgence :</strong> {{ user.urgence_name || "—" }}</p>
                 <p><strong>Téléphone du contact d’urgence :</strong> {{ user.urgence_phone || "—" }}</p>
             </div>
             <div v-else>
-                <li>
-                    <label><strong> Groupe sanguin :</strong></label>
-                    <input
-                        v-model="user.blood"
-                        class="oval-input"
-                    />
-                </li>
                 <li>
                     <label><strong> Nom et Prénom du contact d’urgence :</strong></label>
                     <input

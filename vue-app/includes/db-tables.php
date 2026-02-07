@@ -46,7 +46,6 @@ function mon_plugin_creer_tables() {
         email VARCHAR(200) NOT NULL,
         experience VARCHAR(200) NOT NULL,
         is_adherent TINYINT(1) NOT NULL DEFAULT 0,
-        blood VARCHAR(10),
         urgence_phone VARCHAR(10),
         urgence_name VARCHAR(200),
         PRIMARY KEY (id)

@@ -33,7 +33,6 @@ function monplugin_get_users(WP_REST_Request $request) {
         $user->lastName   = get_user_meta($user->ID, 'lastName', true);
         $user->telephone  = get_user_meta($user->ID, 'telephone', true);
         $user->moto       = get_user_meta($user->ID, 'moto', true);
-        $user->blood      = get_user_meta($user->ID, 'blood', true);
         $user->urgence_phone = get_user_meta($user->ID, 'urgence_phone', true);
         $user->urgence_name  = get_user_meta($user->ID, 'urgence_name', true);
     }
@@ -74,7 +73,6 @@ function monplugin_get_user(WP_REST_Request $request) {
         "telephone" => get_user_meta($user->ID, 'telephone', true),
         "moto"      => get_user_meta($user->ID, 'moto', true),
         "roles"     => $user->roles,
-        "blood"     => get_user_meta($user->ID, 'blood', true),
         "urgence_phone" => get_user_meta($user->ID, 'urgence_phone', true),
         "urgence_name"  => get_user_meta($user->ID, 'urgence_name', true),
     ];
@@ -165,7 +163,6 @@ function myplugin_update_user(WP_REST_Request $request) {
     $lastName      = sanitize_text_field($request->get_param('lastName'));
     $telephone     = sanitize_text_field($request->get_param('telephone'));
     $moto          = sanitize_text_field($request->get_param('moto'));
-    $blood         = sanitize_text_field($request->get_param('blood'));
     $urgence_phone = sanitize_text_field($request->get_param('urgence_phone'));
     $urgence_name  = sanitize_text_field($request->get_param('urgence_name'));
 
@@ -195,7 +192,6 @@ function myplugin_update_user(WP_REST_Request $request) {
     // Mise à jour des metas
     update_user_meta($user_id, 'telephone', $telephone);
     update_user_meta($user_id, 'moto', $moto);
-    update_user_meta($user_id, 'blood', $blood);
     update_user_meta($user_id, 'urgence_phone', $urgence_phone);
     update_user_meta($user_id, 'urgence_name', $urgence_name);
 
