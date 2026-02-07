@@ -62,7 +62,7 @@
                 :style="{
                     display: 'inline-block',
                     color: '#245473',
-                    border: '2px solid #245473',
+                    border: '1px solid #245473',
                     padding: '0.3rem 0.3rem',
                     borderRadius: '0.375rem',
                     backgroundColor: 'white',
@@ -77,7 +77,7 @@
                 :style="{
                     display: 'inline-block',
                     color: '#245473',
-                    border: '2px solid #245473',
+                    border: '1px solid #245473',
                     padding: '0.3rem 0.3rem',
                     borderRadius: '0.375rem',
                     backgroundColor: 'white',
@@ -127,7 +127,7 @@
                 :style="{
                     display: 'inline-block',
                     color: '#245473',
-                    border: '2px solid #245473',
+                    border: '1px solid #245473',
                     padding: '0.3rem 0.3rem',
                     borderRadius: '0.375rem',
                     backgroundColor: 'white',
@@ -142,7 +142,7 @@
                 :style="{
                     display: 'inline-block',
                     color: '#245473',
-                    border: '2px solid #245473',
+                    border: '1px solid #245473',
                     padding: '0.3rem 0.3rem',
                     borderRadius: '0.375rem',
                     backgroundColor: 'white',

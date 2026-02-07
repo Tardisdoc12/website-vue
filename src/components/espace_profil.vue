@@ -77,7 +77,7 @@
                     color: 'white',
                     padding: '0.85rem 1rem',
                     borderRadius: '0.375rem',
-                    backgroundColor: '#FF0000',
+                    backgroundColor: '#245473',
                 }"
             >{{ "Supprimer une Catégorie" }}</button>
         </div>
@@ -186,7 +186,7 @@ export default {
     data() {
         const RessourcesCategories= [
             "Fiches et Exercices",
-            "Parcours d'entrainement",
+            "Parcours et Tracés",
             "Liens Utiles",
             "Gestion",
         ]

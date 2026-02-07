@@ -45,7 +45,7 @@
                                 color: 'white',
                                 padding: '0.5rem 1rem',
                                 borderRadius: '0.375rem',
-                                backgroundColor: '#FF0000',
+                                backgroundColor: '#df2727',
                             }"
                         >
                             <font-awesome-icon icon="fa-solid fa-trash"/>
@@ -117,8 +117,8 @@ export default {
         filteredSubcats() {
             return Object.fromEntries(
                 Object.entries(this.subCategoriesAndSources || {}).filter(
-                    ([_, subcat]) =>
-                        subcat?.subcat_title !== "Gestion" || this.isBureau
+                    ([_, cat]) =>
+                        cat?.categorie_title !== "Gestion" || this.isBureau
                 )
             );
         }  
