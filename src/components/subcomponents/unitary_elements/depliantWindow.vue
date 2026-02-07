@@ -188,7 +188,7 @@ export default {
 }
 
 .accordion-content {
-  background-color: #f8f9fa;
+  background-color: #ffffff;
 }
 
 /* Animation douce pour l'ouverture */
