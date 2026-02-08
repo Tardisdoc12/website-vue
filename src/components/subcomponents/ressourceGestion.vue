@@ -38,6 +38,7 @@
                     </label>
                     <div class="flex items-center justify-between gap-2">
                         <button
+                            v-if="isBureau"
                             @click="DeleteFile(file)"
                             class="appearance-none"
                             :style="{
