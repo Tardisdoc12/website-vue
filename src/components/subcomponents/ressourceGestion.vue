@@ -46,7 +46,7 @@
                                 color: 'white',
                                 padding: '0.5rem 1rem',
                                 borderRadius: '0.375rem',
-                                backgroundColor: '#df2727',
+                                backgroundColor: '#000000',
                             }"
                         >
                             <font-awesome-icon icon="fa-solid fa-pen-to-square"/>
