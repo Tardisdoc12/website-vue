@@ -1,46 +1,13 @@
 <template>
     <ModalComponent
-        title="Ajouter un document"
-        :isCancel="isOpen"
+        title="Update file"
+        :isOpen="isOpen"
         @changeBool="Cancel"
     >
-        <form @submit.prevent="handleSubmit" class="space-y-4">
+        <form @submit.prevent="UpdateFile" class="flex flex-col gap-4">
             <div style="margin-left: 20px; margin-right: 20px;margin-top: 10px; margin-bottom: 10px;">
-            
-                <!-- Choix de la catégorie -->
-                <div class="flex flex-col gap-1">
-                    <label class="block font-medium">
-                        Nom de la catégorie
-                        <span style="color: red;">*</span>
-                    </label>
-                    <select v-model="categorieSelected">
-                        <option disabled value="">Choisissez</option>
-                        <option :key="key" v-for="(categorie, key) in subCategoriesAndSources" :value="key">{{ categorie.categorie_title }}</option>
-                    </select>
-                </div>
-
-                <!-- Choix de la sous-catégorie -->
-                <div class="flex flex-col gap-1" v-if="categorieSelected">
-                    <label class="block font-medium">
-                        Sélection de la sous-catégorie
-                    </label>
-                    <select 
-                        
-                        v-model="sousCategorieSelected"
-                    >
-                        <option disabled value="">Choisissez</option>
-                        <option
-                            :key="keySub"
-                            v-for="(sousCategorie, keySub) in subCategoriesAndSources[categorieSelected].subcats"
-                            :value="sousCategorie.subcat_title"
-                        >
-                            {{ sousCategorie.subcat_title }}
-                        </option>
-                    </select>
-                </div>
-
                 <!-- Choix du fichier -->
-                <div v-if="sousCategorieSelected">
+                <div>
                     <!-- Le type de fichier qu'on veut ajouter -->
                     <div class="flex flex-col gap-1">
                         <label>{{ "Fichier ou url" }}</label>
@@ -49,6 +16,27 @@
                             <option>{{ "Fichier" }}</option>
                             <option>{{ "Url" }}</option>
                         </select>
+                    </div>
+
+                    <div
+                        v-if="typeAdd === 'Fichier'"
+                        class="flex flex-col gap-1"
+                        style="margin-top: 10px;"
+                    >
+                        <label>{{ "Ancien Fichier séléctionner" }}</label>
+                        <button
+                            @click="openUrl(file.path_file)"
+                            class="appearance-none"
+                            :style="{
+                                display: 'inline-block',
+                                color: 'white',
+                                padding: '0.5rem 1rem',
+                                borderRadius: '0.375rem',
+                                backgroundColor: '#000000',
+                            }"
+                        >
+                            <font-awesome-icon icon="fa-solid fa-eye"/>
+                        </button>
                     </div>
 
                     <div
@@ -109,20 +97,18 @@
                             required
                         />
                     </div>
-                </div>
 
-                <!-- Boutons de validation -->
-                <div class="flex items-center justify-center " style="margin-bottom:10px;margin-top: 15px;">
-                    <button
-                        :disabled="isDisable"
-                        type="submit"
-                        class="px-4 py-2 rounded-lg font-medium text-white transition"
-                        :class="isDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'"
-                    >
-                        Ajouter le document
-                    </button>
+                    <div class="flex items-center justify-center " style="margin-bottom:10px;margin-top: 15px;">
+                        <button
+                            :disabled="isDisable"
+                            type="submit"
+                            class="px-4 py-2 rounded-lg font-medium text-white transition"
+                            :class="isDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'"
+                        >
+                            Mettre à jour le document
+                        </button>
+                    </div>
                 </div>
-
             </div>
         </form>
     </ModalComponent>
@@ -130,32 +116,28 @@
 
 <script>
 import ModalComponent from './unitary_elements/modalComponent.vue';
-import apiUpload from '@/javascript/axios_upload'
+import apiUpload from '@/javascript/axios_upload';
 import apiSource from '@/javascript/axios_sources';
 
-export default{
-
-    props:{
-        subCategoriesAndSources: {
+export default {
+    props: {
+        file: {
+            type: Object,
+            required: true
+        },
+        subCategorieAndSources: {
             type: Object,
             required: true
         }
     },
-    
-    data(){
+    data() {
         return {
             isOpen: true,
-            categories: [
-                "Fiches et Exos",
-                "Parcours d'entrainement",
-                "Liens Utiles"
-            ],
-            categorieSelected: "",
-            sousCategorieSelected: "",
-            typeAdd: "",
+            fileCopy : {...this.file},
+            typeAdd: this.file.path_file !== '' ? 'Fichier' : 'Url',
+            pdfUrl: this.file.url_file,
             pdfFile: null,
-            pdfUrl: null,
-            tag: null,
+            tag : this.file.tag
         }
     },
 
@@ -164,7 +146,7 @@ export default{
             if(this.typeAdd === "") {
                 return true
             }
-            if( (!this.pdfFile && !this.pdfUrl) && this.typeAdd !== "Aucun") {
+            if(!this.pdfFile && !this.pdfUrl) {
                 return true
             }
             if(!this.tag) {
@@ -174,62 +156,57 @@ export default{
         },
     },
 
-    methods:{
-        Cancel() {
-            this.$emit('cancelSignal', !this.isOpen)
+    methods: {
+        openUrl(file_path) {
+            window.open(file_path,"_blank");
+            
         },
-
         handleFileUpload(event) {
             this.pdfFile = event.target.files[0]
             if (this.pdfFile) {
                 console.log('Fichier sélectionné :', this.pdfFile.name)
             }
         },
-
-        async handleSubmit() {
-            let pathPdf = ""
-            let pdfIDWP = null
-            const obj = this.subCategoriesAndSources[this.categorieSelected].subcats
-            let keyFound = Object.keys(obj).find(
-                key => obj[key].subcat_title === this.sousCategorieSelected
-            )
-            if (this.pdfFile) {
-                const formData = new FormData();
-                formData.append("file", this.pdfFile);
-                try {
-                    const response = await apiUpload.upload_file(formData)
-                    if (response.data.source_url) {
-                        pathPdf = response.data.source_url
-                        pdfIDWP = response.data.id
-                    }
-                    else {
-                        console.log("Soucis lors de la récupération du path du fichier")
-                        console.log(response.data)
-                        return
+        Cancel() {
+            this.$emit('cancelSignal', !this.isOpen)
+        },
+        async UpdateFile() {
+            let pathPdf = this.fileCopy.path_file
+            let pdfIDWP = this.fileCopy.id_wp
+            if(this.pdfFile) {
+                if(this.fileCopy.path_file && Number(this.fileCopy.id_wp) !== 0) {
+                    const response = await apiUpload.deleteFile(this.fileCopy.id_wp)
+                    if(response.status === 200) {
+                        console.log("Ancien fichier supprimé avec succès")
+                    } else {
+                        console.error("Erreur lors de la suppression de l'ancien fichier")
                     }
                 }
-                catch (error) {
-                    console.log(error)
-                    return
+                const formData = new FormData();
+                formData.append('file', this.pdfFile);
+                const uploadResponse = await apiUpload.uploadFile(formData);
+                if (uploadResponse.data.source_url) {
+                    pathPdf = uploadResponse.data.source_url
+                    pdfIDWP = uploadResponse.data.id
                 }
             }
-
-            let source = {
+            const UpdateFile = {
+                ...this.fileCopy,
                 "path_file": pathPdf,
                 "url_file": this.pdfUrl,
-                "id_subcategorie": keyFound,
                 "tag": this.tag,
-                "id_wp": pdfIDWP
+                "id_wp": pdfIDWP,
             }
-            const results_2 = await apiSource.add_source(source)
-            source.id_categorie = this.categorieSelected
-            source.source_id = results_2.data.id
-            this.$emit('newFile', source)
-            this.$emit('cancelSignal', !this.isOpen)
+            const finalAnswer = await apiSource.update_source(UpdateFile)
+            if(finalAnswer.status === 200) {
+                this.$emit('updateSubCategoriesAndSources', UpdateFile)
+            } else {
+                console.error("Erreur lors de la mise à jour du fichier")
+            }
+            this.Cancel()
         }
     },
-
-    components:{
+    components: {
         ModalComponent
     }
 }

@@ -39,6 +39,20 @@
                     <div class="flex items-center justify-between gap-2">
                         <button
                             v-if="isBureau"
+                            @click="UpdateFile(file, subkey, key)"
+                            class="appearance-none"
+                            :style="{
+                                display: 'inline-block',
+                                color: 'white',
+                                padding: '0.5rem 1rem',
+                                borderRadius: '0.375rem',
+                                backgroundColor: '#df2727',
+                            }"
+                        >
+                            <font-awesome-icon icon="fa-solid fa-pen-to-square"/>
+                        </button>
+                        <button
+                            v-if="isBureau"
                             @click="DeleteFile(file)"
                             class="appearance-none"
                             :style="{
@@ -83,11 +97,20 @@
             </div>
         </DepliantWindow>
     </DepliantWindow>
+
+    <ModalFileUpdate
+        v-if="isUpdateFile"
+        :file="fileToUpdate"
+        :sub-categorie-and-sources="subCategoriesAndSources"
+         @cancelSignal="isUpdateFile = false"
+         @updateSubCategoriesAndSources="UpdateHandler"
+    />
 </template>
 
 <script>
 import axios_sources from "../../javascript/axios_sources.js";
 import DepliantWindow from './unitary_elements/depliantWindow.vue';
+import ModalFileUpdate from './modal_update_file.vue';
 import api_upload from '@/javascript/axios_upload'
 import { toRaw } from "vue"
 
@@ -107,6 +130,8 @@ export default {
     data(){
         return {
             subCategoriesAndSourcesCopy : null,
+            isUpdateFile: false,
+            fileToUpdate: null
         }
     },
 
@@ -172,16 +197,34 @@ export default {
                 }
             }
         },
+        UpdateFile(file,subcat_id,categorie_id) {
+            this.isUpdateFile = true
+            this.fileToUpdate = file
+            this.fileToUpdate.id_categorie = categorie_id
+            this.fileToUpdate.id_subcategorie = subcat_id
+        },
         DownloadUrl(file) {
             const link = document.createElement('a');
             link.href = file.path_file;
             link.download = file.path_file.split('/').pop();
             link.click();
-        }
+        },
+        UpdateHandler(updatedFile) {
+            const subcat = this.subCategoriesAndSourcesCopy[updatedFile.id_categorie]?.subcats[updatedFile.id_subcategorie]
+            if (!subcat) return
+
+            const fileIndex = subcat.files.findIndex(f => f.source_id === updatedFile.source_id)
+
+            if (fileIndex !== -1) {
+                subcat.files[fileIndex] = updatedFile
+                this.$emit("updateSubCategoriesAndSources", this.subCategoriesAndSourcesCopy)
+            }
+        },
     },
 
     components: {
-        DepliantWindow
+        DepliantWindow,
+        ModalFileUpdate
     }
 }
 </script>

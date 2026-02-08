@@ -24,6 +24,13 @@ export default {
         const results = await api.delete(`/sources/${id}`)
         return results
     },
+    async update_source(source) {
+        if (!source.source_id) {
+            throw new Error("L'ID de la source est requis pour la mise à jour.")
+        }
+        const results = await api.put(`/sources/${source.source_id}`, source)
+        return results
+    },
     async delete_subcategorie(id) {
         const results = await api.delete(`/subcategories/${id}`)
         return results

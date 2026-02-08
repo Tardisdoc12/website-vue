@@ -189,5 +189,81 @@ function myplugin_rm_sources(WP_REST_Request $request) {
 }
 
 //------------------------------------------------------------------------------
+
+add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1', '/sources/(?P<id>\d+)', [
+        'methods' => WP_REST_Server::EDITABLE,
+        'callback' => 'myplugin_update_sources',
+        'permission_callback' => 'monplugin_verify_csrf',
+    ]);
+});
+
+function myplugin_update_sources(WP_REST_Request $request) {
+    global $wpdb;
+
+    $id = intval($request['id']);
+    $table = $wpdb->prefix . 'source';
+
+    // Vérifier que la source existe
+    $exists = $wpdb->get_var($wpdb->prepare(
+        "SELECT id FROM $table WHERE id = %d",
+        $id
+    ));
+
+    if (!$exists) {
+        return new WP_Error('not_found', 'Source introuvable', ['status' => 404]);
+    }
+
+    $data = [];
+    $formats = [];
+
+    if ($request->has_param('id_subcategorie')) {
+        $data['id_subcategorie'] = intval($request->get_param('id_subcategorie'));
+        $formats[] = '%d';
+    }
+
+    if ($request->has_param('path_file')) {
+        $data['path_file'] = sanitize_text_field($request->get_param('path_file'));
+        $formats[] = '%s';
+    }
+
+    if ($request->has_param('url_file')) {
+        $data['url_file'] = esc_url_raw($request->get_param('url_file'));
+        $formats[] = '%s';
+    }
+
+    if ($request->has_param('tag')) {
+        $data['tag'] = sanitize_text_field($request->get_param('tag'));
+        $formats[] = '%s';
+    }
+
+    if ($request->has_param('id_wp')) {
+        $data['id_wp'] = intval($request->get_param('id_wp'));
+        $formats[] = '%d';
+    }
+
+    if (empty($data)) {
+        return new WP_Error('no_data', 'Aucune donnée à mettre à jour', ['status' => 400]);
+    }
+
+    $updated = $wpdb->update(
+        $table,
+        $data,
+        ['id' => $id],
+        $formats,
+        ['%d']
+    );
+
+    if ($updated === false) {
+        return new WP_Error('db_error', $wpdb->last_error, ['status' => 500]);
+    }
+
+    return [
+        'success' => true,
+        'updated_id' => $id
+    ];
+}
+
+//------------------------------------------------------------------------------
 // End of File
 //------------------------------------------------------------------------------

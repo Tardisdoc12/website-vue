@@ -63,8 +63,8 @@ function mon_plugin_creer_tables() {
     $sql5 = "CREATE TABLE $table_source (
         id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
         id_subcategorie BIGINT(20) UNSIGNED NOT NULL,
-        path_file VARCHAR(200),
-        url_file VARCHAR(200),
+        path_file VARCHAR(500),
+        url_file VARCHAR(500),
         tag VARCHAR(200) NOT NULL,
         id_wp BIGINT(20) UNSIGNED NOT NULL,
         PRIMARY KEY (id)
