@@ -173,10 +173,20 @@ export default {
         async UpdateFile() {
             let pathPdf = this.fileCopy.path_file
             let pdfIDWP = this.fileCopy.id_wp
+            if(!this.pdfFile && this.typeAdd === "Url") {
+                pathPdf = ""
+                pdfIDWP = 0
+                const response = await apiUpload.delete_file(this.fileCopy.id_wp)
+                if(response.status === 200) {
+                    console.log("Ancien fichier supprimé avec succès")
+                } else {
+                    console.error("Erreur lors de la suppression de l'ancien fichier")
+                }
+            }
             if(this.pdfFile) {
                 if(this.fileCopy.path_file && Number(this.fileCopy.id_wp) !== 0) {
-                    const response = await apiUpload.deleteFile(this.fileCopy.id_wp)
-                    if(response.status === 200) {
+                    const response_2 = await apiUpload.delete_file(this.fileCopy.id_wp)
+                    if(response_2.status === 200) {
                         console.log("Ancien fichier supprimé avec succès")
                     } else {
                         console.error("Erreur lors de la suppression de l'ancien fichier")
@@ -184,7 +194,7 @@ export default {
                 }
                 const formData = new FormData();
                 formData.append('file', this.pdfFile);
-                const uploadResponse = await apiUpload.uploadFile(formData);
+                const uploadResponse = await apiUpload.upload_file(formData);
                 if (uploadResponse.data.source_url) {
                     pathPdf = uploadResponse.data.source_url
                     pdfIDWP = uploadResponse.data.id
