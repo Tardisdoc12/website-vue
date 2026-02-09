@@ -94,7 +94,7 @@
                 }"
                 @click="() => {isInMyFollowPage=true;}"
             >
-                {{ "Accéder à ma fiche de suivie" }}
+                {{ "Accéder à ma fiche de suivi" }}
             </button>
         </div>
 
@@ -121,7 +121,7 @@
         />
     </div>
     <div v-else>
-        <h1 class="text-2xl font-bold mb-4">Ma fiche de suivie</h1>
+        <h1 class="text-2xl font-bold mb-4">Ma fiche de suivi</h1>
         <p>Cette page est en cours de développement. Elle permettra d'afficher les informations de suivi de l'utilisateur, telles que les progrès réalisés, les objectifs atteints, et d'autres données pertinentes pour le suivi de sa progression.</p>
         <button
             @click="() => {isInMyFollowPage=false;}"
@@ -187,7 +187,7 @@ export default {
         const RessourcesCategories= [
             "Fiches et Exercices",
             "Parcours et Tracés",
-            "Liens Utiles",
+            "Liens et Documents Utiles",
             "Gestion",
         ]
         return {
