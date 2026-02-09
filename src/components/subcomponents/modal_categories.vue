@@ -91,9 +91,7 @@ export default {
         },
 
         async handleSubmit() {
-            console.log(this.categorieSelected)
             const obj = this.subCategoriesAndSources[this.categorieSelected].subcats
-            console.log("on a les sous catégories : ", obj)
             let keyFound = Object.keys(obj).find(
                 key => obj[key].subcat_title === this.sousCategorieSelected
             )
