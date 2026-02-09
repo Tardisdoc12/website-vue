@@ -110,14 +110,7 @@ function myplugin_register_user(WP_REST_Request $request) {
         $username .= "." . substr($telephone, -4);
     }
 
-    $existing_users = get_users([
-        'meta_key' => 'telephone',
-        'meta_value' => $telephone,
-        'number' => 1,
-    ]);
-
-
-    if (username_exists($username) || email_exists($email) || !empty($existing_users)) {
+    if (username_exists($username) || email_exists($email)) {
         return new WP_Error('user_exists', 'Utilisateur déjà existant', ['status' => 400]);
     }
 
