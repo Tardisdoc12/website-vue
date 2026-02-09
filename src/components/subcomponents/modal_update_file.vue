@@ -173,7 +173,7 @@ export default {
         async UpdateFile() {
             let pathPdf = this.fileCopy.path_file
             let pdfIDWP = this.fileCopy.id_wp
-            if(!this.pdfFile && this.typeAdd === "Url") {
+            if(!this.pdfFile && this.typeAdd === "Url" && this.fileCopy.path_file) {
                 pathPdf = ""
                 pdfIDWP = 0
                 const response = await apiUpload.delete_file(this.fileCopy.id_wp)

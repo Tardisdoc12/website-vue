@@ -252,7 +252,7 @@ export default {
                 if(!this.user.roles.includes("non_adherent")) {
                     number = parseInt(arg.event.extendedProps.subscribePlace) - arg.event.extendedProps.users.length + nonAdherentsCount.value;
                     if(number === 0){
-                        places_avalaible = "complet"
+                        places_available = "complet"
                     }
                     else {
                         places_available = "inscriptions ouvertes"
