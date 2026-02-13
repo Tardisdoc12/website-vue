@@ -4,29 +4,45 @@
 */
 if (!defined('ABSPATH')) exit;
 
-//------------------------------------------------------------------------------
-// IMPORTS
+/**
+ * Génère automatiquement les shortcodes Vue depuis le manifest Vite
+ */
+function register_vue_shortcodes_from_manifest() {
 
-$file = "functions.php";
-require_once plugin_dir_path(__FILE__) . $file;
+    // Chemin vers le manifest.json généré par Vite
+    $manifest_path = plugin_dir_path(__FILE__) . '../dist/manifest.json';
 
-//------------------------------------------------------------------------------
+    if (!file_exists($manifest_path)) {
+        return; // Pas de manifest, rien à faire
+    }
 
-// Enregistrer les shortcodes
-$shortcodes = [
-    'login',
-    'calendar',
-    'connexion',
-    'account',
-    'form_adhesion',
-    'test',
-    'event-page',
-    'reinitialisation'
-];
+    $manifest = json_decode(file_get_contents($manifest_path), true);
 
-foreach ($shortcodes as $sc) {
-    add_shortcode($sc, 'vue_shortcode');
+    if (!$manifest || !is_array($manifest)) {
+        return;
+    }
+
+    // Boucle sur chaque entrée du manifest
+    foreach ($manifest as $file => $data) {
+
+        // On ne garde que les fichiers JS qui sont des entrées de composants
+        if (!isset($data['isEntry']) || !$data['isEntry']) {
+            continue;
+        }
+
+        // Nom du composant (sans extension)
+        $component_name = pathinfo($file, PATHINFO_FILENAME);
+
+        // Convertir PascalCase ou camelCase en kebab-case pour le shortcode
+        $shortcode = strtolower(preg_replace('/(?<!^)[A-Z]/', '-$0', $component_name));
+
+        // Ajouter le shortcode pointant vers la fonction générique vue_shortcode
+        add_shortcode($shortcode, 'vue_shortcode');
+    }
 }
+
+add_action('init', 'register_vue_shortcodes_from_manifest');
+
 
 //------------------------------------------------------------------------------
 
