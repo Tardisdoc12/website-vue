@@ -129,7 +129,7 @@
 </template>
 
 <script>
-import ModalComponent from './unitary_elements/modalComponent.vue';
+import ModalComponent from '@/subcomponents/unitary_elements/modalComponent.vue';
 import apiUpload from '@/javascript/api/axios_upload'
 import apiSource from '@/javascript/api/axios_sources';
 

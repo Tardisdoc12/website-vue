@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import Modal from "./unitary_elements/modalComponent.vue"
+import Modal from "@/subcomponents/unitary_elements/modalComponent.vue"
 import api from "@/javascript/api/axios_inscription"
 
 export default {

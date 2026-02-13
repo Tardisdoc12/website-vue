@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import Modal from "./unitary_elements/modalComponent.vue"
+import Modal from "@/subcomponents/unitary_elements/modalComponent.vue"
 
 export default {
     props: {
