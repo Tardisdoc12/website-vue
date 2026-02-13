@@ -46,7 +46,7 @@ import ModalEvents from "@/subcomponents/modals/modal_event.vue"
 import ModalInscript from "@/subcomponents/modals/modal_form_inscription.vue"
 import ModalPayement from "@/subcomponents/modals/modal_payement.vue"
 import eventsService from '@/javascript/api/axios_events.js';
-import EventsFunctions from "@/javascript/utils/events_functions.js"
+import EventsFunctions from "@/javascript/constants/events_functions.js"
 import { jwtDecode } from "jwt-decode"
 import api from "@/javascript/api/users_wp.js"
 import apiEvents from "@/javascript/api/axios_events"

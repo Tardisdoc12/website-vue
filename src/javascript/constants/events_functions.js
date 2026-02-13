@@ -1,15 +1,16 @@
-import { Couleur } from "@/javascript/constants/colors";
+import { Couleurs } from "@/javascript/constants/colors";
+import { Events } from "@/javascript/constants/events_type.js"
 
 export default {
         colorBg(categorie) {
-            if (categorie === seance) {
-                return [Couleur.seance_main, Couleur.seance_second]
+            if (categorie === Events.seance) {
+                return [Couleurs.seance_main, Couleurs.seance_second]
             }
-            if (categorie === balade) {
-                return [Couleur.ballade_main, Couleur.ballade_second]
+            if (categorie === Events.balade) {
+                return [Couleurs.ballade_main, Couleurs.ballade_second]
             }
-            if (categorie === stage) {
-                return [Couleur.stage_main, Couleur.stage_second]
+            if (categorie === Events.stage) {
+                return [Couleurs.stage_main, Couleurs.stage_second]
             }
         },
 }
