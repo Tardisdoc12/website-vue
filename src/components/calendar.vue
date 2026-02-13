@@ -42,14 +42,14 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction"
 import listPlugin from '@fullcalendar/list';
 import ModalCreateEvent from "@/components/formulaire.vue"
-import ModalEvents from "./subcomponents/modal_event.vue"
-import ModalInscript from "./subcomponents/modal_form_inscription.vue"
-import ModalPayement from "./subcomponents/modal_payement.vue"
+import ModalEvents from "@/subcomponents/modals/modal_event.vue"
+import ModalInscript from "@/subcomponents/modals/modal_form_inscription.vue"
+import ModalPayement from "@/subcomponents/modals/modal_payement.vue"
 import eventsService from '@/javascript/api/axios_events.js';
 import Categories from "@/javascript/constants/events_type"
 import { jwtDecode } from "jwt-decode"
-import api from "../javascript/api/users_wp.js"
-import apiEvents from "../javascript/api/axios_events"
+import api from "@/javascript/api/users_wp.js"
+import apiEvents from "@/javascript/api/axios_events"
 import { computed } from 'vue'
 
 function isOutdated(event) {

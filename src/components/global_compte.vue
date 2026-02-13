@@ -37,7 +37,7 @@
 import CreateAccount from "@/components/Login.vue"
 import ConnectAccount from "@/components/connexion.vue"
 import DrawAccount from "@/components/gestions_comptes.vue"
-import ModalResetPassword from "@/components/subcomponents/modal_reinitialisation.vue"
+import ModalResetPassword from "@/components/subcomponents/modals/modal_reinitialisation.vue"
 import { jwtDecode } from "jwt-decode"
 
 export default {

@@ -133,16 +133,16 @@
 </template>
 
 <script>
-import ProfilInformation from "./subcomponents/compteGestion.vue"
-import RessourceGestion from "./subcomponents/ressourceGestion.vue";
-import ModalCategories from "./subcomponents/modal_categories.vue";
-import ModalFilesAccount from "./subcomponents/modal_files_account.vue";
-import ModalRemoveSubcategorie from "./subcomponents/modal_remove_subcategorie.vue";
-import MediaSpace from "./subcomponents/media_space.vue";
+import ProfilInformation from "@/subcomponents/depliants/compteGestion.vue"
+import RessourceGestion from "@/subcomponents/depliants/ressourceGestion.vue";
+import ModalCategories from "@/subcomponents/modals/modal_categories.vue";
+import ModalFilesAccount from "@/subcomponents/modals/modal_files_account.vue";
+import ModalRemoveSubcategorie from "@/subcomponents/modals/modal_remove_subcategorie.vue";
+import MediaSpace from "@/subcomponents/media_space.vue";
 import apiSources from "@/javascript/api/axios_sources"
 import { jwtDecode } from "jwt-decode"
-import api from "../javascript/api/users_wp.js"
-import { Couleurs } from "@/javascript/constants/coulors.js"
+import api from "@/javascript/api/users_wp.js"
+import { Couleurs } from "@/javascript/constants/colors.js"
 
 export default {
     async mounted() {

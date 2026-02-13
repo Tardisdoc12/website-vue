@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import apiWP from "../javascript/api/users_wp"
+import apiWP from "@/javascript/api/users_wp"
 import { jwtDecode } from "jwt-decode"
 
 export default {

@@ -145,7 +145,7 @@
 </template>
 
 <script>
-import api from "../javascript/api/users_wp"
+import api from "@/javascript/api/users_wp"
 
 export default {
     props: {

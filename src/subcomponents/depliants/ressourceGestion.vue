@@ -110,7 +110,7 @@
 <script>
 import axios_sources from "../../javascript/api/axios_sources.js";
 import DepliantWindow from './unitary_elements/depliantWindow.vue';
-import ModalFileUpdate from './modal_update_file.vue';
+import ModalFileUpdate from './modals/modal_update_file.vue/index.js';
 import api_upload from '@/javascript/api/axios_upload.js'
 import { toRaw } from "vue"
 

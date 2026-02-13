@@ -140,9 +140,9 @@
 </template>
 
 <script>
-import Modal from "./subcomponents/unitary_elements/modalComponent.vue"
-import eventsService from '../javascript/api/axios_events.js';
-import Categories from "../javascript/constants/events_type.js"
+import Modal from "@/subcomponents/unitary_elements/modalComponent.vue"
+import eventsService from '@/javascript/api/axios_events.js';
+import Categories from "@/javascript/constants/events_type.js"
 
 export default {
     props: {
