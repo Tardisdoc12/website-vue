@@ -17,7 +17,6 @@
     "build:test": "cross-env ENTRY=test vite build",
     "build:event-page": "cross-env ENTRY=event-page vite build",
     "build:reinitialisation": "cross-env ENTRY=reinitialisation vite build",
-    "build:all": "npm run build:login && npm run build:calendar && npm run build:events && npm run build:connexion && npm run build:account && npm run build:form_adhesion && npm run build:test",
     "preview": "vite preview"
   },
   "dependencies": {
