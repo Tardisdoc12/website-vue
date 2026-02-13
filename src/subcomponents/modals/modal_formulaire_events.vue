@@ -93,9 +93,9 @@
                         required
                     >
                         <option disabled value="">-- Choisir une catégorie --</option>
-                        <option :value="Categories.seance">Seance</option>
-                        <option :value="Categories.stage">Stage</option>
-                        <option :value="Categories.balade">Balade</option>
+                        <option :value="Events.seance">Seance</option>
+                        <option :value="Events.stage">Stage</option>
+                        <option :value="Events.balade">Balade</option>
                     </select>
                 </div>
 
@@ -142,7 +142,7 @@
 <script>
 import Modal from "@/subcomponents/unitary_elements/modalComponent.vue"
 import eventsService from '@/javascript/api/axios_events.js';
-import Categories from "@/javascript/constants/events_type.js"
+import { Events } from "@/javascript/constants/events_type.js"
 
 export default {
     props: {
@@ -176,7 +176,7 @@ export default {
                 nonsubscribePlace: 0,
             },
             isChecked:false || this?.eventSelected?.subscribePlace >= 0,
-            Categories,
+            Events: Events,
             cloneDates: [
             ],
             isUpdate:false,
