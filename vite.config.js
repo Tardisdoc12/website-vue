@@ -13,7 +13,6 @@ const customEntry = process.env.ENTRY
 const entries = {
   login: path.resolve(__dirname, 'src/main-login.js'),
   calendar: path.resolve(__dirname, 'src/main-calendar.js'),
-  events: path.resolve(__dirname, 'src/main-events.js'),
   connexion: path.resolve(__dirname, 'src/main-connexion.js'),
   account: path.resolve(__dirname, 'src/main-global-account.js'),
   form_adhesion: path.resolve(__dirname, 'src/main-adherent.js'),

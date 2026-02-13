@@ -10,7 +10,6 @@
     "dev": "vite",
     "build:login": "cross-env ENTRY=login vite build",
     "build:calendar": "cross-env ENTRY=calendar vite build",
-    "build:events": "cross-env ENTRY=events vite build",
     "build:connexion": "cross-env ENTRY=connexion vite build",
     "build:account": "cross-env ENTRY=account vite build",
     "build:form_adhesion": "cross-env ENTRY=form_adhesion vite build",

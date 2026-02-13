@@ -107,9 +107,9 @@
 
 <script>
 
-import Modal from "./unitary_elements/modalComponent.vue"
-import ModalInscrit from "./modal_inscrits.vue"
-import ModalEvent from "../formulaire.vue"
+import Modal from "@/subcomponents/unitary_elements/modalComponent.vue"
+import ModalInscrit from "@/subcomponents/modals/modal_inscrits.vue"
+import ModalEvent from "@/subcomponents/modals/modal_formulaire_events.vue"
 import api from "@/javascript/api/axios_events"
 
 function formatDate(d) {

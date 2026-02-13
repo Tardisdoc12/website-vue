@@ -41,7 +41,7 @@ import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction"
 import listPlugin from '@fullcalendar/list';
-import ModalCreateEvent from "@/components/formulaire.vue"
+import ModalCreateEvent from "@/subcomponents/modals/modal_formulaire_events.vue"
 import ModalEvents from "@/subcomponents/modals/modal_event.vue"
 import ModalInscript from "@/subcomponents/modals/modal_form_inscription.vue"
 import ModalPayement from "@/subcomponents/modals/modal_payement.vue"
