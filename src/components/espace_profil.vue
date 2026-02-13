@@ -13,11 +13,11 @@
                 type="button"
                 :style="{
                     display: inline-block,
-                    color: activeIndex === i ? '#FFFFFF' : '#245473',
+                    color: activeIndex === i ? Couleurs.white : Couleurs.main_blue,
                     padding: '1.0rem 1.0rem',
                     borderRadius: '9999px',
-                    backgroundColor: activeIndex === i ? '#245473' : '#FFFFFF',
-                    border: '2px solid #245473',
+                    backgroundColor: activeIndex === i ? Couleurs.main_blue : Couleurs.white,
+                    border: `2px solid ${Couleurs.main_blue}`,
                 }"
             >
                 {{ label }}
@@ -51,10 +51,10 @@
                 class="appearance-none"
                 :style="{
                     display: 'inline-block',
-                    color: 'white',
+                    color: Couleurs.white,
                     padding: '0.85rem 1rem',
                     borderRadius: '0.375rem',
-                    backgroundColor: '#245473',
+                    backgroundColor: Couleurs.main_blue,
                 }"
                 @click="() => {isAddingCategories=true;}"
             >{{ "Ajouter une catégorie" }}</button>
@@ -62,10 +62,10 @@
                 class="appearance-none"
                 :style="{
                     display: 'inline-block',
-                    color: 'white',
+                    color: Couleurs.white,
                     padding: '0.85rem 1rem',
                     borderRadius: '0.375rem',
-                    backgroundColor: '#245473',
+                    backgroundColor: Couleurs.main_blue,
                 }"
                 @click="() => {isAddingFiles=true;}"
             >{{ "Ajouter un fichier" }}</button>
@@ -74,10 +74,10 @@
                 class="appearance-none"
                 :style="{
                     display: 'inline-block',
-                    color: 'white',
+                    color: Couleurs.white,
                     padding: '0.85rem 1rem',
                     borderRadius: '0.375rem',
-                    backgroundColor: '#245473',
+                    backgroundColor: Couleurs.main_blue,
                 }"
             >{{ "Supprimer une Catégorie" }}</button>
         </div>
@@ -87,10 +87,10 @@
                 class="appearance-none"
                 :style="{
                     display: 'inline-block',
-                    color: 'white',
+                    color: Couleurs.white,
                     padding: '0.85rem 1rem',
                     borderRadius: '0.375rem',
-                    backgroundColor: '#245473',
+                    backgroundColor: Couleurs.main_blue,
                 }"
                 @click="() => {isInMyFollowPage=true;}"
             >
@@ -142,6 +142,7 @@ import MediaSpace from "./subcomponents/media_space.vue";
 import apiSources from "@/javascript/api/axios_sources"
 import { jwtDecode } from "jwt-decode"
 import api from "../javascript/api/users_wp.js"
+import { Couleurs } from "@/javascript/constants/coulors.js"
 
 export default {
     async mounted() {

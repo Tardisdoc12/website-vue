@@ -4,6 +4,7 @@ export default {
         main_blue: "#245473",
         cyan: "#d4e3ed",
         main_red: "#df2727",
+        white : "#FFFFFF",
         // event colors
         seance_main: "rgba(109, 159, 175, 1)",
         seance_second: "rgba(109, 159, 175, 0.2)",
