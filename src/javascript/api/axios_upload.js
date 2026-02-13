@@ -1,7 +1,8 @@
-import api from "@/javascript/api"
+import api from "@/javascript/api/api"
 import axios from "axios"
+import { URLS } from "@/javascript/constants/urls.js"
 
-const UPLOAD_URL = "https://mps-moto.fr/wp-json/wp/v2/media"
+const UPLOAD_URL = URLS.media_url
 
 export default {
     async upload_file(file) {

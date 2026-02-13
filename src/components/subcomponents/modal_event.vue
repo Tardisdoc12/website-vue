@@ -110,7 +110,7 @@
 import Modal from "./unitary_elements/modalComponent.vue"
 import ModalInscrit from "./modal_inscrits.vue"
 import ModalEvent from "../formulaire.vue"
-import api from "@/javascript/axios_events"
+import api from "@/javascript/api/axios_events"
 
 function formatDate(d) {
     const year = d.getFullYear();

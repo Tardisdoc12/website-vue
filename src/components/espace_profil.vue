@@ -139,9 +139,9 @@ import ModalCategories from "./subcomponents/modal_categories.vue";
 import ModalFilesAccount from "./subcomponents/modal_files_account.vue";
 import ModalRemoveSubcategorie from "./subcomponents/modal_remove_subcategorie.vue";
 import MediaSpace from "./subcomponents/media_space.vue";
-import apiSources from "@/javascript/axios_sources"
+import apiSources from "@/javascript/api/axios_sources"
 import { jwtDecode } from "jwt-decode"
-import api from "../javascript/users_wp.js"
+import api from "../javascript/api/users_wp.js"
 
 export default {
     async mounted() {

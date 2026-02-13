@@ -19,7 +19,7 @@
 
 <script>
 import Modal from "./unitary_elements/modalComponent.vue"
-import apiUser from "@/javascript/users_wp"
+import apiUser from "@/javascript/api/users_wp"
 
 export default {
     data() {

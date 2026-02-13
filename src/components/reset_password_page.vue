@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import apiUser from "@/javascript/users_wp"
+import apiUser from "@/javascript/api/users_wp"
 
 export default {
     name: "ResetPasswordPage",

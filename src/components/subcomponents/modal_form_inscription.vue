@@ -95,7 +95,7 @@
 </template>
 
 <script>
-import inscritAPI from "@/javascript/axios_inscription"
+import inscritAPI from "@/javascript/api/axios_inscription"
 import Modal from "./unitary_elements/modalComponent.vue"
 
 export default {

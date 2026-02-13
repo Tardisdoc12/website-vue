@@ -17,7 +17,7 @@
 
 <script>
 import { jwtDecode } from "jwt-decode"
-import api from "../javascript/users_wp.js"
+import api from "../javascript/api/users_wp.js"
 
 export default {
     data() {

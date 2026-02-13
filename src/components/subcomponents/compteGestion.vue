@@ -156,7 +156,7 @@
 </template>
 
 <script>
-import api_user from "@/javascript/users_wp.js"
+import api_user from "@/javascript/api/users_wp.js"
 import DepliantWindow from './unitary_elements/depliantWindow.vue';
 
 export default {

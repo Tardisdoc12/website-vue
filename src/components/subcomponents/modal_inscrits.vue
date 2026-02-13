@@ -90,7 +90,7 @@
 
 <script>
 import Modal from "./unitary_elements/modalComponent.vue"
-import api from "@/javascript/axios_inscription"
+import api from "@/javascript/api/axios_inscription"
 
 export default {
     props: {

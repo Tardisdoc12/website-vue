@@ -1,6 +1,7 @@
 import api from "./api.js"
+import { URLS } from "@/javascript/constants/urls.js"
 
-const url_connect = "https://mps-moto.fr/wp-json/jwt-auth/v1/token"
+const url_connect = URLS.url_connect
 
 export default {
     async create_user(body) {

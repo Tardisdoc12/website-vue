@@ -1,4 +1,5 @@
 import axios from "axios"
+import { URLS } from "@/javascript/constants/urls.js"
 
 // Fonction utilitaire pour lire un cookie
 function getCookie(name) {
@@ -18,7 +19,7 @@ function getCookie(name) {
 
 // Crée ton instance axios
 const api = axios.create({
-  baseURL: "https://mps-moto.fr/wp-json/vue-plugin/v1",
+  baseURL: URLS.base_plugin,
   withCredentials: true,
 })
 

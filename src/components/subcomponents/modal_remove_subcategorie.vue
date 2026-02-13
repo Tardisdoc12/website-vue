@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import apiSource from '@/javascript/axios_sources';
+import apiSource from '@/javascript/api/axios_sources';
 import ModalComponent from './unitary_elements/modalComponent.vue';
 
 export default {

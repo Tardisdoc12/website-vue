@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import axiosEvent from '../javascript/axios_events.js'
+import axiosEvent from '../javascript/api/axios_events.js'
 
 export default {
   props:{

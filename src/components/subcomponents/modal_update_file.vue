@@ -116,8 +116,8 @@
 
 <script>
 import ModalComponent from './unitary_elements/modalComponent.vue';
-import apiUpload from '@/javascript/axios_upload';
-import apiSource from '@/javascript/axios_sources';
+import apiUpload from '@/javascript/api/axios_upload';
+import apiSource from '@/javascript/api/axios_sources';
 
 export default {
     props: {
