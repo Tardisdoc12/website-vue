@@ -1,22 +1,26 @@
 #!/bin/bash
-set -e  # stoppe en cas d'erreur
+set -e
 
-# Dossier cible pour ton plugin
-OUTDIR="./vue-app"
+PLUGIN_DIR="vue-app"
+BUILD_DIR="./build"
+FINAL_DIR="$BUILD_DIR/$PLUGIN_DIR"
 
-# Liste des entrées à builder
-ENTRIES=("login" "calendar" "connexion" "account" "form_adhesion" "test" "event-page" "reinitialisation")
+echo "📁 Nettoyage ancien build..."
+rm -rf "$BUILD_DIR"
+mkdir -p "$FINAL_DIR"
 
-# Boucle sur chaque entrée
-for entry in "${ENTRIES[@]}"; do
-  echo "⚡ Build $entry..."
-  ENTRY=$entry npm run build:$entry
+echo "⚡ Build Vite..."
+npm run build
 
-  echo "📦 Copie des fichiers $entry..."
-  cp dist/$entry.js "$OUTDIR"/
-  if [ -f "dist/$entry.css" ]; then
-    cp dist/$entry.css "$OUTDIR"/
-  fi
-done
+echo "📦 Copie des fichiers WordPress..."
+cp -r "$PLUGIN_DIR"/* "$FINAL_DIR/"
 
-echo "✅ Build terminé ! Les fichiers sont dans $OUTDIR/"
+echo "📦 Copie du dossier dist..."
+cp -r "$BUILD_DIR"/dist/* "$FINAL_DIR/"
+
+echo "🗜 Création du ZIP..."
+cd "$BUILD_DIR"
+zip -r "$PLUGIN_DIR.zip" "$PLUGIN_DIR"
+cd ..
+
+echo "✅ Plugin prêt : $BUILD_DIR/$PLUGIN_DIR.zip"

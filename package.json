@@ -8,14 +8,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build:login": "cross-env ENTRY=login vite build",
-    "build:calendar": "cross-env ENTRY=calendar vite build",
-    "build:connexion": "cross-env ENTRY=connexion vite build",
-    "build:account": "cross-env ENTRY=account vite build",
-    "build:form_adhesion": "cross-env ENTRY=form_adhesion vite build",
-    "build:test": "cross-env ENTRY=test vite build",
-    "build:event-page": "cross-env ENTRY=event-page vite build",
-    "build:reinitialisation": "cross-env ENTRY=reinitialisation vite build",
+    "build": "cross-env ENTRY=main vite build",
     "preview": "vite preview"
   },
   "dependencies": {
