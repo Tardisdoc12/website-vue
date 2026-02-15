@@ -15,15 +15,15 @@ import { fab } from '@fortawesome/free-brands-svg-icons'
 /* add icons to the library */
 library.add(fas, far, fab)
 
-const components = {
-  login: defineAsyncComponent(() => import('./components/login.vue')),
-  calendar: defineAsyncComponent(() => import('./components/calendar.vue')),
-  compte: defineAsyncComponent(() => import('./components/global_compte.vue')),
-}
+let new_components = {}
+
+VUE_SHORTCODES.forEach(name => {
+    new_components[name] = defineAsyncComponent(() => import(`./components/${name}.vue`))
+})
 
 document.querySelectorAll('.vue-root').forEach(el => {
   const moduleName = el.dataset.module
-  const component = components[moduleName]
+  const component = new_components[moduleName]
 
   if (component) {
     const app = createApp(component)

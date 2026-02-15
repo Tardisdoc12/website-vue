@@ -40,6 +40,14 @@ function monplugin_verify_csrf(WP_REST_Request $request) {
 }
 
 //------------------------------------------------------------------------------
+/**
+ * Déclaration des shortcodes
+ */
+function get_vue_shortcodes() {
+    return ['login', 'calendar', 'compte'];
+}
+
+//------------------------------------------------------------------------------
 
 function enqueue_vue_scripts() {
     global $vue_requested_modules;
@@ -107,6 +115,12 @@ function enqueue_vue_scripts() {
             'modules' => array_values($vue_requested_modules),
             'restUrl' => esc_url_raw(rest_url()),
         ]);
+
+        wp_localize_script(
+            'vue-modules-js',
+            'VUE_SHORTCODES',
+            get_vue_shortcodes()
+        );
     }
 }
 

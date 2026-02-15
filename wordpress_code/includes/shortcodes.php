@@ -42,7 +42,7 @@ function vue_shortcode($atts, $content = null, $tag = '') {
  */
 
 add_action('init', function () {
-    $shortcodes = ['login', 'calendar', 'compte'];
+    $shortcodes = get_vue_shortcodes();
 
     foreach ($shortcodes as $sc) {
         add_shortcode($sc, 'vue_shortcode');
