@@ -18,6 +18,7 @@ cp -r "$WORDPRESS_CODE_DIR"/* "$FINAL_DIR/"
 
 echo "📦 Copie du dossier dist..."
 cp -r "$BUILD_DIR"/dist/ "$FINAL_DIR/"
+mv "$FINAL_DIR/dist/.vite/manifest.json" "$FINAL_DIR/manifest.json"
 
 echo "🗜 Création du ZIP..."
 cd "$BUILD_DIR"

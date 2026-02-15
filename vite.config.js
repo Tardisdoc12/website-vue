@@ -30,15 +30,15 @@ export default defineConfig({
     outDir: 'build/dist',
    emptyOutDir: true,
     lib: {
-      entry: path.resolve(__dirname, 'src/main-login.js'),
+      entry: path.resolve(__dirname, 'src/main.js'),
       name: 'VueLoginApp',
-      fileName: () => 'app.js',
-      formats: ['iife']   // ✅ ICI c’est correct
+      fileName: () => 'app.[hash].js',
+      formats: ['iife']
     },
     rollupOptions: {
       output: {
-        inlineDynamicImports: true, // ⚠️ important avec async components
-        assetFileNames: 'app.[ext]'
+        inlineDynamicImports: true,
+        assetFileNames: 'app.[hash].[ext]'
       }
     }
   },
