@@ -67,8 +67,8 @@ add_action('wp_enqueue_scripts', function () {
         return;
     }
 
-    $css_file = $manifest['style.css']['file'] ?? null;
-    $js_file  = $manifest['src/main.js']['file'] ?? null;
+    $css_file = "dist/" . $manifest['style.css']['file'] ?? null;
+    $js_file  = "dist/" . $manifest['src/main.js']['file'] ?? null;
 
     if (!$js_file) {
         error_log('Vue main entry not found in manifest');
@@ -85,9 +85,9 @@ add_action('wp_enqueue_scripts', function () {
     if (file_exists($plugin_path . $css_file)) {
         wp_enqueue_style(
             'vue-modules-css',
-            $plugin_url . "dist" . $css_file,
+            $plugin_url . $css_file,
             [],
-            filemtime($plugin_path . "dist" . $css_file)
+            filemtime($plugin_path . $css_file)
         );
     }
 
@@ -95,9 +95,9 @@ add_action('wp_enqueue_scripts', function () {
     if (file_exists($plugin_path . $js_file)) {
         wp_enqueue_script(
             'vue-modules-js',
-            $plugin_url . "dist" . $js_file,
+            $plugin_url . $js_file,
             $deps,
-            filemtime($plugin_path . "dist" . $js_file),
+            filemtime($plugin_path . $js_file),
             true
         );
 
