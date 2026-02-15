@@ -26,7 +26,7 @@ export default defineConfig({
     'process.env': {}
   },
   build: {
-    manifests: true,
+    manifest: true,
     outDir: 'build/dist',
    emptyOutDir: true,
     lib: {

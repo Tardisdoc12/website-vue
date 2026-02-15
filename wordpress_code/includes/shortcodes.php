@@ -25,15 +25,7 @@ function vue_register_requested_module($module) {
 function vue_shortcode($atts, $content = null, $tag = '') {
     vue_register_requested_module($tag);
 
-    // Un seul root Vue (peu importe le nombre de shortcodes)
-    static $root_printed = false;
-
-    if ($root_printed) {
-        return '';
-    }
-
-    $root_printed = true;
-    return '<div id="vue-root"></div>';
+    return '<div class="vue-root" data-module="' . esc_attr($tag) . '"></div>';
 }
 
 /**

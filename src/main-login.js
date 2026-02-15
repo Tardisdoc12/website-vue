@@ -1,8 +1,7 @@
 import { createApp } from 'vue'
-import App from "./App.vue"
 import './assets/main.css'
 import { library } from '@fortawesome/fontawesome-svg-core'
-
+import { defineAsyncComponent } from 'vue'
 /* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -16,7 +15,19 @@ import { fab } from '@fortawesome/free-brands-svg-icons'
 /* add icons to the library */
 library.add(fas, far, fab)
 
+const components = {
+  login: defineAsyncComponent(() => import('./components/login.vue')),
+  calendar: defineAsyncComponent(() => import('./components/calendar.vue')),
+  compte: defineAsyncComponent(() => import('./components/global_compte.vue')),
+}
 
-const app = createApp(App)
-app.component('font-awesome-icon', FontAwesomeIcon)
-app.mount('#vue-root')
+document.querySelectorAll('.vue-root').forEach(el => {
+  const moduleName = el.dataset.module
+  const component = components[moduleName]
+
+  if (component) {
+    const app = createApp(component)
+    app.component('font-awesome-icon', FontAwesomeIcon)
+    app.mount(el)
+  }
+})
