@@ -1,110 +1,112 @@
 <template>
-    <!-- Le reste -->
-    <DepliantWindow
-        :key="key"
-        v-for="(cats, key) in filteredSubcats"
-        :title="cats.categorie_title"
-        :backgroundColorOpen="'#2d5c7f'"
-        :writenColorOpen="'#FFFFFF'"
-        :border-color="'#2d5c7f'"
-        :border-color-open="'#2d5c7f'"
-        :borderWindowColor="'#2d5c7f'"
-        :width="'95%'"
-    >
+    <div>
+        <!-- Le reste -->
         <DepliantWindow
-            v-for="(subcats, subkey) in cats.subcats"
-            :title="subcats.subcat_title"
-            :key="subkey"
-            :width="'100%'"
-            :backgroundColor="'#d4e3ed'"
-            :borderColorOpen="'#2d5c7f'"
-            :borderColor="'#2d5c7f'"
-            :backgroundColorOpen="'#d4e3ed'"
-            :writenColor="'#245473'"
-            :writenColorOpen="'#245473'"
-            :showBorder="false"
-            :borderRadius="'0px'"
+            :key="key"
+            v-for="(cats, key) in filteredSubcats"
+            :title="cats.categorie_title"
+            :backgroundColorOpen="'#2d5c7f'"
+            :writenColorOpen="'#FFFFFF'"
+            :border-color="'#2d5c7f'"
+            :border-color-open="'#2d5c7f'"
+            :borderWindowColor="'#2d5c7f'"
+            :width="'95%'"
         >
-            <div :key="file.source_id" v-for="file in getSortedFiles(subcats.files)">
-                <div 
-                    style="padding: 5px;"
-                    class="flex items-center justify-between"
-                >
-                    <label
-                        class="flex-1 truncate mr-2" :title="file.path_file !== '' ? file.path_file : file.url_file"
+            <DepliantWindow
+                v-for="(subcats, subkey) in cats.subcats"
+                :title="subcats.subcat_title"
+                :key="subkey"
+                :width="'100%'"
+                :backgroundColor="'#d4e3ed'"
+                :borderColorOpen="'#2d5c7f'"
+                :borderColor="'#2d5c7f'"
+                :backgroundColorOpen="'#d4e3ed'"
+                :writenColor="'#245473'"
+                :writenColorOpen="'#245473'"
+                :showBorder="false"
+                :borderRadius="'0px'"
+            >
+                <div :key="file.source_id" v-for="file in getSortedFiles(subcats.files)">
+                    <div 
+                        style="padding: 5px;"
+                        class="flex items-center justify-between"
                     >
-                        <font-awesome-icon style="margin-right:5px;" icon="fa-solid fa-file-lines"/>
-                        {{ (file.tag !== "") ? file.tag : file.url_file }}
-                    </label>
-                    <div class="flex items-center justify-between gap-2">
-                        <button
-                            v-if="isBureau"
-                            @click="UpdateFile(file, subkey, key)"
-                            class="appearance-none"
-                            :style="{
-                                display: 'inline-block',
-                                color: 'white',
-                                padding: '0.5rem 1rem',
-                                borderRadius: '0.375rem',
-                                backgroundColor: '#000000',
-                            }"
+                        <label
+                            class="flex-1 truncate mr-2" :title="file.path_file !== '' ? file.path_file : file.url_file"
                         >
-                            <font-awesome-icon icon="fa-solid fa-pen-to-square"/>
-                        </button>
-                        <button
-                            v-if="isBureau"
-                            @click="DeleteFile(file)"
-                            class="appearance-none"
-                            :style="{
-                                display: 'inline-block',
-                                color: 'white',
-                                padding: '0.5rem 1rem',
-                                borderRadius: '0.375rem',
-                                backgroundColor: '#df2727',
-                            }"
-                        >
-                            <font-awesome-icon icon="fa-solid fa-trash"/>
-                        </button>
-                        <button
-                            @click="openUrl(file.url_file, file.path_file)"
-                            class="appearance-none"
-                            :style="{
-                                display: 'inline-block',
-                                color: 'white',
-                                padding: '0.5rem 1rem',
-                                borderRadius: '0.375rem',
-                                backgroundColor: '#000000',
-                            }"
-                        >
-                            <font-awesome-icon icon="fa-solid fa-eye"/>
-                        </button>
-                        <button
-                            v-if="file.path_file !== ''"
-                            @click="DownloadUrl(file)"
-                            class="appearance-none"
-                            :style="{
-                                display: 'inline-block',
-                                color: 'white',
-                                padding: '0.5rem 1rem',
-                                borderRadius: '0.375rem',
-                                backgroundColor: '#000000',
-                            }"
-                        >
-                            <font-awesome-icon icon="fa-solid fa-download"/>
-                        </button>
+                            <font-awesome-icon style="margin-right:5px;" icon="fa-solid fa-file-lines"/>
+                            {{ (file.tag !== "") ? file.tag : file.url_file }}
+                        </label>
+                        <div class="flex items-center justify-between gap-2">
+                            <button
+                                v-if="isBureau"
+                                @click="UpdateFile(file, subkey, key)"
+                                class="appearance-none"
+                                :style="{
+                                    display: 'inline-block',
+                                    color: 'white',
+                                    padding: '0.5rem 1rem',
+                                    borderRadius: '0.375rem',
+                                    backgroundColor: '#000000',
+                                }"
+                            >
+                                <font-awesome-icon icon="fa-solid fa-pen-to-square"/>
+                            </button>
+                            <button
+                                v-if="isBureau"
+                                @click="DeleteFile(file)"
+                                class="appearance-none"
+                                :style="{
+                                    display: 'inline-block',
+                                    color: 'white',
+                                    padding: '0.5rem 1rem',
+                                    borderRadius: '0.375rem',
+                                    backgroundColor: '#df2727',
+                                }"
+                            >
+                                <font-awesome-icon icon="fa-solid fa-trash"/>
+                            </button>
+                            <button
+                                @click="openUrl(file.url_file, file.path_file)"
+                                class="appearance-none"
+                                :style="{
+                                    display: 'inline-block',
+                                    color: 'white',
+                                    padding: '0.5rem 1rem',
+                                    borderRadius: '0.375rem',
+                                    backgroundColor: '#000000',
+                                }"
+                            >
+                                <font-awesome-icon icon="fa-solid fa-eye"/>
+                            </button>
+                            <button
+                                v-if="file.path_file !== ''"
+                                @click="DownloadUrl(file)"
+                                class="appearance-none"
+                                :style="{
+                                    display: 'inline-block',
+                                    color: 'white',
+                                    padding: '0.5rem 1rem',
+                                    borderRadius: '0.375rem',
+                                    backgroundColor: '#000000',
+                                }"
+                            >
+                                <font-awesome-icon icon="fa-solid fa-download"/>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </DepliantWindow>
         </DepliantWindow>
-    </DepliantWindow>
 
-    <ModalFileUpdate
-        v-if="isUpdateFile"
-        :file="fileToUpdate"
-        :sub-categorie-and-sources="subCategoriesAndSources"
-         @cancelSignal="isUpdateFile = false"
-         @updateSubCategoriesAndSources="UpdateHandler"
-    />
+        <ModalFileUpdate
+            v-if="isUpdateFile"
+            :file="fileToUpdate"
+            :sub-categorie-and-sources="subCategoriesAndSources"
+            @cancelSignal="isUpdateFile = false"
+            @updateSubCategoriesAndSources="UpdateHandler"
+        />
+    </div>
 </template>
 
 <script>
