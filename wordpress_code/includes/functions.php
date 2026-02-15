@@ -44,7 +44,15 @@ function monplugin_verify_csrf(WP_REST_Request $request) {
  * Déclaration des shortcodes
  */
 function get_vue_shortcodes() {
-    return ['login', 'calendar', 'compte'];
+    return [
+        'login',
+        'calendar',
+        'global_compte',
+        'adherent',
+        'connexion',
+        'espace_profil',
+        'gestions_comptes',
+    ];
 }
 
 //------------------------------------------------------------------------------
