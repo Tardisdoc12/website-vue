@@ -10,7 +10,7 @@ const customEntry = process.env.ENTRY
 
 // Définit une map des entrées possibles
 const entries = {
-  app: path.resolve(__dirname, 'src/main-login.js'),
+  app: path.resolve(__dirname, 'src/main.js'),
 }
 
 // Si un ENTRY est passé → build seulement celle-là
