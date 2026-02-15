@@ -3,7 +3,6 @@ import path from "path"
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import vueDevTools from 'vite-plugin-vue-devtools'
 import tailwindcss from "@tailwindcss/vite"
 
 // Récupère l'argument --entry
@@ -21,21 +20,25 @@ const input = customEntry ? { [customEntry]: entries[customEntry] } : { login: e
 export default defineConfig({
   plugins: [
     vue(),
-    vueDevTools(),
     tailwindcss()
   ],
+  define: {
+    'process.env': {}
+  },
   build: {
     manifests: true,
     outDir: 'build/dist',
+   emptyOutDir: true,
+    lib: {
+      entry: path.resolve(__dirname, 'src/main-login.js'),
+      name: 'VueLoginApp',
+      fileName: () => 'app.js',
+      formats: ['iife']   // ✅ ICI c’est correct
+    },
     rollupOptions: {
-      input,
       output: {
-        // manualChunks: undefined, // ⛔ empêche index.js
-        // format: 'iife', // 👈 crée une IIFE isolée
-        // inlineDynamicImports: true,
-        entryFileNames: `[name].js`,
-        chunkFileNames: `[name].js`,
-        assetFileNames: `[name].[ext]`
+        inlineDynamicImports: true, // ⚠️ important avec async components
+        assetFileNames: 'app.[ext]'
       }
     }
   },

@@ -21,12 +21,12 @@
         <ConnectAccount v-else-if="(!isAuthenticated && hasAccount)" :onSuccess="loginSuccess"/>
         <DrawAccount v-else class="w-full max-w-md"/>
         <div class="flex flex-col items-center justify-center space-y-2">
-            <bouton
+            <button
                 v-if="(!isAuthenticated && hasAccount)"
                 @click="isForgetPassword = true"
             >
                 J'ai oublié mon mot de passe
-            </bouton>
+            </button>
         </div>
     </div>
 

@@ -89,7 +89,7 @@ add_action('wp_enqueue_scripts', function () {
             true
         );
 
-        wp_script_add_data('vue-modules-js', 'type', 'module');
+        // wp_script_add_data('vue-modules-js', 'type', 'module');
 
         wp_localize_script('vue-modules-js', 'vueAppData', [
             'nonce'   => wp_create_nonce('wp_rest'),
