@@ -12,7 +12,7 @@
                 :aria-pressed="activeIndex === i ? 'true' : 'false'"
                 type="button"
                 :style="{
-                    display: inline-block,
+                    display: 'inline-block',
                     color: activeIndex === i ? Couleurs.white : Couleurs.main_blue,
                     padding: '1.0rem 1.0rem',
                     borderRadius: '9999px',
@@ -180,7 +180,8 @@ export default {
 
     watch: {
         structuresRessources: {
-            deep: true,
+            handler() {},
+            deep: true
         }
     },
 
@@ -194,6 +195,7 @@ export default {
         return {
             labels: ['Profil', 'Ressources', 'Médias'],
             
+            Couleurs,
             structuresRessources: {
                 0:{"categorie_title":RessourcesCategories[0],"subcats":{}},
                 1:{"categorie_title":RessourcesCategories[1],"subcats":{}},

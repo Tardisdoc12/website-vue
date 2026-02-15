@@ -1,158 +1,160 @@
 <template>
-    <DepliantWindow
-        :title="titleInformations"
-        :backgroundColorOpen="'#2d5c7f'"
-        :writenColorOpen="'#FFFFFF'"
-        :border-color="'#2d5c7f'"
-        :border-color-open="'#2d5c7f'"
-        :is-opoen-forced="true"
-        :width="'95%'"
-    >
-        <div style="margin-left:25px;margin-top: 10px;">
-            <div v-if="!isInformationsChange">
-                <li><strong>Nom :</strong> {{ user.lastName }}</li>
-                <li><strong>Prénom :</strong> {{ user.firstName }}</li>
-                <li><strong>Email :</strong> {{ user.email }}</li>
-                <li><strong>Téléphone :</strong> {{ user.telephone }}</li>
-                <li><strong>Moto :</strong> {{ user.moto }}</li>
+    <div>
+        <DepliantWindow
+            :title="titleInformations"
+            :backgroundColorOpen="'#2d5c7f'"
+            :writenColorOpen="'#FFFFFF'"
+            :border-color="'#2d5c7f'"
+            :border-color-open="'#2d5c7f'"
+            :is-opoen-forced="true"
+            :width="'95%'"
+        >
+            <div style="margin-left:25px;margin-top: 10px;">
+                <div v-if="!isInformationsChange">
+                    <li><strong>Nom :</strong> {{ user.lastName }}</li>
+                    <li><strong>Prénom :</strong> {{ user.firstName }}</li>
+                    <li><strong>Email :</strong> {{ user.email }}</li>
+                    <li><strong>Téléphone :</strong> {{ user.telephone }}</li>
+                    <li><strong>Moto :</strong> {{ user.moto }}</li>
+                </div>
+                <div v-if="isInformationsChange">
+                    <li>
+                        <label><strong>Nom :</strong></label>
+                        <input
+                            v-model="user.lastName"
+                            class="oval-input"
+                        />
+                    </li>
+                    <li>
+                        <label><strong>Prénom :</strong></label>
+                        <input
+                            v-model="user.firstName"
+                            class="oval-input"
+                        />
+                    </li>
+                    <li>
+                        <label><strong>Email :</strong></label>
+                        <input
+                            v-model="user.email"
+                            class="oval-input"
+                        />
+                    </li>
+                    <li>
+                        <label><strong>Téléphone :</strong></label>
+                        <input
+                            v-model="user.telephone"
+                            class="oval-input"
+                        />
+                    </li>
+                    <li>
+                        <label><strong>Moto :</strong></label>
+                        <input
+                            v-model="user.moto"
+                            class="oval-input"
+                        />
+                    </li>
+                </div>
+                
             </div>
-            <div v-if="isInformationsChange">
-                <li>
-                    <label><strong>Nom :</strong></label>
-                    <input
-                        v-model="user.lastName"
-                        class="oval-input"
-                    />
-                </li>
-                <li>
-                    <label><strong>Prénom :</strong></label>
-                    <input
-                        v-model="user.firstName"
-                        class="oval-input"
-                    />
-                </li>
-                <li>
-                    <label><strong>Email :</strong></label>
-                    <input
-                        v-model="user.email"
-                        class="oval-input"
-                    />
-                </li>
-                <li>
-                    <label><strong>Téléphone :</strong></label>
-                    <input
-                        v-model="user.telephone"
-                        class="oval-input"
-                    />
-                </li>
-                <li>
-                    <label><strong>Moto :</strong></label>
-                    <input
-                        v-model="user.moto"
-                        class="oval-input"
-                    />
-                </li>
+            <div class="button-container">
+                <button
+                    v-if="isInformationsChange"
+                    class="appearance-none"
+                    :style="{
+                        display: 'inline-block',
+                        color: '#245473',
+                        border: '1px solid #245473',
+                        padding: '0.3rem 0.3rem',
+                        borderRadius: '0.375rem',
+                        backgroundColor: 'white',
+                    }"
+                    @click="validationChangement"
+                >
+                    Sauvegarder les changements
+                </button>
+                <button
+                    v-else
+                    class="appearance-none"
+                    :style="{
+                        display: 'inline-block',
+                        color: '#245473',
+                        border: '1px solid #245473',
+                        padding: '0.3rem 0.3rem',
+                        borderRadius: '0.375rem',
+                        backgroundColor: 'white',
+                    }"
+                    @click="modifierInformations"
+                >
+                    Modifier mes informations
+                </button>
             </div>
-            
-        </div>
-        <div class="button-container">
-            <button
-                v-if="isInformationsChange"
-                class="appearance-none"
-                :style="{
-                    display: 'inline-block',
-                    color: '#245473',
-                    border: '1px solid #245473',
-                    padding: '0.3rem 0.3rem',
-                    borderRadius: '0.375rem',
-                    backgroundColor: 'white',
-                }"
-                @click="validationChangement"
-            >
-                Sauvegarder les changements
-            </button>
-            <button
-                v-else
-                class="appearance-none"
-                :style="{
-                    display: 'inline-block',
-                    color: '#245473',
-                    border: '1px solid #245473',
-                    padding: '0.3rem 0.3rem',
-                    borderRadius: '0.375rem',
-                    backgroundColor: 'white',
-                }"
-                @click="modifierInformations"
-            >
-                Modifier mes informations
-            </button>
-        </div>
-    </DepliantWindow>
+        </DepliantWindow>
 
-    <DepliantWindow
-        :title="titleUrgences"
-        :backgroundColorOpen="'#2d5c7f'"
-        :writenColorOpen="'#FFFFFF'"
-        :border-color="'#2d5c7f'"
-        :border-color-open="'#2d5c7f'"
-        :is-opoen-forced="true"
-        :width="'95%'"
-    >
-        <div style="margin-left:25px;margin-top: 5px;">
-            <div v-if="!isUrgencesChange">
-                <p><strong>Nom et Prénom du contact d’urgence :</strong> {{ user.urgence_name || "—" }}</p>
-                <p><strong>Téléphone du contact d’urgence :</strong> {{ user.urgence_phone || "—" }}</p>
+        <DepliantWindow
+            :title="titleUrgences"
+            :backgroundColorOpen="'#2d5c7f'"
+            :writenColorOpen="'#FFFFFF'"
+            :border-color="'#2d5c7f'"
+            :border-color-open="'#2d5c7f'"
+            :is-opoen-forced="true"
+            :width="'95%'"
+        >
+            <div style="margin-left:25px;margin-top: 5px;">
+                <div v-if="!isUrgencesChange">
+                    <p><strong>Nom et Prénom du contact d’urgence :</strong> {{ user.urgence_name || "—" }}</p>
+                    <p><strong>Téléphone du contact d’urgence :</strong> {{ user.urgence_phone || "—" }}</p>
+                </div>
+                <div v-else>
+                    <li>
+                        <label><strong> Nom et Prénom du contact d’urgence :</strong></label>
+                        <input
+                            v-model="user.urgence_name"
+                            class="oval-input"
+                        />
+                    </li>
+                    <li>
+                        <label><strong> Téléphone du contact d’urgence :</strong></label>
+                        <input
+                            v-model="user.urgence_phone"
+                            class="oval-input"
+                        />
+                    </li>
+                </div>
             </div>
-            <div v-else>
-                <li>
-                    <label><strong> Nom et Prénom du contact d’urgence :</strong></label>
-                    <input
-                        v-model="user.urgence_name"
-                        class="oval-input"
-                    />
-                </li>
-                <li>
-                    <label><strong> Téléphone du contact d’urgence :</strong></label>
-                    <input
-                        v-model="user.urgence_phone"
-                        class="oval-input"
-                    />
-                </li>
+            <div class="button-container">
+                <button
+                    v-if="isUrgencesChange"
+                    class="appearance-none"
+                    :style="{
+                        display: 'inline-block',
+                        color: '#245473',
+                        border: '1px solid #245473',
+                        padding: '0.3rem 0.3rem',
+                        borderRadius: '0.375rem',
+                        backgroundColor: 'white',
+                    }"
+                    @click="validationChangement"
+                >
+                    Sauvegarder les changements
+                </button>
+                <button
+                    v-else
+                    class="appearance-none"
+                    :style="{
+                        display: 'inline-block',
+                        color: '#245473',
+                        border: '1px solid #245473',
+                        padding: '0.3rem 0.3rem',
+                        borderRadius: '0.375rem',
+                        backgroundColor: 'white',
+                    }"
+                    @click="modifierUrgences"
+                >
+                    Modifier mes informations
+                </button>
             </div>
-        </div>
-        <div class="button-container">
-            <button
-                v-if="isUrgencesChange"
-                class="appearance-none"
-                :style="{
-                    display: 'inline-block',
-                    color: '#245473',
-                    border: '1px solid #245473',
-                    padding: '0.3rem 0.3rem',
-                    borderRadius: '0.375rem',
-                    backgroundColor: 'white',
-                }"
-                @click="validationChangement"
-            >
-                Sauvegarder les changements
-            </button>
-            <button
-                v-else
-                class="appearance-none"
-                :style="{
-                    display: 'inline-block',
-                    color: '#245473',
-                    border: '1px solid #245473',
-                    padding: '0.3rem 0.3rem',
-                    borderRadius: '0.375rem',
-                    backgroundColor: 'white',
-                }"
-                @click="modifierUrgences"
-            >
-                Modifier mes informations
-            </button>
-        </div>
-    </DepliantWindow>
+        </DepliantWindow>
+    </div>
 </template>
 
 <script>
@@ -165,7 +167,7 @@ export default {
         DataUser: {
             required: true,
             type: Object
-        }
+        },
     },
 
     data() {
