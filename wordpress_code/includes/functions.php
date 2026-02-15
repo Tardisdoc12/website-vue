@@ -41,51 +41,6 @@ function monplugin_verify_csrf(WP_REST_Request $request) {
 
 //------------------------------------------------------------------------------
 
-function vue_shortcode($atts, $content, $tag) {
-
-    $plugin_url  = plugin_dir_url(dirname(__FILE__)) . 'dist/';
-    $plugin_path = plugin_dir_path(dirname(__FILE__)) . 'dist/';
-
-    $deps = [];
-    if (wp_script_is('elementor-frontend', 'registered')) {
-        $deps[] = 'elementor-frontend';
-    }
-
-    // Charger le CSS global (une seule fois)
-    if (!wp_style_is('vue-plugin-style', 'enqueued') && file_exists($plugin_path . 'style.css')) {
-        wp_enqueue_style(
-            'vue-plugin-style',
-            $plugin_url . 'style.css',
-            [],
-            filemtime($plugin_path . 'style.css')
-        );
-    }
-
-    // Charger le JS principal (une seule fois)
-    if (!wp_script_is('vue-plugin-main', 'enqueued') && file_exists($plugin_path . 'main.js')) {
-
-        wp_enqueue_script(
-            'vue-plugin-main',
-            $plugin_url . 'main.js',
-            $deps,
-            filemtime($plugin_path . 'main.js'),
-            true
-        );
-
-        wp_script_add_data('vue-plugin-main', 'type', 'module');
-
-        wp_localize_script('vue-plugin-main', 'vueAppData', [
-            'nonce' => wp_create_nonce('wp_rest'),
-        ]);
-    }
-
-    // Retourne un conteneur générique
-    return '<div class="vue-app" data-component="' . esc_attr(ucfirst($tag)) . '"></div>';
-}
-
-
-//------------------------------------------------------------------------------
-
 add_action('wp_print_scripts', function () {
     if (!is_singular('event')) {
         return;
