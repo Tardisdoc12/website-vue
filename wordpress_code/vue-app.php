@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: Vue App
- * Description: Intègre une application Vue dans WordPress via des shortcodes, middleware et des ajouts pour la base de donnée
- * Version: 1.0
+ * Plugin Name: Wordpress Modules
+ * Description: Intègre une application Vue dans WordPress via des shortcodes et des ajouts pour la base de donnée
+ * Version: 1.5.0
  * Author: Jean
  */
 
