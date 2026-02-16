@@ -5,11 +5,11 @@
             :key="key"
             v-for="(cats, key) in filteredSubcats"
             :title="cats.categorie_title"
-            :backgroundColorOpen="'#2d5c7f'"
-            :writenColorOpen="'#FFFFFF'"
-            :border-color="'#2d5c7f'"
-            :border-color-open="'#2d5c7f'"
-            :borderWindowColor="'#2d5c7f'"
+            :backgroundColorOpen="Couleurs.dark_blue"
+            :writenColorOpen="Couleurs.white"
+            :border-color="Couleurs.dark_blue"
+            :border-color-open="Couleurs.dark_blue"
+            :borderWindowColor="Couleurs.dark_blue"
             :width="'95%'"
         >
             <DepliantWindow
@@ -17,12 +17,12 @@
                 :title="subcats.subcat_title"
                 :key="subkey"
                 :width="'100%'"
-                :backgroundColor="'#d4e3ed'"
-                :borderColorOpen="'#2d5c7f'"
-                :borderColor="'#2d5c7f'"
-                :backgroundColorOpen="'#d4e3ed'"
-                :writenColor="'#245473'"
-                :writenColorOpen="'#245473'"
+                :backgroundColor="Couleurs.cyan"
+                :borderColorOpen="Couleurs.dark_blue"
+                :borderColor="Couleurs.dark_blue"
+                :backgroundColorOpen="Couleurs.cyan"
+                :writenColor="Couleurs.main_blue"
+                :writenColorOpen="Couleurs.main_blue"
                 :showBorder="false"
                 :borderRadius="'0px'"
             >
@@ -61,7 +61,7 @@
                                     color: 'white',
                                     padding: '0.5rem 1rem',
                                     borderRadius: '0.375rem',
-                                    backgroundColor: '#df2727',
+                                    backgroundColor: Couleurs.main_red,
                                 }"
                             >
                                 <font-awesome-icon icon="fa-solid fa-trash"/>
@@ -114,6 +114,7 @@ import axios_sources from "@/javascript/api/axios_sources.js";
 import DepliantWindow from '@/subcomponents/unitary_elements/depliantWindow.vue';
 import ModalFileUpdate from '@/subcomponents/modals/modal_update_file.vue';
 import api_upload from '@/javascript/api/axios_upload.js'
+import { Couleurs } from "@/javascript/constants/colors";
 import { toRaw } from "vue"
 
 export default {
@@ -131,6 +132,7 @@ export default {
 
     data(){
         return {
+            Couleurs,
             subCategoriesAndSourcesCopy : null,
             isUpdateFile: false,
             fileToUpdate: null
