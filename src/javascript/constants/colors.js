@@ -1,6 +1,7 @@
 export const Couleurs = {
     //website colors
     main_blue: "#245473",
+    dark_blue: '#2d5c7f',
     cyan: "#d4e3ed",
     main_red: "#df2727",
     white : "#FFFFFF",

@@ -2,10 +2,10 @@
     <div>
         <DepliantWindow
             :title="titleInformations"
-            :backgroundColorOpen="'#2d5c7f'"
-            :writenColorOpen="'#FFFFFF'"
-            :border-color="'#2d5c7f'"
-            :border-color-open="'#2d5c7f'"
+            :backgroundColorOpen="Couleurs.dark_blue"
+            :writenColorOpen="Couleurs.white"
+            :border-color="Couleurs.dark_blue"
+            :border-color-open="Couleurs.dark_blue"
             :is-opoen-forced="true"
             :width="'95%'"
         >
@@ -17,7 +17,14 @@
                     <li><strong>Téléphone :</strong> {{ user.telephone }}</li>
                     <li><strong>Moto :</strong> {{ user.moto }}</li>
                 </div>
-                <div v-if="isInformationsChange">
+                <div
+                    v-if="isInformationsChange"
+                    :style= "{
+                        display: 'flex',
+                        'flex-direction': 'column',
+                        gap: '2px',
+                    }"
+                >
                     <li>
                         <label><strong>Nom :</strong></label>
                         <input
@@ -62,11 +69,11 @@
                     class="appearance-none"
                     :style="{
                         display: 'inline-block',
-                        color: '#245473',
-                        border: '1px solid #245473',
+                        color: Couleurs.main_blue,
+                        border: '1px solid ' + `${Couleurs.main_blue}`,
                         padding: '0.3rem 0.3rem',
                         borderRadius: '0.375rem',
-                        backgroundColor: 'white',
+                        backgroundColor: Couleurs.white,
                     }"
                     @click="validationChangement"
                 >
@@ -77,11 +84,11 @@
                     class="appearance-none"
                     :style="{
                         display: 'inline-block',
-                        color: '#245473',
-                        border: '1px solid #245473',
+                        color: Couleurs.main_blue,
+                        border: '1px solid ' + `${Couleurs.main_blue}`,
                         padding: '0.3rem 0.3rem',
                         borderRadius: '0.375rem',
-                        backgroundColor: 'white',
+                        backgroundColor: Couleurs.white,
                     }"
                     @click="modifierInformations"
                 >
@@ -104,7 +111,14 @@
                     <p><strong>Nom et Prénom du contact d’urgence :</strong> {{ user.urgence_name || "—" }}</p>
                     <p><strong>Téléphone du contact d’urgence :</strong> {{ user.urgence_phone || "—" }}</p>
                 </div>
-                <div v-else>
+                <div
+                    v-else
+                    :style= "{
+                        display: 'flex',
+                        'flex-direction': 'column',
+                        gap: '2px',
+                    }"
+                >
                     <li>
                         <label><strong> Nom et Prénom du contact d’urgence :</strong></label>
                         <input
@@ -160,6 +174,7 @@
 <script>
 import api_user from "@/javascript/api/users_wp.js"
 import DepliantWindow from '@/subcomponents/unitary_elements/depliantWindow.vue';
+import { Couleurs } from '@/javascript/constants/colors'
 
 export default {
 
@@ -172,6 +187,7 @@ export default {
 
     data() {
         return {
+            Couleurs,
             titleInformations: "Mes Informations",
             titleUrgences: "Urgences",
             isInformationsChange: false,
@@ -226,9 +242,9 @@ export default {
 <style>
 .oval-input {
   flex: 1;
-  padding: 0.3rem 0.5rem;
+  padding: 0.1rem 0.3rem;
   border: 1px solid #ccc;
-  border-radius: 9999px;
+  border-radius: 5px;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
