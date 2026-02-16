@@ -49,7 +49,7 @@
                                 color: white,
                                 padding: '0.5rem 1rem',
                                 borderRadius: '0.375rem',
-                                backgroundColor: '#00BFFF'
+                                backgroundColor: Couleurs.main_blue
                             }"
                             @click="addRange" 
                             class="mt-1 text-blue-500"
@@ -68,7 +68,7 @@
                                 color: white,
                                 padding: '0.5rem 1rem',
                                 borderRadius: '0.375rem',
-                                backgroundColor: '#FF0000'
+                                backgroundColor: Couleurs.main_red
                             }"
                             @click="removeRange(index)" 
                             class="text-red-500"
@@ -143,6 +143,7 @@
 import Modal from "@/subcomponents/unitary_elements/modalComponent.vue"
 import eventsService from '@/javascript/api/axios_events.js';
 import { Events } from "@/javascript/constants/events_type.js"
+import { Couleurs } from "@/javascript/constants/colors"
 
 export default {
     props: {
@@ -165,6 +166,7 @@ export default {
 
     data() {
         return {
+            Couleurs,
             form: {
                 title: '',
                 startDate: '',

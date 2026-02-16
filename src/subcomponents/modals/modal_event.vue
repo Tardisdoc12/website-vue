@@ -45,7 +45,7 @@
                         color: white,
                         padding: '0.5rem 1rem',
                         borderRadius: '0.375rem',
-                        backgroundColor: disableSubscribe ? '#9ca3af' : '#22c55e'
+                        backgroundColor: disableSubscribe ? Couleurs.gris_pale : Couleurs.vert
                     }"
                     @click="Register"
                 >
@@ -59,10 +59,10 @@
                     class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600 ml-5"
                     :style="{
                         display: inline-block,
-                        color: white,
+                        color: Couleurs.white,
                         padding: '0.5rem 1rem',
                         borderRadius: '0.375rem',
-                        backgroundColor: '#2563EB'
+                        backgroundColor: Couleurs.main_blue
                     }"
                     @click="VisualizeInscrit"
                     style="margin-left: 20px;"
@@ -77,10 +77,10 @@
                     class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600 ml-5"
                     :style="{
                         display: inline-block,
-                        color: white,
+                        color: Couleurs.white,
                         padding: '0.5rem 1rem',
                         borderRadius: '0.375rem',
-                        backgroundColor: '#2563EB'
+                        backgroundColor: Couleurs.main_blue
                     }"
                     @click="updateEvent"
                     style="margin-left: 20px;"
@@ -110,6 +110,7 @@
 import Modal from "@/subcomponents/unitary_elements/modalComponent.vue"
 import ModalInscrit from "@/subcomponents/modals/modal_inscrits.vue"
 import ModalEvent from "@/subcomponents/modals/modal_formulaire_events.vue"
+import { Couleurs } from "@/javascript/constants/colors"
 import api from "@/javascript/api/axios_events"
 
 function formatDate(d) {
@@ -152,6 +153,7 @@ export default {
 
     data() {
         return {
+            Couleurs,
             isWantedInscript: false,
             isOpen: true,
             visualiseInscrit: false,

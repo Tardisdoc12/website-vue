@@ -5,6 +5,8 @@ export const Couleurs = {
     cyan: "#d4e3ed",
     main_red: "#df2727",
     white : "#FFFFFF",
+    gris_pale: '#9ca3af',
+    vert: '#22c55e',
     // event colors
     seance_main: "rgba(109, 159, 175, 1)",
     seance_second: "rgba(109, 159, 175, 0.2)",
