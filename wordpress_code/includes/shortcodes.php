@@ -9,8 +9,7 @@ if (!defined('ABSPATH')) {
 $file = "functions.php";
 require_once plugin_dir_path(__FILE__) . $file;
 $shortcodesHookersPath = "objects/shortcodesHookers.php";
-require_once plugin_dir_path(__DIR__) . $shortcodesHookersPath;
-
+require_once plugin_dir_path(dirname(__FILE__)) . $shortcodesHookersPath;
 //------------------------------------------------------------------------------
 /**
  * Instanciation de la classe ShortcodesHookers
@@ -18,19 +17,5 @@ require_once plugin_dir_path(__DIR__) . $shortcodesHookersPath;
 $shortcodesHookers = new ShortcodesHookers(get_vue_shortcodes());
 
 //------------------------------------------------------------------------------
-/**
- * Enregistrement des shortcodes
- */
-
-add_action('init', function () use ($shortcodesHookers) {
-    $shortcodesHookers->register_shortcodes();
-});
-
+// End of File
 //------------------------------------------------------------------------------
-/**
- * Enqueue CSS / JS + données Vue
- */
-
-add_action('wp_enqueue_scripts', function () use ($shortcodesHookers) {
-    $shortcodesHookers->enqueue_vue_scripts();
-});

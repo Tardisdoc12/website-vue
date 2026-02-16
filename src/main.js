@@ -17,8 +17,8 @@ library.add(fas, far, fab)
 
 let new_components = {}
 
-VUE_SHORTCODES.forEach(name => {
-    new_components[name] = defineAsyncComponent(() => import(`./components/${name}.vue`))
+Object.entries(VUE_SHORTCODES).forEach(([key, value]) => {
+   new_components[key] = defineAsyncComponent(() => import(`./components/${value}.vue`))
 })
 
 document.querySelectorAll('.vue-root').forEach(el => {

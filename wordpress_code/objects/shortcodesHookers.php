@@ -20,11 +20,20 @@ class ShortcodesHookers {
         $this->shortcodes_name = $shortcodes_name;
 
         $this->get_manifest();
+
+        add_action('init', function(){
+            $this->register_shortcodes();
+        });
+        add_action('wp_enqueue_scripts', function(){
+            $this->enqueue_vue_scripts();
+        });
     }
 
     public function register_shortcodes() {
         foreach ($this->shortcodes_name as $shortcode => $component) {
-            add_shortcode($shortcode, array($this, 'render_vue_component'));
+            add_shortcode($shortcode, function($atts, $content, $tag){
+                return $this->render_vue_component($atts, $content, $tag);
+            });
         }
     }
 
@@ -46,28 +55,28 @@ class ShortcodesHookers {
         $js_file  = "dist/" . $this->manifest['src/main.js']['file'] ?? null;
 
         if ($css_file && file_exists($plugin_path . $css_file)) {
-            $this->enqueue_css_scripts($module_name . 'css', $plugin_path . $css_file);
+            $this->enqueue_css_scripts($module_name . 'css', $plugin_path . $css_file, $plugin_url . $css_file);
         }
 
         if ($js_file && file_exists($plugin_path . $js_file)) {
-            $this->enqueue_js_scripts($module_name . 'js', $plugin_path . $js_file);
+            $this->enqueue_js_scripts($module_name . 'js', $plugin_path . $js_file, $plugin_url . $js_file);
         }
     }
 
     // privates functions
-    private function enqueue_css_scripts($name_modules, $path_file) {
+    private function enqueue_css_scripts($name_modules, $path_file, $url_file) {
         wp_enqueue_style(
             $name_modules,
-            $path_file,
+            $url_file,
             array(),
             filemtime($path_file)
         );
     }
 
-    private function enqueue_js_scripts($name_modules, $path_file) {
+    private function enqueue_js_scripts($name_modules, $path_file, $url_file) {
         wp_enqueue_script(
             $name_modules,
-            $path_file,
+            $url_file,
             array(),
             filemtime($path_file),
             true
@@ -90,14 +99,13 @@ class ShortcodesHookers {
         $plugin_path = plugin_dir_path(__DIR__);
         $manifest_path = $plugin_path . 'manifest.json';
         if (!file_exists($manifest_path)) {
-            error_log('Vue manifest not found at: ' . $manifest_path);
             return '<!-- Vue manifest not found -->';
         }
 
         $this->manifest = json_decode(file_get_contents($manifest_path), true);
     }
 
-    private function render_vue_component($atts, $content = null, $tag = '') {
+    private function render_vue_component($atts, $content, $tag) {
         $this->vue_register_requested_module($tag);
         return '<div class="vue-root" data-module="' . esc_attr($tag) . '"></div>';
     }
