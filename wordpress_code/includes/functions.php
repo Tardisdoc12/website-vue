@@ -48,7 +48,7 @@ function get_vue_shortcodes() {
         // shortcode => Files vue
         'login' => 'login',
         'calendar' => 'calendar',
-        'global_compte' => 'global_compte',
+        'compte' => 'global_compte',
         'adherent' => 'adherent',
         'connexion' => 'connexion',
         'espace_profil' => 'espace_profil',
