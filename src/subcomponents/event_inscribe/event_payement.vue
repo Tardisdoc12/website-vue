@@ -1,18 +1,10 @@
 <template>
-    <Modal
-        :title="title"
-        :isCancel="isOpen"
-        @changeBool="Cancel"
-    >
-        <p style="margin-bottom: 10px; margin-top: 10px; margin-left: 10px;margin-right: 10px;">{{  "Votre inscription ne sera validée qu'après paiement. Merci de Cliquer sur le Bouton pour procéderr au payement" }}</p>
-        <iframe class="center-helloasso" :src="getBilleterieURL" style="border: none;">
-        </iframe>
-    </Modal>
+    <p style="margin-bottom: 10px; margin-top: 10px; margin-left: 10px;margin-right: 10px;">{{  "Votre inscription ne sera validée qu'après paiement. Merci de Cliquer sur le Bouton pour procéderr au payement" }}</p>
+    <iframe class="center-helloasso" :src="getBilleterieURL" style="border: none;">
+    </iframe>
 </template>
 
 <script>
-import Modal from "@/subcomponents/unitary_elements/modalComponent.vue"
-
 export default {
     props: {
         Date: {
@@ -49,10 +41,6 @@ export default {
     },
 
     methods:{
-        Cancel() {
-            this.$emit('cancelSignal', !this.isOpen)
-        },
-
         compareDate(eventDate, month, day, year) {
             const eventDateF = new Date(eventDate);
             const targetDate = new Date(year, month, day);

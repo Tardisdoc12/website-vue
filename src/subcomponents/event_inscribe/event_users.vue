@@ -1,9 +1,5 @@
 <template>
-    <Modal
-        :title="title"
-        :isCancel="isOpen"
-        @changeBool="Cancel"
-    >   
+    <div>
         <!-- Les boutons de gestions des comptes -->
         <div
             class="flex items-center justify-start space-x-4"
@@ -34,7 +30,7 @@
 
             <!-- Le bouton d'export en csv -->
             <button
-                v-if="userRegister.length !== 0"
+                v-if="usersRegistered.length !== 0"
                 style="margin-top: 10px;"
                 type="button"
                 class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
@@ -44,7 +40,7 @@
             </button>
         </div>
 
-        <div v-if="userRegister.length === 0" style="margin-top: 10px;">
+        <div v-if="usersRegistered.length === 0" style="margin-top: 10px;">
             Aucun utilisateur
         </div>
 
@@ -63,7 +59,7 @@
                 </thead>
                 <tbody>
                     <tr 
-                    v-for="(user, index) in userRegister" 
+                    v-for="(user, index) in usersRegistered" 
                     :key="user.id || index"
                     class="hover:bg-gray-50"
                     >
@@ -85,16 +81,15 @@
                 </tbody>
             </table>
         </div>
-    </Modal>
+    </div>
 </template>
 
 <script>
-import Modal from "@/subcomponents/unitary_elements/modalComponent.vue"
 import api from "@/javascript/api/axios_inscription"
 
 export default {
     props: {
-        userRegister: {
+        usersRegistered: {
             type: Array,
             default:[],
         },
@@ -107,8 +102,6 @@ export default {
 
     data() {
         return {
-            title: "Visualisation des Inscrits",
-            isOpen: true,
             fields_csv: ["Nom", "Email", "Téléphone", "Thème demandé", "Moto", "Experience"],
             isPhoneCopied: false,
             isEmailCopied: false,
@@ -121,7 +114,7 @@ export default {
         async CopyPhoneOrEmail(isPhone) {
             try {
                 let TextToCopy = "";
-                this.userRegister.forEach(user => {
+                this.usersRegistered.forEach(user => {
                     if (isPhone) {
                         TextToCopy += `${user.phone}, `;
                     } else {
@@ -147,7 +140,7 @@ export default {
         downloadCSV() {
             const headers = this.fields_csv.map(h => `"${h}"`);
             
-            const rows = this.userRegister.map(obj => {
+            const rows = this.usersRegistered.map(obj => {
                 const values = [
                     obj.user_name,
                     obj.email,
@@ -172,18 +165,10 @@ export default {
             document.body.removeChild(link)
         },
 
-        Cancel() {
-            this.$emit('cancelSignal')
-        },
-
         async DeleteUser(user) {
             const response = await api.delete_inscrit(this.event_id, user.id)
             alert("la personne à était retirer des inscrits veuillez recharger la liste pour voir la modification")
         }
-    },
-
-    components: {
-        Modal
     }
 }
 

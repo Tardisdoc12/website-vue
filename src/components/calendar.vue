@@ -12,27 +12,11 @@
         :onSuccess="creationSuccess"
     />
 
-    <ModalEvents 
+    <ModalEventInscription
         v-if="seeModalEvent"
-        :showDeleteButton="allowedCreateEvent"
-        :form="eventSelected"
-        :roles="user?.roles"
+        :event="eventSelected"
+        :userConnected="user"
         @cancelSignal="closeEvent"
-        @inscriptWanted="(e) => {inscribe=e; seeModalEvent=!seeModalEvent}"
-    />
-
-    <ModalInscript
-        v-if="inscribe"
-        :isSeance="eventSelected.categorie === 'seance'"
-        :event_id="eventSelected.event_id"
-        :user="user"
-        @cancelSignal="(e) => {inscribe=e; eventSelected={}}"
-        @inscritValid="inscribeEnd"
-    />
-    <ModalPayement
-        v-if="payement"
-        :Date="eventSelected.startDate"
-        @cancelSignal="(e) => {payement=false; eventSelected={}}"
     />
 </template>
 
@@ -42,14 +26,11 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction"
 import listPlugin from '@fullcalendar/list';
 import ModalCreateEvent from "@/subcomponents/modals/modal_formulaire_events.vue"
-import ModalEvents from "@/subcomponents/modals/modal_event.vue"
-import ModalInscript from "@/subcomponents/modals/modal_form_inscription.vue"
-import ModalPayement from "@/subcomponents/modals/modal_payement.vue"
+import ModalEventInscription from "@/subcomponents/modals/modal_events.vue"
 import eventsService from '@/javascript/api/axios_events.js';
 import EventsFunctions from "@/javascript/constants/events_functions.js"
 import { jwtDecode } from "jwt-decode"
 import api from "@/javascript/api/users_wp.js"
-import apiEvents from "@/javascript/api/axios_events"
 import { computed } from 'vue'
 
 function isOutdated(event) {
@@ -68,18 +49,14 @@ export default {
     data() {
         return {
             seeModalEvent: false,
-            inscribe: false,
             cancelCreateEvent:false,
             eventSelected: {},
             events: [],
             user:{},
             allowedCreateEvent:false,
-            payement:false,
             isAdherent:false,
             isEncadrant: false,
-            placeSubscribe:0,
             userEvents:[],
-            placeNonSubscribe:0,
         }
     },
 
@@ -92,7 +69,7 @@ export default {
             const user_info = await api.get_user(user_id)
             this.user = {...user_info.user}
 
-            const eventsInscript = await apiEvents.getEventUser(user_id, this.user.email)
+            const eventsInscript = await eventService.getEventUser(user_id, this.user.email)
             this.userEvents = eventsInscript.results
 
             const listB = this.user.roles
@@ -196,21 +173,6 @@ export default {
                         text: "Liste d'évènements"
                     }
                 });
-            }
-        },
-
-        inscribeEnd(e) {
-            if (this.eventSelected.categorie === 'stage') {
-                this.payement=true;
-                this.inscribe=e;
-            }
-            else if (this.eventSelected.categorie === 'seance' && !this.isAdherent) {
-                this.payement=true;
-                this.inscribe=e;
-            }
-            else {
-                this.inscribe=e;
-                this.eventSelected={}
             }
         },
 
@@ -344,7 +306,7 @@ export default {
             }
         }
     },
-    components: { FullCalendar, ModalEvents, ModalInscript, ModalCreateEvent, ModalPayement },
+    components: { FullCalendar, ModalCreateEvent, ModalEventInscription},
 };
 </script>
 
