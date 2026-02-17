@@ -1,7 +1,7 @@
 import api from "./api.js"
 import { URLS } from "@/javascript/constants/urls.js"
 
-const url_connect = URLS.url_connect
+const url_connect = URLS.connection
 
 export default {
     async create_user(body) {
