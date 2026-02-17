@@ -1,6 +1,6 @@
-const WEBSITE_URL = "https://mps-moto.fr/wp-json"
+const WEBSITE_URL = MyPluginData.rest_url
 
-const plugin_url_part = "/vue-plugin/v1"
+const plugin_url_part = "vue-plugin/v1"
 
 export const URLS = {
     base_plugin : `${WEBSITE_URL}${plugin_url_part}`,

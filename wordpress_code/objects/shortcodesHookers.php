@@ -82,7 +82,7 @@ class ShortcodesHookers {
             true
         );
 
-            wp_localize_script($name_modules, 'vueAppData', [
+        wp_localize_script($name_modules, 'vueAppData', [
             'nonce'   => wp_create_nonce('wp_rest'),
             'modules' => array_values($this->vue_requested_modules),
             'restUrl' => esc_url_raw(rest_url()),
@@ -93,6 +93,11 @@ class ShortcodesHookers {
             'VUE_SHORTCODES',
             $this->shortcodes_name
         );
+
+        wp_localize_script($name_modules, 'MyPluginData', [
+            'rest_url' => esc_url_raw(rest_url()),
+            'site_url' => esc_url_raw(get_site_url()),
+        ]);
     }
 
     private function get_manifest() {
