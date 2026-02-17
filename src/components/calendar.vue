@@ -306,7 +306,11 @@ export default {
             }
         }
     },
-    components: { FullCalendar, ModalCreateEvent, ModalEventInscription},
+    components: {
+        FullCalendar,
+        ModalCreateEvent,
+        ModalEventInscription
+    },
 };
 </script>
 

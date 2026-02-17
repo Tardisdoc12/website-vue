@@ -20,10 +20,6 @@ export default {
         }
     },
 
-    components:{
-        Modal
-    },
-
     computed: {
         getBilleterieURL() {
             if (this.compareDate(this.Date, 1, 22, 2026)) {
