@@ -28,7 +28,7 @@ export default defineConfig({
   build: {
     manifest: true,
     outDir: 'build/dist',
-   emptyOutDir: true,
+    emptyOutDir: true,
     lib: {
       entry: path.resolve(__dirname, 'src/main.js'),
       name: 'VueLoginApp',
