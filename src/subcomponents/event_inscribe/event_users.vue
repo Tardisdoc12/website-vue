@@ -1,12 +1,18 @@
 <template>
-    <div>
+    <div 
+        :style="{
+            display: 'flex',
+            'flex-direction': 'column',
+            gap: '2px',
+            padding: '10px 5px'
+        }"
+    >
         <!-- Les boutons de gestions des comptes -->
         <div
             class="flex items-center justify-start space-x-4"
         >
             <!-- bouton pour copier téléphone des inscrits -->
             <button
-                style="margin-top: 10px;"
                 type="button"
                 class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
                 @click="CopyPhoneOrEmail(true)"
@@ -18,7 +24,6 @@
 
             <!-- button pour copier mail inscrits -->
             <button
-                style="margin-top: 10px;"
                 type="button"
                 class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
                 @click="CopyPhoneOrEmail(false)"
@@ -31,7 +36,6 @@
             <!-- Le bouton d'export en csv -->
             <button
                 v-if="usersRegistered.length !== 0"
-                style="margin-top: 10px;"
                 type="button"
                 class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
                 @click="downloadCSV"
