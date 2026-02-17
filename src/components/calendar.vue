@@ -69,7 +69,7 @@ export default {
             const user_info = await api.get_user(user_id)
             this.user = {...user_info.user}
 
-            const eventsInscript = await eventService.getEventUser(user_id, this.user.email)
+            const eventsInscript = await eventsService.getEventUser(user_id, this.user.email)
             this.userEvents = eventsInscript.results
 
             const listB = this.user.roles
@@ -177,6 +177,9 @@ export default {
         },
 
         async closeEvent(e) {
+            console.log("coucou on est biend dans le close event")
+            console.log(e)
+            console.log(this.seeModalEvent)
             this.seeModalEvent=e;
             this.eventSelected={};
             this.events = await eventsService.getAllEvents();

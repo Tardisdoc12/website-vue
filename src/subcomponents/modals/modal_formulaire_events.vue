@@ -45,7 +45,7 @@
                         <button 
                             type="button" 
                             :style="{
-                                display: inline-block,
+                                display: 'inline-block',
                                 color: white,
                                 padding: '0.5rem 1rem',
                                 borderRadius: '0.375rem',
@@ -64,7 +64,7 @@
                         <button
                             type="button"
                             :style="{
-                                display: inline-block,
+                                display: 'inline-block',
                                 color: white,
                                 padding: '0.5rem 1rem',
                                 borderRadius: '0.375rem',

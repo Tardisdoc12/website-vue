@@ -40,8 +40,8 @@
                     <button 
                         type="button" 
                         :style="{
-                            display: inline-block,
-                            color: white,
+                            display: 'inline-block',
+                            color: Couleurs.white,
                             padding: '0.5rem 1rem',
                             borderRadius: '0.375rem',
                             backgroundColor: Couleurs.main_blue
@@ -59,8 +59,8 @@
                     <button
                         type="button"
                         :style="{
-                            display: inline-block,
-                            color: white,
+                            display: 'inline-block',
+                            color: Couleurs.white,
                             padding: '0.5rem 1rem',
                             borderRadius: '0.375rem',
                             backgroundColor: Couleurs.main_red

@@ -5,7 +5,7 @@
             class="flex items-center justify-start space-x-4"
         >
             <!-- bouton pour copier téléphone des inscrits -->
-            <bouton
+            <button
                 style="margin-top: 10px;"
                 type="button"
                 class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
@@ -14,10 +14,10 @@
                 <font-awesome-icon icon="fa-solid fa-phone-volume" v-if="!isPhoneCopied && !isPhoneError"/>
                 <font-awesome-icon icon="fa-solid fa-check" v-if="isPhoneCopied"/>
                 <font-awesome-icon icon="fa-solid fa-xmark" v-if="isPhoneError"/>
-            </bouton>
+            </button>
 
-            <!-- bouton pour copier mail inscrits -->
-            <bouton
+            <!-- button pour copier mail inscrits -->
+            <button
                 style="margin-top: 10px;"
                 type="button"
                 class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
@@ -26,7 +26,7 @@
                 <font-awesome-icon icon="fa-solid fa-envelope" v-if="!isEmailCopied && !isEmailError"/>
                 <font-awesome-icon icon="fa-solid fa-check" v-if="isEmailCopied"/>
                 <font-awesome-icon icon="fa-solid fa-xmark" v-if="isEmailError"/>
-            </bouton>
+            </button>
 
             <!-- Le bouton d'export en csv -->
             <button

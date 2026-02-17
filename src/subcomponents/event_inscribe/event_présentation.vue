@@ -35,8 +35,8 @@
                 bg-green-500 hover:bg-green-600 
                 disabled:bg-gray-400 disabled:cursor-not-allowed"
                 :style="{
-                    display: inline-block,
-                    color: white,
+                    display: 'inline-block',
+                    color: Couleurs.white,
                     padding: '0.5rem 1rem',
                     borderRadius: '0.375rem',
                     backgroundColor: disableSubscribe ? Couleurs.gris_pale : Couleurs.vert
@@ -52,7 +52,7 @@
                 type="button"
                 class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600 ml-5"
                 :style="{
-                    display: inline-block,
+                    display: 'inline-block',
                     color: Couleurs.white,
                     padding: '0.5rem 1rem',
                     borderRadius: '0.375rem',
@@ -70,7 +70,7 @@
                 type="button"
                 class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600 ml-5"
                 :style="{
-                    display: inline-block,
+                    display: 'inline-block',
                     color: Couleurs.white,
                     padding: '0.5rem 1rem',
                     borderRadius: '0.375rem',

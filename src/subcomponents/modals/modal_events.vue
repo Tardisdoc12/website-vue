@@ -1,7 +1,7 @@
 <template>
     <Modal
         :title="Title"
-        :is-cancel="isCancel"
+        :isCancel="isCancel"
         @changeBool="Cancel"
     >
         <PresentationsEvent
@@ -17,7 +17,7 @@
             v-if="steps == 1"
             :event="event"
             :user="userConnected"
-            :inscrit="incrementSteps"
+            @inscrit="incrementSteps"
         />
         <PayementEvent
             v-if="steps == 2"
@@ -31,7 +31,7 @@
         <UsersInEvent
             v-if="steps == 4"
             :users-registered="event.users"
-            :event_id="event.event_id"
+            :event_id="Number(event.event_id)"
         />
     </Modal>
 </template>
@@ -83,20 +83,19 @@ export default{
 
     methods: {
         Cancel() {
-            this.isCancel = !this.isCancel
             this.$emit("cancelSignal", this.isCancel)
         },
 
         incrementSteps() {
             this.steps += 1
             if(this.steps == 2) {
-                if(this.event.categorie == Events.balade && !this.userConnected.roles.includes("non_adherent")) {
-                    this.isCancel = !this.isCancel
+                if(this.event.categorie === Events.balade && !this.userConnected.roles.includes("non_adherent")) {
                     this.$emit("cancelSignal", this.isCancel)
+                    return
                 }
-                else if (this.event.categorie != Events.stage) {
-                    this.isCancel = !this.isCancel
+                if (this.event.categorie !== Events.stage) {
                     this.$emit("cancelSignal", this.isCancel)
+                    return
                 }
             }
         },
