@@ -35,7 +35,7 @@
 
             <!-- Le bouton d'export en csv -->
             <button
-                v-if="usersRegistered.length !== 0"
+                v-if="usersToShow.length !== 0"
                 type="button"
                 class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
                 @click="downloadCSV"
@@ -44,7 +44,7 @@
             </button>
         </div>
 
-        <div v-if="usersRegistered.length === 0" style="margin-top: 10px;">
+        <div v-if="usersToShow.length === 0" style="margin-top: 10px;">
             Aucun utilisateur
         </div>
 
@@ -63,7 +63,7 @@
                 </thead>
                 <tbody>
                     <tr 
-                    v-for="(user, index) in usersRegistered" 
+                    v-for="(user, index) in usersToShow" 
                     :key="user.id || index"
                     class="hover:bg-gray-50"
                     >
@@ -112,6 +112,12 @@ export default {
             isPhoneError: false,
             isEmailError: false,
         }
+    },
+
+    computed: {
+        usersToShow() {
+            return this.usersRegistered
+        },
     },
 
     methods: {
@@ -171,7 +177,9 @@ export default {
 
         async DeleteUser(user) {
             const response = await api.delete_inscrit(this.event_id, user.id)
-            alert("la personne à était retirer des inscrits veuillez recharger la liste pour voir la modification")
+            if(response.data.success) {
+                this.$emit("userDeleted", user.id)
+            }
         }
     }
 }

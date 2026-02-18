@@ -17,6 +17,7 @@
         :event="eventSelected"
         :userConnected="user"
         @cancelSignal="closeEvent"
+        @userDeleted="userToDelete"
     />
 </template>
 
@@ -177,9 +178,6 @@ export default {
         },
 
         async closeEvent(e) {
-            console.log("coucou on est biend dans le close event")
-            console.log(e)
-            console.log(this.seeModalEvent)
             this.seeModalEvent=e;
             this.eventSelected={};
             this.events = await eventsService.getAllEvents();
@@ -307,6 +305,10 @@ export default {
                 subscribePlace: e.event.extendedProps.subscribePlace - e.event.extendedProps.users.length + nonAdherentsCount.value,
                 title:e.event.title
             }
+        },
+
+        userToDelete(user_id) {
+            this.eventSelected = this.eventSelected.users.filter(user => user.id == user_id)
         }
     },
     components: {

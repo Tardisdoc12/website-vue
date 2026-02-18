@@ -32,6 +32,7 @@
             v-if="steps == 4"
             :users-registered="event.users"
             :event_id="Number(event.event_id)"
+            @userDeleted="userToDelete"
         />
     </Modal>
 </template>
@@ -100,6 +101,10 @@ export default{
             }
         },
         
+        userToDelete(user_id) {
+            this.$emit("userDeleted", user_id)
+        },
+
         visualizeUsers() {
             this.steps = 4
         },
