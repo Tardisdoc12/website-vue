@@ -272,17 +272,17 @@ export default {
 
         async createEvent(event) {
             if (event.endDate !== '') {
-                    if (new Date(event.startDate) >= new Date(event.endDate)) {
-                        alert("La date de fin doit être après la date de début.")
-                        return
-                    }
+                if (new Date(event.startDate) >= new Date(event.endDate)) {
+                    alert("La date de fin doit être après la date de début.")
+                    return
                 }
-                else {
-                    event.endDate = null;
-                }
+            }
+            else {
+                event.endDate = null;
+            }
 
-                const response = await eventsService.createEvent(event)
-                return response;
+            const response = await eventsService.createEvent(event)
+            return response;
         },
 
         async handleSubmit() {
@@ -293,16 +293,31 @@ export default {
             if (!this.isUpdate){
                 
                 const response = await this.createEvent(this.event)
+                if(response?.data?.id){
+                    const event = {
+                        ...this.event,
+                        id : response.data.id,
+                        post_id : response.data.post_id,
+                        users: []
+                    }
+                    this.$emit("createEvents", event)
+                }
                 if (this.cloneDates.length > 0) {
                     for (const range of this.cloneDates) {
-                        await this.createEvent({
+                        let new_event = {
                             ...this.event,
                             startDate: range.start_date,
                             endDate: range.end_date
-                        });
+                        }
+                        let response_clone = await this.createEvent(new_event);
+                        if(response_clone?.data?.id) {
+                            new_event.id = response_clone.data.id
+                            new_event.post_id = response_clone.data.post_id
+                            new_event.users = []
+                            this.$emit("createEvents", new_event)
+                        }
                     }
                 }
-                alert("Événement(s) créé avec succès !")
 
                 this.event = {
                     title: '',
@@ -322,16 +337,23 @@ export default {
                 const response = await eventsService.updateEvent(this.event.event_id, this.event)
                 if (this.cloneDates.length > 0) {
                     for (const range of this.cloneDates) {
-                        await this.createEvent({
+                        let event_duplicate = {
                             ...this.event,
                             startDate: range.start_date,
                             endDate: range.end_date
-                        });
+                        }
+                        let response_update = await this.createEvent(event_duplicate);
+                        if(response_update?.data?.id){
+                            event_duplicate.id = response_clone.data.id
+                            event_duplicate.post_id = response_clone.data.post_id
+                            event_duplicate.users = []
+                            this.$emit("createEvents", event_duplicate)
+                        }
                     }
                 }
                 alert("Évènement modifié avec succés !")
+                this.$emit('cancelSignal', !this.isOpen)
             }
-            this.$emit('cancelSignal')
         }
     }
 }

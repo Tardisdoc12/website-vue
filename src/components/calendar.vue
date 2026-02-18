@@ -9,6 +9,7 @@
     <ModalCreateEvent
         v-if="startCreateEvent"
         @cancelSignal="startCreateEvent=false"
+        @createEvents="AddEventCreated"
         :onSuccess="creationSuccess"
     />
 
@@ -77,6 +78,18 @@ export default {
         },
     },
     methods: {
+        AddEventCreated(event){
+            this.events.push(
+                {
+                    start: event.startDate,
+                    end: event.endDate || event.startDate,
+                    event_id:event.id,
+                    backgroundColor: 'transparent',
+                    borderColor: 'transparent',
+                    ...event
+                }
+            )
+        },
         SelectEvent(event){
             this.eventSelected = event
             this.seeModalEvent = true

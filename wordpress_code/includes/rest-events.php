@@ -283,7 +283,8 @@ function monplugin_create_events(WP_REST_Request $request) {
 
     return [
         'id'   => $wpdb->insert_id,
-        'url'  => get_permalink($post_id)
+        'url'  => get_permalink($post_id),
+        'post_id' => $post_id
     ];
 }
 //------------------------------------------------------------------------------
