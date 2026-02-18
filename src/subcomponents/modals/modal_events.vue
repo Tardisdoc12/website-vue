@@ -12,6 +12,7 @@
             @updateEvent="updateEvent"
             @visualizingUsers="visualizeUsers"
             @inscriptWanted="incrementSteps"
+            @deletedEvent="deletedEvent"
         />
         <InscriptionEvent
             v-if="steps == 1"
@@ -101,6 +102,10 @@ export default{
             }
         },
         
+        deletedEvent(event_id){
+            this.$emit('deletedEvent', event_id)
+        },
+
         userToDelete(user_id) {
             this.$emit("userDeleted", user_id)
         },

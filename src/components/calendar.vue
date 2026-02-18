@@ -19,6 +19,7 @@
         :userConnected="user"
         @cancelSignal="closeEvent"
         @userDeleted="userToDelete"
+        @deletedEvent="DeleteEvent"
     />
 </template>
 
@@ -63,18 +64,17 @@ export default {
     computed: {
 
         eventsList() {
-                return this.events.map((e) => {
-                    let endDate = e.endDate || e.startDate;
-                    return {
-                        start: e.startDate,
-                        end: endDate,
-                        event_id:e.id,
-                        backgroundColor: 'transparent',
-                        borderColor: 'transparent',
-                        ...e
-                    }
+            return this.events.map((e) => {
+                let endDate = e.endDate || e.startDate;
+                return {
+                    start: e.startDate,
+                    end: endDate,
+                    event_id:e.id,
+                    backgroundColor: 'transparent',
+                    borderColor: 'transparent',
+                    ...e
                 }
-                )
+            })
         },
     },
     methods: {
@@ -89,6 +89,9 @@ export default {
                     ...event
                 }
             )
+        },
+        DeleteEvent(event_id){
+            this.events = this.events.filter(event => Number(event.id) !== Number(event_id))
         },
         SelectEvent(event){
             this.eventSelected = event
@@ -111,7 +114,7 @@ export default {
         },
 
         userToDelete(user_id) {
-            this.eventSelected = this.eventSelected.users.filter(user => user.id == user_id)
+            this.eventSelected = this.eventSelected.users.filter(user => Number(user.id) !== Number(user_id))
         }
     },
     components: {

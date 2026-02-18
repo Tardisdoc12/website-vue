@@ -171,8 +171,9 @@ export default {
         },
 
         async RemoveEvent() {
-            this.$emit('cancelSignal')
             const response = await api.deleteEvent(this.event.event_id)
+            this.$emit('deletedEvent', this.event.event_id)
+            this.$emit('cancelSignal')
         },
 
         Register() {

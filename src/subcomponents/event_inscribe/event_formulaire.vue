@@ -344,8 +344,8 @@ export default {
                         }
                         let response_update = await this.createEvent(event_duplicate);
                         if(response_update?.data?.id){
-                            event_duplicate.id = response_clone.data.id
-                            event_duplicate.post_id = response_clone.data.post_id
+                            event_duplicate.id = response_update.data.id
+                            event_duplicate.post_id = response_update.data.post_id
                             event_duplicate.users = []
                             this.$emit("createEvents", event_duplicate)
                         }
