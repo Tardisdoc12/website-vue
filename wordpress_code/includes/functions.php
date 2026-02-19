@@ -46,13 +46,14 @@ function monplugin_verify_csrf(WP_REST_Request $request) {
 function get_vue_shortcodes() {
     return [
         // shortcode => Files vue
-        'login' => 'sign_in',
-        'calendar' => 'calendar',
-        'compte' => 'global_compte',
-        'adherent' => 'adherent',
-        'connexion' => 'connexion',
-        'espace_profil' => 'espace_profil',
+        'login'            => 'sign_in',
+        'calendar'         => 'calendar',
+        'compte'           => 'global_compte',
+        'adherent'         => 'adherent',
+        'connexion'        => 'connexion',
+        'espace_profil'    => 'espace_profil',
         'gestions_comptes' => 'gestions_comptes',
+        'event-page'       => 'event_page_proper',
     ];
 }
 

@@ -18,6 +18,7 @@ function conversion_from_bdd(datas) {
     return {
         id: datas["id"],
         post_id: datas['post_id'],
+        url_post: datas['url_post'],
         title: datas['title'],
         startDate: datas['start_date'],
         endDate: datas['end_date'],

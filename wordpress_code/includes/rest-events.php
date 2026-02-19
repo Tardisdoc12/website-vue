@@ -74,6 +74,7 @@ function monplugin_get_events(WP_REST_Request $request) {
         $result[$event->id] = [
             'id'          => $event->id,
             'post_id'     => $event->post_id,
+            'url_post'    => get_permalink($event->post_id),
             'title'       => $event->title,
             'start_date'  => $event->start_date,
             'end_date'    => $event->end_date,
@@ -171,6 +172,7 @@ function monplugin_get_event_id(WP_REST_Request $request) {
     $result = [
         'id'                  => $event->id,
         'post_id'             => $event->post_id,
+        'url_post'            => get_permalink($event->post_id),
         'title'               => $event->title,
         'start_date'          => $event->start_date,
         'end_date'            => $event->end_date,
@@ -242,6 +244,7 @@ function monplugin_get_event_post_id(WP_REST_Request $request) {
     $result = [
         'id'                  => $event->id,
         'post_id'             => $event->post_id,
+        'url_post'            => get_permalink($event->post_id),
         'title'               => $event->title,
         'start_date'          => $event->start_date,
         'end_date'            => $event->end_date,

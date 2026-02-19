@@ -47,6 +47,7 @@ export default {
 
     async mounted() {
         this.events = await eventsService.getAllEvents();
+        console.log(this.events)
         const token = sessionStorage.getItem("mps_moto")
         if (token) {
             const decoded = jwtDecode(token)

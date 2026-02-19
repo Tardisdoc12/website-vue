@@ -27,6 +27,11 @@ class ShortcodesHookers {
         add_action('wp_enqueue_scripts', function(){
             $this->enqueue_vue_scripts();
         });
+        add_action('wp', function () {
+            if (is_singular('event')) {
+                $this->vue_register_requested_module('event-page');
+            }
+        });
     }
 
     public function register_shortcodes() {

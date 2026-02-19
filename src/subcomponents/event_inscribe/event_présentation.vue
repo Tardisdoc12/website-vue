@@ -45,7 +45,20 @@
             >
                 {{ this.event.isInscript ? "Déjà Inscrit" : "Inscription" }}
             </button>
-
+            <!-- Voir la page de l'event -->
+            <button
+                class="appearance-none"
+                :style="{
+                    display: 'inline-block',
+                    color: Couleurs.white,
+                    padding: '0.5rem 1rem',
+                    borderRadius: '0.375rem',
+                    backgroundColor: Couleurs.main_blue
+                }"
+                :src="event.url_post"
+            >
+                {{ "Voir la page de l'évènement" }}
+            </button>
             <!-- visualisation -->
             <button
                 v-if="isBureau || isEncadrant"
