@@ -26,7 +26,7 @@
         </div>
         
         <!-- bouton -->
-        <div class="flex items-center justify-center">
+        <div class="flex items-center justify-center" :style="{ gap: '20px'}">
             <button
                 :disabled="disableSubscribe"
                 type="button"
@@ -46,7 +46,8 @@
                 {{ this.event.isInscript ? "Déjà Inscrit" : "Inscription" }}
             </button>
             <!-- Voir la page de l'event -->
-            <button
+            <a
+                :href="event.url_post"
                 class="appearance-none"
                 :style="{
                     display: 'inline-block',
@@ -55,10 +56,9 @@
                     borderRadius: '0.375rem',
                     backgroundColor: Couleurs.main_blue
                 }"
-                :src="event.url_post"
             >
                 {{ "Voir la page de l'évènement" }}
-            </button>
+            </a>
             <!-- visualisation -->
             <button
                 v-if="isBureau || isEncadrant"
@@ -72,7 +72,6 @@
                     backgroundColor: Couleurs.main_blue
                 }"
                 @click="VisualizeInscrit"
-                style="margin-left: 20px;"
             >
                 Voir les inscrits
             </button>
@@ -90,7 +89,6 @@
                     backgroundColor: Couleurs.main_blue
                 }"
                 @click="updateEvent"
-                style="margin-left: 20px;"
             >
                 Modifier l'évènement
             </button>

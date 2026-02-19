@@ -24,7 +24,6 @@ Object.entries(VUE_SHORTCODES).forEach(([key, value]) => {
 document.querySelectorAll('.vue-root').forEach(el => {
   const moduleName = el.dataset.module
   const component = new_components[moduleName]
-  console.log("On veut = ", moduleName, "et ",component)
   if (moduleName === "event-page"){
     const app = createApp(component,{postId: el.dataset.postId})
     app.component('font-awesome-icon', FontAwesomeIcon)
