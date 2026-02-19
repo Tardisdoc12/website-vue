@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import { Couleurs } from "@/javascript/constants/colors"
 
 export default {
   props: {
@@ -75,17 +76,18 @@ export default {
   },
   data() {
     return {
+      Couleurs,
       isOpen: this.isOpoenForced,
     }
   },
 
   computed: {
     AccordionHeader() {
-      let color = this.backgroundColor ? this.backgroundColor : "#2d5c7f"
-      let borderColor = this.borderColor ? this.borderColor : "#FFFFFF"
+      let color = this.backgroundColor ? this.backgroundColor : Couleurs.dark_blue
+      let borderColor = this.borderColor ? this.borderColor : Couleurs.white
       if (this.isOpen) {
-        color = this.backgroundColorOpen ? this.backgroundColorOpen : "#FFFFFF"
-        borderColor = this.borderColorOpen ? this.borderColorOpen : "#2d5c7f"
+        color = this.backgroundColorOpen ? this.backgroundColorOpen : Couleurs.white
+        borderColor = this.borderColorOpen ? this.borderColorOpen : Couleurs.dark_blue
       }
       return {
         "background-color": color,
@@ -101,9 +103,9 @@ export default {
       }
     },
     AccordionTitle() {
-        let color = this.backgroundColorOpen ? this.backgroundColorOpen : "#FFFFFF"  
+        let color = this.backgroundColorOpen ? this.backgroundColorOpen : Couleurs.white 
         if (this.isOpen) {
-            color = this.backgroundColor ? this.backgroundColor : "#2d5c7f"
+            color = this.backgroundColor ? this.backgroundColor : Couleurs.dark_blue
         }
 
         if (this.writenColorOpen) {
@@ -124,9 +126,9 @@ export default {
         }
     },
     AccordionArrow() {
-        let color = this.backgroundColorOpen ? this.backgroundColorOpen : "#FFFFFF"  
+        let color = this.backgroundColorOpen ? this.backgroundColorOpen : Couleurs.white 
         if (this.isOpen) {
-            color = this.backgroundColor ? this.backgroundColor : "#2d5c7f"
+            color = this.backgroundColor ? this.backgroundColor : Couleurs.dark_blue
         }
 
         if (this.writenColorOpen) {
@@ -138,7 +140,7 @@ export default {
         }
 
         if ( this.backgroundColor && this.backgroundColorOpen && this.backgroundColor === this.backgroundColorOpen && !this?.writenColor && !this?.writenColorOpen) {
-            color = "white"
+            color = Couleurs.white
         }
         return {
             "position": "absolute",
@@ -150,7 +152,7 @@ export default {
       return {
         "border": this.showBorder ? `${this.sizeBorder} solid ${this.borderWindowColor}` : "none",
         "border-radius": this.borderRadius,
-        "background-color": "white",
+        "background-color": Couleurs.white,
         "overflow": "hidden",
         "font-family": "Arial, sans-serif",
       }
