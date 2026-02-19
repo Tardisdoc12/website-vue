@@ -1,7 +1,6 @@
 <template>
     <ModalComponent
         title="Update file"
-        :isOpen="isOpen"
         @changeBool="Cancel"
     >
         <form @submit.prevent="UpdateFile" class="flex flex-col gap-4">

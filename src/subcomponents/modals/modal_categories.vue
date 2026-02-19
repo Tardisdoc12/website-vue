@@ -1,7 +1,6 @@
 <template>
     <ModalComponent
         :title="'Ajouter une catégorie'"
-        :isCancel="isOpen"
         @changeBool="Cancel"
     >
         <form @submit.prevent="handleSubmit" class="space-y-4">

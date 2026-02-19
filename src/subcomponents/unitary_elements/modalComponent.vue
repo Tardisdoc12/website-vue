@@ -24,22 +24,12 @@ export default {
         title: {
             type: String,
             required: true,
-        },
-        isCancel: {
-            type: Boolean,
-            required: true
-        }
-    },
-
-    data() {
-        return {
-            cancelBool: this.isCancel,
         }
     },
 
     methods: {
         Cancel() {
-            this.$emit("changeBool", !this.cancelBool)
+            this.$emit("changeBool")
         }
     }
 }

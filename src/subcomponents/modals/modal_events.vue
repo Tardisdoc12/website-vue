@@ -1,7 +1,6 @@
 <template>
     <Modal
         :title="Title"
-        :isCancel="isCancel"
         @changeBool="Cancel"
     >
         <PresentationsEvent

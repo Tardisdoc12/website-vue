@@ -1,7 +1,6 @@
 <template>
     <ModalComponent
         title="Ajouter un document"
-        :isCancel="isOpen"
         @changeBool="Cancel"
     >
         <form @submit.prevent="handleSubmit" class="space-y-4">

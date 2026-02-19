@@ -1,7 +1,6 @@
 <template>
     <Modal
         :title="title"
-        :isOpen="isOpen"
         @close="$emit('cancelSignal')"
     >
         <div class="flex flex-col items-center justify-center space-y-4">

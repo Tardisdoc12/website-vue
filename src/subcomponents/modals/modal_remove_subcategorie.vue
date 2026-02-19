@@ -1,7 +1,6 @@
 <template>
     <ModalComponent
         :title="'Supprimer une Sous-catégorie'"
-        :isCancel="isOpen"
         @changeBool="Cancel"
     >
          <form @submit.prevent="handleSubmit" class="space-y-4">

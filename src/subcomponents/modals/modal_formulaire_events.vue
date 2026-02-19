@@ -1,7 +1,6 @@
 <template>
     <Modal
         :title="titleName"
-        :isCancel="isOpen"
         @changeBool="Cancel"
     >
         <CreateEventForm
