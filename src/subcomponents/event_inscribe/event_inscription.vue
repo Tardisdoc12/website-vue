@@ -158,7 +158,10 @@ export default {
     methods:{
         async handleSubmit() {
             const res = await inscritAPI.create_inscrit(this.event.event_id, this.formUser)
-            this.$emit('inscrit')
+            if(res?.data?.success){
+                this.$emit('inscrit')
+            }
+            
         }
     }
 }

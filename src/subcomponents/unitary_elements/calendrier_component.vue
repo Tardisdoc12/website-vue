@@ -37,7 +37,7 @@ export default{
         userConnected: {
             type: Object,
             required: false,
-            default: {},
+            default: () => ({}),
         },
         allowedCreateEvent: {
             type: Boolean,
@@ -46,23 +46,21 @@ export default{
         }
     },
 
-    data() {
-        return {
-            isAdherent:false,
-            isEncadrant: false,
-            userEvents:[],
-        }
-    },
-
-    mount(){
-        this.userEvents = this.userConnected.events
-        const listB = this.userConnected.roles
-        this.isAdherent = !listB.includes("non_adherent")
-        this.isEncadrant = !listB.includes("non_adherent") && !listB.includes("adherent")
-    },
-
     computed: {
-
+        userEvents() {
+            return this.userConnected?.events ?? []
+        },
+        isAdherent() {
+            const roles = this.userConnected?.roles ?? []
+            return !roles.includes("non_adherent")
+        },
+        isEncadrant() {
+            const roles = this.userConnected?.roles ?? []
+            return (
+            !roles.includes("non_adherent") &&
+            !roles.includes("adherent")
+            )
+        },
         calendarOptions() {
             const customButtons = this.getCustomButtons()
             const rightToolbar = this.allowedCreateEvent
@@ -181,8 +179,7 @@ export default{
             if (isOutdated(arg.event)) {
                 places_available = "inscriptions fermées"
             }
-
-            const alreadyInscript = this.userEvents?.some(obj => obj.event_id === arg.event.extendedProps.event_id) ?? false
+            const alreadyInscript = this.userEvents?.some(obj => Number(obj.event_id) === Number(arg.event.extendedProps.event_id)) ?? false
             if(alreadyInscript) {
                 places_available = "déjà inscrit"
             }
@@ -253,7 +250,7 @@ export default{
 
             
             this.seeModalEvent = !this.seeModalEvent
-            const alreadyInscript = this.userEvents.some(obj => obj.event_id === e.event.extendedProps.event_id)
+            const alreadyInscript = this.userEvents.some(obj => Number(obj.event_id) === Number(e.event.extendedProps.event_id))
             const eventSelected = {
                 ...e.event.extendedProps,
                 isInscript: alreadyInscript,

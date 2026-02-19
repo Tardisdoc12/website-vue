@@ -178,7 +178,7 @@ export default {
         async DeleteUser(user) {
             const response = await api.delete_inscrit(this.event_id, user.id)
             if(response.data.success) {
-                this.$emit("userDeleted", user.id)
+                this.$emit("userDeleted", user)
             }
         }
     }

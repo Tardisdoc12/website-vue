@@ -91,6 +91,7 @@ export default{
         incrementSteps() {
             this.steps += 1
             if(this.steps == 2) {
+                this.$emit("inscritEvent", this.event)
                 if(this.event.categorie === Events.balade && !this.userConnected.roles.includes("non_adherent")) {
                     this.$emit("cancelSignal", this.isCancel)
                     return
@@ -106,8 +107,8 @@ export default{
             this.$emit('deletedEvent', event_id)
         },
 
-        userToDelete(user_id) {
-            this.$emit("userDeleted", user_id)
+        userToDelete(user) {
+            this.$emit("userDeleted", user)
         },
 
         visualizeUsers() {

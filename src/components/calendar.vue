@@ -20,6 +20,7 @@
         @cancelSignal="closeEvent"
         @userDeleted="userToDelete"
         @deletedEvent="DeleteEvent"
+        @inscritEvent="InscritEvent"
     />
 </template>
 
@@ -90,6 +91,13 @@ export default {
                 }
             )
         },
+        async InscritEvent(event){
+            const event_id = event?.event_id ? event.event_id : event.id
+            this.user.events.push({
+                event_id: event_id
+            })
+            this.events = await eventsService.getAllEvents();
+        },
         DeleteEvent(event_id){
             this.events = this.events.filter(event => Number(event.id) !== Number(event_id))
         },
@@ -113,8 +121,17 @@ export default {
             this.events = await eventsService.getAllEvents();
         },
 
-        userToDelete(user_id) {
-            this.eventSelected = this.eventSelected.users.filter(user => Number(user.id) !== Number(user_id))
+        userToDelete(user) {
+            const event_id = this.eventSelected?.event_id ? this.eventSelected.event_id : this.eventSelected.id
+            this.eventSelected = this.eventSelected.users.filter(user_ => Number(user_.id) !== Number(user.id))
+            if(this?.user && user?.wp_user_id){
+                if(Number(user.wp_user_id) == Number(this.user.ID)){
+                    const index = this.user.events.findIndex(event => Number(event.event_id) === Number(event_id))
+                    if (index !== -1) {
+                        this.user.events.splice(index, 1);
+                    }
+                }
+            }
         }
     },
     components: {
