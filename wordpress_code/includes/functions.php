@@ -46,7 +46,7 @@ function monplugin_verify_csrf(WP_REST_Request $request) {
 function get_vue_shortcodes() {
     return [
         // shortcode => Files vue
-        'login' => 'login',
+        'login' => 'sign_in',
         'calendar' => 'calendar',
         'compte' => 'global_compte',
         'adherent' => 'adherent',

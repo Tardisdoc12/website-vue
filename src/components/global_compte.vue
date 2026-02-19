@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import CreateAccount from "@/components/login.vue"
+import CreateAccount from "@/components/sign_in.vue"
 import ConnectAccount from "@/components/connexion.vue"
 import DrawAccount from "@/components/gestions_comptes.vue"
 import ModalResetPassword from "@/subcomponents/modals/modal_reinitialisation.vue"
