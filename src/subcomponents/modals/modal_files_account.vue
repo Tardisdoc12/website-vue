@@ -116,7 +116,7 @@
                         :disabled="isDisable"
                         type="submit"
                         class="px-4 py-2 rounded-lg font-medium text-white transition"
-                        :class="isDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'"
+                        :class="isDisable ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'"
                     >
                         Ajouter le document
                     </button>

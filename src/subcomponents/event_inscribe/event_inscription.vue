@@ -79,7 +79,7 @@
         <div class="flex items-center justify-center " style="margin-bottom:10px;">
             <button
                 type="submit"
-                class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                class="appearance-none button-base"
             >
                 Confirmer l'inscription
             </button>
@@ -91,6 +91,7 @@
 <script>
 import inscritAPI from "@/javascript/api/axios_inscription"
 import { Events } from "@/javascript/constants/events_type"
+import { Couleurs } from "@/javascript/constants/colors"
 
 export default {
 
@@ -108,6 +109,7 @@ export default {
     data() {
         return {
             Events,
+            Couleurs,
             formUser: {
                 name: this.user?.firstName && this.user?.lastName 
                     ? `${this.user.firstName} ${this.user.lastName}` 

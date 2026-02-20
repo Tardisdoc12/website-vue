@@ -11,7 +11,13 @@
                 placeholder="Votre adresse email"
                 class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <bouton @click="handleRequest" :disabled="!email">Envoyer</bouton>
+            <bouton @click="handleRequest" :disabled="!email"
+                class="appearance-none button-base"
+                :style="{
+                    '--btn-bg' : !email ? Couleurs.cyan : Couleurs.main_blue,
+                    '--btn-hover-bg' : !email ? Couleurs.cyan : Couleurs.dark_blue
+                }"
+            >Envoyer</bouton>
         </div>
     </Modal>
 </template>
@@ -19,10 +25,12 @@
 <script>
 import Modal from "@/subcomponents/unitary_elements/modalComponent.vue"
 import apiUser from "@/javascript/api/users_wp"
+import { Couleurs } from '@/javascript/constants/colors'
 
 export default {
     data() {
         return {
+            Couleurs,
             isOpen: true,
             title: "Réinitialisation du mot de passe",
             email: "",

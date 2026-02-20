@@ -14,7 +14,11 @@
             <!-- bouton pour copier téléphone des inscrits -->
             <button
                 type="button"
-                class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                class="appearance-none button-base"
+                :style="{
+                    '--btn-bg': Couleurs.vert,
+                    '--btn-hover-bg':Couleurs.dark_vert,
+                }"
                 @click="CopyPhoneOrEmail(true)"
             >
                 <font-awesome-icon icon="fa-solid fa-phone-volume" v-if="!isPhoneCopied && !isPhoneError"/>
@@ -25,7 +29,11 @@
             <!-- button pour copier mail inscrits -->
             <button
                 type="button"
-                class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                class="appearance-none button-base"
+                :style="{
+                    '--btn-bg': Couleurs.vert,
+                    '--btn-hover-bg':Couleurs.dark_vert,
+                }"
                 @click="CopyPhoneOrEmail(false)"
             >
                 <font-awesome-icon icon="fa-solid fa-envelope" v-if="!isEmailCopied && !isEmailError"/>
@@ -37,7 +45,11 @@
             <button
                 v-if="usersToShow.length !== 0"
                 type="button"
-                class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                class="appearance-none button-base"
+                :style="{
+                    '--btn-bg': Couleurs.vert,
+                    '--btn-hover-bg':Couleurs.dark_vert,
+                }"
                 @click="downloadCSV"
             >
                 <font-awesome-icon icon="fa-solid fa-download" />
@@ -76,7 +88,11 @@
                     <td class="border border-gray-300 p-2 text-center">
                         <button 
                         @click="DeleteUser(user)"
-                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                        class="appearance-none button-base"
+                        :style="{
+                            '--btn-bg': Couleurs.main_red,
+                            '--btn-hover-bg': Couleurs.dark_red
+                        }"
                         >
                             Supprimer l'inscrit
                         </button>
@@ -90,6 +106,7 @@
 
 <script>
 import api from "@/javascript/api/axios_inscription"
+import { Couleurs } from "@/javascript/constants/colors"
 
 export default {
     props: {
@@ -106,6 +123,7 @@ export default {
 
     data() {
         return {
+            Couleurs,
             fields_csv: ["Nom", "Email", "Téléphone", "Thème demandé", "Moto", "Experience"],
             isPhoneCopied: false,
             isEmailCopied: false,

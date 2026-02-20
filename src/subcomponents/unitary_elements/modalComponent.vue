@@ -6,7 +6,7 @@
                 <span>
                     <label style="color:rgb(255, 255, 255);"> {{ title }} </label>
                 </span>
-                <button class="btn-close" @click="Cancel">
+                <button class="appearance-none button-base" :style="{ '--btn-bg': Couleurs.main_red, '--btn-hover-bg': Couleurs.dark_red }" @click="Cancel">
                     <font-awesome-icon icon="fa-solid fa-xmark" />
                 </button>
             </div>
@@ -18,12 +18,19 @@
 </template>
 
 <script>
+import { Couleurs } from '@/javascript/constants/colors'
 
 export default {
     props: {
         title: {
             type: String,
             required: true,
+        }
+    },
+
+    data() {
+        return {
+            Couleurs
         }
     },
 

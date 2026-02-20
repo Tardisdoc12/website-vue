@@ -48,50 +48,22 @@
         <!-- Sous-Boutons de chaque Boutons -->
         <div class="flex items-center justify-center gap-4" style="margin-top: 20px;" v-if="activeIndex === 1 && isBureau">
             <button
-                class="appearance-none"
-                :style="{
-                    display: 'inline-block',
-                    color: Couleurs.white,
-                    padding: '0.85rem 1rem',
-                    borderRadius: '0.375rem',
-                    backgroundColor: Couleurs.main_blue,
-                }"
+                class="appearance-none button-base"
                 @click="() => {isAddingCategories=true;}"
             >{{ "Ajouter une catégorie" }}</button>
             <button
-                class="appearance-none"
-                :style="{
-                    display: 'inline-block',
-                    color: Couleurs.white,
-                    padding: '0.85rem 1rem',
-                    borderRadius: '0.375rem',
-                    backgroundColor: Couleurs.main_blue,
-                }"
+                class="appearance-none button-base"
                 @click="() => {isAddingFiles=true;}"
             >{{ "Ajouter un fichier" }}</button>
             <button
                 @click="() => {isRemovingCategories=true;}"
-                class="appearance-none"
-                :style="{
-                    display: 'inline-block',
-                    color: Couleurs.white,
-                    padding: '0.85rem 1rem',
-                    borderRadius: '0.375rem',
-                    backgroundColor: Couleurs.main_blue,
-                }"
+                class="appearance-none button-base"
             >{{ "Supprimer une Catégorie" }}</button>
         </div>
 
         <div class="flex items-center justify-center gap-4" style="margin-top: 20px;" v-if="activeIndex === 0">
             <button
-                class="appearance-none"
-                :style="{
-                    display: 'inline-block',
-                    color: Couleurs.white,
-                    padding: '0.85rem 1rem',
-                    borderRadius: '0.375rem',
-                    backgroundColor: Couleurs.main_blue,
-                }"
+                class="appearance-none button-base"
                 @click="() => {isInMyFollowPage=true;}"
             >
                 {{ "Accéder à ma fiche de suivi" }}
@@ -125,7 +97,7 @@
         <p>Cette page est en cours de développement. Elle permettra d'afficher les informations de suivi de l'utilisateur, telles que les progrès réalisés, les objectifs atteints, et d'autres données pertinentes pour le suivi de sa progression.</p>
         <button
             @click="() => {isInMyFollowPage=false;}"
-            class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            class="appearance-none button-base"
         >
             {{ "Retour à mon profil" }}
         </button>

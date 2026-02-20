@@ -41,13 +41,10 @@
                             <button
                                 v-if="isBureau"
                                 @click="UpdateFile(file, subkey, key)"
-                                class="appearance-none"
+                                class="appearance-none button-base"
                                 :style="{
-                                    display: 'inline-block',
-                                    color: 'white',
-                                    padding: '0.5rem 1rem',
-                                    borderRadius: '0.375rem',
-                                    backgroundColor: '#000000',
+                                    '--btn-bg':Couleurs.black,
+                                    '--btn-hover-bg': Couleurs.black,
                                 }"
                             >
                                 <font-awesome-icon icon="fa-solid fa-pen-to-square"/>
@@ -55,26 +52,20 @@
                             <button
                                 v-if="isBureau"
                                 @click="DeleteFile(file)"
-                                class="appearance-none"
+                                class="appearance-none button-base"
                                 :style="{
-                                    display: 'inline-block',
-                                    color: 'white',
-                                    padding: '0.5rem 1rem',
-                                    borderRadius: '0.375rem',
-                                    backgroundColor: Couleurs.main_red,
+                                    '--btn-bg':Couleurs.main_red,
+                                    '--btn-hover-bg': Couleurs.dark_red,
                                 }"
                             >
                                 <font-awesome-icon icon="fa-solid fa-trash"/>
                             </button>
                             <button
                                 @click="openUrl(file.url_file, file.path_file)"
-                                class="appearance-none"
+                                class="appearance-none button-base"
                                 :style="{
-                                    display: 'inline-block',
-                                    color: 'white',
-                                    padding: '0.5rem 1rem',
-                                    borderRadius: '0.375rem',
-                                    backgroundColor: '#000000',
+                                    '--btn-bg':Couleurs.black,
+                                    '--btn-hover-bg': Couleurs.black,
                                 }"
                             >
                                 <font-awesome-icon icon="fa-solid fa-eye"/>
@@ -82,13 +73,10 @@
                             <button
                                 v-if="file.path_file !== ''"
                                 @click="DownloadUrl(file)"
-                                class="appearance-none"
+                                class="appearance-none button-base"
                                 :style="{
-                                    display: 'inline-block',
-                                    color: 'white',
-                                    padding: '0.5rem 1rem',
-                                    borderRadius: '0.375rem',
-                                    backgroundColor: '#000000',
+                                    '--btn-bg':Couleurs.black,
+                                    '--btn-hover-bg': Couleurs.black,
                                 }"
                             >
                                 <font-awesome-icon icon="fa-solid fa-download"/>

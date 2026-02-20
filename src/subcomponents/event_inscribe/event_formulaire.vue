@@ -38,16 +38,9 @@
                 <div class="block font-medium">
                     Dupliquer l'évènement pour les dates :
                     <button 
-                        type="button" 
-                        :style="{
-                            display: 'inline-block',
-                            color: Couleurs.white,
-                            padding: '0.5rem 1rem',
-                            borderRadius: '0.375rem',
-                            backgroundColor: Couleurs.main_blue
-                        }"
+                        type="button"
                         @click="addRange" 
-                        class="mt-1 text-blue-500"
+                        class="appearance-none button-base"
                     >
                             <font-awesome-icon icon="fa-solid fa-plus" />
                     </button>
@@ -59,14 +52,11 @@
                     <button
                         type="button"
                         :style="{
-                            display: 'inline-block',
-                            color: Couleurs.white,
-                            padding: '0.5rem 1rem',
-                            borderRadius: '0.375rem',
-                            backgroundColor: Couleurs.main_red
+                            '--btn-bg': Couleurs.main_red,
+                            '--btn-hover-bg': Couleurs.dark_red
                         }"
                         @click="removeRange(index)" 
-                        class="text-red-500"
+                        class="appearance-none button-base"
                     >
                         <font-awesome-icon icon="fa-solid fa-trash" />
                     </button>
@@ -125,7 +115,7 @@
 
             <!-- Bouton -->
             <div class="flex justify-center items-center" style="margin-bottom:10px;">
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" >
+                <button type="submit" class="appearance-none button-base" >
                     {{ buttonName }}
                 </button>
             </div>

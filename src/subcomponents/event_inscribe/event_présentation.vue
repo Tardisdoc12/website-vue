@@ -30,13 +30,11 @@
             <button
                 :disabled="disableSubscribe"
                 type="button"
-                class="appearance-none"
+                class="appearance-none button-base"
                 :style="{
-                    display: 'inline-block',
-                    color: Couleurs.white,
-                    padding: '0.5rem 1rem',
-                    borderRadius: '0.375rem',
-                    backgroundColor: disableSubscribe ? Couleurs.gris_pale : Couleurs.vert
+                    '--btn-color': Couleurs.white,
+                    '--btn-bg': disableSubscribe ? Couleurs.gris_pale : Couleurs.vert,
+                    '--btn-hover-bg': disableSubscribe ? Couleurs.gris_pale : Couleurs.dark_vert
                 }"
                 @click="Register"
             >
@@ -46,14 +44,7 @@
             <a
                 v-if="canBeRedirected"
                 :href="event.url_post"
-                class="appearance-none"
-                :style="{
-                    display: 'inline-block',
-                    color: Couleurs.white,
-                    padding: '0.5rem 1rem',
-                    borderRadius: '0.375rem',
-                    backgroundColor: Couleurs.main_blue
-                }"
+                class="appearance-none button-base"
             >
                 {{ "Voir la page" }}
             </a>
@@ -61,14 +52,7 @@
             <button
                 v-if="isBureau || isEncadrant"
                 type="button"
-                class="appearance-none"
-                :style="{
-                    display: 'inline-block',
-                    color: Couleurs.white,
-                    padding: '0.5rem 1rem',
-                    borderRadius: '0.375rem',
-                    backgroundColor: Couleurs.main_blue
-                }"
+                class="appearance-none button-base"
                 @click="VisualizeInscrit"
             >
                 Voir les inscrits
@@ -78,14 +62,7 @@
             <button
                 v-if="isBureau"
                 type="button"
-                class="appearance-none"
-                :style="{
-                    display: 'inline-block',
-                    color: Couleurs.white,
-                    padding: '0.5rem 1rem',
-                    borderRadius: '0.375rem',
-                    backgroundColor: Couleurs.main_blue
-                }"
+                class="appearance-none button-base"
                 @click="updateEvent"
             >
                 Modifier l'évènement

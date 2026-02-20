@@ -37,8 +37,11 @@
                     <button
                         :disabled="isDisable"
                         type="submit"
-                        class="px-4 py-2 rounded-lg font-medium text-white transition"
-                        :class="isDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'"
+                        class="appearance-none button-base"
+                        :style="{
+                            '--btn-bg' : isDisable ? Couleurs.cyan : Couleurs.main_blue,
+                            '--btn-hover-bg' : isDisable ? Couleurs.cyan : Couleurs.dark_blue
+                        }"
                     >
                         Ajouter la catégorie
                     </button>
@@ -51,6 +54,7 @@
 <script>
 import apiSource from '@/javascript/api/axios_sources';
 import ModalComponent from '@/subcomponents/unitary_elements/modalComponent.vue';
+import { Couleurs } from '@/javascript/constants/colors'
 
 
 export default {
@@ -63,6 +67,7 @@ export default {
 
     data() {
         return {
+            Couleurs,
             isOpen: true,
             categories: [
                 "Fiches et Exos",

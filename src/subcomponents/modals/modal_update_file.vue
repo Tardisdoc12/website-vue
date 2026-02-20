@@ -101,8 +101,11 @@
                         <button
                             :disabled="isDisable"
                             type="submit"
-                            class="px-4 py-2 rounded-lg font-medium text-white transition"
-                            :class="isDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'"
+                            class="appearance-none button-base"
+                            :style="{
+                                '--btn-bg' : isDisable ? Couleurs.gris_pale : Couleurs.main_blue,
+                                '--btn-hover-bg' : isDisable ? Couleurs.gris_pale : Couleurs.dark_blue,
+                            }"
                         >
                             Mettre à jour le document
                         </button>
@@ -117,6 +120,7 @@
 import ModalComponent from '@/subcomponents/unitary_elements/modalComponent.vue';
 import apiUpload from '@/javascript/api/axios_upload';
 import apiSource from '@/javascript/api/axios_sources';
+import { Couleurs } from '@/javascript/constants/colors'
 
 export default {
     props: {
@@ -131,6 +135,7 @@ export default {
     },
     data() {
         return {
+            Couleurs,
             isOpen: true,
             fileCopy : {...this.file},
             typeAdd: this.file.path_file !== '' ? 'Fichier' : 'Url',
