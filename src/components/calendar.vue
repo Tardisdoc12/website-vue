@@ -29,8 +29,7 @@ import CalendarModule from "@/subcomponents/unitary_elements/calendrier_componen
 import ModalCreateEvent from "@/subcomponents/modals/modal_formulaire_events.vue"
 import ModalEventInscription from "@/subcomponents/modals/modal_events.vue"
 import eventsService from '@/javascript/api/axios_events.js';
-import { jwtDecode } from "jwt-decode"
-import api from "@/javascript/api/users_wp.js"
+import EventsFunctions from '@/javascript/constants/events_functions'
 
 export default {
     
@@ -47,15 +46,9 @@ export default {
 
     async mounted() {
         this.events = await eventsService.getAllEvents();
-        console.log(this.events)
-        const token = sessionStorage.getItem("mps_moto")
-        if (token) {
-            const decoded = jwtDecode(token)
-            const user_id = decoded.data.user.id
-            const user_info = await api.get_user(user_id)
-            this.user = {...user_info.user}
-
-            const eventsInscript = await eventsService.getEventUser(user_id, this.user.email)
+        this.user = await EventsFunctions.isUserConnected()        
+        if(Object.keys(this.user).length !== 0){
+            const eventsInscript = await eventsService.getEventUser(this.user.ID, this.user.email)
             this.user.events = eventsInscript.results
             const listB = this.user.roles
             const listA = ['bureau', 'administrator']
@@ -124,7 +117,7 @@ export default {
 
         userToDelete(user) {
             const event_id = this.eventSelected?.event_id ? this.eventSelected.event_id : this.eventSelected.id
-            this.eventSelected = this.eventSelected.users.filter(user_ => Number(user_.id) !== Number(user.id))
+            this.eventSelected.users = this.eventSelected.users.filter(user_ => Number(user_.id) !== Number(user.id))
             if(this?.user && user?.wp_user_id){
                 if(Number(user.wp_user_id) == Number(this.user.ID)){
                     const index = this.user.events.findIndex(event => Number(event.event_id) === Number(event_id))

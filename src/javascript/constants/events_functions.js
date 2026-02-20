@@ -1,5 +1,7 @@
 import { Couleurs } from "@/javascript/constants/colors";
 import { Events } from "@/javascript/constants/events_type.js"
+import { jwtDecode } from "jwt-decode"
+import api from "@/javascript/api/users_wp.js"
 
 export default {
         colorBg(categorie) {
@@ -13,4 +15,16 @@ export default {
                 return [Couleurs.stage_main, Couleurs.stage_second]
             }
         },
+
+        async isUserConnected() {
+            const token = sessionStorage.getItem("mps_moto")
+            if (token) {
+                const decoded = jwtDecode(token)
+                const user_id = decoded.data.user.id
+                const user_info = await api.get_user(user_id)
+                const user = {...user_info.user}
+                return user
+            }
+            return {}
+        },     
 }

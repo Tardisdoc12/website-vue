@@ -44,6 +44,7 @@
             </button>
             <!-- Voir la page de l'event -->
             <a
+                v-if="canBeRedirected"
                 :href="event.url_post"
                 class="appearance-none"
                 :style="{
@@ -117,6 +118,12 @@ export default {
             type: Array,
             required: false,
             default: ["non_adherent"]
+        },
+
+        canBeRedirected: {
+            type: Boolean,
+            required: false,
+            default: false,
         }
     },
 
