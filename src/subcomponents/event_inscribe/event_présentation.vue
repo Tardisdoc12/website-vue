@@ -26,14 +26,11 @@
         </div>
         
         <!-- bouton -->
-        <div class="flex items-center justify-center" :style="{ gap: '20px'}">
+        <div class="flex items-center justify-center" :style="{ gap: '10px'}">
             <button
                 :disabled="disableSubscribe"
                 type="button"
-                class="appearance-none focus:outline-none px-4 py-2 rounded 
-                text-white 
-                bg-green-500 hover:bg-green-600 
-                disabled:bg-gray-400 disabled:cursor-not-allowed"
+                class="appearance-none"
                 :style="{
                     display: 'inline-block',
                     color: Couleurs.white,
@@ -57,13 +54,13 @@
                     backgroundColor: Couleurs.main_blue
                 }"
             >
-                {{ "Voir la page de l'évènement" }}
+                {{ "Voir la page" }}
             </a>
             <!-- visualisation -->
             <button
                 v-if="isBureau || isEncadrant"
                 type="button"
-                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600 ml-5"
+                class="appearance-none"
                 :style="{
                     display: 'inline-block',
                     color: Couleurs.white,
@@ -80,7 +77,7 @@
             <button
                 v-if="isBureau"
                 type="button"
-                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600 ml-5"
+                class="appearance-none"
                 :style="{
                     display: 'inline-block',
                     color: Couleurs.white,
