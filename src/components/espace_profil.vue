@@ -28,20 +28,17 @@
         <div class="page-container">
             <ProfilInformation
                 v-if="activeIndex === 0"
-                class="mt-4 w-full"
                 :DataUser="user"
                 @userChange="e => {user = e}"
             />
             <RessourceGestion
                 v-if="activeIndex === 1"
-                class="mt-4 w-full"
                 :subCategoriesAndSources="structuresRessources"
                 :isBureau="isBureau"
                 @updateSubCategoriesAndSources="(e) => {structuresRessources = {...e}}"
             />
             <MediaSpace
                 v-if="activeIndex === 2"
-                class="mt-4 w-full"
             />
         </div>
         
