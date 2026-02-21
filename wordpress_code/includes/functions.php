@@ -49,7 +49,7 @@ function get_vue_shortcodes() {
         'calendar'         => 'calendar',
         'account'           => 'global_compte',
         'form_adhesion'    => 'adherent',
-        'test'             => 'espace_profil',
+        'test'             => 'depliant_events',
         'event-page'       => 'event_page_proper',
         'reinitialisation' => 'reset_password_page',
     ];

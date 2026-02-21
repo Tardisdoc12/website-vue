@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+/*---------------------------------------------------------*/
+/* Bouton CSS */
 .button-base {
     --btn-bg: #245473;
     --btn-color: white;
@@ -16,3 +18,51 @@
 .button-base:hover {
   background-color: var(--btn-hover-bg);
 }
+
+/*---------------------------------------------------------*/
+/* Event CSS */
+.background-card {
+  border-radius: 4px;
+  padding: 4px 2px;
+}
+
+.event-font {
+    font-size: 10px;
+}
+
+.event-row {
+    display:flex;
+    align-items: stretch;  
+}
+
+.event-card {
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    width: 8px;
+    min-width: 8px;   /* 👈 empêche la compression */
+    flex-shrink: 0;
+}
+
+.event-content {
+  flex: 1;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 8px;
+  line-height: 1.2;
+}
+
+.event-content b {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.event-content small {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/*---------------------------------------------------------*/
+/* End of File                                             */
+/*---------------------------------------------------------*/
