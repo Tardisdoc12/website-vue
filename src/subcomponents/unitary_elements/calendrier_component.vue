@@ -273,6 +273,16 @@ export default{
 
 
 <style>
+.fc-daygrid-event {
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+.fc-daygrid-event a {
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
 .event-font {
     font-size: 10px;
 }
