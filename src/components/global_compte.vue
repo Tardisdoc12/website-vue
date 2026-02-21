@@ -10,12 +10,6 @@
             </p>
         </div>
 
-        
-        <!-- Bouton déconnexion si connecté -->
-        <div v-else class="w-full max-w-md text-center">
-            <p @click="logout" class="logout-link cursor-pointer">Se déconnecter</p>
-        </div>
-        
         <!-- Sate Account -->
          <div class="w-full">
             <CreateAccount
@@ -43,6 +37,10 @@
             >
                 J'ai oublié mon mot de passe
             </p>
+        </div>
+        <!-- Bouton déconnexion si connecté -->
+        <div v-if="isAuthenticated" class="w-full max-w-md text-center">
+            <p @click="logout" class="logout-link cursor-pointer">Se déconnecter</p>
         </div>
     </div>
 
