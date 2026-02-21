@@ -1,27 +1,46 @@
 <template>
-    <div class="flex flex-col items-center justify-center space-y-2">
+    <div class="flex flex-col items-center w-full space-y-2 px-4">
         <!-- Ligne cliquable -->
-        <div class="switch-link" v-if="!isAuthenticated">
-            <p v-if="!hasAccount" @click="hasAccount = true">
+        <div class="switch-link w-full max-w-md text-center" v-if="!isAuthenticated">
+            <p v-if="!hasAccount" @click="hasAccount = true" class="cursor-pointer">
                 J’ai déjà un compte
             </p>
-            <p v-else-if="hasAccount" @click="hasAccount = false">
+            <p v-else-if="hasAccount" @click="hasAccount = false" class="cursor-pointer">
                 Je crée un compte
             </p>
         </div>
 
         
         <!-- Bouton déconnexion si connecté -->
-        <div v-else>
-            <p @click="logout" class="logout-link">Se déconnecter</p>
+        <div v-else class="w-full max-w-md text-center">
+            <p @click="logout" class="logout-link cursor-pointer">Se déconnecter</p>
         </div>
         
         <!-- Sate Account -->
-        <CreateAccount v-if="(!isAuthenticated && !hasAccount)" :onSuccess="createAccountSuccess"/>
-        <ConnectAccount v-else-if="(!isAuthenticated && hasAccount)" :onSuccess="loginSuccess"/>
-        <DrawAccount v-else class="w-full max-w-md"/>
-        <div class="flex flex-col items-center justify-center space-y-2">
-            <p v-if="(!isAuthenticated && hasAccount)" @click="StartForgetPwd">
+         <div class="w-full">
+            <CreateAccount
+                v-if="!isAuthenticated && !hasAccount"
+                :onSuccess="createAccountSuccess"
+                class="w-full max-w-md"
+            />
+            <ConnectAccount
+                v-else-if="!isAuthenticated && hasAccount"
+                :onSuccess="loginSuccess"
+                class="w-full max-w-md"
+            />
+            <div
+                v-else
+                class="w-full"
+            >
+                <ShowProfil/>
+            </div>
+        </div>
+        <div class="w-full max-w-md text-center">
+            <p
+                v-if="!isAuthenticated && hasAccount"
+                @click="StartForgetPwd"
+                class="cursor-pointer"
+            >
                 J'ai oublié mon mot de passe
             </p>
         </div>
@@ -33,7 +52,7 @@
 <script>
 import CreateAccount from "@/components/sign_in.vue"
 import ConnectAccount from "@/components/connexion.vue"
-import DrawAccount from "@/components/gestions_comptes.vue"
+import ShowProfil from "@/components/espace_profil.vue"
 import ModalResetPassword from "@/subcomponents/modals/modal_reinitialisation.vue"
 import { jwtDecode } from "jwt-decode"
 
@@ -88,7 +107,7 @@ export default {
     components: {
         CreateAccount,
         ConnectAccount,
-        DrawAccount,
+        ShowProfil,
         ModalResetPassword
     }
 }

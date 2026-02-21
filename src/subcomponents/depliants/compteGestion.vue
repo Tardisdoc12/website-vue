@@ -10,11 +10,11 @@
     >
         <div style="margin-left:25px;margin-top: 10px;">
             <div v-if="!isInformationsChange">
-                <li><strong>Nom :</strong> {{ user.lastName }}</li>
-                <li><strong>Prénom :</strong> {{ user.firstName }}</li>
-                <li><strong>Email :</strong> {{ user.email }}</li>
-                <li><strong>Téléphone :</strong> {{ user.telephone }}</li>
-                <li><strong>Moto :</strong> {{ user.moto }}</li>
+                <li><strong>Nom :</strong> {{ user.lastName || "—" }}</li>
+                <li><strong>Prénom :</strong> {{ user.firstName || "—" }}</li>
+                <li><strong>Email :</strong> {{ user.email || "—" }}</li>
+                <li><strong>Téléphone :</strong> {{ user.telephone || "—" }}</li>
+                <li><strong>Moto :</strong> {{ user.moto || "—" }}</li>
             </div>
             <div
                 v-if="isInformationsChange"
