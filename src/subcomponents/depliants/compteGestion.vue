@@ -96,6 +96,11 @@
         </div>
     </DepliantWindow>
 
+    <EventsUser
+        :user="DataUser"
+        style="width: 95%;"
+    />
+
     <DepliantWindow
         :title="titleUrgences"
         :backgroundColorOpen="'#2d5c7f'"
@@ -173,6 +178,7 @@
 import api_user from "@/javascript/api/users_wp.js"
 import DepliantWindow from '@/subcomponents/unitary_elements/depliantWindow.vue';
 import { Couleurs } from '@/javascript/constants/colors'
+import EventsUser from '@/subcomponents/depliants/depliant_events.vue'
 
 export default {
     emits: [
@@ -234,7 +240,8 @@ export default {
     },
 
     components: {
-        DepliantWindow
+        DepliantWindow,
+        EventsUser
     }
 }
 

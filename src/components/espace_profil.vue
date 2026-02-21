@@ -114,6 +114,7 @@ import ModalFilesAccount from "@/subcomponents/modals/modal_files_account.vue";
 import ModalRemoveSubcategorie from "@/subcomponents/modals/modal_remove_subcategorie.vue";
 import MediaSpace from "@/subcomponents/media_space.vue";
 import apiSources from "@/javascript/api/axios_sources"
+import apiEvents from "@/javascript/api/axios_events"
 import { jwtDecode } from "jwt-decode"
 import api from "@/javascript/api/users_wp.js"
 import { Couleurs } from "@/javascript/constants/colors.js"
@@ -145,6 +146,13 @@ export default {
             const user_id = decoded.data.user.id
             const user_info = await api.get_user(user_id)
             this.user = user_info.user
+            this.user.events = []
+            const events = await apiEvents.getEventUser(this.user.ID,this.user.email)
+            
+            for(const element of events.results){
+                const event = await apiEvents.getEvent(element.event_id)
+                this.user.events.push(event)
+            }
             if (this.user.roles.includes("administrator") || this.user.roles.includes("bureau")) {
                 this.isBureau = true
             }

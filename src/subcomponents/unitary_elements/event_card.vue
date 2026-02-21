@@ -3,6 +3,7 @@
         class="background-card"
         :style="{
             'background-color': `${backgroundColorCard}`,
+            'border': '1px solid ' + `${BackgroundColor}`
         }"
     >
         <div class="event-row">
@@ -13,16 +14,11 @@
                 }"
             ></div>
             <div class="event-content" :style="{ 'color':'#000000', }">
-                <span class="event-font">
+                <span class="event-font" style="font-size: 15px;">
                     {{ hour }}
                 </span>
                 <div>
-                    <b class="event-font">{{ title }}</b>
-                </div>
-                <div>
-                    <small class="event-font">
-                        {{ places_available }}
-                    </small>
+                    <b class="event-font" style="font-size: 20px;">{{ title }}</b>
                 </div>
                 <p
                     v-if="isEncadrant"

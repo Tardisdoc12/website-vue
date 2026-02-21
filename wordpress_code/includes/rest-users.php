@@ -66,13 +66,13 @@ function monplugin_get_user(WP_REST_Request $request) {
 
     // Construction de l'objet utilisateur
     $user_data = [
-        "ID"        => $user->ID,
-        "email"     => $user->user_email,
-        "firstName" => get_user_meta($user->ID, 'firstName', true),
-        "lastName"  => get_user_meta($user->ID, 'lastName', true),
-        "telephone" => get_user_meta($user->ID, 'telephone', true),
-        "moto"      => get_user_meta($user->ID, 'moto', true),
-        "roles"     => $user->roles,
+        "ID"            => $user->ID,
+        "email"         => $user->user_email,
+        "firstName"     => get_user_meta($user->ID, 'firstName', true),
+        "lastName"      => get_user_meta($user->ID, 'lastName', true),
+        "telephone"     => get_user_meta($user->ID, 'telephone', true),
+        "moto"          => get_user_meta($user->ID, 'moto', true),
+        "roles"         => $user->roles,
         "urgence_phone" => get_user_meta($user->ID, 'urgence_phone', true),
         "urgence_name"  => get_user_meta($user->ID, 'urgence_name', true),
     ];
