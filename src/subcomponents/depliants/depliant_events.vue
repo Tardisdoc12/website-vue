@@ -41,8 +41,11 @@ export default{
             if (!this.user || !this.user.events) return [];
             const today = new Date();
             return this.user?.events.filter(event => {
-                const eventDate = new Date(event.startDate); // Assure-toi que startDate est compatible JS Date
-                return eventDate >= today;
+                const eventDate = new Date(event.startDate);
+                const eventDateOnly = new Date(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate());
+
+                // On garde seulement si l'event n'est pas avant aujourd'hui
+                return eventDateOnly.getTime() + 24*60*60*1000 > todayDateOnly.getTime();
             }) ?? [];
         }
     },
