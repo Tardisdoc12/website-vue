@@ -55,7 +55,7 @@
                         class="flex flex-col gap-1"
                         style="margin-top: 10px;"
                     >
-                        <label>{{ "Fichier à uploader (PDF seulement)" }}</label>
+                        <label>{{ "Fichier à uploader (PDF/JPG/PNG)" }}</label>
                         <div class="border border-gray-300 rounded-lg p-3 flex items-center justify-between">
                             <input
                                 id="pdfFile"
@@ -180,9 +180,6 @@ export default{
 
         handleFileUpload(event) {
             this.pdfFile = event.target.files[0]
-            if (this.pdfFile) {
-                console.log('Fichier sélectionné :', this.pdfFile.name)
-            }
         },
 
         async handleSubmit() {
@@ -202,8 +199,6 @@ export default{
                         pdfIDWP = response.data.id
                     }
                     else {
-                        console.log("Soucis lors de la récupération du path du fichier")
-                        console.log(response.data)
                         return
                     }
                 }

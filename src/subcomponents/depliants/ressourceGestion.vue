@@ -168,7 +168,6 @@ export default {
             if (confirm("Êtes-vous sûr de vouloir supprimer ce fichier ?")) {
                 const response = await axios_sources.delete_source(file.source_id);
                 const wpId = Number(file.id_wp)
-
                 if (wpId > 0) {
                     await api_upload.delete_file(wpId)
                 }

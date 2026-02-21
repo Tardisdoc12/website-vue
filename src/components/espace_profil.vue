@@ -35,7 +35,7 @@
                 v-if="activeIndex === 1 && !isNonAdherent"
                 :subCategoriesAndSources="structuresRessources"
                 :isBureau="isBureau"
-                @updateSubCategoriesAndSources="(e) => {structuresRessources = {...e}}"
+                @updateSubCategoriesAndSources="updateSubCategoriesAndSources"
             />
             <div
                 v-else-if="activeIndex === 1 && isNonAdherent"
@@ -196,12 +196,14 @@ export default {
 
     computed:{
         isNonAdherent() {
-            console.log(this.user)
             return this.user?.roles?.includes("non_adherent") || false;
         }
     },
 
     methods: {
+        updateSubCategoriesAndSources(e){
+            this.structuresRessources = { ...e}
+        },
         handleNewCategorie(newCategorie) {
 
             const cat = this.structuresRessources[newCategorie.id_categorie]

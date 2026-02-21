@@ -167,9 +167,6 @@ export default {
         },
         handleFileUpload(event) {
             this.pdfFile = event.target.files[0]
-            if (this.pdfFile) {
-                console.log('Fichier sélectionné :', this.pdfFile.name)
-            }
         },
         Cancel() {
             this.$emit('cancelSignal', !this.isOpen)
