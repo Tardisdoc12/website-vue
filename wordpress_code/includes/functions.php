@@ -47,9 +47,9 @@ function get_vue_shortcodes() {
     return [
         // shortcode => Files vue
         'calendar'         => 'calendar',
-        'account'           => 'global_compte',
+        'account'          => 'global_compte',
         'form_adhesion'    => 'adherent',
-        'test'             => 'depliant_events',
+        'test'             => 'calendar',
         'event-page'       => 'event_page_proper',
         'reinitialisation' => 'reset_password_page',
     ];
