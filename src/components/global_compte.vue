@@ -21,16 +21,13 @@
         <ConnectAccount v-else-if="(!isAuthenticated && hasAccount)" :onSuccess="loginSuccess"/>
         <DrawAccount v-else class="w-full max-w-md"/>
         <div class="flex flex-col items-center justify-center space-y-2">
-            <button
-                v-if="(!isAuthenticated && hasAccount)"
-                @click="isForgetPassword = true"
-            >
+            <p v-if="(!isAuthenticated && hasAccount)" @click="StartForgetPwd">
                 J'ai oublié mon mot de passe
-            </button>
+            </p>
         </div>
     </div>
 
-    <ModalResetPassword v-if="isForgetPassword" @cancelSignal="isForgetPassword = false"/>
+    <ModalResetPassword v-if="isForgetPassword" @cancelSignal="Cancel"/>
 </template>
 
 <script>
@@ -67,6 +64,14 @@ export default {
     },
 
     methods: {
+        StartForgetPwd() {
+            this.isForgetPassword = true
+        },
+
+        Cancel() {
+            this.isForgetPassword = false
+        },
+
         logout() {
             sessionStorage.removeItem("mps_moto")
             this.token = null

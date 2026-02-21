@@ -3,7 +3,7 @@
             v-if="stepsComputed == 0"
             :event="event"
             :roles="userConnected?.roles"
-            :can-be-redirected="canBeRedirected"
+            :can-be-redirected="canBeRedirectedComputed"
             @cancelSignal="Cancel"
             @updateEvent="updateEvent"
             @visualizingUsers="visualizeUsers"
@@ -78,6 +78,16 @@ export default{
     },
 
     computed:{
+        canBeRedirectedComputed(){
+            if(!this.canBeRedirected){
+                return this.canBeRedirected
+            }
+            if(this.event.url_post === false){
+                return false
+            }
+            return true
+        },
+
         stepsComputed() {
             if(this?.stepsToStart !== null){
                 this.steps = this.stepsToStart

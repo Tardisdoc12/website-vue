@@ -82,7 +82,7 @@ class ShortcodesHookers {
         wp_enqueue_script(
             $name_modules,
             $url_file,
-            array(),
+            ['elementor-frontend'],
             filemtime($path_file),
             true
         );

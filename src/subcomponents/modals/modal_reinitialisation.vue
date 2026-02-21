@@ -1,9 +1,12 @@
 <template>
     <Modal
         :title="title"
-        @close="$emit('cancelSignal')"
+        @changeBool="$emit('cancelSignal')"
     >
-        <div class="flex flex-col items-center justify-center space-y-4">
+        <div
+            class="mx-auto flex flex-col items-center justify-center space-y-4"
+            style="width: 80%"
+        >
             <p class="text-gray-700">Entrez votre adresse email pour recevoir les instructions de réinitialisation de votre mot de passe.</p>
             <input
                 v-model="email"
@@ -11,13 +14,13 @@
                 placeholder="Votre adresse email"
                 class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <bouton @click="handleRequest" :disabled="!email"
+            <button @click="handleRequest" :disabled="!email"
                 class="appearance-none button-base"
                 :style="{
                     '--btn-bg' : !email ? Couleurs.cyan : Couleurs.main_blue,
                     '--btn-hover-bg' : !email ? Couleurs.cyan : Couleurs.dark_blue
                 }"
-            >Envoyer</bouton>
+            >Envoyer</button>
         </div>
     </Modal>
 </template>
