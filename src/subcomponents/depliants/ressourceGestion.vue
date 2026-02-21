@@ -157,13 +157,12 @@ export default {
             )
         },
         openUrl(url, file_path) {
-            if (url!== "") {
+            if (url!== "" && url) {
                 window.open(url, "_blank");
             }
             else {
                 window.open(file_path,"_blank");
             }
-            
         },
         async DeleteFile(file) {
             if (confirm("Êtes-vous sûr de vouloir supprimer ce fichier ?")) {

@@ -60,7 +60,7 @@
                             <input
                                 id="pdfFile"
                                 type="file"
-                                accept="application/pdf"
+                                accept="application/pdf,image/png,image/jpeg"
                                 @change="handleFileUpload"
                             />
                         </div>
