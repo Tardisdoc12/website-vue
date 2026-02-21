@@ -11,17 +11,19 @@
                 {{ "Retour en arrière" }}
             </button>
         </div>
-        <EventPipeline
-            :event="eventData"
-            :user-connected="user"
-            :steps-to-start="stepsToPass"
-            :can-be-redirected="false"
-            @incrementSteps="incrementSteps"
-            @cancel-signal="ReturnToStart"
-            @inscritEvent="InscritEvent"
-            @userDeleted="userToDelete"
-            @deletedEvent="deletedEvent"
-        />
+        <div class="flex flex-col items-center w-full">
+            <EventPipeline
+                :event="eventData"
+                :user-connected="user"
+                :steps-to-start="stepsToPass"
+                :can-be-redirected="false"
+                @incrementSteps="incrementSteps"
+                @cancel-signal="ReturnToStart"
+                @inscritEvent="InscritEvent"
+                @userDeleted="userToDelete"
+                @deletedEvent="deletedEvent"
+            />
+        </div>
     </div>
     <div v-else>Chargement...</div>
 </template>
