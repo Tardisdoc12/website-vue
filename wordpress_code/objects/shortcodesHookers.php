@@ -116,9 +116,25 @@ class ShortcodesHookers {
     }
 
     private function render_vue_component($atts, $content, $tag) {
+
         $this->vue_register_requested_module($tag);
+
+        static $scripts_enqueued = false;
+
+        if (!$scripts_enqueued) {
+            add_action('wp_footer', function () {
+                $this->enqueue_vue_scripts();
+            }, 1);
+            $scripts_enqueued = true;
+        }
+
         return '<div class="vue-root" data-module="' . esc_attr($tag) . '"></div>';
     }
+
+    // private function render_vue_component($atts, $content, $tag) {
+    //     $this->vue_register_requested_module($tag);
+    //     return '<div class="vue-root" data-module="' . esc_attr($tag) . '"></div>';
+    // }
 
     private function vue_register_requested_module($module) {
 

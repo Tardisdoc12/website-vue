@@ -145,7 +145,7 @@ export default {
         espaceDate() {
             const invalidDates = [null, undefined, "", "0000-00-00 00:00:00"];
             if (!invalidDates.includes(this.event.endDate) && !isNaN(new Date(this.event.endDate).getTime())) {
-                return eventatDate(new Date(this.event.startDate)) + " jusqu'à " + formatDate(new Date(this.event.endDate))
+                return formatDate(new Date(this.event.startDate)) + " jusqu'à " + formatDate(new Date(this.event.endDate))
             } else {
                 return formatDate(new Date(this.event.startDate))
             }
