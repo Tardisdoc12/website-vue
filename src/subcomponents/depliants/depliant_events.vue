@@ -9,7 +9,7 @@
         :is-opoen-forced="true"
     >
         <event_card
-            v-for="event in user.events"
+            v-for="event in upcomingEvents"
             :event="event"
             :is-encadrant="false"
             @click="Click"
@@ -33,6 +33,17 @@ export default{
     data() {
         return {
             Couleurs,
+        }
+    },
+
+    computed: {
+        upcomingEvents() {
+            if (!this.user || !this.user.events) return [];
+            const today = new Date();
+            return this.user?.events.filter(event => {
+                const eventDate = new Date(event.startDate); // Assure-toi que startDate est compatible JS Date
+                return eventDate >= today;
+            }) ?? [];
         }
     },
 
