@@ -32,11 +32,16 @@
                 @userChange="e => {user = e}"
             />
             <RessourceGestion
-                v-if="activeIndex === 1"
+                v-if="activeIndex === 1 && !isNonAdherent"
                 :subCategoriesAndSources="structuresRessources"
                 :isBureau="isBureau"
                 @updateSubCategoriesAndSources="(e) => {structuresRessources = {...e}}"
             />
+            <div
+                v-else-if="activeIndex === 1 && isNonAdherent"
+            >
+                <p class="flex-1 text-center"> Les Ressources ne sont disponibles que pour les personnes de l'Associations.</p>
+            </div>
             <MediaSpace
                 v-if="activeIndex === 2"
             />
@@ -178,6 +183,22 @@ export default {
             isRemovingCategories: false,
             isInMyFollowPage: false,
             isBureau: false,
+        }
+    },
+
+    computed:{
+        isNonAdherent() {
+            if(this.user?.roles){
+                if(this.user.roles.length > 1) {
+                    return false
+                }
+                else{
+                    if(this.user.roles.includes("non_adherent")){
+                        return true
+                    }
+                }
+            }
+            return true
         }
     },
 
