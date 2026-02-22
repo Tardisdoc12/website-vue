@@ -112,12 +112,4 @@ export default {
     overflow-y: auto;     /* scroll sur toute la page si besoin */
     padding: 2rem;        /* espace autour de la fenêtre */
 }
-
-/* .modal-content {
-    margin: auto;
-    max-width: 600px;
-    background: #fff;
-    border-radius: 8px;
-    padding: 0;
-} */
 </style>
