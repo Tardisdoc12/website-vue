@@ -13,6 +13,15 @@ export default {
         }
     },
 
+    async get_adherents() {
+        try{
+            const response = await api.get("/adherents/")
+            return response
+        } catch (err) {
+            throw err
+        }
+    },
+
     async update_user(user) {
         try {
             const response = await api.post(`/user/update`, user)

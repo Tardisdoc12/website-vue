@@ -1,6 +1,6 @@
 <template>
     <div class="modal">
-        <div class="modal-content">
+        <div :style="ModalContent">
             <!-- Entete -->
             <div class="encadre">
                 <span>
@@ -25,12 +25,36 @@ export default {
         title: {
             type: String,
             required: true,
+        },
+        width:{
+            type: String,
+            required: false,
+            default: null
         }
     },
 
     data() {
         return {
             Couleurs
+        }
+    },
+
+    computed:{
+        ModalContent(){
+            let modal_content= {
+                'margin': 'auto',
+                'max-width': '600px',
+                'background': '#fff',
+                'border-radius': '8px',
+                'padding': '0',
+            }
+            if(this.width) {
+                return {
+                    ...modal_content,
+                    'width': this.width
+                }
+            }
+            return modal_content
         }
     },
 
@@ -89,11 +113,11 @@ export default {
     padding: 2rem;        /* espace autour de la fenêtre */
 }
 
-.modal-content {
+/* .modal-content {
     margin: auto;
     max-width: 600px;
     background: #fff;
     border-radius: 8px;
     padding: 0;
-}
+} */
 </style>

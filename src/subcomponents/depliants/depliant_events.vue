@@ -12,7 +12,6 @@
             v-for="event in upcomingEvents"
             :event="event"
             :is-encadrant="false"
-            @click="Click"
         />
     </DepliantWindow>
 </template>
@@ -39,20 +38,26 @@ export default{
     computed: {
         upcomingEvents() {
             if (!this.user || !this.user.events) return [];
+
             const today = new Date();
-            return this.user?.events.filter(event => {
+            const todayDateOnly = new Date(
+                today.getFullYear(),
+                today.getMonth(),
+                today.getDate()
+            );
+
+            return this.user.events.filter(event => {
                 const eventDate = new Date(event.startDate);
-                const eventDateOnly = new Date(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate());
 
-                // On garde seulement si l'event n'est pas avant aujourd'hui
-                return eventDateOnly.getTime() + 24*60*60*1000 > todayDateOnly.getTime();
-            }) ?? [];
-        }
-    },
+                const eventDateOnly = new Date(
+                    eventDate.getFullYear(),
+                    eventDate.getMonth(),
+                    eventDate.getDate()
+                );
 
-    methods:{
-        Click(){
-            alert("coucou")
+                // Visible le jour J, supprimé le lendemain
+                return eventDateOnly.getTime() + 24 * 60 * 60 * 1000 > todayDateOnly.getTime();
+            });
         }
     },
 

@@ -45,6 +45,39 @@ function monplugin_get_users(WP_REST_Request $request) {
 
 //------------------------------------------------------------------------------
 
+
+add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1','/adherents',[
+        'methods' => 'GET',
+        'callback' => 'monplugin_get_adherents',
+        'permission_callback' => 'monplugin_verify_csrf'
+    ]);
+});
+
+function monplugin_get_adherents(WP_REST_Request $request) {
+    $users = get_users([
+        'role__in' => ['administrator', 'bureau', 'encadrant','adherent'],
+        'fields'   => ['ID']
+    ]);
+
+    $result = [];
+
+    foreach ($users as $user) {
+        $result[] = [
+            'ID'        => $user->ID,
+            'firstName' => get_user_meta($user->ID, 'firstName', true),
+            'lastName'  => get_user_meta($user->ID, 'lastName', true),
+        ];
+    }
+
+    return [
+        "message" => "Success",
+        "users"   => $result
+    ];
+}
+
+//------------------------------------------------------------------------------
+
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1','/users/(?P<id>\d+)',[
         'methods' => 'GET',
