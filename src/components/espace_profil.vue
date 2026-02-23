@@ -120,8 +120,15 @@
     <div v-else>
         <FicheSuivi
             :user="user"
-            @cancelSignal="()=>{isInMyFollowPage = false}"
         />
+        <div class="page-container">
+            <button
+                @click="()=>{isInMyFollowPage = false}"
+                class="appearance-none button-base"
+            >
+                {{ "Retour à mon profil" }}
+            </button>
+        </div>
     </div>
 </template>
 

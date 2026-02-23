@@ -33,6 +33,7 @@
         <FicheSuivi
             v-if="activeIndex === 1"
             :user="user"
+            :isMe="false"
             @cancelSignal="CancelFollowPage"
         />
     </div>
