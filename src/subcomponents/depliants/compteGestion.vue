@@ -62,7 +62,7 @@
             </div>
             
         </div>
-        <div class="button-container">
+        <div class="button-container" v-if="canUpdate">
             <button
                 v-if="isInformationsChange"
                 class="appearance-none"
@@ -97,6 +97,7 @@
     </DepliantWindow>
 
     <EventsUser
+        v-if="canUpdate"
         :user="DataUser"
         style="width: 95%;"
     />
@@ -139,7 +140,7 @@
                 </li>
             </div>
         </div>
-        <div class="button-container">
+        <div class="button-container" v-if="canUpdate">
             <button
                 v-if="isUrgencesChange"
                 class="appearance-none"
@@ -190,6 +191,11 @@ export default {
             required: true,
             type: Object
         },
+        canUpdate: {
+            type: Boolean,
+            required : false,
+            default: true
+        }
     },
 
     data() {

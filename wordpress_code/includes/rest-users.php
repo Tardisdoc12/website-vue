@@ -64,9 +64,12 @@ function monplugin_get_adherents(WP_REST_Request $request) {
 
     foreach ($users as $user) {
         $result[] = [
-            'ID'        => $user->ID,
-            'firstName' => get_user_meta($user->ID, 'firstName', true),
-            'lastName'  => get_user_meta($user->ID, 'lastName', true),
+            'ID'            => $user->ID,
+            'firstName'     => get_user_meta($user->ID, 'firstName', true),
+            'lastName'      => get_user_meta($user->ID, 'lastName', true),
+            'telephone'     => get_user_meta($user->ID, 'telephone', true),
+            'urgence_phone' => get_user_meta($user->ID, 'urgence_phone', true),
+            'urgence_name'  => get_user_meta($user->ID, 'urgence_name', true),
         ];
     }
 

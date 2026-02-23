@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!isInMyFollowPage">
+    <div v-if="!isInMyFollowPage && !isInOtherFollowPage">
         <div class="flex flex-wrap w-[95%] mx-auto gap-4 justify-center">
             <button
                 v-for="(label, i) in labels"
@@ -70,6 +70,13 @@
             >
                 {{ "Accéder à ma fiche de suivi" }}
             </button>
+            <button
+                v-if="isEncadrantComp"
+                class="appearance-none button-base"
+                @click="()=>{showListMembers = true}"
+            >
+                {{ "Liste des Membres" }}
+            </button>
         </div>
 
         <!-- Modals -->
@@ -93,16 +100,28 @@
             @cancelSignal="(e)=>{isRemovingCategories=e;}"
             @deleteSubcategorie="handleDeleteSubcategorie"
         />
+        <ModalSearch
+            v-if="showListMembers"
+            :ColumnList="listColumn"
+            :listToPass="listMembers"
+            :title="'Membres:'"
+            @cancel-signal="()=>{showListMembers=false}"
+            @select="selectUser"
+        />
+    </div>
+    <div
+        v-else-if="!isInMyFollowPage && isInOtherFollowPage"
+    >
+        <EspaceAdherent
+            :user="otherUser"
+            @cancel-signal="CancelFollowPage"
+        />
     </div>
     <div v-else>
-        <h1 class="text-2xl font-bold mb-4">Ma fiche de suivi</h1>
-        <p>Cette page est en cours de développement. Elle permettra d'afficher les informations de suivi de l'utilisateur, telles que les progrès réalisés, les objectifs atteints, et d'autres données pertinentes pour le suivi de sa progression.</p>
-        <button
-            @click="() => {isInMyFollowPage=false;}"
-            class="appearance-none button-base"
-        >
-            {{ "Retour à mon profil" }}
-        </button>
+        <FicheSuivi
+            :user="user"
+            @cancelSignal="()=>{isInMyFollowPage = false}"
+        />
     </div>
 </template>
 
@@ -110,14 +129,18 @@
 import ProfilInformation from "@/subcomponents/depliants/compteGestion.vue"
 import RessourceGestion from "@/subcomponents/depliants/ressourceGestion.vue";
 import ModalCategories from "@/subcomponents/modals/modal_categories.vue";
+import ModalSearch from "@/subcomponents/modals/modal_search.vue"
 import ModalFilesAccount from "@/subcomponents/modals/modal_files_account.vue";
 import ModalRemoveSubcategorie from "@/subcomponents/modals/modal_remove_subcategorie.vue";
 import MediaSpace from "@/subcomponents/media_space.vue";
+import FicheSuivi from "@/subcomponents/depliants/fiche_suivi.vue"
 import apiSources from "@/javascript/api/axios_sources"
 import apiEvents from "@/javascript/api/axios_events"
 import { jwtDecode } from "jwt-decode"
 import api from "@/javascript/api/users_wp.js"
 import { Couleurs } from "@/javascript/constants/colors.js"
+import { isEncadrant } from "@/javascript/constants/roles";
+import EspaceAdherent from "@/subcomponents/depliants/adherent_page.vue"
 
 export default {
     async mounted() {
@@ -156,6 +179,12 @@ export default {
             if (this.user.roles.includes("administrator") || this.user.roles.includes("bureau")) {
                 this.isBureau = true
             }
+            if (isEncadrant(this.user.roles)){
+                const usersMembers = await api.get_adherents()
+                if (usersMembers?.data?.users){
+                    this.listMembers = usersMembers.data.users.filter(el => Number(el.ID) !== 1)
+                }
+            }
         }
 
     },
@@ -189,15 +218,27 @@ export default {
             isAddingFiles: false,
             isAddingCategories: false,
             isRemovingCategories: false,
+            showListMembers: false,
             isInMyFollowPage: false,
+            isInOtherFollowPage:false,
             isBureau: false,
+            listColumn: {
+                "firstName":"Prénom",
+                "lastName":"Nom",
+            },
+            listMembers: [],
+            otherUser: null,
         }
     },
 
     computed:{
+        isEncadrantComp(){
+            return isEncadrant(this.user.roles)
+        },
+
         isNonAdherent() {
             return this.user?.roles?.includes("non_adherent") || false;
-        }
+        },
     },
 
     methods: {
@@ -237,6 +278,15 @@ export default {
                 return
             }
             this.activeIndex = index
+        },
+        selectUser(user) {
+            this.showListMembers = false
+            this.isInOtherFollowPage = true
+            this.otherUser = user
+        },
+        CancelFollowPage(){
+            this.otherUser = null
+            this.isInOtherFollowPage = false
         }
     },
 
@@ -247,6 +297,9 @@ export default {
         ModalCategories,
         ModalRemoveSubcategorie,
         MediaSpace,
+        ModalSearch,
+        FicheSuivi,
+        EspaceAdherent,
     }
 }
 </script>
