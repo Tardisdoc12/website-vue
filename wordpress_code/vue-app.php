@@ -21,6 +21,7 @@ $includes = [
     'includes/rest_favoris.php',
     'includes/migrations.php',
     'includes/events_template.php',
+    'includes/rest-conseils.php',
 ];
 
 foreach ($includes as $file) {
