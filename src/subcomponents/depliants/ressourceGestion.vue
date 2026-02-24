@@ -30,6 +30,15 @@
                     style="padding: 5px;"
                     class="flex items-center justify-between"
                 >
+                    <font-awesome-icon
+                        v-if="Number(key) === 0"
+                        icon="fa-solid fa-star"
+                        :style="{
+                            'color': file.isFav ? 'gold' : 'grey'
+                        }"
+                        @click="()=>{update_favoris(file)}"
+                    >
+                    </font-awesome-icon>
                     <label
                         class="flex-1 truncate mr-2" :title="file.path_file !== '' ? file.path_file : file.url_file"
                     >
@@ -100,6 +109,7 @@ import axios_sources from "@/javascript/api/axios_sources.js";
 import DepliantWindow from '@/subcomponents/unitary_elements/depliantWindow.vue';
 import ModalFileUpdate from '@/subcomponents/modals/modal_update_file.vue';
 import api_upload from '@/javascript/api/axios_upload.js'
+import apiFavoris from '@/javascript/api/axios_favoris'
 import { Couleurs } from "@/javascript/constants/colors";
 import { toRaw } from "vue"
 
@@ -143,6 +153,21 @@ export default {
     },
 
     methods:{
+        async update_favoris(file){
+            if(file.isFav) {
+                const response = await apiFavoris.delete_favoris(file.source_id)
+                if(response?.data?.success){
+                    file.isFav = false
+                }
+            }
+            else {
+                const response = await apiFavoris.add_favoris(file.source_id)
+                if(response?.data?.success){
+                    file.isFav = true
+                }
+            }
+        },
+
         isSuivi(_label) {
             return false
         },

@@ -18,6 +18,7 @@ $includes = [
     'includes/rest-users.php',
     'includes/rest-auth.php',
     'includes/rest-source.php',
+    'includes/rest_favoris.php',
     'includes/migrations.php',
     'includes/events_template.php',
 ];

@@ -70,10 +70,19 @@ function mon_plugin_creer_tables() {
         PRIMARY KEY (id)
     ) $charset_collate;";
 
+    $table_favoris = $wpdb->prefix . "favoris";
+    $sql6 = "CREATE TABLE $table_favoris (
+        id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+        wp_user_id BIGINT(20) UNSIGNED NOT NULL,
+        file_id BIGINT(20) UNSIGNED NOT NULL,
+        PRIMARY KEY (id)
+    ) $charset_collate;";
+
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($sql1);
     dbDelta($sql2);
     dbDelta($sql3);
     dbDelta($sql4);
     dbDelta($sql5);
+    dbDelta($sql6);
 }

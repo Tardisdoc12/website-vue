@@ -148,27 +148,12 @@ import api from "@/javascript/api/users_wp.js"
 import { Couleurs } from "@/javascript/constants/colors.js"
 import { isEncadrant } from "@/javascript/constants/roles";
 import EspaceAdherent from "@/subcomponents/depliants/adherent_page.vue"
+import apiFavoris from "@/javascript/api/axios_favoris"
 
 export default {
     async mounted() {
         const results_2 = await apiSources.get_sources()
         const data = results_2.data
-
-        data.forEach(item => {
-            const { categorie_id, subcat_id, source_id, subcat_title, path_file, url_file, tag, id_wp } = item;
-            // Si la sous-catégorie n’existe pas encore, on la crée
-            if (!this.structuresRessources[categorie_id]["subcats"][subcat_id]) {
-                    this.structuresRessources[categorie_id]["subcats"][subcat_id] = {
-                    subcat_title,
-                    files: [],
-                };
-            }
-
-            // On ajoute le fichier à la liste si il existe
-            if ((path_file && path_file.trim() !== "") || (url_file && url_file.trim() !== "")){
-                this.structuresRessources[categorie_id]["subcats"][subcat_id].files.push({ path_file, url_file, source_id, tag, id_wp });
-            }
-        });
         // On recherche qui est l'utilisateur connecté pour afficher les bonnes informations
         const token = sessionStorage.getItem("mps_moto")
         if (token) {
@@ -193,6 +178,30 @@ export default {
                 }
             }
         }
+
+        const res = await apiFavoris.get_favoris()
+        let favoris = []
+        if(res?.data?.success){
+            favoris = res.data.favoris
+        }
+        data.forEach(item => {
+            const { categorie_id, subcat_id, source_id, subcat_title, path_file, url_file, tag, id_wp } = item;
+            // Si la sous-catégorie n’existe pas encore, on la crée
+            if (!this.structuresRessources[categorie_id]["subcats"][subcat_id]) {
+                    this.structuresRessources[categorie_id]["subcats"][subcat_id] = {
+                    subcat_title,
+                    files: [],
+                };
+            }
+
+            // On ajoute le fichier à la liste si il existe
+            if ((path_file && path_file.trim() !== "") || (url_file && url_file.trim() !== "")){
+                let isFav = favoris.some(
+                    el => Number(el.source_id) === Number(source_id)
+                );
+                this.structuresRessources[categorie_id]["subcats"][subcat_id].files.push({ path_file, url_file, source_id, tag, id_wp, isFav });
+            }
+        });
 
     },
 
