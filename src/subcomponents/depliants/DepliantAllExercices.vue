@@ -11,18 +11,27 @@
         <DepliantExercies
             :files="files"
         />
+        <ExercicesConseils
+            :files="conseils"
+        />
     </DepliantWindow>
 </template>
 
 <script>
 import DepliantWindow from '../unitary_elements/depliantWindow.vue';
 import DepliantExercies from './depliantExercies.vue';
+import ExercicesConseils from './ExercicesConseils.vue';
 import { Couleurs } from '@/javascript/constants/colors';
 
 export default {
     props:{
         files:{
             type: Array,
+            required: true
+        },
+        
+        conseils:{
+            type:Array,
             required: true
         }
     },
@@ -35,7 +44,8 @@ export default {
 
     components:{
         DepliantWindow,
-        DepliantExercies
+        DepliantExercies,
+        ExercicesConseils
     }
 }
 </script>
