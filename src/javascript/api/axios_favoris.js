@@ -13,6 +13,13 @@ export default{
         return response
     },
 
+    async get_favoris_by_user(user_id){
+        const response = await api.get(
+            `/favoris/${user_id}`
+        )
+        return response
+    },
+
     async delete_favoris(file_id) {
         const response = await api.delete(
             '/favoris',

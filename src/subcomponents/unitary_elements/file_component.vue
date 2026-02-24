@@ -83,11 +83,13 @@ export default {
             type: Object,
             required: true
         },
+        
         canBeFavoris:{
             type: Boolean,
             required: false,
             default: false,
         },
+
         canBeUpdated:{
             type: Boolean,
             required: false,

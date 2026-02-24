@@ -106,6 +106,47 @@ function myplugin_get_favoris(WP_REST_Request $request) {
 
 //------------------------------------------------------------------------------
 
+
+add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1', '/favoris/(?P<id>\d+)', [
+        'methods' => 'GET',
+        'callback' => 'myplugin_get_favoris_by_user',
+        'permission_callback' => 'monplugin_verify_csrf',
+    ]);
+});
+
+function myplugin_get_favoris_by_user(WP_REST_Request $request) {
+    global $wpdb;
+    $table_favoris = $wpdb->prefix . "favoris";
+    $user_id = (int) $request->get_param('id');
+    $user = get_user_by('id', $user_id);
+
+    if (!$user) {
+        return new WP_REST_Response(array(
+            'message' => 'Utilisateur introuvable'
+        ), 404);
+    }
+    $table_source = $wpdb->prefix . "source";
+
+    $favoris = $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT u.id AS source_id, u.path_file, u.url_file, u.tag, u.id_wp
+             FROM $table_favoris f
+             LEFT JOIN $table_source u
+             ON f.file_id = u.id
+             WHERE f.wp_user_id = %d",
+            $user_id
+        )
+    );
+
+    return [
+        'success' => true,
+        'favoris'    => $favoris
+    ];
+}
+
+//------------------------------------------------------------------------------
+
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/favoris', [
         'methods' => 'DELETE',

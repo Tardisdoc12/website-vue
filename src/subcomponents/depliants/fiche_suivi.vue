@@ -7,10 +7,15 @@
         :Title="'Suivi et Conseils'"
         :can-update="!isMe"
     />
+    <DepliantAllExercices
+        :files="files"
+    />
 </template>
 
 <script>
 import PersonalNotes from '@/subcomponents/depliants/personal_notes.vue';
+import DepliantAllExercices from './DepliantAllExercices.vue';
+import apiFavoris from '@/javascript/api/axios_favoris'
 
 export default{
     emits:["cancelSignal"],
@@ -29,9 +34,16 @@ export default{
         }
     },
 
+    async mounted(){
+        const response = await apiFavoris.get_favoris_by_user(this.user.ID)
+        if(response?.data?.success){
+            this.files = response.data.favoris
+        }
+    },
+
     data() {
         return {
-
+            files: []
         }
     },
 
@@ -45,13 +57,15 @@ export default{
     },
 
     methods:{
+
         Cancel() {
             this.$emit("cancelSignal")
         }
     },
 
     components:{
-        PersonalNotes
+        PersonalNotes,
+        DepliantAllExercices
     }
 }
 </script>
