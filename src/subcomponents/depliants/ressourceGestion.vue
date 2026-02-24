@@ -26,71 +26,13 @@
             :borderRadius="'0px'"
         >
             <div :key="file.source_id" v-for="file in getSortedFiles(subcats.files)">
-                <div 
-                    style="padding: 5px;"
-                    class="flex items-center justify-between"
-                >
-                    <font-awesome-icon
-                        v-if="Number(key) === 0"
-                        icon="fa-solid fa-star"
-                        :style="{
-                            'color': file.isFav ? 'gold' : 'grey'
-                        }"
-                        @click="()=>{update_favoris(file)}"
-                    >
-                    </font-awesome-icon>
-                    <label
-                        class="flex-1 truncate mr-2" :title="file.path_file !== '' ? file.path_file : file.url_file"
-                    >
-                        <font-awesome-icon style="margin-right:5px;" icon="fa-solid fa-file-lines"/>
-                        {{ (file.tag !== "") ? file.tag : file.url_file }}
-                    </label>
-                    <div class="flex items-center justify-between gap-2">
-                        <button
-                            v-if="isBureau"
-                            @click="UpdateFile(file, subkey, key)"
-                            class="appearance-none button-base"
-                            :style="{
-                                '--btn-bg':Couleurs.black,
-                                '--btn-hover-bg': Couleurs.black,
-                            }"
-                        >
-                            <font-awesome-icon icon="fa-solid fa-pen-to-square"/>
-                        </button>
-                        <button
-                            v-if="isBureau"
-                            @click="DeleteFile(file)"
-                            class="appearance-none button-base"
-                            :style="{
-                                '--btn-bg':Couleurs.main_red,
-                                '--btn-hover-bg': Couleurs.dark_red,
-                            }"
-                        >
-                            <font-awesome-icon icon="fa-solid fa-trash"/>
-                        </button>
-                        <button
-                            @click="openUrl(file.url_file, file.path_file)"
-                            class="appearance-none button-base"
-                            :style="{
-                                '--btn-bg':Couleurs.black,
-                                '--btn-hover-bg': Couleurs.black,
-                            }"
-                        >
-                            <font-awesome-icon icon="fa-solid fa-eye"/>
-                        </button>
-                        <button
-                            v-if="file.path_file !== ''"
-                            @click="DownloadUrl(file)"
-                            class="appearance-none button-base"
-                            :style="{
-                                '--btn-bg':Couleurs.black,
-                                '--btn-hover-bg': Couleurs.black,
-                            }"
-                        >
-                            <font-awesome-icon icon="fa-solid fa-download"/>
-                        </button>
-                    </div>
-                </div>
+                <FileComponent
+                    :file="file"
+                    :can-be-favoris="Number(key) === 0"
+                    :can-be-updated="isBureau"
+                    @update-sub-categories-and-sources="DeleteFile"
+                    @updateFile="(file)=>{UpdateFile(file, subkey, key)}"
+                />
             </div>
         </DepliantWindow>
     </DepliantWindow>
@@ -105,11 +47,9 @@
 </template>
 
 <script>
-import axios_sources from "@/javascript/api/axios_sources.js";
 import DepliantWindow from '@/subcomponents/unitary_elements/depliantWindow.vue';
 import ModalFileUpdate from '@/subcomponents/modals/modal_update_file.vue';
-import api_upload from '@/javascript/api/axios_upload.js'
-import apiFavoris from '@/javascript/api/axios_favoris'
+import FileComponent from "../unitary_elements/file_component.vue";
 import { Couleurs } from "@/javascript/constants/colors";
 import { toRaw } from "vue"
 
@@ -153,24 +93,10 @@ export default {
     },
 
     methods:{
-        async update_favoris(file){
-            if(file.isFav) {
-                const response = await apiFavoris.delete_favoris(file.source_id)
-                if(response?.data?.success){
-                    file.isFav = false
-                }
-            }
-            else {
-                const response = await apiFavoris.add_favoris(file.source_id)
-                if(response?.data?.success){
-                    file.isFav = true
-                }
-            }
-        },
-
         isSuivi(_label) {
             return false
         },
+
         getSortedFiles(files) {
             if (!files) return []
 
@@ -181,49 +107,26 @@ export default {
             })
             )
         },
-        openUrl(url, file_path) {
-            if (url!== "" && url) {
-                window.open(url, "_blank");
-            }
-            else {
-                window.open(file_path,"_blank");
-            }
-        },
+
         async DeleteFile(file) {
-            if (confirm("Êtes-vous sûr de vouloir supprimer ce fichier ?")) {
-                const response = await axios_sources.delete_source(file.source_id);
-                const wpId = Number(file.id_wp)
-                if (wpId > 0) {
-                    await api_upload.delete_file(wpId)
-                }
-                
-                if (response.data.success) {
-                    // Supprimer le fichier de la structure locale
-                    const subcat = this.subCategoriesAndSourcesCopy[file.id_categorie]?.subcats[file.id_subcategorie]
+            // Supprimer le fichier de la structure locale
+            const subcat = this.subCategoriesAndSourcesCopy[file.id_categorie]?.subcats[file.id_subcategorie]
 
-                    if (!subcat) return
+            if (!subcat) return
 
-                    subcat.files = subcat.files.filter(
-                        f => f.source_id !== file.source_id
-                    )
-                    this.$emit("updateSubCategoriesAndSources", this.subCategoriesAndSourcesCopy)
-                } else {
-                    alert("Une erreur est survenue lors de la suppression du fichier.");
-                }
-            }
+            subcat.files = subcat.files.filter(
+                f => f.source_id !== file.source_id
+            )
+            this.$emit("updateSubCategoriesAndSources", this.subCategoriesAndSourcesCopy)
         },
+
         UpdateFile(file,subcat_id,categorie_id) {
             this.isUpdateFile = true
             this.fileToUpdate = file
             this.fileToUpdate.id_categorie = categorie_id
             this.fileToUpdate.id_subcategorie = subcat_id
         },
-        DownloadUrl(file) {
-            const link = document.createElement('a');
-            link.href = file.path_file;
-            link.download = file.path_file.split('/').pop();
-            link.click();
-        },
+
         UpdateHandler(updatedFile) {
             const subcat = this.subCategoriesAndSourcesCopy[updatedFile.id_categorie]?.subcats[updatedFile.id_subcategorie]
             if (!subcat) return
@@ -239,7 +142,8 @@ export default {
 
     components: {
         DepliantWindow,
-        ModalFileUpdate
+        ModalFileUpdate,
+        FileComponent
     }
 }
 </script>

@@ -23,5 +23,10 @@ export default{
             }
         )
         return response
+    },
+
+    async delete_favoris_from_file(file_id) {
+        const response = await api.delete(`/favoris/${file_id}`)
+        return response
     }
 }

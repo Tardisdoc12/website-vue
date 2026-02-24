@@ -89,7 +89,7 @@ function myplugin_get_favoris(WP_REST_Request $request) {
 
     $favoris = $wpdb->get_results(
         $wpdb->prepare(
-            "SELECT u.id AS source_id
+            "SELECT u.id AS source_id, u.path_file, u.url_file, u.tag, u.id_wp
              FROM $table_favoris f
              LEFT JOIN $table_source u
              ON f.file_id = u.id
@@ -159,6 +159,39 @@ function myplugin_delete_favoris(WP_REST_Request $request) {
     ];
 }
 
+//------------------------------------------------------------------------------
+
+add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1', '/favoris/(?P<id>\d+)', [
+        'methods' => 'DELETE',
+        'callback' => 'myplugin_delete_all_by_favoris',
+        'permission_callback' => 'monplugin_verify_csrf',
+    ]);
+});
+
+function myplugin_delete_all_by_favoris(WP_REST_Request $request) {
+    global $wpdb;
+    $table_favoris = $wpdb->prefix . "favoris";
+    $file_id = (int) $request->get_param('id');
+    
+    if (!$file_id) {
+        return new WP_Error(
+            'invalid_file_id',
+            'ID de fichier invalide',
+            ['status' => 400]
+        );
+    }
+
+    $wpdb->delete(
+        $table_favoris,
+        ['file_id' => $file_id],
+        ['%d']
+    );
+
+    return [
+        'success' => true
+    ];
+}
 
 //------------------------------------------------------------------------------
 // End of File

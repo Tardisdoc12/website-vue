@@ -21,7 +21,7 @@ export default {
                 force: true
             },
             headers: {
-                "X-WP-Nonce": window.wpApiSettings.nonce
+                "X-WP-Nonce": window.vueAppData.nonce
             }
             }
         )
