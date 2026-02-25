@@ -15,6 +15,7 @@ import interactionPlugin from "@fullcalendar/interaction"
 import listPlugin from '@fullcalendar/list';
 import EventsFunctions from '@/javascript/constants/events_functions'
 import { computed } from 'vue'
+import { isEncadrant } from "@/javascript/constants/roles";
 
 function isOutdated(event) {
     const now = new Date();
@@ -46,6 +47,27 @@ export default{
         }
     },
 
+    data(){
+        return {
+            isMobile: false,
+            mediaQuery: null
+        }
+    },
+
+    mounted(){
+        this.mediaQuery = window.matchMedia("(max-width: 768px)")
+        this.isMobile = this.mediaQuery.matches
+        this.mediaQuery.addEventListener("change", this.onChange)
+        this.$nextTick(() => {
+            const calendarApi = this.$refs.fullCalendar.getApi()
+            calendarApi.changeView(this.isMobile ? 'listMonth' : 'dayGridMonth')
+        })
+    },
+
+    beforeUnmount() {
+        this.mediaQuery.removeEventListener("change", this.onChange)
+    },
+
     computed: {
         userEvents() {
             return this.userConnected?.events ?? []
@@ -54,12 +76,9 @@ export default{
             const roles = this.userConnected?.roles ?? []
             return !roles.includes("non_adherent")
         },
-        isEncadrant() {
+        isEncadrantComp() {
             const roles = this.userConnected?.roles ?? []
-            return (
-            !roles.includes("non_adherent") &&
-            !roles.includes("adherent")
-            )
+            return isEncadrant(roles)
         },
         calendarOptions() {
             const customButtons = this.getCustomButtons()
@@ -67,9 +86,10 @@ export default{
                 ? 'today myCustomButton toggleView prev,next'
                 : 'today toggleView prev,next';
 
+            const firstView = this.isMobile ? 'listMonth' : 'dayGridMonth'
             return {
                 plugins: [dayGridPlugin, interactionPlugin, listPlugin],
-                initialView: 'dayGridMonth',
+                initialView: firstView,
                 events: this.eventsList,
                 selectable:true,
                 eventClick: this.handleSelect,
@@ -96,6 +116,9 @@ export default{
         },
     },
     methods: {
+        onChange(e){
+            this.isMobile = e.matches
+        },
         getCustomButtons() {
             return {
                 ...(
@@ -183,7 +206,6 @@ export default{
             if(alreadyInscript) {
                 places_available = "déjà inscrit"
             }
-            
             const hour = arg.timeText
             const wrapper = document.createElement('div');
 
@@ -192,6 +214,11 @@ export default{
             wrapper.style.overflow = "hidden";   // coupe si trop long
             wrapper.style.display = "block"; // étendre comme un block
             
+            let line_inscrit = `<div><p class="event-font">${arg.event.extendedProps.users.length} inscrits</p></div>`
+            if(!this.isEncadrantComp){
+                line_inscrit = ''
+            }
+            const place = arg.event.extendedProps.place
             wrapper.innerHTML = `
                 <div class="background-card">
                     <div class="event-row">
@@ -203,12 +230,13 @@ export default{
                             <div>
                                 <b class="event-font">${title}</b>
                             </div>
+                                <small class="event-font">${place}<small/>
                             <div>
                                 <small class="event-font">
-                                    ${places_available}
+                                    <i>${places_available}</i>
                                 </small>
                             </div>
-                            ${this.isEncadrant ? `<div><p class="event-font">${arg.event.extendedProps.users.length} inscrits</p></div>` : ''}
+                            ${line_inscrit}
                         </div>
                     </div>
                 </div>

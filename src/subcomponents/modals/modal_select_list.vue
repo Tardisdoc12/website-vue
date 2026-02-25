@@ -71,7 +71,7 @@ export default {
 
     methods:{
         Cancel(){
-            this.$emits("cancelSignal")
+            this.$emit("cancelSignal")
         },
 
         Validate(){

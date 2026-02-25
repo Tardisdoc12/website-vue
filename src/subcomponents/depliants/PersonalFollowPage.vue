@@ -1,17 +1,42 @@
 <template>
     <div>
-        <FicheSuivi
-            :user="user"
-            :listConseils="listConseil"
-            :listExercices="listFavoris"
-        />
-        <div class="page-container">
+        <div class="flex flex-wrap w-[95%] mx-auto gap-4 justify-center">
             <button
                 @click="Cancel"
-                class="appearance-none button-base"
+                class="flex-1 text-center"
+                type="button"
+                :style="{
+                    display: 'inline-block',
+                    color: Couleurs.main_blue,
+                    padding: '1.0rem 1.0rem',
+                    borderRadius: '9999px',
+                    backgroundColor: Couleurs.white,
+                    border: `2px solid ${Couleurs.main_blue}`,
+                }"
             >
-                {{ "Retour à mon profil" }}
+                {{ 'Retour Profil' }}
             </button>
+            <button
+                class="flex-1 text-center"
+                type="button"
+                :style="{
+                    display: 'inline-block',
+                    color: Couleurs.white,
+                    padding: '1.0rem 1.0rem',
+                    borderRadius: '9999px',
+                    backgroundColor: Couleurs.main_blue,
+                    border: `2px solid ${Couleurs.main_blue}`,
+                }"
+            >
+                {{ 'Fiche De Suivi' }}
+            </button>
+        </div>
+        <div class="page-container">
+            <FicheSuivi
+                :user="user"
+                :listConseils="listConseil"
+                :listExercices="listFavoris"
+            />
         </div>
     </div>
 </template>
@@ -20,6 +45,7 @@
 import FicheSuivi from '@/subcomponents/depliants/fiche_suivi.vue'
 import apiFavoris from '@/javascript/api/axios_favoris'
 import apiConseils from '@/javascript/api/axios_conseils'
+import { Couleurs } from '@/javascript/constants/colors';
 
 export default{
     emits:["cancelSignal"],
@@ -45,6 +71,7 @@ export default{
 
     data(){
         return {
+            Couleurs,
             listConseil:[],
             listFavoris:[]
         }
