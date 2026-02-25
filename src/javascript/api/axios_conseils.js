@@ -32,6 +32,13 @@ export default{
         return response
     },
 
+    async delete_conseils_for_user(user_id, file_id) {
+        const response = await api.delete(
+            `/conseils/${user_id}/${file_id}`
+        )
+        return response
+    },
+
     async delete_conseils_from_file(file_id) {
         const response = await api.delete(`/conseils/${file_id}`)
         return response

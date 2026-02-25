@@ -203,6 +203,61 @@ function myplugin_delete_conseils(WP_REST_Request $request) {
 //------------------------------------------------------------------------------
 
 add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1', '/conseils/(?P<user_id>\d+)/(?P<file_id>\d+)', [
+        'methods' => 'DELETE',
+        'callback' => 'myplugin_delete_conseils_for_user',
+        'permission_callback' => 'monplugin_verify_csrf',
+    ]);
+});
+
+function myplugin_delete_conseils_for_user(WP_REST_Request $request) {
+    global $wpdb;
+    $table_conseils = $wpdb->prefix . "conseils";
+    $user_id = (int) $request->get_param('user_id');
+    $user = get_user_by('id', $user_id);
+
+    if (!$user) {
+        return new WP_REST_Response(array(
+            'message' => 'Utilisateur introuvable'
+        ), 404);
+    }
+    
+    $file_id = (int) $request->get_param('file_id');
+    
+    $exists = $wpdb->get_var($wpdb->prepare(
+        "SELECT COUNT(*) FROM $table_conseils WHERE wp_user_id = %d AND file_id = %d",
+        $user_id,
+        $file_id
+    ));
+
+    if (!$exists) {
+        return new WP_Error(
+            'conseils_not_found',
+            'Ce conseils n’existe pas.',
+            ['status' => 404]
+        );
+    }
+
+    $wpdb->delete(
+        $table_conseils,
+        [
+            'wp_user_id' => $user_id,
+            'file_id'    => $file_id
+        ],
+        [
+            '%d',
+            '%d'
+        ]
+    );
+
+    return [
+        'success' => true
+    ];
+}
+
+//------------------------------------------------------------------------------
+
+add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/conseils/(?P<id>\d+)', [
         'methods' => 'DELETE',
         'callback' => 'myplugin_delete_all_by_conseils',

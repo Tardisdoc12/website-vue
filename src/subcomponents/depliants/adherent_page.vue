@@ -75,6 +75,15 @@
         @add="AddExercice"
     />
 
+    <ModalSelectList
+        v-if="isRemovingConseil"
+        :title="'Supprimer un exercice conseillé'"
+        :listToSelectFrom="listConseil"
+        :keyToDraw="'tag'"
+        @cancelSignal="()=>{isRemovingConseil=false}"
+        @validate="RemoveExercice"
+    />
+
 </template>
 
 <script>
@@ -82,6 +91,7 @@ import EspaceProfil from "@/subcomponents/depliants/compteGestion.vue"
 import FicheSuivi from "@/subcomponents/depliants/fiche_suivi.vue"
 import { Couleurs } from "@/javascript/constants/colors";
 import ModalExercises from "../modals/modal_exercises.vue";
+import ModalSelectList from '@/subcomponents/modals/modal_select_list.vue'
 import apiSources from '@/javascript/api/axios_sources'
 import apiConseil from '@/javascript/api/axios_conseils'
 import apiFavoris from '@/javascript/api/axios_favoris'
@@ -120,6 +130,7 @@ export default {
             labels: ['Profil', 'Fiche de suivi'],
             activeIndex: 0,
             isStartingAddConseil: false,
+            isRemovingConseil:false,
             listExerciseToChoose: [],
             listFavoris:[],
             listConseil:[]
@@ -151,14 +162,22 @@ export default {
         },
 
         startSuppression(){
-            console.log("Supprimer un exercice")
-        }  
+            this.isRemovingConseil = true
+        },
+
+        async RemoveExercice(exercice){
+            const response = await apiConseil.delete_conseils_for_user(this.user.ID,exercice.source_id)
+            if(response?.data?.success){
+                this.listConseil = this.listConseil.filter(el=> Number(el.source_id) !== Number(exercice.source_id))
+            }
+        }
     },
 
     components:{
         EspaceProfil,
         FicheSuivi,
-        ModalExercises
+        ModalExercises,
+        ModalSelectList
     }
 }
 
