@@ -34,5 +34,10 @@ export default {
     async delete_subcategorie(id) {
         const results = await api.delete(`/subcategories/${id}`)
         return results
+    },
+
+    async get_exercices(){
+        const response = await api.get('/exercices')
+        return response
     }
 }

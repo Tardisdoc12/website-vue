@@ -8,16 +8,14 @@
         :can-update="!isMe"
     />
     <DepliantAllExercices
-        :files="files"
-        :conseils="conseils"
+        :files="listExercices"
+        :conseils="listConseils"
     />
 </template>
 
 <script>
 import PersonalNotes from '@/subcomponents/depliants/personal_notes.vue';
 import DepliantAllExercices from './DepliantAllExercices.vue';
-import apiFavoris from '@/javascript/api/axios_favoris'
-import apiConseils from '@/javascript/api/axios_conseils'
 
 export default{
     emits:["cancelSignal"],
@@ -29,6 +27,16 @@ export default{
             default: null
         },
 
+        listExercices:{
+            type: Array,
+            required: true
+        },
+
+        listConseils:{
+            type: Array,
+            required: true
+        },
+
         isMe:{
             type:Boolean,
             required:false,
@@ -36,21 +44,8 @@ export default{
         }
     },
 
-    async mounted(){
-        const response = await apiFavoris.get_favoris_by_user(this.user.ID)
-        if(response?.data?.success){
-            this.files = response.data.favoris ?? []
-        }
-        const response2 = await apiConseils.get_conseils_by_user(this.user.ID)
-        if(response2?.data?.success){
-            this.conseils = response.data.conseils ?? []
-        }
-    },
-
     data() {
         return {
-            files: [],
-            conseils: []
         }
     },
 

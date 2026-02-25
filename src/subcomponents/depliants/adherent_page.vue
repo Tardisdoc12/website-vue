@@ -1,5 +1,5 @@
 <template>
-    <h1>{{ "Compte d'autre utilisateur" }}</h1>
+    <h1>{{ "Compte de " + `${user.firstName} ${user.lastName}` }}</h1>
     
     <div class="flex flex-wrap w-[95%] mx-auto gap-4 justify-center">
         <button
@@ -34,17 +34,46 @@
             v-if="activeIndex === 1"
             :user="user"
             :isMe="false"
+            :listConseils="listConseil"
+            :listExercices="listFavoris"
             @cancelSignal="CancelFollowPage"
         />
     </div>
-    <div class="page-container">
+    <div
+        class="flex flex-wrap mx-auto gap-2 justify-center"
+        style="margin-top: 10px;"
+    >
         <button
             @click="CancelFollowPage"
             class="appearance-none button-base"
         >
             {{ "Retour à mon profil" }}
         </button>
+
+        <button
+            v-if="activeIndex === 1"
+            @click="startAddConseil"
+            class="appearance-none button-base"
+        >
+            {{ 'Ajouter un exercice' }}
+        </button>
+
+        <button
+            v-if="activeIndex === 1"
+            @click="startSuppression"
+            class="appearance-none button-base"
+        >
+            {{ 'Supprimer un exercice' }}
+        </button>
     </div>
+
+    <ModalExercises
+        v-if="isStartingAddConseil"
+        :title="'Ajouter un exercice'"
+        :list="listExerciseToChoose"
+        @cancelSignal="()=>{isStartingAddConseil = false}"
+        @add="AddExercice"
+    />
 
 </template>
 
@@ -52,11 +81,31 @@
 import EspaceProfil from "@/subcomponents/depliants/compteGestion.vue"
 import FicheSuivi from "@/subcomponents/depliants/fiche_suivi.vue"
 import { Couleurs } from "@/javascript/constants/colors";
+import ModalExercises from "../modals/modal_exercises.vue";
+import apiSources from '@/javascript/api/axios_sources'
+import apiConseil from '@/javascript/api/axios_conseils'
+import apiFavoris from '@/javascript/api/axios_favoris'
 
 export default {
     emits:[
         "cancelSignal"
     ],
+
+    async mounted() {
+        const response = await apiSources.get_exercices()
+        if(response?.data?.success){
+            this.listExerciseToChoose = response.data.exercices
+        }
+        const response3 = await apiFavoris.get_favoris_by_user(this.user.ID)
+        if(response3?.data?.success){
+            this.listFavoris = response3.data.favoris ?? []
+        }
+        const response2 = await apiConseil.get_conseils_by_user(this.user.ID)
+        if(response2?.data?.success){
+            this.listConseil = response2.data.conseils ?? []
+
+        }
+    },
 
     props:{
         user:{
@@ -70,6 +119,10 @@ export default {
             Couleurs,
             labels: ['Profil', 'Fiche de suivi'],
             activeIndex: 0,
+            isStartingAddConseil: false,
+            listExerciseToChoose: [],
+            listFavoris:[],
+            listConseil:[]
         }
     },
 
@@ -77,17 +130,35 @@ export default {
         CancelFollowPage() {
             this.$emit("cancelSignal")
         },
+        
         activate(index) {
             if (this.activeIndex === index) {
                 return
             }
             this.activeIndex = index
         },
+        
+        startAddConseil(){
+            console.log("Ajouter un exercice à conseillé")
+            this.isStartingAddConseil = true
+        },
+
+        async AddExercice(exercice){
+            const response = await apiConseil.add_conseils(exercice.source_id, this.user.ID)
+            if(response?.data?.success){
+                this.listConseil.push(exercice)
+            }
+        },
+
+        startSuppression(){
+            console.log("Supprimer un exercice")
+        }  
     },
 
     components:{
         EspaceProfil,
-        FicheSuivi
+        FicheSuivi,
+        ModalExercises
     }
 }
 

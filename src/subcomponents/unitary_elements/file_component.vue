@@ -69,6 +69,7 @@
 <script>
 import api_upload from '@/javascript/api/axios_upload.js'
 import apiFavoris from '@/javascript/api/axios_favoris'
+import apiConseils from '@/javascript/api/axios_conseils'
 import axios_sources from "@/javascript/api/axios_sources.js";
 import { Couleurs } from '@/javascript/constants/colors'
 
@@ -133,6 +134,10 @@ export default {
                 const response_delete_favoris = await apiFavoris.delete_favoris_from_file(file.source_id)
                 if(!response_delete_favoris?.data?.success){
                     console.log("error during the suppression of the favoris")
+                }
+                const response_delete_conseils = await apiConseils.delete_conseils_from_file(file.source_id)
+                if(!response_delete_conseils?.data?.success){
+                    console.log("error during the suppression of the exercise requested")
                 }
                 const response = await axios_sources.delete_source(file.source_id);
                 const wpId = Number(file.id_wp)

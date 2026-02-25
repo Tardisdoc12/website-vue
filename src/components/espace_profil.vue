@@ -118,17 +118,10 @@
         />
     </div>
     <div v-else>
-        <FicheSuivi
+        <PersonalFollowPage
             :user="user"
+            @cancel-signal="()=>{isInMyFollowPage = false}"
         />
-        <div class="page-container">
-            <button
-                @click="()=>{isInMyFollowPage = false}"
-                class="appearance-none button-base"
-            >
-                {{ "Retour à mon profil" }}
-            </button>
-        </div>
     </div>
 </template>
 
@@ -140,7 +133,7 @@ import ModalSearch from "@/subcomponents/modals/modal_search.vue"
 import ModalFilesAccount from "@/subcomponents/modals/modal_files_account.vue";
 import ModalRemoveSubcategorie from "@/subcomponents/modals/modal_remove_subcategorie.vue";
 import MediaSpace from "@/subcomponents/media_space.vue";
-import FicheSuivi from "@/subcomponents/depliants/fiche_suivi.vue"
+import PersonalFollowPage from "@/subcomponents/depliants/PersonalFollowPage.vue";
 import apiSources from "@/javascript/api/axios_sources"
 import apiEvents from "@/javascript/api/axios_events"
 import { jwtDecode } from "jwt-decode"
@@ -314,7 +307,7 @@ export default {
         ModalRemoveSubcategorie,
         MediaSpace,
         ModalSearch,
-        FicheSuivi,
+        PersonalFollowPage,
         EspaceAdherent,
     }
 }

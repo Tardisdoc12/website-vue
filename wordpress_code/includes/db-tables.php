@@ -79,7 +79,7 @@ function mon_plugin_creer_tables() {
     ) $charset_collate;";
 
     $table_conseils = $wpdb->prefix . "conseils";
-    $sql7 = "CREATE TABLE $table_favoris (
+    $sql7 = "CREATE TABLE $table_conseils (
         id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
         wp_user_id BIGINT(20) UNSIGNED NOT NULL,
         file_id BIGINT(20) UNSIGNED NOT NULL,

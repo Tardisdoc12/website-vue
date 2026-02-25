@@ -64,6 +64,39 @@ function myplugin_get_sources(WP_REST_Request $request) {
 }
 
 //------------------------------------------------------------------------------
+// ROUTE : Récupération des sous-catégories + sources associées
+
+add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1', '/exercices', [
+        'methods' => 'GET',
+        'callback' => 'myplugin_get_sources_exercice',
+        'permission_callback' => 'monplugin_verify_csrf', // même remarque
+    ]);
+});
+
+function myplugin_get_sources_exercice(WP_REST_Request $request) {
+    global $wpdb;
+
+    $table_subcategories = $wpdb->prefix . "subcategories";
+    $table_source = $wpdb->prefix . "source";
+
+    $sql = "
+        SELECT src.id AS source_id, src.path_file, src.url_file, src.tag, src.id_wp
+        FROM $table_source src
+        LEFT JOIN $table_subcategories s
+            ON s.id = src.id_subcategorie
+        WHERE s.id_categorie = 0
+    ";
+
+    $results = $wpdb->get_results($sql);
+
+    return rest_ensure_response([
+            'success' => true,
+            'exercices' => $results
+        ]);
+}
+
+//------------------------------------------------------------------------------
 
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/subcategories', [

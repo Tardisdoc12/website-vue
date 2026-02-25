@@ -1,8 +1,8 @@
 import api from '@/javascript/api/api'
 
 export default{
-    async add_conseils(file_id){
-        const response = await api.post('/conseils', {'file_id': file_id})
+    async add_conseils(file_id, user_id){
+        const response = await api.post('/conseils', {'file_id': file_id, 'user_id': user_id})
         return response
     },
 

@@ -27,16 +27,16 @@ function myplugin_add_conseils(WP_REST_Request $request) {
     $table_conseils = $wpdb->prefix . "conseils";
     $table_file = $wpdb->prefix . "source";
 
-    $user_id = get_current_user_id();
+    $user_id = (int) $request->get_param('user_id');
+    $user = get_user_by('id', $user_id);
 
-    if (!$user_id) {
-        return new WP_Error(
-            'not_logged_in',
-            'Utilisateur non connecté.',
-            ['status' => 401]
-        );
+    if (!$user) {
+        return new WP_REST_Response(array(
+            'message' => 'Utilisateur introuvable'
+        ), 404);
     }
-    $file_id = $request->get_param('file_id');
+    
+    $file_id = (int) $request->get_param('file_id');
     $exists = $wpdb->get_var(
         $wpdb->prepare(
             "SELECT COUNT(*) FROM $table_file WHERE id = %d",
