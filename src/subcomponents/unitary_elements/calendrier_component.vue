@@ -120,6 +120,8 @@ export default{
             this.isMobile = e.matches
         },
         getCustomButtons() {
+            const firstView = this.isMobile ? 'listMonth' : 'dayGridMonth'
+
             return {
                 ...(
                     this.allowedCreateEvent
@@ -134,7 +136,9 @@ export default{
                         : {}
                 ),
                 toggleView: {
-                    text: "Liste d'évènements",
+                    text: firstView === 'listMonth'
+                        ? "Calendrier"
+                        : "Liste d'évènements",
                     click: this.toggleViewClick
                 }
             }
