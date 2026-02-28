@@ -22,6 +22,7 @@ $includes = [
     'includes/migrations.php',
     'includes/events_template.php',
     'includes/rest-conseils.php',
+    'includes/rest-notes.php',
 ];
 
 foreach ($includes as $file) {

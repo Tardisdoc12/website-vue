@@ -25,7 +25,7 @@
         </div>
         <div v-if="isModify">
             <textarea
-                v-model="notes"
+                v-model="notesCopy"
                 placeholder="Vous pouvez prendre des notes"
                 class="block mx-auto"
                 rows="6"
@@ -46,15 +46,31 @@
 
 <script>
 import DepliantWindow from '@/subcomponents/unitary_elements/depliantWindow.vue';
+import apiNotes from '@/javascript/api/axios_notes'
 
 export default{
     emits:["saveNotes"],
+    
+    watch: {
+        notes: {
+            immediate: true,
+            handler(newVal){
+                this.notesCopy = newVal?.note_write ?? ''
+            }
+        }
+    },
 
     props:{
         Title:{
             type: String,
             required: true
         },
+
+        notes:{
+            type:Object,
+            required:true
+        },
+
         canUpdate:{
             type: Boolean,
             required: false,
@@ -64,23 +80,38 @@ export default{
 
     data(){
         return {
-            notes:'',
+            notesCopy: this.notes?.note_write,
             isModify: this.canUpdate,
         }
     },
 
     computed:{
         Texte(){
-            if(this.notes === ''){
+            if(this.notesCopy === ''){
                 return 'Veuillez modifier pour avoir un texte ici'
             }
-            return this.notes
+            return this.notesCopy
         }
     },
 
     methods:{
-        SaveNotes(){
-            this.$emit("saveNotes", this.notes)
+        async SaveNotes(){
+            if(!this.notes?.note_write){
+                const result = await apiNotes.add_notes({
+                    'is_personal': this.notes.is_personal,
+                    'user_id': this.notes.user_id,
+                    'notes': this.notesCopy
+                })
+                if(result?.data?.success){
+                    this.$emit("saveNotes",this.notes)
+                }
+            }
+            else{
+                const result = await apiNotes.update_notes(this.notes.wp_user_id, Number(this.notes.is_personal), this.notesCopy)
+                if(result?.data?.success){
+                    this.$emit("saveNotes", this.notesCopy)
+                }
+            }
             this.isModify = false
         }
     },

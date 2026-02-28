@@ -34,6 +34,7 @@
         <div class="page-container">
             <FicheSuivi
                 :user="user"
+                :notes="notes"
                 :listConseils="listConseil"
                 :listExercices="listFavoris"
             />
@@ -45,6 +46,7 @@
 import FicheSuivi from '@/subcomponents/depliants/fiche_suivi.vue'
 import apiFavoris from '@/javascript/api/axios_favoris'
 import apiConseils from '@/javascript/api/axios_conseils'
+import apiNotes from '@/javascript/api/axios_notes';
 import { Couleurs } from '@/javascript/constants/colors';
 
 export default{
@@ -67,13 +69,18 @@ export default{
             this.listConseil = response2.data.conseils ?? []
 
         }
+        const response3 = await apiNotes.get_notes_by_user(this.user.ID)
+        if (response3?.data?.success){
+            this.notes = response3.data.notes ?? []
+        }
     },
 
     data(){
         return {
             Couleurs,
             listConseil:[],
-            listFavoris:[]
+            listFavoris:[],
+            notes: [],
         }
     },
 

@@ -33,6 +33,7 @@
         <FicheSuivi
             v-if="activeIndex === 1"
             :user="user"
+            :notes="notes"
             :isMe="false"
             :listConseils="listConseil"
             :listExercices="listFavoris"
@@ -95,6 +96,7 @@ import ModalSelectList from '@/subcomponents/modals/modal_select_list.vue'
 import apiSources from '@/javascript/api/axios_sources'
 import apiConseil from '@/javascript/api/axios_conseils'
 import apiFavoris from '@/javascript/api/axios_favoris'
+import apiNotes from '@/javascript/api/axios_notes'
 
 export default {
     emits:[
@@ -115,6 +117,10 @@ export default {
             this.listConseil = response2.data.conseils ?? []
 
         }
+        const response4 = await apiNotes.get_notes_by_user(this.user.ID)
+        if(response4?.data?.success){
+            this.notes = response4.data.notes ??  []
+        }
     },
 
     props:{
@@ -133,7 +139,8 @@ export default {
             isRemovingConseil:false,
             listExerciseToChoose: [],
             listFavoris:[],
-            listConseil:[]
+            listConseil:[],
+            notes: [],
         }
     },
 
@@ -150,7 +157,6 @@ export default {
         },
         
         startAddConseil(){
-            console.log("Ajouter un exercice à conseillé")
             this.isStartingAddConseil = true
         },
 

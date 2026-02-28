@@ -1,10 +1,12 @@
 <template>
     <PersonalNotes
         :Title="'Mes Notes'"
+        :notes="PersonnalNotes"
         :can-update="isMe"
     />
     <PersonalNotes
         :Title="'Suivi et Conseils'"
+        :notes="AdvicesNotes"
         :can-update="!isMe"
     />
     <DepliantAllExercices
@@ -32,6 +34,11 @@ export default{
             required: true
         },
 
+        notes:{
+            type: Array,
+            required: true
+        },
+
         listConseils:{
             type: Array,
             required: true
@@ -50,6 +57,41 @@ export default{
     },
 
     computed:{
+        
+        PersonnalNotes(){
+            if(this.notes.length === 0){
+                return {
+                    is_personal: 0,
+                    user_id: this.user.ID
+                }
+            }
+
+            const note = this.notes.find(
+                el => Number(el.is_personal) === 1
+            )
+            return note ?? {
+                is_personal: 0,
+                user_id: this.user.ID
+            }
+        },
+
+        AdvicesNotes(){
+            if(this.notes.length === 0){
+                return {
+                    is_personal: 0,
+                    user_id: this.user.ID
+                }
+            }
+
+            const note = this.notes.find(
+                el => Number(el.is_personal) === 0
+            )
+            return note ?? {
+                is_personal: 0,
+                user_id: this.user.ID
+            }
+        },
+
         Title() {
             if(this.user){
                 return "Fiche de Suivi"

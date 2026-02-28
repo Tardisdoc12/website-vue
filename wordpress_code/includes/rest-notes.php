@@ -86,7 +86,7 @@ function monplugin_create_notes(WP_REST_Request $request) {
         return new WP_Error(
             'notes_found',
             'Cette note existe déjà.',
-            ['status' => 404]
+            ['status' => 409]
         );
     }
 
@@ -99,11 +99,58 @@ function monplugin_create_notes(WP_REST_Request $request) {
         ]
     );
 
-    iif ($wpdb->last_error) {
+    if ($wpdb->last_error) {
         return new WP_Error('db_error', $wpdb->last_error, ['status' => 500]);
     }
     return [
         'success' => true
+    ];
+}
+
+//------------------------------------------------------------------------------
+
+add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1', '/notes', [
+        'methods' => 'PUT',
+        'callback' => 'monplugin_update_notes',
+        'permission_callback' => 'monplugin_verify_csrf',
+    ]);
+});
+
+// Fonction pour modifier l'événement
+function monplugin_update_notes(WP_REST_Request $request) {
+    global $wpdb;
+    $table = $wpdb->prefix . "notes";
+    $user_id = intval($request->get_param('user_id'));
+    $user = get_user_by('id', $user_id);
+
+    if (!$user) {
+        return new WP_REST_Response(array(
+            'message' => 'Utilisateur introuvable'
+        ), 404);
+    }
+    $note = sanitize_text_field($request->get_param('notes'));
+    $is_personal = (int) $request->get_param('is_personal');
+
+    $data = [
+        'note_write' => $note
+    ];
+
+    $where = [
+        'wp_user_id' => $user_id,
+        'is_personal' => $is_personal
+    ];
+
+    $updated = $wpdb->update($table, $data, $where);
+
+    if ($updated === false) {
+        return new WP_Error('db_error', 'Impossible de mettre à jour la notes', ['status' => 500]);
+    }
+
+    return [
+        'success'=>true,
+        'updated' => $updated,
+        'note' => $note
     ];
 }
 
