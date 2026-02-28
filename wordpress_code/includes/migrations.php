@@ -5,6 +5,8 @@ function monplugin_run_migrations() {
     global $wpdb;
     $table_events = $wpdb->prefix . "events";
     $table_source = $wpdb->prefix . "source";
+    $table_conseils = $wpdb->prefix . "conseils";
+    $table_favoris = $wpdb->prefix . "favoris";
 
     // --- 1️⃣ Ajouter post_id si elle n'existe pas ---
     $column = $wpdb->get_results("SHOW COLUMNS FROM $table_events LIKE 'post_id'");
@@ -16,14 +18,23 @@ function monplugin_run_migrations() {
     if (empty($column2)) {
         $wpdb->query("ALTER TABLE $table_source ADD id_wp BIGINT(20) UNSIGNED NULL AFTER tag");
     }
-    // --- 2️⃣ Optionnel : autres migrations futures ---
-    // Exemple : ajouter une colonne pour event_type
-    /*
-    $column2 = $wpdb->get_results("SHOW COLUMNS FROM $table_events LIKE 'event_type'");
-    if (empty($column2)) {
-        $wpdb->query("ALTER TABLE $table_events ADD event_type VARCHAR(50) NULL AFTER post_id");
+
+    // 3️⃣ Vérifier index user_file
+    $index = $wpdb->get_results("SHOW INDEX FROM $table_conseils WHERE Key_name = 'user_file'");
+    if (empty($index)) {
+        $wpdb->query("
+            ALTER TABLE $table_conseils
+            ADD KEY user_file (wp_user_id, file_id)
+        ");
     }
-    */
+
+    $index = $wpdb->get_results("SHOW INDEX FROM $table_favoris WHERE Key_name = 'user_file'");
+    if (empty($index)) {
+        $wpdb->query("
+            ALTER TABLE $table_favoris
+            ADD KEY user_file (wp_user_id, file_id)
+        ");
+    }
 
     // --- 3️⃣ Flag pour éviter de relancer la migration ---
     update_option('monplugin_last_migration', time());

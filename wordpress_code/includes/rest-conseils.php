@@ -44,6 +44,14 @@ function myplugin_add_conseils(WP_REST_Request $request) {
         )
     );
 
+    if (!$exists) {
+        return new WP_Error(
+            'source_not_found',
+            'Cet exercice n’existe pas.',
+            ['status' => 404]
+        );
+    }
+
     $wpdb->insert(
         $table_conseils,
         [

@@ -75,7 +75,8 @@ function mon_plugin_creer_tables() {
         id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
         wp_user_id BIGINT(20) UNSIGNED NOT NULL,
         file_id BIGINT(20) UNSIGNED NOT NULL,
-        PRIMARY KEY (id)
+        PRIMARY KEY (id),
+        KEY user_file (wp_user_id, file_id)
     ) $charset_collate;";
 
     $table_conseils = $wpdb->prefix . "conseils";
@@ -83,7 +84,18 @@ function mon_plugin_creer_tables() {
         id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
         wp_user_id BIGINT(20) UNSIGNED NOT NULL,
         file_id BIGINT(20) UNSIGNED NOT NULL,
-        PRIMARY KEY (id)
+        PRIMARY KEY (id),
+        KEY user_file (wp_user_id, file_id)
+    ) $charset_collate;";
+
+    $table_notes = $wpdb->prefix . "notes";
+    $sql8 = "CREATE TABLE $table_notes (
+        id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+        wp_user_id BIGINT(20) UNSIGNED NOT NULL,
+        note_write TEXT NOT NULL,
+        is_personal TINYINT(1) NOT NULL DEFAULT 0,
+        PRIMARY KEY (id),
+        KEY user_personal (wp_user_id, is_personal)
     ) $charset_collate;";
 
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -94,4 +106,5 @@ function mon_plugin_creer_tables() {
     dbDelta($sql5);
     dbDelta($sql6);
     dbDelta($sql7);
+    dbDelta($sql8);
 }
