@@ -1,6 +1,7 @@
 <template>
     <Modal
         :title="Title"
+        :width="'80%'"
         @changeBool="Cancel"
     >
         <EventPipeline
