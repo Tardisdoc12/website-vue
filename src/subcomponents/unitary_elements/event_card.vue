@@ -18,7 +18,7 @@
                     {{ hour }}
                 </span>
                 <div>
-                    <b class="event-font" style="font-size: 20px;">{{ title }}</b>
+                    <span class="event-font" style="font-size: 15px;">{{ title }}</span>
                 </div>
                 <p
                     v-if="isEncadrant"
