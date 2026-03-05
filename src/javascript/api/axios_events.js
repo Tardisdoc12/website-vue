@@ -11,6 +11,7 @@ function conversion_to_bdd(datas) {
         category: datas['categorie'],
         subscribe_places: datas['subscribePlace'],
         nonsubscribe_places: datas['nonsubscribePlace'],
+        closed_inscription: datas['closed_inscription'] ?? 0
     }
 }
 
@@ -27,7 +28,8 @@ function conversion_from_bdd(datas) {
         categorie: datas['category'],
         subscribePlace: datas['subscribe_places'],
         nonsubscribePlace: datas['nonsubscribe_places'],
-        users: datas?.["users"] ?? null
+        closed_inscription: datas['closed_inscription'] ?? 0,
+        users: datas?.["users"] ?? []
     }
 }
 

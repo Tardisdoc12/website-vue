@@ -83,6 +83,7 @@ function monplugin_get_events(WP_REST_Request $request) {
             'category'    => $event->category,
             'subscribe_places'   => $event->subscribe_places,
             'nonsubscribe_places'=> $event->nonsubscribe_places,
+            'closed_inscription' => $event->closed_inscription,
             'users'       => $users
         ];
     }
@@ -181,6 +182,7 @@ function monplugin_get_event_id(WP_REST_Request $request) {
         'category'            => $event->category,
         'subscribe_places'    => $event->subscribe_places,
         'nonsubscribe_places' => $event->nonsubscribe_places,
+        'closed_inscription'   => $event->closed_inscription,
         'users'               => $users
     ];
 
@@ -253,6 +255,7 @@ function monplugin_get_event_post_id(WP_REST_Request $request) {
         'category'            => $event->category,
         'subscribe_places'    => $event->subscribe_places,
         'nonsubscribe_places' => $event->nonsubscribe_places,
+        'closed_inscription'   => $event->closed_inscription,
         'users'               => $users
     ];
 
@@ -296,6 +299,7 @@ function monplugin_create_events(WP_REST_Request $request) {
             'category' => sanitize_text_field($request['category']),
             'subscribe_places' => intval($request['subscribe_places']),
             'nonsubscribe_places' => intval($request['nonsubscribe_places']),
+            'closed_inscription' => intval($request['closed_inscription']),
         ]
     );
 
@@ -336,6 +340,7 @@ function monplugin_update_event(WP_REST_Request $request) {
         'category' => sanitize_text_field($request['category']),
         'subscribe_places' => intval($request['subscribe_places']),
         'nonsubscribe_places' => intval($request['nonsubscribe_places']),
+        'closed_inscription' => intval($request['closed_inscription']),
     ];
 
     $where = ['id' => $id];

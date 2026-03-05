@@ -14,6 +14,12 @@ function monplugin_run_migrations() {
         $wpdb->query("ALTER TABLE $table_events ADD post_id BIGINT(20) UNSIGNED NULL AFTER id");
     }
 
+    // --- Ajouter closed_inscription si elle n'existe pas ---
+    $column = $wpdb->get_results("SHOW COLUMNS FROM $table_events LIKE 'closed_inscription'");
+    if (empty($column)) {
+        $wpdb->query("ALTER TABLE $table_events ADD closed_inscription TINYINT(1) NOT NULL DEFAULT 0 AFTER nonsubscribe_places");
+    }
+
     $column2 = $wpdb->get_results("SHOW COLUMNS FROM $table_source LIKE 'ip_wp'");
     if (empty($column2)) {
         $wpdb->query("ALTER TABLE $table_source ADD id_wp BIGINT(20) UNSIGNED NULL AFTER tag");

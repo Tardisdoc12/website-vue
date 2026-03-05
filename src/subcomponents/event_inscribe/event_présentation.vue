@@ -4,6 +4,10 @@
         <div v-if="isBureauComp" style="margin-bottom: 10px;">
             <small @click="RemoveEvent">Supprimer l'évènement</small>
         </div>
+
+        <div v-if="isBureauComp" style="margin-bottom: 10px;">
+            <small @click="LockEvent">Verrouiller l'évènement</small>
+        </div>
         <!-- Dates -->
             <div style="margin-bottom: 10px;">
             <span style="font-weight: bold; text-decoration: underline;">{{ "Date :"}}</span>
@@ -48,7 +52,7 @@
                 }"
                 @click="Register"
             >
-                {{ this.event.isInscript ? "Déjà Inscrit" : "Inscription" }}
+                {{ affichageInscribe }}
             </button>
             <!-- Voir la page de l'event -->
             <a
@@ -134,8 +138,29 @@ export default {
             return isEncadrant(this.roles)
         },
 
+        affichageInscribe(){
+            if(this.event.isInscript){
+                return "Déjà inscrit"
+            }
+            else if(Number(this.event.closed_inscription) === 1){
+                return "Inscriptions fermées"
+            }
+            else if(Number(this.event.closed_inscription) === 2){
+                return "Évènement complet"
+            }
+            else if(Number(this.event.closed_inscription) === 3){
+                return "Évènement dépassé"
+            }
+            else{
+                return "Inscription"
+            }
+        },
+
         disableSubscribe() {
             if (this.event.isInscript) {
+                return true
+            }
+            if(Number(this.event.closed_inscription) !== 0){
                 return true
             }
             if (this.isAdherentComp) {
@@ -175,6 +200,31 @@ export default {
         async RemoveEvent() {
             const response = await api.deleteEvent(this.event.event_id)
             this.$emit('deletedEvent', this.event.event_id)
+            this.$emit('cancelSignal')
+        },
+
+        async LockEvent() {
+            let newStatus = 0
+            if(Number(this.event.closed_inscription) === 0){
+                newStatus = 1
+            }
+            else{
+                newStatus = 0
+            }
+            const response = await api.updateEvent(
+                this.event.event_id,
+                {
+                    title: this.event.title,
+                    description: this.event.description,
+                    startDate: this.event.startDate,
+                    endDate: this.event.endDate,
+                    place: this.event.place,
+                    categorie: this.event.categorie,
+                    subscribePlace: this.event.subscribePlace,
+                    nonsubscribePlace: this.event.nonsubscribePlace,
+                    closed_inscription: newStatus
+                })
+            this.$emit('updatedEvent')
             this.$emit('cancelSignal')
         },
 

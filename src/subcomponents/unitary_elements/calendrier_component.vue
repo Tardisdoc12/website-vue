@@ -181,10 +181,13 @@ export default{
 
         renderEvent(arg) {
             const title = arg.event.title;
+            const users = Array.isArray(arg.event.extendedProps?.users)
+                ? arg.event.extendedProps.users
+                : [];
             const nonAdherentsCount = computed(() =>
                 {
-                    if (!arg.event.extendedProps.users.length) return 0;
-                    return arg.event.extendedProps.users.filter(u => u.is_adherent === "1").length
+                    if (!users.length) return 0;
+                    return users.filter(u => u.is_adherent === "1").length
                 }
             )
             let number = parseInt(arg.event.extendedProps.nonsubscribePlace) - nonAdherentsCount.value;
@@ -194,7 +197,7 @@ export default{
             }
             if (this.userConnected?.roles) {
                 if(!this.userConnected.roles.includes("non_adherent")) {
-                    number = parseInt(arg.event.extendedProps.subscribePlace) - arg.event.extendedProps.users.length + nonAdherentsCount.value;
+                    number = parseInt(arg.event.extendedProps.subscribePlace) - users.length + nonAdherentsCount.value;
                     if(number === 0){
                         places_available = "complet"
                     }
@@ -210,6 +213,15 @@ export default{
             if(alreadyInscript) {
                 places_available = "déjà inscrit"
             }
+            if(Number(arg.event.extendedProps.closed_inscription) === 1) {
+                places_available = "inscriptions fermées"
+            }
+            else if(Number(arg.event.extendedProps.closed_inscription) === 2) {
+                places_available = "complet"
+            }
+            else if(Number(arg.event.extendedProps.closed_inscription) === 3) {
+                places_available = "évènement dépassé"
+            }
             const hour = arg.timeText
             const wrapper = document.createElement('div');
 
@@ -218,7 +230,7 @@ export default{
             wrapper.style.overflow = "hidden";   // coupe si trop long
             wrapper.style.display = "block"; // étendre comme un block
             
-            let line_inscrit = `<div><p class="event-font">${arg.event.extendedProps.users.length} inscrits</p></div>`
+            let line_inscrit = `<div><p class="event-font">${users.length} inscrits</p></div>`
             if(!this.isEncadrantComp){
                 line_inscrit = ''
             }
@@ -250,7 +262,12 @@ export default{
             let backgroundColorCard;
             let colorWritting = "rgba(0, 0, 0, 1)";
             if(new Date() < arg.event.start) {
-                const duoColor = EventsFunctions.colorBg(arg.event.extendedProps.categorie)
+                let categorie = arg.event.extendedProps.categorie
+                if(arg.event.extendedProps.categorie === "") {
+                    categorie = "seance"
+                }
+                const duoColor = EventsFunctions.colorBg(categorie)
+                console.log("duocolor", duoColor)
                 bgColor = duoColor[0]
                 backgroundColorCard = duoColor[1]
             }
@@ -275,9 +292,9 @@ export default{
                     return;
                 } 
             }
-            const nonAdherentsCount = computed(() =>{
-                if (!e.event.extendedProps.users.length) return 0;
-                return e.event.extendedProps.users.filter(u => u.is_adherent === "1").length
+            const nonAdherentsCount = computed(() => {
+                const users = e.event.extendedProps?.users ?? []
+                return users.filter(u => u.is_adherent === "1").length
             })
 
             

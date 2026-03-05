@@ -13,6 +13,13 @@ function mon_plugin_creer_tables() {
     $charset_collate = $wpdb->get_charset_collate();
 
     $table_events = $wpdb->prefix . "events";
+    /** 
+     * le closed_inscription est à 
+     * 1 si les inscriptions sont fermées, 
+     * 2 si l'evenement es complet, 
+     * 3 si il est dépassé 
+     * sinon 0
+     */
     $sql1 = "CREATE TABLE $table_events (
         id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
         post_id BIGINT(20) UNSIGNED NOT NULL,
@@ -24,6 +31,7 @@ function mon_plugin_creer_tables() {
         category VARCHAR(100) NOT NULL,
         subscribe_places INT NOT NULL,
         nonsubscribe_places INT UNSIGNED NOT NULL,
+        closed_inscription TINYINT(1) NOT NULL DEFAULT 0,
         PRIMARY KEY (id)
     ) $charset_collate;";
 
