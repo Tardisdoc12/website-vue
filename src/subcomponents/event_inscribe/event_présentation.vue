@@ -1,7 +1,7 @@
 <template>
     <!-- Corps de l'annonce -->
     <div class="body">
-        <div v-if="isBureau" style="margin-bottom: 10px;">
+        <div v-if="isBureauComp" style="margin-bottom: 10px;">
             <small @click="RemoveEvent">Supprimer l'évènement</small>
         </div>
         <!-- Dates -->
@@ -15,8 +15,18 @@
             <span style="padding: 15px">{{ event.place }}</span>
         </p>
 
+        <p v-if="isEncadrantComp" style="margin-bottom: 10px;">
+            <span style="font-weight: bold; text-decoration: underline;">{{ "Adhérents inscrit :" }}</span>
+            <span style="padding: 15px">{{ event.nbr_adherents }}</span>
+        </p>
+
+        <p v-if="isEncadrantComp" style="margin-bottom: 10px;">
+            <span style="font-weight: bold; text-decoration: underline;">{{ "Non Adhérents inscrit :" }}</span>
+            <span style="padding: 15px">{{ event.nbr_non_adherents }}</span>
+        </p>
+
         <!-- Description -->
-            <div style="margin-bottom: 10px;">
+        <div style="margin-bottom: 10px;">
             <span style="font-weight: bold; text-decoration: underline;">{{ "Description :"}}</span>
             <p
                 style="white-space: pre-line;"
@@ -50,7 +60,7 @@
             </a>
             <!-- visualisation -->
             <button
-                v-if="isBureau || isEncadrant"
+                v-if="isBureauComp || isEncadrantComp"
                 type="button"
                 class="appearance-none button-base"
                 @click="VisualizeInscrit"
@@ -60,7 +70,7 @@
 
             <!-- events -->
             <button
-                v-if="isBureau"
+                v-if="isBureauComp"
                 type="button"
                 class="appearance-none button-base"
                 @click="updateEvent"
@@ -74,6 +84,7 @@
 <script>
 import { Couleurs } from "@/javascript/constants/colors"
 import api from "@/javascript/api/axios_events"
+import { isAdherent, isEncadrant, isBureau } from "@/javascript/constants/roles";
 
 function formatDate(d) {
     const year = d.getFullYear();
@@ -111,24 +122,23 @@ export default {
     },
 
     computed: {
-        isBureau() {
-            const listA = ['bureau', 'administrator']
-            return this.roles.some(el => listA.includes(el));
+        isBureauComp() {
+            return isBureau(this.roles);
         },
 
-        isAdherent() {
-            return !this.roles.includes("non_adherent")
+        isAdherentComp() {
+            return isAdherent(this.roles);
         },
 
-        isEncadrant() {
-            return this.roles.includes("encadrant")
+        isEncadrantComp() {
+            return isEncadrant(this.roles)
         },
 
         disableSubscribe() {
             if (this.event.isInscript) {
                 return true
             }
-            if (this.isAdherent) {
+            if (this.isAdherentComp) {
                 if (this.event.subscribePlace === 0) {
                     return true
                 }

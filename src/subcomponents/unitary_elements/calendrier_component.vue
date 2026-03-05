@@ -286,9 +286,11 @@ export default{
             const eventSelected = {
                 ...e.event.extendedProps,
                 isInscript: alreadyInscript,
-                nonsubscribePlace: e.event.extendedProps.nonsubscribePlace - nonAdherentsCount.value,
-                subscribePlace: e.event.extendedProps.subscribePlace - e.event.extendedProps.users.length + nonAdherentsCount.value,
-                title:e.event.title
+                nonsubscribePlace: e.event.extendedProps.nonsubscribePlace,
+                subscribePlace: e.event.extendedProps.subscribePlace,
+                title:e.event.title,
+                nbr_adherents: e.event.extendedProps.users.length - nonAdherentsCount.value,
+                nbr_non_adherents: nonAdherentsCount.value,
             }
             this.$emit("eventSelect", eventSelected)
         },
