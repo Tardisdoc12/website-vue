@@ -267,7 +267,6 @@ export default{
                     categorie = "seance"
                 }
                 const duoColor = EventsFunctions.colorBg(categorie)
-                console.log("duocolor", duoColor)
                 bgColor = duoColor[0]
                 backgroundColorCard = duoColor[1]
             }

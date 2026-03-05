@@ -4,6 +4,7 @@ defined('ABSPATH') || exit;
 function monplugin_run_migrations() {
     global $wpdb;
     $table_events = $wpdb->prefix . "events";
+    $table_inscribes = $wpdb->prefix . "inscrits";
     $table_source = $wpdb->prefix . "source";
     $table_conseils = $wpdb->prefix . "conseils";
     $table_favoris = $wpdb->prefix . "favoris";
@@ -18,6 +19,11 @@ function monplugin_run_migrations() {
     $column = $wpdb->get_results("SHOW COLUMNS FROM $table_events LIKE 'closed_inscription'");
     if (empty($column)) {
         $wpdb->query("ALTER TABLE $table_events ADD closed_inscription TINYINT(1) NOT NULL DEFAULT 0 AFTER nonsubscribe_places");
+    }
+
+    $column = $wpdb->get_results("SHOW COLUMNS FROM $table_inscribes LIKE 'encadrement'");
+    if (empty($column)) {
+        $wpdb->query("ALTER TABLE $table_inscribes ADD encadrement TINYINT(1) NOT NULL DEFAULT 0 AFTER goal");
     }
 
     $column2 = $wpdb->get_results("SHOW COLUMNS FROM $table_source LIKE 'ip_wp'");

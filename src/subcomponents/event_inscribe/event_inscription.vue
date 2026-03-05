@@ -58,6 +58,22 @@
                 />
             </div>
 
+            <!-- Catégorie -->
+            <div v-if="isEncadrantComp" style="margin-bottom:10px;">
+                <label class="block font-medium">
+                    Souhaitez-vous encadrer? <span style="color: red;">*</span>
+                </label>
+                <select
+                    v-model="formUser.wantsEncadrant"
+                    class="w-full border p-1 rounded"
+                    required
+                >
+                    <option disabled value="">-- Choisir --</option>
+                    <option :value="1">Je veux encadrer</option>
+                    <option :value="0">Je ne veux pas encadrer</option>
+                </select>
+            </div>
+
             <!-- experience -->
             <div class="flex flex-col gap-1" v-if="!isAdherent">
                 <label class="block font-medium">
@@ -78,6 +94,7 @@
         <!-- bouton -->
         <div class="flex items-center justify-center " style="margin-bottom:10px;">
             <button
+                :disabled="isDisabled"
                 type="submit"
                 class="appearance-none button-base"
             >
@@ -92,6 +109,7 @@
 import inscritAPI from "@/javascript/api/axios_inscription"
 import { Events } from "@/javascript/constants/events_type"
 import { Couleurs } from "@/javascript/constants/colors"
+import { isEncadrant } from "@/javascript/constants/roles";
 
 export default {
 
@@ -119,6 +137,7 @@ export default {
                 email: this.user?.email ?? "",
                 experience:"",
                 goal:"",
+                wantsEncadrant: null,
                 roles: this.user?.roles ?? ["non_adherent"]
             },
         }
@@ -138,6 +157,8 @@ export default {
                     phone: newUser.telephone ?? "",
                     bike: newUser.moto ?? "",
                     email: newUser.email ?? "",
+                    roles: newUser.roles ?? ["non_adherent"],
+                    wantsEncadrant: null
                     }
                 }
             }
@@ -145,6 +166,17 @@ export default {
     },
 
     computed: {
+        isDisabled() {
+            if(this.isEncadrantComp) {
+                return this.formUser.wantsEncadrant === null
+            }
+            return false
+        },
+
+        isEncadrantComp(){
+            return isEncadrant(this.user?.roles ?? [])
+        },
+
         isSeance() {
             return this.event.categorie === Events.seance
         },

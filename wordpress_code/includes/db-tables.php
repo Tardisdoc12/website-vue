@@ -43,6 +43,7 @@ function mon_plugin_creer_tables() {
         date_inscription DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
         bike VARCHAR(200) NULL,
         goal VARCHAR(200) NULL,
+        encadrement TINYINT(1) NOT NULL DEFAULT 0,
         PRIMARY KEY (id)
     ) $charset_collate;";
 
