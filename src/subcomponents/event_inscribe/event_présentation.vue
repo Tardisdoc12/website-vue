@@ -21,12 +21,12 @@
 
         <p v-if="isEncadrantComp" style="margin-bottom: 10px;">
             <span style="font-weight: bold; text-decoration: underline;">{{ "Adhérents inscrit :" }}</span>
-            <span style="padding: 15px">{{ event.nbr_adherents }}</span>
+            <span style="padding: 15px">{{ placeAdherents }}</span>
         </p>
 
         <p v-if="isEncadrantComp" style="margin-bottom: 10px;">
             <span style="font-weight: bold; text-decoration: underline;">{{ "Non Adhérents inscrit :" }}</span>
-            <span style="padding: 15px">{{ event.nbr_non_adherents }}</span>
+            <span style="padding: 15px">{{ placeNonAdherents }}</span>
         </p>
 
         <!-- Description -->
@@ -126,6 +126,15 @@ export default {
     },
 
     computed: {
+        placeAdherents() {
+            if(Number(this.event.subscribePlace) < 0 ){
+                return `${this.event.nbr_non_adherents}/∞`
+            }
+            return `${this.event.nbr_non_adherents}/${this.event.subscribePlace}`
+        },
+        placeNonAdherents() {
+            return `${this.event.nbr_adherents}/${this.event.nonsubscribePlace}`
+        },
         isBureauComp() {
             return isBureau(this.roles);
         },
