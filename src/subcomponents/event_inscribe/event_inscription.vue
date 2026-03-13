@@ -69,8 +69,8 @@
                     required
                 >
                     <option disabled value="">-- Choisir --</option>
-                    <option :value="1">Je veux encadrer</option>
-                    <option :value="0">Je ne veux pas encadrer</option>
+                    <option :value="1">Je viens encadrer</option>
+                    <option :value="0">Je ne viens pas encadrer</option>
                 </select>
             </div>
 

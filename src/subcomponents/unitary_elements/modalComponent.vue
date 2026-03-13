@@ -43,7 +43,6 @@ export default {
         ModalContent(){
             let modal_content= {
                 'margin': 'auto',
-                'max-width': '600px',
                 'background': '#fff',
                 'border-radius': '8px',
                 'padding': '0',

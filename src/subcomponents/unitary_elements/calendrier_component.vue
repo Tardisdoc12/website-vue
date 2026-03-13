@@ -187,7 +187,7 @@ export default{
             const nonAdherentsCount = computed(() =>
                 {
                     if (!users.length) return 0;
-                    return users.filter(u => u.is_adherent === "1").length
+                    return users.filter(u => u.is_adherent === "0").length
                 }
             )
             let number = parseInt(arg.event.extendedProps.nonsubscribePlace) - nonAdherentsCount.value;

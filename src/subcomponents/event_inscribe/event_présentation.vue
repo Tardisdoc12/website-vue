@@ -8,6 +8,10 @@
         <div v-if="isBureauComp" style="margin-bottom: 10px;">
             <small @click="LockEvent">Verrouiller l'évènement</small>
         </div>
+
+        <div v-if="isBureauComp" style="margin-bottom: 10px;">
+            <small @click="FullEvent">Rendre l'évènement complet</small>
+        </div>
         <!-- Dates -->
             <div style="margin-bottom: 10px;">
             <span style="font-weight: bold; text-decoration: underline;">{{ "Date :"}}</span>
@@ -173,13 +177,13 @@ export default {
                 return true
             }
             if (this.isAdherentComp) {
-                if (this.event.subscribePlace === 0) {
+                if (this.event.subscribePlace - this.event.nbr_non_adherents === 0) {
                     return true
                 }
                 return false
             }
             else {
-                if (this.event.nonsubscribePlace <= 0) {
+                if (this.event.nonsubscribePlace - this.event.nbr_adherents<= 0) {
                     return true
                 }
                 return false
@@ -214,8 +218,33 @@ export default {
 
         async LockEvent() {
             let newStatus = 0
-            if(Number(this.event.closed_inscription) === 0){
+            if(Number(this.event.closed_inscription) != 1){
                 newStatus = 1
+            }
+            else{
+                newStatus = 0
+            }
+            const response = await api.updateEvent(
+                this.event.event_id,
+                {
+                    title: this.event.title,
+                    description: this.event.description,
+                    startDate: this.event.startDate,
+                    endDate: this.event.endDate,
+                    place: this.event.place,
+                    categorie: this.event.categorie,
+                    subscribePlace: this.event.subscribePlace,
+                    nonsubscribePlace: this.event.nonsubscribePlace,
+                    closed_inscription: newStatus
+                })
+            this.$emit('updatedEvent')
+            this.$emit('cancelSignal')
+        },
+
+        async FullEvent(){
+            let newStatus = 0
+            if(Number(this.event.closed_inscription) != 2){
+                newStatus = 2
             }
             else{
                 newStatus = 0
