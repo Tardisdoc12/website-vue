@@ -58,14 +58,14 @@
             >
                 {{ affichageInscribe }}
             </button>
-            <!-- Voir la page de l'event -->
+            <!-- Voir la page de l'event
             <a
                 v-if="canBeRedirected"
                 :href="event.url_post"
                 class="appearance-none button-base"
             >
                 {{ "Voir la page" }}
-            </a>
+            </a> -->
             <!-- visualisation -->
             <button
                 v-if="isBureauComp || isEncadrantComp"
