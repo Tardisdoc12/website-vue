@@ -15,6 +15,7 @@
                 <li><strong>Email :</strong> {{ user.email || "—" }}</li>
                 <li><strong>Téléphone :</strong> {{ user.telephone || "—" }}</li>
                 <li><strong>Moto :</strong> {{ user.moto || "—" }}</li>
+                <li><strong>Statut :</strong> {{ isAdherentComp ? "Adhérent" : "Non-adhérent" }}</li>
             </div>
             <div
                 v-if="isInformationsChange"
@@ -59,6 +60,7 @@
                         class="oval-input"
                     />
                 </li>
+                <li><strong>Statut :</strong> {{ isAdherentComp ? "Adhérent" : "Non-adhérent" }}</li>
             </div>
             
         </div>
@@ -180,6 +182,7 @@ import api_user from "@/javascript/api/users_wp.js"
 import DepliantWindow from '@/subcomponents/unitary_elements/depliantWindow.vue';
 import { Couleurs } from '@/javascript/constants/colors'
 import EventsUser from '@/subcomponents/depliants/depliant_events.vue'
+import { isAdherent } from "@/javascript/constants/roles"
 
 export default {
     emits: [
@@ -212,6 +215,9 @@ export default {
         user() {
             return this.DataUser
         },
+        isAdherentComp() {
+            return isAdherent(this.user.roles)
+        }
     },
 
     methods: {
