@@ -16,23 +16,25 @@ export default {
     data() {
         return {
             isOpen: false,
-            title: "Règlement"
+            title: "Règlement",
+            dates :{
+                "1_22_2026" : "stage-reprise-de-guidon/widget-bouton",
+                "2_8_2026" : "stage-reprise-de-guidon-8-mars/widget-bouton",
+                "2_22_2026" : "stage-reprise-de-guidon-22-mars/widget-bouton",
+            },
+            baseUrl : "https://www.helloasso.com/associations/mps-moto/evenements/",
+            fallback : "inscription-seance/widget-bouton",
         }
     },
 
     computed: {
         getBilleterieURL() {
-            if (this.compareDate(this.Date, 1, 22, 2026)) {
-                return "https://www.helloasso.com/associations/mps-moto/evenements/stage-reprise-de-guidon/widget-bouton"
-            } else if (this.compareDate(this.Date, 2, 8, 2026)) {
-                return "https://www.helloasso.com/associations/mps-moto/evenements/stage-reprise-de-guidon-8-mars/widget-bouton"
-            } 
-            else if (this.compareDate(this.Date, 2, 22, 2026)) {
-                return "https://www.helloasso.com/associations/mps-moto/evenements/stage-reprise-de-guidon-22-mars/widget-bouton"
-            }
-            else {
-                return "https://www.helloasso.com/associations/mps-moto/evenements/inscription-seance/widget-bouton"
-            }
+            const match = Object.entries(this.dates).find(([key]) => {
+                const [month, day, year] = key.split("_").map(Number);
+                return this.compareDate(this.Date, month, day, year);
+            });
+
+            return this.baseUrl + (match ? match[1] : this.fallback);
         }
     },
 
