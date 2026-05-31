@@ -35,14 +35,14 @@ function isJwtExpired(token) {
 }
 
 api.interceptors.request.use(config => {
-    const token = sessionStorage.getItem("mps_moto");
+    const token = localStorage.getItem("mps_moto");
 
     if (token && !isJwtExpired(token)) {
         config.headers.Authorization = `Bearer ${token}`;
         delete config.headers["X-WP-Nonce"];
     } else {
         // fallback CSRF
-        sessionStorage.removeItem("mps_moto"); // nettoyer l'expiré
+        localStorage.removeItem("mps_moto");
         delete config.headers.Authorization;
         config.headers["X-WP-Nonce"] = window.vueAppData.nonce;
     }

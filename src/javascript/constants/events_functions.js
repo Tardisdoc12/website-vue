@@ -17,7 +17,7 @@ export default {
         },
 
         async isUserConnected() {
-            const token = sessionStorage.getItem("mps_moto")
+            const token = localStorage.getItem("mps_moto")
             if (token) {
                 const decoded = jwtDecode(token)
                 const user_id = decoded.data.user.id

@@ -148,7 +148,7 @@ export default {
         const results_2 = await apiSources.get_sources()
         const data = results_2.data
         // On recherche qui est l'utilisateur connecté pour afficher les bonnes informations
-        const token = sessionStorage.getItem("mps_moto")
+        const token = localStorage.getItem("mps_moto")
         if (token) {
             const decoded = jwtDecode(token)
             const user_id = decoded.data.user.id

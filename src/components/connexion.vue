@@ -64,7 +64,9 @@ export default {
         async handleSubmit() {
             try {
                 const data = await apiWP.verify_connexion(this.formUser.email, this.formUser.password)
-                sessionStorage.setItem("mps_moto", data.token)
+                const expiry = Date.now() + 14 * 24 * 60 * 60 * 1000 // 14 jours en ms
+                localStorage.setItem("mps_moto", data.token)
+                localStorage.setItem("mps_moto_expiry", expiry)
                 const decoded = jwtDecode(data.token)
                 const user_id = decoded.data.user.id
                 const setUserWP = await apiWP.connect_user(user_id)

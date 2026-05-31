@@ -59,7 +59,7 @@ export default {
     data() {
         return {
             hasAccount: true,
-            token: sessionStorage.getItem("mps_moto"),
+            token: localStorage.getItem("mps_moto"),
             isForgetPassword: false,
         }
     },
@@ -74,7 +74,7 @@ export default {
                 return decoded.exp && decoded.exp > now
             } catch (e) {
                 console.error("JWT invalide :", e)
-                sessionStorage.removeItem("mps_moto")
+                localStorage.removeItem("mps_moto")
                 return false
             }
         },
@@ -90,7 +90,7 @@ export default {
         },
 
         logout() {
-            sessionStorage.removeItem("mps_moto")
+            localStorage.removeItem("mps_moto")
             this.token = null
             this.hasAccount = true
         },
