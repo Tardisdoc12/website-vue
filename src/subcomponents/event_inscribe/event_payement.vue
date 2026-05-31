@@ -1,6 +1,6 @@
 <template>
     <p style="margin-bottom: 10px; margin-top: 10px; margin-left: 10px;margin-right: 10px;">{{  "Votre inscription ne sera validée qu'après paiement. Merci de Cliquer sur le Bouton pour procéderr au payement" }}</p>
-    <iframe class="center-helloasso" :src="getBilleterieURL" style="border: none;">
+    <iframe class="center-helloasso" :src="getBilleterieURL" style="border: none; width: 100%; height: 700px;">
     </iframe>
 </template>
 
@@ -23,12 +23,12 @@ export default {
             isOpen: false,
             title: "Règlement",
             dates :{
-                "1_22_2026" : "stage-reprise-de-guidon/widget-bouton",
-                "2_8_2026" : "stage-reprise-de-guidon-8-mars/widget-bouton",
-                "2_22_2026" : "stage-reprise-de-guidon-22-mars/widget-bouton",
+                "1_22_2026" : "stage-reprise-de-guidon/widget",
+                "2_8_2026" : "stage-reprise-de-guidon-8-mars/widget",
+                "2_22_2026" : "stage-reprise-de-guidon-22-mars/widget",
             },
             baseUrl : "https://www.helloasso.com/associations/mps-moto/evenements/",
-            fallback : "inscription-seance/widget-bouton",
+            fallback : "inscription-seance/widget",
         }
     },
 

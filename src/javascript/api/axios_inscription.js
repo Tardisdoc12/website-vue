@@ -6,6 +6,11 @@ export default {
         return response
     },
 
+    async find_user(query) {
+        const response = await api.get(`/users/search`, { params: { q: query } })
+        return response
+    },
+
     async delete_inscrit(event_id, user_id) {
         const response = await api.delete(`/subscribe/${user_id}/${event_id}`)
         return response

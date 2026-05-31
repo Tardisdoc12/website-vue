@@ -106,16 +106,21 @@ export default{
         incrementSteps() {
             this.steps += 1
             this.$emit("incrementSteps", this.steps)
-            if(this.steps == 2) {
+
+            if (this.steps == 2) {
                 this.$emit("inscritEvent", this.event)
-                if(this.event.categorie === Events.balade && !this.userConnected.roles.includes("non_adherent")) {
-                    this.$emit("cancelSignal", this.isCancel)
-                    return
-                }
-                if (this.event.categorie !== Events.stage) {
-                    this.$emit("cancelSignal", this.isCancel)
-                    return
-                }
+
+                const isNonAdherent = this.userConnected.roles.includes("non_adherent")
+                const categorie = this.event.categorie
+
+                // Stage → toujours paiement
+                if (categorie === Events.stage) return
+
+                // Séance → paiement uniquement si non-adhérent
+                if (categorie === Events.seance && isNonAdherent) return
+
+                // Tous les autres cas → ferme
+                this.$emit("cancelSignal", this.isCancel)
             }
         },
         

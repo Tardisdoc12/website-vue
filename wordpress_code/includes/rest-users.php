@@ -171,6 +171,58 @@ function myplugin_register_user(WP_REST_Request $request) {
 //------------------------------------------------------------------------------
 
 add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1', '/users/search', [
+        'methods'             => 'GET',
+        'callback'            => 'monplugin_search_user',
+        'permission_callback' => 'monplugin_verify_csrf'
+    ]);
+});
+
+function monplugin_search_user(WP_REST_Request $request) {
+    $query = sanitize_text_field($request->get_param('q'));
+
+    if (empty($query)) {
+        return new WP_Error('missing_query', 'Paramètre q obligatoire', ['status' => 400]);
+    }
+
+    // Cherche par email
+    $user = get_user_by('email', $query);
+
+    // Sinon cherche par téléphone
+    if (!$user) {
+        $users_by_phone = get_users([
+            'meta_key'   => 'telephone',
+            'meta_value' => $query,
+            'number'     => 1,
+            'fields'     => 'all',
+        ]);
+        $user = !empty($users_by_phone) ? $users_by_phone[0] : null;
+    }
+
+    if (!$user) {
+        return [
+            "message" => "Utilisateur non trouvé",
+            "user"    => null
+        ];
+    }
+
+    return [
+        "message" => "Success",
+        "user"    => [
+            "ID"        => $user->ID,
+            "email"     => $user->user_email,
+            "firstName" => get_user_meta($user->ID, 'firstName', true),
+            "lastName"  => get_user_meta($user->ID, 'lastName', true),
+            "telephone" => get_user_meta($user->ID, 'telephone', true),
+            "moto"      => get_user_meta($user->ID, 'moto', true),
+            "roles"     => $user->roles,
+        ]
+    ];
+}
+
+//------------------------------------------------------------------------------
+
+add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/user/update', [
         'methods'  => 'POST',
         'callback' => 'myplugin_update_user',

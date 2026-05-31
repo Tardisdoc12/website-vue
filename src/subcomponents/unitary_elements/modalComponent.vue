@@ -46,6 +46,8 @@ export default {
                 'background': '#fff',
                 'border-radius': '8px',
                 'padding': '0',
+                'max-height': '90vh',
+                'overflow-y': 'auto',
             }
             if(this.width) {
                 return {
