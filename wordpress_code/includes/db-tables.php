@@ -32,6 +32,7 @@ function mon_plugin_creer_tables() {
         subscribe_places INT NOT NULL,
         nonsubscribe_places INT UNSIGNED NOT NULL,
         closed_inscription TINYINT(1) NOT NULL DEFAULT 0,
+        billeterie_url VARCHAR(500) NULL,
         PRIMARY KEY (id)
     ) $charset_collate;";
 

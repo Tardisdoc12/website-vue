@@ -11,6 +11,11 @@ export default {
             type: String,
             required: true,
         },
+        billeterie_url: {
+            type: String,
+            required: false,
+            default: "",
+        }
     },
 
     data() {
@@ -29,6 +34,10 @@ export default {
 
     computed: {
         getBilleterieURL() {
+            if (this.billeterie_url && this.billeterie_url !== "") {
+                return this.billeterie_url;
+            }
+
             const match = Object.entries(this.dates).find(([key]) => {
                 const [month, day, year] = key.split("_").map(Number);
                 return this.compareDate(this.Date, month, day, year);

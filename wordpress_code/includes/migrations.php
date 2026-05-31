@@ -15,6 +15,11 @@ function monplugin_run_migrations() {
         $wpdb->query("ALTER TABLE $table_events ADD post_id BIGINT(20) UNSIGNED NULL AFTER id");
     }
 
+    $column = $wpdb->get_results("SHOW COLUMNS FROM $table_events LIKE 'billeterie_url'");
+    if (empty($column)) {
+        $wpdb->query("ALTER TABLE $table_events ADD billeterie_url VARCHAR(500) NULL AFTER closed_inscription");
+    }
+
     // --- Ajouter closed_inscription si elle n'existe pas ---
     $column = $wpdb->get_results("SHOW COLUMNS FROM $table_events LIKE 'closed_inscription'");
     if (empty($column)) {

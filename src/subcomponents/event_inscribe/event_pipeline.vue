@@ -19,6 +19,7 @@
         <PayementEvent
             v-if="stepsComputed == 2"
             :Date="event.startDate"
+            :billeterie_url="event.billeterie_url"
         />
         <ModificationEvent
             v-if="stepsComputed == 3"

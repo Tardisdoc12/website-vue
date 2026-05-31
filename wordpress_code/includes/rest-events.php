@@ -84,6 +84,7 @@ function monplugin_get_events(WP_REST_Request $request) {
             'subscribe_places'   => $event->subscribe_places,
             'nonsubscribe_places'=> $event->nonsubscribe_places,
             'closed_inscription' => $event->closed_inscription,
+            'billeterie_url'     => $event->billeterie_url,
             'users'       => $users
         ];
     }
@@ -183,6 +184,7 @@ function monplugin_get_event_id(WP_REST_Request $request) {
         'subscribe_places'    => $event->subscribe_places,
         'nonsubscribe_places' => $event->nonsubscribe_places,
         'closed_inscription'   => $event->closed_inscription,
+        'billeterie_url'       => $event->billeterie_url,
         'users'               => $users
     ];
 
@@ -256,6 +258,7 @@ function monplugin_get_event_post_id(WP_REST_Request $request) {
         'subscribe_places'    => $event->subscribe_places,
         'nonsubscribe_places' => $event->nonsubscribe_places,
         'closed_inscription'   => $event->closed_inscription,
+        'billeterie_url'       => $event->billeterie_url,
         'users'               => $users
     ];
 
@@ -300,6 +303,7 @@ function monplugin_create_events(WP_REST_Request $request) {
             'subscribe_places' => intval($request['subscribe_places']),
             'nonsubscribe_places' => intval($request['nonsubscribe_places']),
             'closed_inscription' => intval($request['closed_inscription']),
+            'billeterie_url' => sanitize_text_field($request['billeterie_url']),
         ]
     );
 
@@ -341,6 +345,7 @@ function monplugin_update_event(WP_REST_Request $request) {
         'subscribe_places' => intval($request['subscribe_places']),
         'nonsubscribe_places' => intval($request['nonsubscribe_places']),
         'closed_inscription' => intval($request['closed_inscription']),
+        'billeterie_url' => sanitize_text_field($request['billeterie_url']),
     ];
 
     $where = ['id' => $id];

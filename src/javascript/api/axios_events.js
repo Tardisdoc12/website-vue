@@ -11,7 +11,8 @@ function conversion_to_bdd(datas) {
         category: datas['categorie'],
         subscribe_places: datas['subscribePlace'],
         nonsubscribe_places: datas['nonsubscribePlace'],
-        closed_inscription: datas['closed_inscription'] ?? 0
+        closed_inscription: datas['closed_inscription'] ?? 0,
+        billeterie_url: datas['billeterie_url'] ?? '',
     }
 }
 
@@ -29,6 +30,7 @@ function conversion_from_bdd(datas) {
         subscribePlace: datas['subscribe_places'],
         nonsubscribePlace: datas['nonsubscribe_places'],
         closed_inscription: datas['closed_inscription'] ?? 0,
+        billeterie_url: datas['billeterie_url'] ?? '',
         users: datas?.["users"] ?? []
     }
 }

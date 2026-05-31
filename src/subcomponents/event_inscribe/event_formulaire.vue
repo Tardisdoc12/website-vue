@@ -84,6 +84,17 @@
                 </select>
             </div>
 
+            <!-- Lien billetterie -->
+            <div style="margin-bottom:10px;" v-if="categorieForm === Events.stage">
+                <label class="block font-medium">Lien billetterie (optionnel)</label>
+                <input
+                    v-model="billeterieForm"
+                    type="url"
+                    class="w-full border p-1 rounded"
+                    placeholder="https://example.com/billetterie"
+                />
+            </div>
+
             <!-- Lieu -->
             <div style="margin-bottom:10px;">
                 <label class="block font-medium">Lieu</label>
@@ -159,6 +170,7 @@ export default {
                 categorie: '',
                 subscribePlace: 1,
                 nonsubscribePlace: 0,
+                billeterie_url: '',
             },
             isChecked:false || this?.eventSelected?.subscribePlace >= 0,
             Events: Events,
@@ -183,6 +195,15 @@ export default {
             },
             set(newValue) {
                 this.event.description = newValue
+            }
+        },
+
+        billeterieForm: {
+            get() {
+                return this.event.billeterie_url
+            },
+            set(newValue) {
+                this.event.billeterie_url = newValue
             }
         },
 
@@ -318,6 +339,7 @@ export default {
                     categorie: '',
                     subscribePlace: 1,
                     nonsubscribePlace: 0,
+                    billeterie_url: '',
                 }
                 if (this.onSuccess) {
                     await this.onSuccess()
