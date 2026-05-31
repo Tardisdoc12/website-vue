@@ -9,6 +9,7 @@
             @visualizingUsers="visualizeUsers"
             @inscriptWanted="incrementSteps"
             @deletedEvent="deletedEvent"
+            @addPerson="addUser"
         />
         <InscriptionEvent
             v-if="stepsComputed == 1"
@@ -32,6 +33,11 @@
             :event_id="Number(event.event_id)"
             @userDeleted="userToDelete"
         />
+        <EncadrantAddPerson
+            v-if="stepsComputed == 5"
+            :event="event"
+            @inscrit="() => {this.$emit('inscritEvent', this.event); this.$emit('cancelSignal', this.isCancel)}"
+        />
 </template>
 
 <script>
@@ -41,7 +47,7 @@ import PresentationsEvent from "@/subcomponents/event_inscribe/event_présentati
 import PayementEvent from "@/subcomponents/event_inscribe/event_payement.vue"
 import UsersInEvent from "@/subcomponents/event_inscribe/event_users.vue"
 import InscriptionEvent from "@/subcomponents/event_inscribe/event_inscription.vue"
-
+import EncadrantAddPerson from "@/subcomponents/event_inscribe/event_encadrant_add_person.vue"
 
 export default{
     emits: [
@@ -71,11 +77,13 @@ export default{
             default:true
         }
     },
+
     data() {
         return {
             Events,
             steps: 0,
             lastParticipants: [],
+            listMembers: null,
         }
     },
 
@@ -133,6 +141,11 @@ export default{
             }
         },
         
+        addUser() {
+            this.steps = 5
+            this.$emit("incrementSteps", this.steps)
+        },
+        
         deletedEvent(event_id){
             this.$emit('deletedEvent', event_id)
         },
@@ -158,6 +171,7 @@ export default{
         PayementEvent,
         UsersInEvent,
         InscriptionEvent,
+        EncadrantAddPerson
     }
 }
 </script>

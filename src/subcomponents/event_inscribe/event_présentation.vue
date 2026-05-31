@@ -12,6 +12,10 @@
         <div v-if="isBureauComp" style="margin-bottom: 10px;">
             <small @click="FullEvent">Rendre l'évènement complet</small>
         </div>
+
+        <div v-if="isBureauComp" style="margin-bottom: 10px;">
+            <small @click="ajoutPerson">Ajouter une personne</small>
+        </div>
         <!-- Dates -->
             <div style="margin-bottom: 10px;">
             <span style="font-weight: bold; text-decoration: underline;">{{ "Date :"}}</span>
@@ -239,6 +243,10 @@ export default {
                 })
             this.$emit('updatedEvent')
             this.$emit('cancelSignal')
+        },
+
+        ajoutPerson() {
+            this.$emit('addPerson')
         },
 
         async FullEvent(){

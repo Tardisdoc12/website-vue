@@ -53,6 +53,8 @@ export default{
                     return "Modification de l'évènement"
                 case 4:
                     return "Personnes Inscrites"
+                case 5:
+                    return "Ajouter une personne"
             }
         },
     },
