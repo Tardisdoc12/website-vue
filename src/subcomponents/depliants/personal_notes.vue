@@ -103,7 +103,7 @@ export default{
                     'notes': this.notesCopy
                 })
                 if(result?.data?.success){
-                    this.$emit("saveNotes",this.notes)
+                    this.$emit("saveNotes",this.notesCopy)
                 }
             }
             else{

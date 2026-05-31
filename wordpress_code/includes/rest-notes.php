@@ -62,49 +62,40 @@ add_action('rest_api_init', function () {
 function monplugin_create_notes(WP_REST_Request $request) {
     global $wpdb;
     $table_notes = $wpdb->prefix . "notes";
-    $user_id = (int) $request->get_param('user_id');
-    $user = get_user_by('id', $user_id);
-
-    if (!$user) {
-        return new WP_REST_Response(array(
-            'message' => 'Utilisateur introuvable'
-        ), 404);
-    }
-
-    $note = sanitize_text_field($request->get_param('notes'));
+    $user_id     = (int) $request->get_param('user_id');
+    $note        = sanitize_text_field($request->get_param('notes'));
     $is_personal = (int) $request->get_param('is_personal');
 
-    $exists = $wpdb->get_var(
-        $wpdb->prepare(
-            "SELECT COUNT(*) FROM $table_notes WHERE is_personal = %d AND wp_user_id = %d",
-            $is_personal,
-            $user_id
-        )
-    );
-
-    if ($exists) {
-        return new WP_Error(
-            'notes_found',
-            'Cette note existe déjà.',
-            ['status' => 409]
-        );
+    $user = get_user_by('id', $user_id);
+    if (!$user) {
+        return new WP_REST_Response(['message' => 'Utilisateur introuvable'], 404);
     }
 
-    $wpdb->insert(
-        $table_notes,
-        [
+    $exists = $wpdb->get_var($wpdb->prepare(
+        "SELECT COUNT(*) FROM $table_notes WHERE is_personal = %d AND wp_user_id = %d",
+        $is_personal, $user_id
+    ));
+
+    if ($exists) {
+        // Déjà là → on met à jour plutôt que d'échouer
+        $wpdb->update(
+            $table_notes,
+            ['note_write' => $note],
+            ['wp_user_id' => $user_id, 'is_personal' => $is_personal]
+        );
+    } else {
+        $wpdb->insert($table_notes, [
             'wp_user_id'  => $user_id,
             'note_write'  => $note,
             'is_personal' => $is_personal
-        ]
-    );
+        ]);
+    }
 
     if ($wpdb->last_error) {
         return new WP_Error('db_error', $wpdb->last_error, ['status' => 500]);
     }
-    return [
-        'success' => true
-    ];
+
+    return ['success' => true];
 }
 
 //------------------------------------------------------------------------------
