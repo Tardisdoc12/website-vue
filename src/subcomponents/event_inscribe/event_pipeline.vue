@@ -14,7 +14,7 @@
             v-if="stepsComputed == 1"
             :event="event"
             :user="userConnected"
-            @inscrit="incrementSteps"
+            @inscrit="onInscrit"
         />
         <PayementEvent
             v-if="stepsComputed == 2"
@@ -75,6 +75,7 @@ export default{
         return {
             Events,
             steps: 0,
+            lastParticipants: [],
         }
     },
 
@@ -103,6 +104,11 @@ export default{
             this.$emit("cancelSignal", this.isCancel)
         },
 
+        onInscrit(participants) {
+            this.lastParticipants = participants
+            this.incrementSteps()
+        },
+
         incrementSteps() {
             this.steps += 1
             this.$emit("incrementSteps", this.steps)
@@ -110,14 +116,17 @@ export default{
             if (this.steps == 2) {
                 this.$emit("inscritEvent", this.event)
 
-                const isNonAdherent = this.userConnected.roles.includes("non_adherent")
                 const categorie = this.event.categorie
+
+                const hasNonAdherent = this.lastParticipants.some(p =>
+                    p.roles?.includes("non_adherent")
+                )
 
                 // Stage → toujours paiement
                 if (categorie === Events.stage) return
 
-                // Séance → paiement uniquement si non-adhérent
-                if (categorie === Events.seance && isNonAdherent) return
+                // Séance → paiement si au moins un non-adhérent parmi les inscrits
+                if (categorie === Events.seance && hasNonAdherent) return
 
                 // Tous les autres cas → ferme
                 this.$emit("cancelSignal", this.isCancel)

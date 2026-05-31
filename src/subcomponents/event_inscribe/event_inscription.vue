@@ -375,7 +375,7 @@ export default {
                     const res = await inscritAPI.create_inscrit(this.event.event_id, participant)
                     if (!res?.data?.success) throw new Error("Échec pour " + participant.name)
                 }
-                this.$emit('inscrit')
+                this.$emit('inscrit', this.participants)
             } catch (err) {
                 console.error("❌ Erreur inscription:", err)
             } finally {
