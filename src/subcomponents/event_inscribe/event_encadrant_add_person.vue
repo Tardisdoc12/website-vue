@@ -32,21 +32,11 @@
         <!-- Étape 2 : Si oui, on affiche le champ de recherche -->
         <!-- 2a. OUI → recherche du compte -->
         <template v-if="participant.hasAccount === true">
-            <div class="flex flex-col gap-1">
-                <label class="block font-medium">Email ou téléphone</label>
-                <div style="display:flex; gap:8px;">
-                    <input
-                        v-model="participant.searchQuery"
-                        type="text"
-                        class="w-full border p-1 rounded"
-                        placeholder="ex: jean@mail.com ou 0612345678"
-                        @input="participant.searchResult = null"
-                    />
-                    <button type="button" class="button-base" style="white-space:nowrap;" @click="searchParticipant()">
-                        Rechercher
-                    </button>
-                </div>
-            </div>
+            <SearchComponent
+                :list="listMembers"
+                :ColumnToShow="listColumn"
+                @select="searchParticipant"
+            />
 
             <!-- Compte trouvé -->
             <div v-if="participant.searchResult === 'found'" class="found-card">
@@ -114,8 +104,10 @@
 
 <script>
 import inscritAPI from "@/javascript/api/axios_inscription"
+import SearchComponent from '@/subcomponents/unitary_elements/search_component.vue';
 import { Events } from "@/javascript/constants/events_type"
 import { Couleurs } from "@/javascript/constants/colors.js"
+import api from "@/javascript/api/users_wp.js"
 
 export default{
 
@@ -126,6 +118,12 @@ export default{
             type: Object,
             required: true
         },
+    },
+
+    async mounted() {
+        const usersMembers = await api.get_adherents()
+        
+        this.listMembers = usersMembers.data.users
     },
 
     data() {
@@ -143,6 +141,11 @@ export default{
             },
             isSubmitting: false,
             Couleurs,
+            listColumn: {
+                "firstName":"Prénom",
+                "lastName":"Nom",
+            },
+            listMembers: [],
         }
     },
     
@@ -166,14 +169,11 @@ export default{
             this.participant.goal = ""
         },
 
-        async searchParticipant() {
-            const query = this.participant.searchQuery?.trim()
-            if (!query) return
+        searchParticipant(element) {
             try {
-                // Remplace par ton API réelle
-                const res = await inscritAPI.find_user(query)
-                if (res?.data?.user) {
-                    const u = res.data.user
+                console.log("Element sélectionné dans SearchComponent :", element)
+                if (element && element?.ID) {
+                    const u = element
                     this.participant = {
                         ...this.participant,
                         name:  `${u.firstName} ${u.lastName}`,
@@ -207,6 +207,10 @@ export default{
                 this.isSubmitting = false
             }
         },
+    },
+
+    components: {
+        SearchComponent
     }
 }
 

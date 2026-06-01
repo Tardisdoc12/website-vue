@@ -36,7 +36,7 @@
         <EncadrantAddPerson
             v-if="stepsComputed == 5"
             :event="event"
-            @inscrit="() => {this.$emit('inscritEvent', this.event); this.$emit('cancelSignal', this.isCancel)}"
+            @inscrit="() => {this.$emit('cancelSignal', this.isCancel)}"
         />
 </template>
 

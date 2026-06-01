@@ -57,7 +57,6 @@ add_action('rest_api_init', function () {
 function monplugin_get_adherents(WP_REST_Request $request) {
     $users = get_users([
         'role__in' => ['administrator', 'bureau', 'encadrant','adherent'],
-        'fields'   => ['ID']
     ]);
 
     $result = [];
@@ -68,6 +67,7 @@ function monplugin_get_adherents(WP_REST_Request $request) {
             'firstName'     => get_user_meta($user->ID, 'firstName', true),
             'lastName'      => get_user_meta($user->ID, 'lastName', true),
             'telephone'     => get_user_meta($user->ID, 'telephone', true),
+            'email'         => $user->user_email,
             'urgence_phone' => get_user_meta($user->ID, 'urgence_phone', true),
             'urgence_name'  => get_user_meta($user->ID, 'urgence_name', true),
         ];
