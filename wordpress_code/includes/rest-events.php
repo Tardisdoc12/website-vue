@@ -84,6 +84,7 @@ function monplugin_get_events(WP_REST_Request $request) {
             'category'    => $event->category,
             'subscribe_places'   => $event->subscribe_places,
             'nonsubscribe_places'=> $event->nonsubscribe_places,
+            'attente_places'     => $event->attente_places,
             'closed_inscription' => $event->closed_inscription,
             'billeterie_url'     => $event->billeterie_url,
             'users'       => $users
@@ -184,6 +185,7 @@ function monplugin_get_event_id(WP_REST_Request $request) {
         'category'            => $event->category,
         'subscribe_places'    => $event->subscribe_places,
         'nonsubscribe_places' => $event->nonsubscribe_places,
+        'attente_places'       => $event->attente_places,
         'closed_inscription'   => $event->closed_inscription,
         'billeterie_url'       => $event->billeterie_url,
         'users'               => $users
@@ -259,6 +261,7 @@ function monplugin_get_event_post_id(WP_REST_Request $request) {
         'category'            => $event->category,
         'subscribe_places'    => $event->subscribe_places,
         'nonsubscribe_places' => $event->nonsubscribe_places,
+        'attente_places'       => $event->attente_places,
         'closed_inscription'   => $event->closed_inscription,
         'billeterie_url'       => $event->billeterie_url,
         'users'               => $users
@@ -304,6 +307,7 @@ function monplugin_create_events(WP_REST_Request $request) {
             'category' => sanitize_text_field($request['category']),
             'subscribe_places' => intval($request['subscribe_places']),
             'nonsubscribe_places' => intval($request['nonsubscribe_places']),
+            'attente_places' => intval($request['attente_places']) ?? 0,
             'closed_inscription' => intval($request['closed_inscription']),
             'billeterie_url' => sanitize_text_field($request['billeterie_url']),
         ]
@@ -346,6 +350,7 @@ function monplugin_update_event(WP_REST_Request $request) {
         'category' => sanitize_text_field($request['category']),
         'subscribe_places' => intval($request['subscribe_places']),
         'nonsubscribe_places' => intval($request['nonsubscribe_places']),
+        'attente_places' => intval($request['attente_places']) ?? 0,
         'closed_inscription' => intval($request['closed_inscription']),
         'billeterie_url' => sanitize_text_field($request['billeterie_url']),
     ];

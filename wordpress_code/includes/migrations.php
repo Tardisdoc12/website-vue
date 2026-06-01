@@ -21,6 +21,11 @@ function monplugin_run_migrations() {
         // Tous les inscrits existants héritent de 'inscrit' grâce au DEFAULT
     }
 
+    $column = $wpdb->get_results("SHOW COLUMNS FROM $table_events LIKE 'attente_places'");
+    if (empty($column)) {
+        $wpdb->query("ALTER TABLE $table_events ADD attente_places INT UNSIGNED NOT NULL DEFAULT 0 AFTER nonsubscribe_places");
+    }
+
     $column = $wpdb->get_results("SHOW COLUMNS FROM $table_events LIKE 'billeterie_url'");
     if (empty($column)) {
         $wpdb->query("ALTER TABLE $table_events ADD billeterie_url VARCHAR(500) NULL AFTER closed_inscription");
