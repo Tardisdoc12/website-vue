@@ -134,7 +134,16 @@ export default {
 
     computed: {
         usersToShow() {
-            return this.usersRegistered
+            console.log(this.usersRegistered)
+            return this.usersRegistered.map(user => ({
+                id: user.id,
+                user_name: user.user_name,
+                email: user.email,
+                phone: user.phone,
+                goal: user.goal,
+                bike: user.bike,
+                experience: user.is_adherent === "0" ? "" : user.experience
+            }))
         },
     },
 
@@ -175,7 +184,7 @@ export default {
                     obj.phone,
                     obj.goal,
                     obj.bike,
-                    obj.experience
+                    obj.is_adherent === "0" ? "" : obj.experience
                 ].map(value => `"${String(value).replace(/"/g, '""')}"`); // Échappe les guillemets
                 return values.join(",");
             });

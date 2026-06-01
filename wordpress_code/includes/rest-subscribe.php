@@ -121,6 +121,14 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
         $user_id = $wpdb->insert_id;
     } else {
         $user_id = intval($user->id);
+        // Mettre à jour l'expérience si elle est fournie
+        if (!empty($user_d['experience'])) {
+            $wpdb->update(
+                $table_users,
+                ['experience' => sanitize_text_field($user_d['experience'])],
+                ['id' => $user_id]
+            );
+        }
     }
 
     // Vérifier si l’utilisateur est déjà inscrit à cet event
