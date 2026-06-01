@@ -15,6 +15,12 @@ function monplugin_run_migrations() {
         $wpdb->query("ALTER TABLE $table_events ADD post_id BIGINT(20) UNSIGNED NULL AFTER id");
     }
 
+    $column = $wpdb->get_results("SHOW COLUMNS FROM $table_inscribes LIKE 'status'");
+    if (empty($column)) {
+        $wpdb->query("ALTER TABLE $table_inscribes ADD status ENUM('inscrit', 'attente') NOT NULL DEFAULT 'inscrit' AFTER encadrement");
+        // Tous les inscrits existants héritent de 'inscrit' grâce au DEFAULT
+    }
+
     $column = $wpdb->get_results("SHOW COLUMNS FROM $table_events LIKE 'billeterie_url'");
     if (empty($column)) {
         $wpdb->query("ALTER TABLE $table_events ADD billeterie_url VARCHAR(500) NULL AFTER closed_inscription");
