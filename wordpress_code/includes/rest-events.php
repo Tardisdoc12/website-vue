@@ -62,6 +62,7 @@ function monplugin_get_events(WP_REST_Request $request) {
                 i.goal, 
                 u.is_adherent, 
                 i.bike,
+                i.status,
                 wp_users.ID AS wp_user_id
             FROM $table_inscrits i
             JOIN $table_users u ON u.id = i.user_id
@@ -162,7 +163,7 @@ function monplugin_get_event_id(WP_REST_Request $request) {
     // Récupérer les utilisateurs inscrits
     $users = $wpdb->get_results(
         $wpdb->prepare(
-            "SELECT u.id, u.user_name, u.email, u.phone, u.experience, i.goal, u.is_adherent, i.bike
+            "SELECT u.id, u.user_name, u.email, u.phone, u.experience, i.goal, u.is_adherent, i.bike, i.status
              FROM $table_inscrits i
              JOIN $table_users u ON u.id = i.user_id
              WHERE i.event_id = %d",
@@ -235,6 +236,7 @@ function monplugin_get_event_post_id(WP_REST_Request $request) {
                 i.goal, 
                 u.is_adherent, 
                 i.bike,
+                i.status,
                 wp_users.ID AS wp_user_id
             FROM $table_inscrits i
             JOIN $table_users u ON u.id = i.user_id
