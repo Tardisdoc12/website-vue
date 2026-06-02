@@ -161,6 +161,16 @@ export default {
         },
 
         affichageInscribe(){
+            const isFullAdherent = this.event.subscribePlace - (this.event.nbr_non_adherents) <= 0
+            const isFullNonAdherent = this.event.nonsubscribePlace - (this.event.nbr_adherents) <= 0
+            const isAdherent = this.isAdherentComp
+            let isOkay = false
+            if(isAdherent){
+                isOkay = isFullAdherent
+            }
+            else{
+                isOkay = isFullNonAdherent
+            }
             if(this.event.isInscript){
                 return "Déjà inscrit"
             }
@@ -173,7 +183,7 @@ export default {
             else if(Number(this.event.closed_inscription) === 3){
                 return "Évènement dépassé"
             }
-            else if (this.isAttente){
+            else if (this.isAttente && isOkay){
                 return "Inscription (liste d'attente)"
             }
             else{
