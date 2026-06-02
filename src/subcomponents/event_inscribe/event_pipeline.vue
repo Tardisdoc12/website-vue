@@ -1,44 +1,50 @@
 <template>
     <PresentationsEvent
-            v-if="stepsComputed == 0"
-            :event="event"
-            :roles="userConnected?.roles"
-            :can-be-redirected="canBeRedirectedComputed"
-            @cancelSignal="Cancel"
-            @updateEvent="updateEvent"
-            @visualizingUsers="visualizeUsers"
-            @inscriptWanted="incrementSteps"
-            @deletedEvent="deletedEvent"
-            @addPerson="addUser"
-        />
-        <InscriptionEvent
-            v-if="stepsComputed == 1"
-            :event="event"
-            :user="userConnected"
-            :isAttente="isAttenteComp"
-            @inscrit="onInscrit"
-        />
-        <PayementEvent
-            v-if="stepsComputed == 2"
-            :Date="event.startDate"
-            :billeterie_url="event.billeterie_url"
-        />
-        <ModificationEvent
-            v-if="stepsComputed == 3"
-            :event-selected="event"
-            @cancelSignal="Cancel"
-        />
-        <UsersInEvent
-            v-if="stepsComputed == 4"
-            :users-registered="event.users"
-            :event_id="Number(event.event_id)"
-            @userDeleted="userToDelete"
-        />
-        <EncadrantAddPerson
-            v-if="stepsComputed == 5"
-            :event="event"
-            @inscrit="() => {this.$emit('cancelSignal', this.isCancel)}"
-        />
+        v-if="stepsComputed == 0"
+        :event="event"
+        :roles="userConnected?.roles"
+        :can-be-redirected="canBeRedirectedComputed"
+        @cancelSignal="Cancel"
+        @updateEvent="updateEvent"
+        @visualizingUsers="visualizeUsers"
+        @inscriptWanted="incrementSteps"
+        @copyEvent="CopyEvent"
+        @deletedEvent="deletedEvent"
+        @addPerson="addUser"
+    />
+    <InscriptionEvent
+        v-if="stepsComputed == 1"
+        :event="event"
+        :user="userConnected"
+        :isAttente="isAttenteComp"
+        @inscrit="onInscrit"
+    />
+    <PayementEvent
+        v-if="stepsComputed == 2"
+        :Date="event.startDate"
+        :billeterie_url="event.billeterie_url"
+    />
+    <ModificationEvent
+        v-if="stepsComputed == 3"
+        :event-selected="event"
+        @cancelSignal="Cancel"
+    />
+    <UsersInEvent
+        v-if="stepsComputed == 4"
+        :users-registered="event.users"
+        :event_id="Number(event.event_id)"
+        @userDeleted="userToDelete"
+    />
+    <EncadrantAddPerson
+        v-if="stepsComputed == 5"
+        :event="event"
+        @inscrit="() => {this.$emit('cancelSignal', this.isCancel)}"
+    />
+    <DuplicationEvent
+        v-if="stepsComputed == 6"
+        :event="event"
+        @cancelSignal="Cancel"
+    />
 </template>
 
 <script>
@@ -49,6 +55,7 @@ import PayementEvent from "@/subcomponents/event_inscribe/event_payement.vue"
 import UsersInEvent from "@/subcomponents/event_inscribe/event_users.vue"
 import InscriptionEvent from "@/subcomponents/event_inscribe/event_inscription.vue"
 import EncadrantAddPerson from "@/subcomponents/event_inscribe/event_encadrant_add_person.vue"
+import DuplicationEvent from "@/subcomponents/event_inscribe/event_duplication.vue"
 
 export default{
     emits: [
@@ -192,6 +199,11 @@ export default{
             this.steps = 5
             this.$emit("incrementSteps", this.steps)
         },
+
+        CopyEvent() {
+            this.steps = 6
+            this.$emit("incrementSteps", this.steps)
+        },
         
         deletedEvent(event_id){
             this.$emit('deletedEvent', event_id)
@@ -218,7 +230,8 @@ export default{
         PayementEvent,
         UsersInEvent,
         InscriptionEvent,
-        EncadrantAddPerson
+        EncadrantAddPerson,
+        DuplicationEvent
     }
 }
 </script>

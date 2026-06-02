@@ -33,36 +33,6 @@
                 <input v-model="endDateForm" type="datetime-local" class="w-full border p-1 rounded"/>
             </div>
 
-            <!-- Ajouter des dates -->
-            <div>
-                <div class="block font-medium">
-                    Dupliquer l'évènement pour les dates :
-                    <button 
-                        type="button"
-                        @click="addRange" 
-                        class="appearance-none button-base"
-                    >
-                            <font-awesome-icon icon="fa-solid fa-plus" />
-                    </button>
-                </div>
-                
-                <div v-for="(range, index) in cloneDates" :key="index" class="flex gap-2 items-center" style="margin-bottom: 5px;">
-                    <input type="datetime-local" v-model="range.start_date" class="border p-1" />
-                    <input type="datetime-local" v-model="range.end_date" class="border p-1" />
-                    <button
-                        type="button"
-                        :style="{
-                            '--btn-bg': Couleurs.main_red,
-                            '--btn-hover-bg': Couleurs.dark_red
-                        }"
-                        @click="removeRange(index)" 
-                        class="appearance-none button-base"
-                    >
-                        <font-awesome-icon icon="fa-solid fa-trash" />
-                    </button>
-                </div>
-            </div>
-
             <!-- Description -->
             <div style="margin-bottom:10px;">
                 <label class="block font-medium">Description</label>
@@ -187,8 +157,6 @@ export default {
             isChecked:false || this?.eventSelected?.subscribePlace >= 0,
             isCheckedAttente: false || this?.eventSelected?.attentePlace > 0,
             Events: Events,
-            cloneDates: [
-            ],
             isUpdate:false,
         }
     },
@@ -334,22 +302,6 @@ export default {
                         users: []
                     }
                     this.$emit("createEvents", event)
-                }
-                if (this.cloneDates.length > 0) {
-                    for (const range of this.cloneDates) {
-                        let new_event = {
-                            ...this.event,
-                            startDate: range.start_date,
-                            endDate: range.end_date
-                        }
-                        let response_clone = await this.createEvent(new_event);
-                        if(response_clone?.data?.id) {
-                            new_event.id = response_clone.data.id
-                            new_event.post_id = response_clone.data.post_id
-                            new_event.users = []
-                            this.$emit("createEvents", new_event)
-                        }
-                    }
                 }
 
                 this.event = {

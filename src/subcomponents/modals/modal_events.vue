@@ -55,6 +55,8 @@ export default{
                     return "Personnes Inscrites"
                 case 5:
                     return "Ajouter une personne"
+                case 6:
+                    return "Dupliquer l'évènement"
             }
         },
     },

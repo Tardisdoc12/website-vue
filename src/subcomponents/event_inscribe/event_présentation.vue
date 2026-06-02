@@ -16,6 +16,10 @@
         <div v-if="isBureauComp" style="margin-bottom: 10px;">
             <small @click="ajoutPerson">Ajouter une personne</small>
         </div>
+
+        <div v-if="isBureauComp" style="margin-bottom: 10px;">
+            <small @click="CopyEvent">Dupliquer l'évènement</small>
+        </div>
         <!-- Dates -->
             <div style="margin-bottom: 10px;">
             <span style="font-weight: bold; text-decoration: underline;">{{ "Date :"}}</span>
@@ -258,6 +262,10 @@ export default {
 
         ajoutPerson() {
             this.$emit('addPerson')
+        },
+
+        CopyEvent() {
+            this.$emit('copyEvent')
         },
 
         async FullEvent(){
