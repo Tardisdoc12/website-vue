@@ -95,6 +95,17 @@
                 />
             </div>
 
+            <!-- Liste d'attentes -->
+            <div style="margin-bottom: 10px;" v-if="categorieForm !== Events.balade">
+                <label class="block font-medium">Ajouter une liste d'attente?</label>
+                <input type="checkbox" v-model="isCheckedAttente"/>
+            </div>
+
+            <div style="margin-bottom: 10px;" v-if="categorieForm !== Events.balade && isCheckedAttente">
+                <label class="block font-medium">Nombre de place dans la liste d'attente</label>
+                <input type="number" v-model.number="attentePlaceForm" min="0" class="w-full border p-1 rounded" required />
+            </div>
+
             <!-- Lieu -->
             <div style="margin-bottom:10px;">
                 <label class="block font-medium">Lieu</label>
@@ -170,9 +181,11 @@ export default {
                 categorie: '',
                 subscribePlace: 1,
                 nonsubscribePlace: 0,
+                attentePlace: 0,
                 billeterie_url: '',
             },
             isChecked:false || this?.eventSelected?.subscribePlace >= 0,
+            isCheckedAttente: false || this?.eventSelected?.attentePlace > 0,
             Events: Events,
             cloneDates: [
             ],
@@ -213,6 +226,15 @@ export default {
             },
             set(newValue) {
                 this.event.title = newValue
+            }
+        },
+
+        attentePlaceForm: {
+            get() {
+                return this.event.attentePlace
+            },
+            set(newValue) {
+                this.event.attentePlace = newValue
             }
         },
 
@@ -339,6 +361,7 @@ export default {
                     categorie: '',
                     subscribePlace: 1,
                     nonsubscribePlace: 0,
+                    attentePlace: 0,
                     billeterie_url: '',
                 }
                 if (this.onSuccess) {

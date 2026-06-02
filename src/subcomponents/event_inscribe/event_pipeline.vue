@@ -15,6 +15,7 @@
             v-if="stepsComputed == 1"
             :event="event"
             :user="userConnected"
+            :isAttente="isAttenteComp"
             @inscrit="onInscrit"
         />
         <PayementEvent
@@ -104,6 +105,22 @@ export default{
                 return this.stepsToStart
             }
             return this.steps
+        },
+
+        isAttenteComp() {
+            if (this.event.attentePlace - this.event.nbr_attente > 0) {
+                return true
+            }
+
+            const isListAttente = this.event.attentePlace > 0
+            const isFullAdherent = this.event.subscribePlace - (this.event.nbr_non_adherents) <= 0
+            const isFullNonAdherent = this.event.nonsubscribePlace - (this.event.nbr_adherents) <= 0
+            const isAdherent = this.userConnected.roles?.includes("adherent")
+            const isFull = isAdherent ? isFullAdherent : isFullNonAdherent
+            if(isFull && isListAttente){
+                return true
+            }
+            return false
         }
     },
 
@@ -114,6 +131,36 @@ export default{
 
         onInscrit(participants) {
             this.lastParticipants = participants
+            let isFulladherent = this.event.subscribePlace - (this.event.nbr_non_adherents) <= 0
+            let isFullNonAdherent = this.event.nonsubscribePlace - (this.event.nbr_adherents) <= 0
+            for (const participant of participants) {
+                if (participant.roles?.includes("adherent") ) {
+                    if(isFulladherent){
+                        participant.status = "attente"
+                        this.event.nbr_attente += 1
+                        if(this.event.attentePlace - this.event.nbr_attente < 0){
+                            this.participants = this.participants.filter(p => p.id !== participant.id)
+                            this.event.nbr_attente -= 1
+                        }
+                        break
+                    }
+                    participant.status = "inscrit"
+                    isFulladherent = this.event.subscribePlace - (this.event.nbr_non_adherents + 1) <= 0
+                }
+                else {
+                    if(isFullNonAdherent){
+                        participant.status = "attente"
+                        this.event.nbr_attente += 1
+                        if(this.event.attentePlace - this.event.nbr_attente < 0){
+                            this.participants = this.participants.filter(p => p.id !== participant.id)
+                            this.event.nbr_attente -= 1
+                        }
+                        break
+                    }
+                    participant.status = "inscrit"
+                    isFullNonAdherent = this.event.nonsubscribePlace - (this.event.nbr_adherents + 1) <= 0
+                }
+            }
             this.incrementSteps()
         },
 

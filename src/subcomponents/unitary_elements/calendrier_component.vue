@@ -187,7 +187,13 @@ export default{
             const nonAdherentsCount = computed(() =>
                 {
                     if (!users.length) return 0;
-                    return users.filter(u => u.is_adherent === "0").length
+                    return users.filter(u => u.is_adherent === "0" && u.status === "inscrit").length
+                }
+            )
+            const adherentsCount = computed(() =>
+                {
+                    if (!users.length) return 0;
+                    return users.filter(u => u.is_adherent === "1" && u.status === "inscrit").length
                 }
             )
             let number = parseInt(arg.event.extendedProps.nonsubscribePlace) - nonAdherentsCount.value;
@@ -197,7 +203,7 @@ export default{
             }
             if (this.userConnected?.roles) {
                 if(!this.userConnected.roles.includes("non_adherent")) {
-                    number = parseInt(arg.event.extendedProps.subscribePlace) - users.length + nonAdherentsCount.value;
+                    number = parseInt(arg.event.extendedProps.subscribePlace) - adherentsCount.value;
                     if(number === 0){
                         places_available = "complet"
                     }
@@ -293,8 +299,21 @@ export default{
             }
             const nonAdherentsCount = computed(() => {
                 const users = e.event.extendedProps?.users ?? []
-                return users.filter(u => u.is_adherent === "1").length
+                return users.filter(u => u.is_adherent === "1" && u.status === "inscrit").length
             })
+
+            const adherentsCount = computed(() => {
+                const users = e.event.extendedProps?.users ?? []
+                return users.filter(u => u.is_adherent === "0" && u.status === "inscrit").length
+            })
+
+            const nbr_attentes = computed(() =>
+                {
+                    const users = e.event.extendedProps?.users ?? []
+                    if (!users.length) return 0;
+                    return users.filter(u => u.status === "attente").length
+                }
+            )
 
             
             this.seeModalEvent = !this.seeModalEvent
@@ -305,8 +324,9 @@ export default{
                 nonsubscribePlace: e.event.extendedProps.nonsubscribePlace,
                 subscribePlace: e.event.extendedProps.subscribePlace,
                 title:e.event.title,
-                nbr_adherents: e.event.extendedProps.users.length - nonAdherentsCount.value,
+                nbr_adherents: adherentsCount.value,
                 nbr_non_adherents: nonAdherentsCount.value,
+                nbr_attente: nbr_attentes.value,
             }
             this.$emit("eventSelect", eventSelected)
         },

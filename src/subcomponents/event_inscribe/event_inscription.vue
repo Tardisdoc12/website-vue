@@ -230,7 +230,8 @@ function emptyParticipant() {
 export default {
     props: {
         event:  { type: Object, required: true },
-        user:   { type: Object, required: true }
+        user:   { type: Object, required: true },
+        isAttente: { type: Boolean, required: false, default: false },
     },
 
     data() {
@@ -249,6 +250,7 @@ export default {
                     bike:  this.user?.moto ?? "",
                     email: this.user?.email ?? "",
                     roles: this.user?.roles ?? ["non_adherent"],
+                    isAttente: this.isAttente,
                 }
             ]
         }
@@ -268,6 +270,7 @@ export default {
                         bike:  newUser.moto ?? "",
                         email: newUser.email ?? "",
                         roles: newUser.roles ?? ["non_adherent"],
+                        isAttente: this.isAttente,
                     }
                 }
             }
@@ -372,6 +375,10 @@ export default {
             this.isSubmitting = true
             try {
                 for (const participant of this.participants) {
+                    participant.status = "inscrit"
+                    if (participant.isAttente) {
+                        participant.status = "attente"
+                    }
                     const res = await inscritAPI.create_inscrit(this.event.event_id, participant)
                     if (!res?.data?.success) throw new Error("Échec pour " + participant.name)
                 }

@@ -295,7 +295,7 @@ function monplugin_create_events(WP_REST_Request $request) {
         return new WP_Error('post_error', 'Erreur création page');
     }
 
-    $wpdb->insert(
+    $result = $wpdb->insert(
         $wpdb->prefix . 'events',
         [
             'post_id' => $post_id,
@@ -313,9 +313,25 @@ function monplugin_create_events(WP_REST_Request $request) {
         ]
     );
 
+    if ($result === false) {
+        return new WP_Error(
+            'db_error',
+            $wpdb->last_error,
+            ['status' => 500]
+        );
+    }
+
     if ($wpdb->last_error) {
+
+        error_log($wpdb->last_error);
+
         wp_delete_post($post_id, true);
-        return new WP_Error('db_error', 'Erreur DB');
+
+        return new WP_Error(
+            'db_error',
+            $wpdb->last_error,
+            ['status' => 500]
+        );
     }
 
     return [

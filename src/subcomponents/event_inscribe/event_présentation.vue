@@ -130,6 +130,7 @@ export default {
     data() {
         return {
             Couleurs,
+            isAttente: this.event.attentePlace - this.event.nbr_attente > 0,
         }
     },
 
@@ -162,11 +163,14 @@ export default {
             else if(Number(this.event.closed_inscription) === 1){
                 return "Inscriptions fermées"
             }
-            else if(Number(this.event.closed_inscription) === 2){
+            else if(Number(this.event.closed_inscription) === 2 && (!this.isAttente)){
                 return "Évènement complet"
             }
             else if(Number(this.event.closed_inscription) === 3){
                 return "Évènement dépassé"
+            }
+            else if (this.isAttente){
+                return "Inscription (liste d'attente)"
             }
             else{
                 return "Inscription"
@@ -180,8 +184,14 @@ export default {
             if(Number(this.event.closed_inscription) !== 0){
                 return true
             }
-            if (this.isAdherentComp) {
+            if (this.isAdherentComp && this.event.attentePlace <= 0) {
                 if (this.event.subscribePlace - this.event.nbr_non_adherents === 0) {
+                    return true
+                }
+                return false
+            }
+            else if(this.event.attentePlace > 0) {
+                if (!this.isAttente) {
                     return true
                 }
                 return false
@@ -239,6 +249,7 @@ export default {
                     categorie: this.event.categorie,
                     subscribePlace: this.event.subscribePlace,
                     nonsubscribePlace: this.event.nonsubscribePlace,
+                    attentePlace: this.event.attentePlace,
                     closed_inscription: newStatus
                 })
             this.$emit('updatedEvent')
@@ -268,6 +279,7 @@ export default {
                     categorie: this.event.categorie,
                     subscribePlace: this.event.subscribePlace,
                     nonsubscribePlace: this.event.nonsubscribePlace,
+                    attentePlace: this.event.attentePlace,
                     closed_inscription: newStatus
                 })
             this.$emit('updatedEvent')

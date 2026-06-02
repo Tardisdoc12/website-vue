@@ -173,6 +173,7 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
         'bike' => isset($user_d['bike']) ? sanitize_text_field($user_d['bike']) : '',
         'goal'=> isset($user_d['goal']) ? sanitize_text_field($user_d['goal']) : '',
         'encadrement' => isset($user_d['wantsEncadrant']) ? intval($user_d['wantsEncadrant']) : 0,
+        'status' => isset($user_d['status']) && in_array($user_d['status'], ['inscrit', 'attente']) ? sanitize_text_field($user_d['status']) : 'inscrit'
     ]);
 
     if ($wpdb->last_error) {
