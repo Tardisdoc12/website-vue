@@ -171,7 +171,6 @@ export default{
 
         searchParticipant(element) {
             try {
-                console.log("Element sélectionné dans SearchComponent :", element)
                 if (element && element?.ID) {
                     const u = element
                     this.participant = {

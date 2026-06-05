@@ -146,7 +146,7 @@ export default{
                         participant.status = "attente"
                         this.event.nbr_attente += 1
                         if(this.event.attentePlace - this.event.nbr_attente < 0){
-                            this.participants = this.participants.filter(p => p.id !== participant.id)
+                            this.lastParticipants = this.lastParticipants.filter(p => p.id !== participant.id)
                             this.event.nbr_attente -= 1
                         }
                         break
@@ -159,7 +159,7 @@ export default{
                         participant.status = "attente"
                         this.event.nbr_attente += 1
                         if(this.event.attentePlace - this.event.nbr_attente < 0){
-                            this.participants = this.participants.filter(p => p.id !== participant.id)
+                            this.lastParticipants = this.lastParticipants.filter(p => p.id !== participant.id)
                             this.event.nbr_attente -= 1
                         }
                         break

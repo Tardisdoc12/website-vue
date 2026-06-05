@@ -134,7 +134,6 @@ export default {
 
     computed: {
         usersToShow() {
-            console.log(this.usersRegistered)
             return this.usersRegistered.map(user => ({
                 id: user.id,
                 user_name: user.user_name,

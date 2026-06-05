@@ -70,6 +70,7 @@ function monplugin_get_adherents(WP_REST_Request $request) {
             'email'         => $user->user_email,
             'urgence_phone' => get_user_meta($user->ID, 'urgence_phone', true),
             'urgence_name'  => get_user_meta($user->ID, 'urgence_name', true),
+            'roles'         => $user->roles,
         ];
     }
 

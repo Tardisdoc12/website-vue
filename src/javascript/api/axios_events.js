@@ -72,7 +72,6 @@ export default {
 
     // Créer un nouvel event
     async createEvent(eventData) {
-        console.log("Données envoyées à l'API :", conversion_to_bdd(eventData));
         return await api.post("/events/", conversion_to_bdd(eventData));
     },
 

@@ -299,12 +299,12 @@ export default{
             }
             const nonAdherentsCount = computed(() => {
                 const users = e.event.extendedProps?.users ?? []
-                return users.filter(u => u.is_adherent === "1" && u.status === "inscrit").length
+                return users.filter(u => u.is_adherent === "0" && u.status === "inscrit").length
             })
 
             const adherentsCount = computed(() => {
                 const users = e.event.extendedProps?.users ?? []
-                return users.filter(u => u.is_adherent === "0" && u.status === "inscrit").length
+                return users.filter(u => u.is_adherent === "1" && u.status === "inscrit").length
             })
 
             const nbr_attentes = computed(() =>

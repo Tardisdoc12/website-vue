@@ -1,24 +1,72 @@
 <template>
     <!-- Corps de l'annonce -->
     <div class="body">
-        <div v-if="isBureauComp" style="margin-bottom: 10px;">
-            <small @click="RemoveEvent">Supprimer l'évènement</small>
-        </div>
+        <div
+            v-if="isBureauComp"
+            class="flex items-center justify-center"
+            :style="{
+                gap: '10px',
+                'margin-bottom': '10px',
+            }"
+        >
+            <button
+                type="button"
+                :style="{
+                    '--btn-bg': Couleurs.main_red,
+                    '--btn-hover-bg': Couleurs.dark_red
+                }"
+                @click="RemoveEvent"
+                class="appearance-none button-base"
+            >
+                <font-awesome-icon icon="fa-solid fa-trash" />
+            </button>
+            
+            <button
+                type="button"
+                :style="{
+                    '--btn-bg': Number(event.closed_inscription) === 1 ? Couleurs.main_red : Couleurs.main_blue,
+                    '--btn-hover-bg': Number(event.closed_inscription) === 1 ? Couleurs.dark_red : Couleurs.dark_blue
+                }"
+                @click="LockEvent"
+                class="appearance-none button-base"
+            >
+                <font-awesome-icon
+                    v-if="Number(event.closed_inscription) !== 1"
+                    icon="fa-solid fa-lock-open"
+                />
+                <font-awesome-icon
+                    v-else
+                    icon="fa-solid fa-lock"
+                />
+            </button>
 
-        <div v-if="isBureauComp" style="margin-bottom: 10px;">
-            <small @click="LockEvent">Verrouiller l'évènement</small>
-        </div>
+            <div>
+                <small @click="FullEvent">Rendre l'évènement complet</small>
+            </div>
 
-        <div v-if="isBureauComp" style="margin-bottom: 10px;">
-            <small @click="FullEvent">Rendre l'évènement complet</small>
-        </div>
+            <button
+                type="button"
+                :style="{
+                    '--btn-bg': Couleurs.main_blue,
+                    '--btn-hover-bg': Couleurs.dark_blue
+                }"
+                @click="ajoutPerson"
+                class="appearance-none button-base"
+            >
+                <font-awesome-icon icon="fa-solid fa-user-plus"/>
+            </button>
 
-        <div v-if="isBureauComp" style="margin-bottom: 10px;">
-            <small @click="ajoutPerson">Ajouter une personne</small>
-        </div>
-
-        <div v-if="isBureauComp" style="margin-bottom: 10px;">
-            <small @click="CopyEvent">Dupliquer l'évènement</small>
+            <button
+                type="button"
+                :style="{
+                    '--btn-bg': Couleurs.main_blue,
+                    '--btn-hover-bg': Couleurs.dark_blue
+                }"
+                @click="CopyEvent"
+                class="appearance-none button-base"
+            >
+                <font-awesome-icon icon="fa-solid fa-clone"/>
+            </button>
         </div>
         <!-- Dates -->
             <div style="margin-bottom: 10px;">
@@ -81,7 +129,7 @@
                 class="appearance-none button-base"
                 @click="VisualizeInscrit"
             >
-                Voir les inscrits
+                <font-awesome-icon icon="fa-solid fa-clipboard-list" />
             </button>
 
             <!-- events -->
@@ -141,12 +189,12 @@ export default {
     computed: {
         placeAdherents() {
             if(Number(this.event.subscribePlace) < 0 ){
-                return `${this.event.nbr_non_adherents}/∞`
+                return `${this.event.nbr_adherents}/∞`
             }
-            return `${this.event.nbr_non_adherents}/${this.event.subscribePlace}`
+            return `${this.event.nbr_adherents}/${this.event.subscribePlace}`
         },
         placeNonAdherents() {
-            return `${this.event.nbr_adherents}/${this.event.nonsubscribePlace}`
+            return `${this.event.nbr_non_adherents}/${this.event.nonsubscribePlace}`
         },
         isBureauComp() {
             return isBureau(this.roles);
@@ -161,8 +209,8 @@ export default {
         },
 
         affichageInscribe(){
-            const isFullAdherent = this.event.subscribePlace - (this.event.nbr_non_adherents) <= 0
-            const isFullNonAdherent = this.event.nonsubscribePlace - (this.event.nbr_adherents) <= 0
+            const isFullAdherent = this.event.subscribePlace - (this.event.nbr_adherents) <= 0
+            const isFullNonAdherent = this.event.nonsubscribePlace - (this.event.nbr_non_adherents) <= 0
             const isAdherent = this.isAdherentComp
             let isOkay = false
             if(isAdherent){
@@ -199,7 +247,7 @@ export default {
                 return true
             }
             if (this.isAdherentComp && this.event.attentePlace <= 0) {
-                if (this.event.subscribePlace - this.event.nbr_non_adherents === 0) {
+                if (this.event.subscribePlace - this.event.nbr_adherents === 0) {
                     return true
                 }
                 return false
@@ -211,7 +259,7 @@ export default {
                 return false
             }
             else {
-                if (this.event.nonsubscribePlace - this.event.nbr_adherents<= 0) {
+                if (this.event.nonsubscribePlace - this.event.nbr_non_adherents<= 0) {
                     return true
                 }
                 return false
