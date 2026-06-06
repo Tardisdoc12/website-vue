@@ -70,6 +70,7 @@
                     <th class="border border-gray-300 p-2 text-left">Thème demandé</th>
                     <th class="border border-gray-300 p-2 text-left">Moto</th>
                     <th class="border border-gray-300 p-2 text-left">Expérience</th>
+                    <th class="border border-gray-300 p-2 text-center">Encadrant</th>
                     <th class="border border-gray-300 p-2 text-center">Actions</th>
                     </tr>
                 </thead>
@@ -85,6 +86,7 @@
                     <td class="border border-gray-300 p-2">{{ user.goal }}</td>
                     <td class="border border-gray-300 p-2">{{ user.bike }}</td>
                     <td class="border border-gray-300 p-2">{{ user.experience }}</td>
+                    <td class="border border-gray-300 p-2 text-center">{{ user.encadrant }}</td>
                     <td class="border border-gray-300 p-2 text-center">
                         <button 
                         @click="DeleteUser(user)"
@@ -134,6 +136,7 @@ export default {
 
     computed: {
         usersToShow() {
+            console.log("🚀 usersRegistered:", this.usersRegistered)
             return this.usersRegistered.map(user => ({
                 id: user.id,
                 user_name: user.user_name,
@@ -141,7 +144,8 @@ export default {
                 phone: user.phone,
                 goal: user.goal,
                 bike: user.bike,
-                experience: user.is_adherent === "1" ? "" : user.experience
+                experience: user.is_adherent === "1" ? "" : user.experience,
+                encadrant: user.encadrement === "1" ? "Oui" : "Non",
             }))
         },
     },

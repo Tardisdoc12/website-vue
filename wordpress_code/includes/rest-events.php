@@ -63,6 +63,7 @@ function monplugin_get_events(WP_REST_Request $request) {
                 u.is_adherent, 
                 i.bike,
                 i.status,
+                i.encadrement,
                 wp_users.ID AS wp_user_id
             FROM $table_inscrits i
             JOIN $table_users u ON u.id = i.user_id
@@ -239,6 +240,7 @@ function monplugin_get_event_post_id(WP_REST_Request $request) {
                 u.is_adherent, 
                 i.bike,
                 i.status,
+                i.encadrement,
                 wp_users.ID AS wp_user_id
             FROM $table_inscrits i
             JOIN $table_users u ON u.id = i.user_id
