@@ -5,6 +5,7 @@
             'background-color': `${backgroundColorCard}`,
             'border': '1px solid ' + `${BackgroundColor}`
         }"
+        @click="OnClickEventCard"
     >
         <div class="event-row">
             <div
@@ -69,6 +70,12 @@ export default{
         backgroundColorCard() {
             return this.ColorsCard[1]
         },
+    },
+
+    methods:{
+        OnClickEventCard() {
+            this.$emit('click-event-card', this.event)
+        }
     }
 
 

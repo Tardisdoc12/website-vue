@@ -10,6 +10,7 @@
         @inscriptWanted="incrementSteps"
         @copyEvent="CopyEvent"
         @deletedEvent="deletedEvent"
+        @uninscriptEvent="onUninscriptEvent"
         @addPerson="addUser"
     />
     <InscriptionEvent
@@ -56,6 +57,7 @@ import UsersInEvent from "@/subcomponents/event_inscribe/event_users.vue"
 import InscriptionEvent from "@/subcomponents/event_inscribe/event_inscription.vue"
 import EncadrantAddPerson from "@/subcomponents/event_inscribe/event_encadrant_add_person.vue"
 import DuplicationEvent from "@/subcomponents/event_inscribe/event_duplication.vue"
+import api from "@/javascript/api/axios_inscription"
 
 export default{
     emits: [
@@ -221,6 +223,21 @@ export default{
         updateEvent() {
             this.steps = 3
             this.$emit("incrementSteps", this.steps)
+        },
+
+        async DeleteUser() {
+            const tempEventUserList = this.event.users.filter(user => user.email === this.userConnected.email)
+            const response = await api.delete_inscrit(this.event.event_id, tempEventUserList[0].id)
+            if(response.data.success) {
+                this.$emit("userDeleted", tempEventUserList[0])
+                this.$emit("cancelSignal", this.isCancel)
+            }
+        },
+
+        async onUninscriptEvent() {
+            this.steps = 0
+            this.$emit("incrementSteps", this.steps)
+            await this.DeleteUser()
         },
     },
 

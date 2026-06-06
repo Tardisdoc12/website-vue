@@ -7,19 +7,30 @@
         :border-color-open="Couleurs.dark_blue"
         :borderWindowColor="Couleurs.dark_blue"
         :is-opoen-forced="true"
+        v-bind="$attrs"
     >
         <event_card
             v-for="event in upcomingEvents"
             :event="event"
             :is-encadrant="false"
+            @click-event-card="OnClickEventCard"
         />
     </DepliantWindow>
+
+    <ModalEventUninscript
+        v-if="OpenModalInscription"
+        :event="eventSelected"
+        :user-connected="user"
+        @cancelSignal="()=>{OpenModalInscription = false}"
+        @eventDeleted="deleteEvent"
+    />
 </template>
 
 <script>
 import event_card from '@/subcomponents/unitary_elements/event_card.vue';
 import { Couleurs } from '@/javascript/constants/colors'
 import DepliantWindow from '@/subcomponents/unitary_elements/depliantWindow.vue';
+import ModalEventUninscript from '@/subcomponents/modals/modal_event_uninscript.vue'
 
 export default{
     props:{
@@ -32,6 +43,8 @@ export default{
     data() {
         return {
             Couleurs,
+            OpenModalInscription: false,
+            eventSelected: null,
         }
     },
 
@@ -61,9 +74,25 @@ export default{
         }
     },
 
+    methods: {
+        OnClickEventCard(event) {
+            this.OpenModalInscription = true
+            this.eventSelected = event
+            this.eventSelected.isInscript = true
+        },
+
+        deleteEvent(eventId) {
+            const eventIndex = this.user.events.findIndex(event => event.id === eventId);
+            if (eventIndex !== -1) {
+                this.user.events.splice(eventIndex, 1);
+            }
+        },
+    },
+
     components:{
         event_card,
-        DepliantWindow
+        DepliantWindow,
+        ModalEventUninscript,
     }
 }
 </script>

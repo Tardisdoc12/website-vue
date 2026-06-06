@@ -107,8 +107,8 @@
                 class="appearance-none button-base"
                 :style="{
                     '--btn-color': Couleurs.white,
-                    '--btn-bg': disableSubscribe ? Couleurs.gris_pale : Couleurs.vert,
-                    '--btn-hover-bg': disableSubscribe ? Couleurs.gris_pale : Couleurs.dark_vert
+                    '--btn-bg': colorButton,
+                    '--btn-hover-bg': colorHoverButton
                 }"
                 @click="Register"
             >
@@ -220,7 +220,7 @@ export default {
                 isOkay = isFullNonAdherent
             }
             if(this.event.isInscript){
-                return "Déjà inscrit"
+                return "Se désinscrire"
             }
             else if(Number(this.event.closed_inscription) === 1){
                 return "Inscriptions fermées"
@@ -239,9 +239,51 @@ export default {
             }
         },
 
+        colorButton() {
+             if(this.event.isInscript){
+                return Couleurs.main_red
+             }
+             else if(Number(this.event.closed_inscription) === 1){
+                return Couleurs.gris_pale
+             }
+             else if(Number(this.event.closed_inscription) === 2 && (!this.isAttente)){
+                return Couleurs.gris_pale
+             }
+             else if(Number(this.event.closed_inscription) === 3){
+                return Couleurs.gris_pale
+             }
+             else if (this.isAttente){
+                return Couleurs.vert
+             }
+             else{
+                return Couleurs.vert
+             }
+        },
+
+        colorHoverButton() {
+            if(this.event.isInscript){
+                return Couleurs.dark_red
+            }
+            else if(Number(this.event.closed_inscription) === 1){
+                return Couleurs.gris_pale
+            }
+            else if(Number(this.event.closed_inscription) === 2 && (!this.isAttente)){
+                return Couleurs.gris_pale
+            }
+            else if(Number(this.event.closed_inscription) === 3){
+                return Couleurs.gris_pale
+            }
+            else if (this.isAttente){
+                return Couleurs.dark_vert
+            }
+            else{
+                return Couleurs.dark_vert
+            }
+        },
+
         disableSubscribe() {
             if (this.event.isInscript) {
-                return true
+                return false
             }
             if(Number(this.event.closed_inscription) !== 0){
                 return true
@@ -353,6 +395,10 @@ export default {
         },
 
         Register() {
+            if(this.event.isInscript){
+                this.$emit('uninscriptEvent')
+                return
+            }
             this.$emit('inscriptWanted')
         }
     }
