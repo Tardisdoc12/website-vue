@@ -141,7 +141,7 @@ export default {
                 phone: user.phone,
                 goal: user.goal,
                 bike: user.bike,
-                experience: user.is_adherent === "0" ? "" : user.experience
+                experience: user.is_adherent === "1" ? "" : user.experience
             }))
         },
     },

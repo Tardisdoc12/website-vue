@@ -248,7 +248,7 @@ export default {
                                 ? `${this.user.firstName} ${this.user.lastName}` : "",
                     phone: this.user?.telephone ?? "",
                     bike:  this.user?.moto ?? "",
-                    isAdherent: this.user.roles.includes("adherent") ? 1 : 0,
+                    isAdherent: !this.user.roles.includes("non_adherent") ? 1 : 0,
                     email: this.user?.email ?? "",
                     roles: this.user?.roles ?? ["non_adherent"],
                     isAttente: this.isAttente,
@@ -380,6 +380,7 @@ export default {
                     if (participant.isAttente) {
                         participant.status = "attente"
                     }
+                    console.log("🚀 Inscription de :", participant)
                     const res = await inscritAPI.create_inscrit(this.event.event_id, participant)
                     if (!res?.data?.success) throw new Error("Échec pour " + participant.name)
                 }

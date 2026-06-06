@@ -121,6 +121,16 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
         $user_id = $wpdb->insert_id;
     } else {
         $user_id = intval($user->id);
+        $isAdherent = in_array('non_adherent', $roles, true) ? 0 : 1;
+    
+        $wpdb->update(
+            $table_users,
+            [
+                'is_adherent' => $isAdherent,
+                'experience'  => !empty($user_d['experience']) ? sanitize_text_field($user_d['experience']) : $user->experience,
+            ],
+            ['id' => $user_id]
+        );
         // Mettre à jour l'expérience si elle est fournie
         if (!empty($user_d['experience'])) {
             $wpdb->update(
@@ -145,7 +155,7 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
     }
 
     // Décider quelle colonne décrémenter
-    if (empty($roles) || in_array('nonadherent', $roles, true)) {
+    if (empty($roles) || in_array('non_adherent', $roles, true)) {
         $column = 'nonsubscribe_places';
         // Vérifier s'il reste des places
         if ($event->$column <= 0) {
