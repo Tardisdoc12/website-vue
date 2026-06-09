@@ -84,7 +84,7 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
     $table_users    = $wpdb->prefix . "users_inscrits";
     $event_id = $request->get_param('event_id'); 
     $user_d = $request->get_param('user');
-    $roles    = isset($user_d['roles']) && is_array($user_d['roles']) ? array_map('sanitize_text_field', $user_d['roles']) : [];
+    $roles    = isset($user_d['roles']) && is_array($user_d['roles']) ? array_map('sanitize_text_field', $user_d['roles']) : ['non_adherent'];
 
     // Vérifier si l’événement existe
     $event = $wpdb->get_row($wpdb->prepare(
