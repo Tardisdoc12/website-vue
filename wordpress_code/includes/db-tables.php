@@ -110,13 +110,34 @@ function mon_plugin_creer_tables() {
         KEY user_personal (wp_user_id, is_personal)
     ) $charset_collate;";
 
+    $table_medias = $wpdb->prefix . "medias";
+    $sql9 = "CREATE TABLE $table_medias (
+        id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+        kdrive_file_id VARCHAR(200) NOT NULL,
+        file_name VARCHAR(200) NOT NULL,
+        file_size BIGINT(20) UNSIGNED DEFAULT NULL,
+        file_type VARCHAR(100) DEFAULT NULL,
+        uploaded_by BIGINT(20) UNSIGNED DEFAULT NULL,
+        date_creation DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+        PRIMARY KEY (id),
+        KEY kdrive_file (kdrive_file_id),
+        KEY uploaded_by (uploaded_by)
+    ) $charset_collate;";
+
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-    dbDelta($sql1);
-    dbDelta($sql2);
-    dbDelta($sql3);
-    dbDelta($sql4);
-    dbDelta($sql5);
-    dbDelta($sql6);
-    dbDelta($sql7);
-    dbDelta($sql8);
+    $sqls = [
+        $sql1,
+        $sql2,
+        $sql3,
+        $sql4,
+        $sql5,
+        $sql6,
+        $sql7,
+        $sql8,
+        $sql9
+    ];
+
+    foreach ($sqls as $sql) {
+        dbDelta($sql);
+    }
 }

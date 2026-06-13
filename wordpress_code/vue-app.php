@@ -23,6 +23,7 @@ $includes = [
     'includes/events_template.php',
     'includes/rest-conseils.php',
     'includes/rest-notes.php',
+    'includes/rest-media.php',
 ];
 
 foreach ($includes as $file) {
