@@ -322,22 +322,6 @@ export default {
             }
             else {
                 const response = await eventsService.updateEvent(this.event.event_id, this.event)
-                if (this.cloneDates.length > 0) {
-                    for (const range of this.cloneDates) {
-                        let event_duplicate = {
-                            ...this.event,
-                            startDate: range.start_date,
-                            endDate: range.end_date
-                        }
-                        let response_update = await this.createEvent(event_duplicate);
-                        if(response_update?.data?.id){
-                            event_duplicate.id = response_update.data.id
-                            event_duplicate.post_id = response_update.data.post_id
-                            event_duplicate.users = []
-                            this.$emit("createEvents", event_duplicate)
-                        }
-                    }
-                }
                 alert("Évènement modifié avec succés !")
                 this.$emit('cancelSignal', !this.isOpen)
             }

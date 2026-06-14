@@ -248,9 +248,9 @@ export default {
                                 ? `${this.user.firstName} ${this.user.lastName}` : "",
                     phone: this.user?.telephone ?? "",
                     bike:  this.user?.moto ?? "",
-                    isAdherent: !this.user.roles.includes("non_adherent") ? 1 : 0,
-                    email: this.user?.email ?? "",
+                    isAdherent: this.user?.roles ? (!this.user.roles.includes("non_adherent") ? 1 : 0) : 0,
                     roles: this.user?.roles ?? ["non_adherent"],
+                    email: this.user?.email ?? "",
                     isAttente: this.isAttente,
                 }
             ]
