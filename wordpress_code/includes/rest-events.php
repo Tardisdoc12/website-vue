@@ -286,15 +286,22 @@ add_action('rest_api_init', function () {
 function monplugin_create_events(WP_REST_Request $request) {
     global $wpdb;
 
+    error_log('HTML brut reçu: ' . $request['description']);
+
     $post_id = wp_insert_post([
         'post_type'   => 'event',
         'post_title'  => sanitize_text_field($request['title']),
         'post_status' => 'publish',
-        'post_content'=> sanitize_textarea_field($request['description']),
+        'post_content'=> monplugin_sanitize_rich_text($request['description']),
     ], true);
 
+    $description = monplugin_sanitize_rich_text($request['description']);
+    error_log('Description after kses: ' . $description);
+
+
     if (is_wp_error($post_id)) {
-        return new WP_Error('post_error', 'Erreur création page');
+        error_log('Post error: ' . $post_id->get_error_message());
+        return new WP_Error('post_error', $post_id->get_error_message());
     }
 
     $result = $wpdb->insert(
@@ -304,7 +311,7 @@ function monplugin_create_events(WP_REST_Request $request) {
             'title' => sanitize_text_field($request['title']),
             'start_date' => sanitize_text_field($request['start_date']),
             'end_date' => sanitize_text_field($request['end_date']),
-            'description' => sanitize_textarea_field($request['description']),
+            'description' => monplugin_sanitize_rich_text($request['description']),
             'place' => sanitize_text_field($request['place']),
             'category' => sanitize_text_field($request['category']),
             'subscribe_places' => intval($request['subscribe_places']),
@@ -316,6 +323,8 @@ function monplugin_create_events(WP_REST_Request $request) {
     );
 
     if ($result === false) {
+        error_log('DB Error: ' . $wpdb->last_error);
+        error_log('Last query: ' . $wpdb->last_query);
         return new WP_Error(
             'db_error',
             $wpdb->last_error,

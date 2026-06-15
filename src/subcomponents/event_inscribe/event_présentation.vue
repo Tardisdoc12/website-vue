@@ -92,11 +92,7 @@
         <!-- Description -->
         <div style="margin-bottom: 10px;">
             <span style="font-weight: bold; text-decoration: underline;">{{ "Description :"}}</span>
-            <p
-                style="white-space: pre-line;"
-            >
-                {{ event.description }}
-            </p>
+            <span style="white-space: pre-line;" v-html="description"></span>
         </div>
         
         <!-- bouton -->
@@ -206,6 +202,12 @@ export default {
 
         isEncadrantComp() {
             return isEncadrant(this.roles)
+        },
+
+        description(){
+            const desc = this.event.description
+            if (!desc) return ''
+            return desc.startsWith('<') ? desc : `<p>${desc}</p>`
         },
 
         affichageInscribe(){

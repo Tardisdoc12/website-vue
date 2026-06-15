@@ -9,6 +9,11 @@ function monplugin_run_migrations() {
     $table_conseils = $wpdb->prefix . "conseils";
     $table_favoris = $wpdb->prefix . "favoris";
 
+    $column = $wpdb->get_results("SHOW COLUMNS FROM $table_events LIKE 'description'");
+    if (!empty($column) && $column[0]->Type !== 'longtext') {
+        $wpdb->query("ALTER TABLE $table_events MODIFY COLUMN description LONGTEXT");
+    }
+
     // --- 1️⃣ Ajouter post_id si elle n'existe pas ---
     $column = $wpdb->get_results("SHOW COLUMNS FROM $table_events LIKE 'post_id'");
     if (empty($column)) {

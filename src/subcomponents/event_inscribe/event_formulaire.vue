@@ -34,9 +34,28 @@
             </div>
 
             <!-- Description -->
-            <div style="margin-bottom:10px;">
-                <label class="block font-medium">Description</label>
-                <textarea v-model="descriptionForm" class="w-full border p-1 rounded" rows="4" required></textarea>
+            <div class="rte-wrap">
+                <label class="rte-label">Description</label>
+                <div class="rte-box">
+                    <div class="rte-toolbar" v-if="event.description">
+                        <button class="rte-btn" @click="event.description.chain().focus().toggleBold().run()" :class="{ active: event.description.isActive('bold') }">
+                        <b>G</b>
+                        </button>
+                        <button class="rte-btn" @click="event.description.chain().focus().toggleItalic().run()" :class="{ active: event.description.isActive('italic') }">
+                        <i>I</i>
+                        </button>
+                        <button class="rte-btn" @click="event.description.chain().focus().toggleUnderline().run()" :class="{ active: event.description.isActive('underline') }">
+                        <u>S</u>
+                        </button>
+                        <div class="rte-sep"></div>
+                        <div class="rte-color-wrap">
+                        <div class="rte-color-btn" :style="{ background: currentColor }">
+                            <input type="color" v-model="currentColor" @input="event.description.chain().focus().setColor(currentColor).run()" />
+                        </div>
+                        </div>
+                    </div>
+                    <EditorContent :editor="event.description" class="rte-content" />
+                </div>
             </div>
 
             <!-- Catégorie -->
@@ -119,6 +138,10 @@
 import eventsService from '@/javascript/api/axios_events.js';
 import { Events } from "@/javascript/constants/events_type.js"
 import { Couleurs } from "@/javascript/constants/colors"
+import { Editor, EditorContent } from '@tiptap/vue-3'
+import StarterKit from '@tiptap/starter-kit'
+import { Color } from '@tiptap/extension-color'
+import { TextStyle } from '@tiptap/extension-text-style'
 
 export default {
     props: {
@@ -137,6 +160,20 @@ export default {
             this.event = {...this.eventSelected}
             this.isUpdate = true
         }
+        this.event.description = new Editor({
+            content: this.eventSelected ? this.eventSelected.description : '<p>Écris ton texte ici...</p>',
+            extensions: [
+                StarterKit,
+                TextStyle,
+                Color,
+            ],
+        })
+    },
+
+    beforeUnmount() {
+        if (this.event.description?.destroy) {
+            this.event.description.destroy()
+        }
     },
 
     data() {
@@ -146,7 +183,7 @@ export default {
                 title: '',
                 startDate: '',
                 endDate: '',
-                description: '',
+                description: null,
                 place: '',
                 categorie: '',
                 subscribePlace: 1,
@@ -158,6 +195,7 @@ export default {
             isCheckedAttente: false || this?.eventSelected?.attentePlace > 0,
             Events: Events,
             isUpdate:false,
+            currentColor: Couleurs.main_blue,
         }
     },
 
@@ -172,10 +210,10 @@ export default {
 
         descriptionForm: {
             get() {
-                return this.event.description
+                return this.event.description.getHTML()
             },
             set(newValue) {
-                this.event.description = newValue
+                this.event.description.commands.setContent(newValue)
             }
         },
 
@@ -281,6 +319,7 @@ export default {
             else {
                 event.endDate = null;
             }
+            event.description = this.event.description.getHTML()
 
             const response = await eventsService.createEvent(event)
             return response;
@@ -299,16 +338,15 @@ export default {
                         ...this.event,
                         id : response.data.id,
                         post_id : response.data.post_id,
-                        users: []
+                        users: [],
                     }
                     this.$emit("createEvents", event)
                 }
-
                 this.event = {
                     title: '',
                     startDate: '',
                     endDate: '',
-                    description: '',
+                    description: this.event.description, // ← on garde l'instance existante
                     place: '',
                     categorie: '',
                     subscribePlace: 1,
@@ -326,10 +364,26 @@ export default {
                 this.$emit('cancelSignal', !this.isOpen)
             }
         }
+    },
+
+    components: {
+        EditorContent,
     }
 }
 </script>
 
 <style>
+.rte-wrap { margin-bottom: 10px; }
+.rte-label { font-size: 13px; color: #666; font-weight: 500; margin-bottom: 8px; display: block; }
+.rte-box { border: 1px solid #ddd; border-radius: 8px; overflow: hidden; background: #fff; }
+.rte-toolbar { display: flex; align-items: center; gap: 2px; padding: 6px 8px; border-bottom: 1px solid #eee; background: #f9f9f9; }
+.rte-btn { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border: 1px solid transparent; border-radius: 6px; background: transparent; cursor: pointer; color: #555; font-size: 14px; }
+.rte-btn:hover { background: #fff; border-color: #ddd; }
+.rte-btn.active { background: #fff; border-color: #bbb; color: #111; }
+.rte-sep { width: 1px; height: 20px; background: #e0e0e0; margin: 0 4px; }
+.rte-color-btn { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #ccc; cursor: pointer; position: relative; overflow: hidden; }
+.rte-color-btn input[type=color] { position: absolute; inset: -4px; opacity: 0; cursor: pointer; width: 30px; height: 30px; }
+.rte-content :deep(.ProseMirror) { min-height: 140px; padding: 12px 14px; font-size: 15px; line-height: 1.6; outline: none; }
+.rte-content :deep(.ProseMirror p.is-editor-empty:first-child::before) { content: 'Écris ta description ici...'; color: #aaa; pointer-events: none; float: left; height: 0; }
 
 </style>

@@ -26,7 +26,7 @@ function mon_plugin_creer_tables() {
         title VARCHAR(200) NOT NULL,
         start_date DATETIME NOT NULL,
         end_date DATETIME NULL,
-        description TEXT NOT NULL,
+        description LONGTEXT NOT NULL,
         place VARCHAR(200) NOT NULL,
         category VARCHAR(100) NOT NULL,
         subscribe_places INT NOT NULL,
