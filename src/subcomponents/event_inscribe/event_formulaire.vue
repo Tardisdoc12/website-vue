@@ -156,11 +156,31 @@ export default {
         }
     },
 
-    mounted() {
-        if (this.eventSelected) {
-            this.event = {...this.eventSelected}
-            this.isUpdate = true
+    watch: {
+        eventSelected: {
+            immediate: true,  // ← remplace la logique de mounted()
+            handler(newVal) {
+                if (newVal) {
+                    this.event = {
+                        ...newVal,
+                        startDate:   this.formatDateForInput(newVal.startDate),
+                        endDate:     this.formatDateForInput(newVal.endDate),
+                        description: newVal.description ?? '',
+                    }
+                    this.isUpdate = true
+                    this.isChecked = newVal.subscribePlace >= 0
+                    this.isCheckedAttente = newVal.attentePlace > 0
+
+                    // Mettre à jour le contenu de l'éditeur s'il existe déjà
+                    if (this.editor) {
+                        this.editor.commands.setContent(this.event.description || '<p>Écris ton texte ici...</p>')
+                    }
+                }
+            }
         }
+    },
+
+    mounted() {
        this.editor = new Editor({
             content: this.event.description || '<p>Écris ton texte ici...</p>',
             extensions: [StarterKit, TextStyle, Color, Underline],
@@ -305,6 +325,15 @@ export default {
 
         removeRange(index) {
             this.cloneDates.splice(index, 1);
+        },
+
+        formatDateForInput(dateStr) {
+            if (!dateStr) return ''
+            if (dateStr.startsWith('0000')) return ''
+            if (dateStr === '00:00:00') return ''
+            // "2024-06-15 14:30:00" → "2024-06-15T14:30"
+            // "2024-06-15T14:30:00" → "2024-06-15T14:30"
+            return dateStr.replace(' ', 'T').slice(0, 16)
         },
 
         async createEvent(event) {
