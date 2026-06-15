@@ -24,6 +24,7 @@
     "@tailwindcss/vite": "^4.1.11",
     "@tiptap/extension-color": "^2.27.2",
     "@tiptap/extension-text-style": "^2.27.2",
+    "@tiptap/extension-underline": "^2.27.2",
     "@tiptap/pm": "^2.27.2",
     "@tiptap/starter-kit": "^2.27.2",
     "@tiptap/vue-3": "^2.27.2",

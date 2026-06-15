@@ -372,7 +372,7 @@ function monplugin_update_event(WP_REST_Request $request) {
         'title' => sanitize_text_field($request['title']),
         'start_date' => sanitize_text_field($request['start_date']),
         'end_date' => sanitize_text_field($request['end_date']),
-        'description' => sanitize_textarea_field($request['description']),
+        'description' =>  monplugin_sanitize_rich_text($request['description']),
         'place' => sanitize_text_field($request['place']),
         'category' => sanitize_text_field($request['category']),
         'subscribe_places' => intval($request['subscribe_places']),

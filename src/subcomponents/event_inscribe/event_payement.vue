@@ -1,5 +1,5 @@
 <template>
-    <p style="margin-bottom: 10px; margin-top: 10px; margin-left: 10px;margin-right: 10px;">{{  "Votre inscription ne sera validée qu'après paiement. Merci de Cliquer sur le Bouton pour procéderr au payement" }}</p>
+    <p style="margin-bottom: 10px; margin-top: 10px; margin-left: 10px;margin-right: 10px;">{{  "Votre inscription ne sera validée qu'après paiement. Merci de remplir le formulaire ci-dessous pour procéder au paiement." }}</p>
     <iframe class="center-helloasso" :src="getBilleterieURL" style="border: none; width: 100%; height: 700px;">
     </iframe>
 </template>

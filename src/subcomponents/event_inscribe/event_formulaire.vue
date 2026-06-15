@@ -37,24 +37,24 @@
             <div class="rte-wrap">
                 <label class="rte-label">Description</label>
                 <div class="rte-box">
-                    <div class="rte-toolbar" v-if="event.description">
-                        <button class="rte-btn" @click="event.description.chain().focus().toggleBold().run()" :class="{ active: event.description.isActive('bold') }">
+                    <div class="rte-toolbar" v-if="editor">
+                        <button type="button" class="rte-btn" @click="editor.chain().focus().toggleBold().run()" :class="{ active: editor.isActive('bold') }">
                         <b>G</b>
                         </button>
-                        <button class="rte-btn" @click="event.description.chain().focus().toggleItalic().run()" :class="{ active: event.description.isActive('italic') }">
+                        <button type="button" class="rte-btn" @click="editor.chain().focus().toggleItalic().run()" :class="{ active: editor.isActive('italic') }">
                         <i>I</i>
                         </button>
-                        <button class="rte-btn" @click="event.description.chain().focus().toggleUnderline().run()" :class="{ active: event.description.isActive('underline') }">
+                        <button type="button" class="rte-btn" @click="editor.chain().focus().toggleUnderline().run()" :class="{ active: editor.isActive('underline') }">
                         <u>S</u>
                         </button>
                         <div class="rte-sep"></div>
                         <div class="rte-color-wrap">
                         <div class="rte-color-btn" :style="{ background: currentColor }">
-                            <input type="color" v-model="currentColor" @input="event.description.chain().focus().setColor(currentColor).run()" />
+                            <input type="color" v-model="currentColor" @input="editor.chain().focus().setColor(currentColor).run()" />
                         </div>
                         </div>
                     </div>
-                    <EditorContent :editor="event.description" class="rte-content" />
+                    <EditorContent :editor="editor" class="rte-content" />
                 </div>
             </div>
 
@@ -142,6 +142,7 @@ import { Editor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import { Color } from '@tiptap/extension-color'
 import { TextStyle } from '@tiptap/extension-text-style'
+import { Underline } from '@tiptap/extension-underline'
 
 export default {
     props: {
@@ -160,30 +161,27 @@ export default {
             this.event = {...this.eventSelected}
             this.isUpdate = true
         }
-        this.event.description = new Editor({
-            content: this.eventSelected ? this.eventSelected.description : '<p>Écris ton texte ici...</p>',
-            extensions: [
-                StarterKit,
-                TextStyle,
-                Color,
-            ],
+       this.editor = new Editor({
+            content: this.event.description || '<p>Écris ton texte ici...</p>',
+            extensions: [StarterKit, TextStyle, Color, Underline],
         })
     },
 
     beforeUnmount() {
-        if (this.event.description?.destroy) {
-            this.event.description.destroy()
+        if (this.editor) {
+            this.editor.destroy()
         }
     },
 
     data() {
         return {
             Couleurs,
+            editor: null,
             event: {
                 title: '',
                 startDate: '',
                 endDate: '',
-                description: null,
+                description: '',
                 place: '',
                 categorie: '',
                 subscribePlace: 1,
@@ -210,10 +208,10 @@ export default {
 
         descriptionForm: {
             get() {
-                return this.event.description.getHTML()
+                return this.editor.getHTML()
             },
             set(newValue) {
-                this.event.description.commands.setContent(newValue)
+                this.editor.commands.setContent(newValue)
             }
         },
 
@@ -319,7 +317,7 @@ export default {
             else {
                 event.endDate = null;
             }
-            event.description = this.event.description.getHTML()
+            event.description = this.editor.getHTML()
 
             const response = await eventsService.createEvent(event)
             return response;
@@ -359,7 +357,20 @@ export default {
                 }
             }
             else {
-                const response = await eventsService.updateEvent(this.event.event_id, this.event)
+                const payload = {
+                    title:              this.event.title,
+                    startDate:          this.event.startDate,
+                    endDate:            this.event.endDate,
+                    description:        this.editor.getHTML(),
+                    place:              this.event.place,
+                    categorie:          this.event.categorie,
+                    subscribePlace:     this.event.subscribePlace,
+                    nonsubscribePlace:  this.event.nonsubscribePlace,
+                    attentePlace:       this.event.attentePlace,
+                    billeterie_url:     this.event.billeterie_url,
+                }
+
+                const response = await eventsService.updateEvent(this.event.event_id, payload)
                 alert("Évènement modifié avec succés !")
                 this.$emit('cancelSignal', !this.isOpen)
             }
