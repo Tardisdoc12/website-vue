@@ -380,7 +380,6 @@ export default {
                     if (participant.isAttente) {
                         participant.status = "attente"
                     }
-                    console.log("🚀 Inscription de :", participant)
                     const res = await inscritAPI.create_inscrit(this.event.event_id, participant)
                     if (!res?.data?.success) throw new Error("Échec pour " + participant.name)
                 }
