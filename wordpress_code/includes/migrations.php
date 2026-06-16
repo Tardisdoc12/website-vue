@@ -8,6 +8,7 @@ function monplugin_run_migrations() {
     $table_source = $wpdb->prefix . "source";
     $table_conseils = $wpdb->prefix . "conseils";
     $table_favoris = $wpdb->prefix . "favoris";
+    $table_medias = $wpdb->prefix . "medias";
 
     $column = $wpdb->get_results("SHOW COLUMNS FROM $table_events LIKE 'description'");
     if (!empty($column) && $column[0]->Type !== 'longtext') {
@@ -18,6 +19,11 @@ function monplugin_run_migrations() {
     $column = $wpdb->get_results("SHOW COLUMNS FROM $table_events LIKE 'post_id'");
     if (empty($column)) {
         $wpdb->query("ALTER TABLE $table_events ADD post_id BIGINT(20) UNSIGNED NULL AFTER id");
+    }
+
+    $column = $wpdb->get_results("SHOW COLUMNS FROM $table_medias LIKE 'parent_id'");
+    if (empty($column)) {
+        $wpdb->query("ALTER TABLE $table_medias ADD parent_id VARCHAR(200) UNSIGNED NULL AFTER file_type");
     }
 
     $column = $wpdb->get_results("SHOW COLUMNS FROM $table_inscribes LIKE 'status'");
