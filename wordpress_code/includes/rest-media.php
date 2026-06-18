@@ -35,11 +35,13 @@ function myplugin_get_medias_thumbnails(WP_REST_Request $request) {
     $multi   = curl_multi_init();
     $handles = [];
 
+    $token = defined('KDRIVE_TOKEN') ? KDRIVE_TOKEN : get_option('mon_plugin_token');
+
     foreach ($urls as $key => $url) {
         $ch = curl_init($url);
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HTTPHEADER     => ['Authorization: Bearer ' . KDRIVE_TOKEN],
+            CURLOPT_HTTPHEADER     => ['Authorization: Bearer ' . $token],
             CURLOPT_TIMEOUT        => 15,
         ]);
         curl_multi_add_handle($multi, $ch);
@@ -72,6 +74,51 @@ function myplugin_get_medias_thumbnails(WP_REST_Request $request) {
     return rest_ensure_response([
         'success'    => true,
         'thumbnails' => $thumbnails,
+    ]);
+}
+
+//------------------------------------------------------------------------------
+
+
+add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1', '/medias/directory/(?P<directory_id>\d+)', [
+        'methods' => 'GET',
+        'callback' => 'myplugin_get_medias',
+        'permission_callback' => 'monplugin_verify_csrf'
+    ]);
+});
+
+function myplugin_get_medias(WP_REST_Request $request) {
+    $token = defined('KDRIVE_TOKEN') ? KDRIVE_TOKEN : get_option('mon_plugin_token');
+    $kdrive_id = defined('KDRIVE_DRIVE_ID') ? KDRIVE_DRIVE_ID : get_option('mon_plugin_kdrive_id');
+    $kdrive_directory_default = defined('KDRIVE_DIRECTORY_ID') ? KDRIVE_DIRECTORY_ID : get_option('mon_plugin_kdrive_directory_id');
+    $kdrive_directory_id = intval($request['directory_id']) ?? $kdrive_directory_default;
+
+    if (empty($token) || empty($kdrive_id)) {
+        return new WP_Error('kdrive_config_error', 'Configuration KDrive manquante.', ['status' => 505]);
+    }
+
+    $url = "https://api.infomaniak.com/3/drive/{$kdrive_id}/files/{$kdrive_directory_id}/files";
+
+    $response = wp_remote_get($url, [
+        'headers' => [
+            'Authorization' => 'Bearer ' . $token,
+        ],
+    ]);
+
+    if (is_wp_error($response)) {
+        return new WP_Error('kdrive_error', 'Erreur lors de la récupération des médias : ' . $response->get_error_message(), ['status' => 500]);
+    }
+
+    $body = json_decode(wp_remote_retrieve_body($response), true);
+
+    if ($body["result"] !== "success") {
+        return new WP_Error('kdrive_response_error', 'Réponse kDrive invalide : ' . wp_remote_retrieve_body($response), ['status' => 500]);
+    }
+
+    return rest_ensure_response([
+        'success' => true,
+        'medias' => $body['data'],
     ]);
 }
 

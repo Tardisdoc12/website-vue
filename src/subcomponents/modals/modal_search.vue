@@ -1,7 +1,7 @@
 <template>
     <ModalComponent
         :title="title"
-        :width="'40%'"
+        :width="'80%'"
         @changeBool="Cancel"
     >
         <SearchComponent

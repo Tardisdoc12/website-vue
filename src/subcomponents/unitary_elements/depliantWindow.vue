@@ -73,6 +73,11 @@ export default {
       type: String,
       default: '1px'
     },
+
+    overflow: {
+      type: String,
+      default: 'hidden'
+    }
   },
   data() {
     return {
@@ -153,7 +158,7 @@ export default {
         "border": this.showBorder ? `${this.sizeBorder} solid ${this.borderWindowColor}` : "none",
         "border-radius": this.borderRadius,
         "background-color": Couleurs.white,
-        "overflow": "hidden",
+        "overflow": this.overflow,
         "font-family": "Arial, sans-serif",
       }
     }

@@ -24,6 +24,7 @@ $includes = [
     'includes/rest-conseils.php',
     'includes/rest-notes.php',
     'includes/rest-media.php',
+    'templates/admin-settings.php'
 ];
 
 foreach ($includes as $file) {
