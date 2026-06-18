@@ -71,6 +71,8 @@
                     <th class="border border-gray-300 p-2 text-left">Moto</th>
                     <th class="border border-gray-300 p-2 text-left">Expérience</th>
                     <th class="border border-gray-300 p-2 text-center">Encadrant</th>
+                    <th class="border border-gray-300 p-2 text-center">Liste d'attente</th>
+                    <th class="border border-gray-300 p-2 text-center">Passer Inscrit</th>
                     <th class="border border-gray-300 p-2 text-center">Actions</th>
                     </tr>
                 </thead>
@@ -87,6 +89,33 @@
                     <td class="border border-gray-300 p-2">{{ user.bike }}</td>
                     <td class="border border-gray-300 p-2">{{ user.experience }}</td>
                     <td class="border border-gray-300 p-2 text-center">{{ user.encadrant }}</td>
+                    <td class="border border-gray-300 p-2 text-center">{{ user.status }}</td>
+                    <td class="border border-gray-300 p-2 text-center">
+                        <button
+                            v-if="user.status === 'attente'"
+                            @click="UpdateUser(user)"
+                            :disabled="!hasAttente"
+                            class="appearance-none button-base"
+                            :style="{
+                                '--btn-bg': hasAttente ? Couleurs.main_blue : Couleurs.gray,
+                                '--btn-hover-bg': hasAttente ? Couleurs.dark_blue : Couleurs.gray
+                            }"
+                        >
+                            Passer inscrit
+                        </button>
+                        <button
+                            v-if="user.status === 'inscrit'"
+                            @click="UpdateUser(user)"
+                            class="appearance-none button-base"
+                            :disabled="!hasAttente"
+                            :style="{
+                                '--btn-bg': hasAttente ? Couleurs.main_blue : Couleurs.gray,
+                                '--btn-hover-bg': hasAttente ? Couleurs.dark_blue : Couleurs.gray
+                            }"
+                        >
+                            Passer en attente
+                        </button>
+                    </td>
                     <td class="border border-gray-300 p-2 text-center">
                         <button 
                         @click="DeleteUser(user)"
@@ -120,6 +149,11 @@ export default {
         event_id: {
             type: Number,
             required: true
+        },
+
+        hasAttente: {
+            type: Boolean,
+            default: false
         }
     },
 
@@ -136,7 +170,6 @@ export default {
 
     computed: {
         usersToShow() {
-            console.log("🚀 usersRegistered:", this.usersRegistered)
             return this.usersRegistered.map(user => ({
                 id: user.id,
                 user_name: user.user_name,
@@ -146,11 +179,30 @@ export default {
                 bike: user.bike,
                 experience: user.is_adherent === "1" ? "" : user.experience,
                 encadrant: user.encadrement === "1" ? "Oui" : "Non",
+                status: user.status,
+                wp_user_id: user.wp_user_id
             }))
         },
     },
 
     methods: {
+        async UpdateUser(user) {
+            const response = await api.change_status_inscrit(this.event_id, user.email)
+            if(response.data.success) {
+                if (user.status === "inscrit") {
+                    user.status = "attente"
+                } else {
+                    user.status = "inscrit"
+                }
+                const data_to_update = {
+                    id: user.id,
+                    status: user.status,
+                    event_id: this.event_id
+                }
+                this.$emit("userUpdated", data_to_update)
+            }
+        },
+
         async CopyPhoneOrEmail(isPhone) {
             try {
                 let TextToCopy = "";

@@ -21,6 +21,7 @@
         @userDeleted="userToDelete"
         @deletedEvent="DeleteEvent"
         @inscritEvent="InscritEvent"
+        @userUpdated="userToUpdate"
     />
 </template>
 
@@ -84,6 +85,24 @@ export default {
                     ...event
                 }
             )
+        },
+        userToUpdate(user) {
+            this.events.filter(event => Number(event.id) === Number(this.eventSelected.id)).forEach(event => {
+                event.users = event.users.map(user_ => {
+                    if (Number(user_.id) === Number(user.id)) {
+                        user_.status = user.status;
+                        return user_;
+                    }
+                    return user_;
+                });
+            });
+            this.eventSelected.users = this.eventSelected.users.map(user_ => {
+                if (Number(user_.id) === Number(user.id)) {
+                    user_.status = user.status;
+                    return user_;
+                }
+                return user_;
+            });
         },
         async InscritEvent(event){
             const event_id = event?.event_id ? event.event_id : event.id

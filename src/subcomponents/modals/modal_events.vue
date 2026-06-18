@@ -12,6 +12,7 @@
             @cancelSignal="Cancel"
             @userDeleted="userToDelete"
             @deletedEvent="deletedEvent"
+            @userUpdated="userToUpdate"
         />
     </Modal>
 </template>
@@ -80,6 +81,10 @@ export default{
 
         userToDelete(user) {
             this.$emit("userDeleted", user)
+        },
+
+        userToUpdate(user) {
+            this.$emit("userUpdated", user)
         }
     },
 

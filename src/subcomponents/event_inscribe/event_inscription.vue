@@ -376,10 +376,7 @@ export default {
             this.isSubmitting = true
             try {
                 for (const participant of this.participants) {
-                    participant.status = "inscrit"
-                    if (participant.isAttente) {
-                        participant.status = "attente"
-                    }
+                    participant.status = this.isAttente ? "attente" : "inscrit"
                     const res = await inscritAPI.create_inscrit(this.event.event_id, participant)
                     if (!res?.data?.success) throw new Error("Échec pour " + participant.name)
                 }

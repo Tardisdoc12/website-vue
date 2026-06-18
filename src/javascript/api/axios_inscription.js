@@ -6,6 +6,11 @@ export default {
         return response
     },
 
+    async change_status_inscrit(event_id, email) {
+        const response = await api.post(`/subscribe/${event_id}`, { email })
+        return response
+    },
+
     async find_user(query) {
         const response = await api.get(`/users/search`, { params: { q: query } })
         return response

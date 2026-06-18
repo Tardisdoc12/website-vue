@@ -199,5 +199,93 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
 }
 
 //------------------------------------------------------------------------------
+
+add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1','/subscribe/(?P<event_id>\d+)',[
+        'methods' => 'POST',
+        'callback' => 'monplugin_update_subscribe',
+        'permission_callback' => 'monplugin_verify_csrf'
+    ]);
+});
+
+function monplugin_update_subscribe(WP_REST_Request $request) {
+    global $wpdb;
+    $table_events   = $wpdb->prefix . "events";
+    $table_users    = $wpdb->prefix . "users_inscrits";
+    $table_inscrits = $wpdb->prefix . "inscrits";
+
+    $user_email = $request->get_param('email');
+    $event_id = $request->get_param('event_id');
+
+    $user_id = $wpdb->get_var($wpdb->prepare(
+        "SELECT id FROM $table_users WHERE email = %s",
+        $user_email
+    ));
+
+    if (!$user_id) {
+        return new WP_Error(
+            'user_not_found',
+            'Utilisateur non trouvé.',
+            ['status' => 404]
+        );
+    }
+    
+    // Vérifier si l’événement existe
+    $event = $wpdb->get_row($wpdb->prepare(
+        "SELECT * FROM $table_events WHERE id = %d",
+        $event_id
+    ));
+
+    if (!$event) {
+        error_log("Event with ID $event_id not found.");
+        return new WP_Error(
+            'event_not_found',
+            'Cet événement n\’existe pas.',
+            ['status' => 404]
+        );
+    }
+
+    $status = $wpdb->get_var($wpdb->prepare(
+        "SELECT status FROM $table_inscrits WHERE user_id = %d AND event_id = %d",
+        $user_id, $event_id
+    ));
+
+    if (!$status) {
+        error_log("Inscription not found for user ID $user_id and event ID $event_id.");
+        return new WP_Error(
+            'inscription_not_found',
+            'Inscription non trouvée pour cet utilisateur et cet événement.',
+            ['status' => 404]
+        );
+    }
+
+    if ($status === 'inscrit') {
+        $status = 'attente';
+    } else {
+        $status = 'inscrit';
+    }
+    error_log("Updating status for user ID $user_id and event ID $event_id to $status.");
+
+    $wpdb->update($table_inscrits, [
+        'status' => $status
+    ], [
+        'user_id' => $user_id,
+        'event_id' => $event_id
+    ]);
+
+    if ($wpdb->last_error) {
+        error_log("Erreur SQL (inscrits) : " . $wpdb->last_error);
+        return new WP_Error('db_update_error', 'Erreur SQL (inscrits) : ' . $wpdb->last_error, ['status' => 500]);
+    }
+
+    return [
+        'success' => true,
+        'event_id' => $event_id,
+        'user_id' => $user_id,
+        'message' => 'Inscription mise à jour.'
+    ];
+}
+
+//------------------------------------------------------------------------------
 // End of File
 //------------------------------------------------------------------------------

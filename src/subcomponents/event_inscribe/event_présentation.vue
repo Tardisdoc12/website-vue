@@ -211,7 +211,7 @@ export default {
         },
 
         affichageInscribe(){
-            const isFullAdherent = this.event.subscribePlace - (this.event.nbr_adherents) <= 0
+            const isFullAdherent = (this.event.subscribePlace > 0 && this.event.subscribePlace - (this.event.nbr_adherents) <= 0)
             const isFullNonAdherent = this.event.nonsubscribePlace - (this.event.nbr_non_adherents) <= 0
             const isAdherent = this.isAdherentComp
             let isOkay = false

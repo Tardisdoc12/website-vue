@@ -34,7 +34,9 @@
         v-if="stepsComputed == 4"
         :users-registered="event.users"
         :event_id="Number(event.event_id)"
+        :hasAttente="event.attentePlace > 0"
         @userDeleted="userToDelete"
+        @userUpdated="userToUpdate"
     />
     <EncadrantAddPerson
         v-if="stepsComputed == 5"
@@ -65,6 +67,7 @@ export default{
         'inscritEvent',
         'cancelSignal',
         'userDeleted',
+        'userUpdated',
         'deletedEvent'
     ],
     props:{
@@ -117,14 +120,10 @@ export default{
         },
 
         isAttenteComp() {
-            if (this.event.attentePlace - this.event.nbr_attente > 0) {
-                return true
-            }
-
-            const isListAttente = this.event.attentePlace > 0
-            const isFullAdherent = this.event.subscribePlace - (this.event.nbr_non_adherents) <= 0
-            const isFullNonAdherent = this.event.nonsubscribePlace - (this.event.nbr_adherents) <= 0
-            const isAdherent = this.userConnected.roles?.includes("adherent")
+            const isListAttente = this.event.attentePlace > 0 && this.event.attentePlace - this.event.nbr_attente > 0
+            const isFullAdherent = this.event.subscribePlace > 0 && this.event.subscribePlace - (this.event.nbr_adherents) <= 0
+            const isFullNonAdherent = this.event.nonsubscribePlace - (this.event.nbr_non_adherents) <= 0
+            const isAdherent = this.userConnected.roles?.includes("adherent") || this.userConnected.roles?.includes("bureau") || this.userConnected.roles?.includes("administrator")
             const isFull = isAdherent ? isFullAdherent : isFullNonAdherent
             if(isFull && isListAttente){
                 return true
@@ -134,13 +133,16 @@ export default{
     },
 
     methods: {
+        userToUpdate(user) {
+            this.$emit("userUpdated", user)
+        },
         Cancel() {
             this.$emit("cancelSignal", this.isCancel)
         },
 
         onInscrit(participants) {
             this.lastParticipants = participants
-            let isFulladherent = this.event.subscribePlace - (this.event.nbr_non_adherents) <= 0
+            let isFulladherent = this.event.subscribePlace > 0 && this.event.subscribePlace - (this.event.nbr_non_adherents) <= 0
             let isFullNonAdherent = this.event.nonsubscribePlace - (this.event.nbr_adherents) <= 0
             for (const participant of participants) {
                 if (participant.roles?.includes("adherent") ) {
