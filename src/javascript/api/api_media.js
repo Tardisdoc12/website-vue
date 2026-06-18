@@ -22,6 +22,13 @@ export default{
         return response
     },
 
+    async get_children_directory(directory_id) {
+        const response = await api.get(
+            `/medias/directory/${directory_id}`
+        )
+        return response
+    },
+
     async create_directory(directory_name, parent_id) {
         const response = await api.post('/medias/directory', {
             directory_name: directory_name,
@@ -32,9 +39,7 @@ export default{
 
     async get_thumbnails_medias(urls) {
         const response = await api.get('/medias/thumbnails', {
-            params: {
-                urls: urls
-            }
+                params: { "urls": urls }
         });
         return response;
     },

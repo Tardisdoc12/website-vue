@@ -41,8 +41,9 @@ function myplugin_get_medias_thumbnails(WP_REST_Request $request) {
         $ch = curl_init($url);
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTPHEADER     => ['Authorization: Bearer ' . $token],
-            CURLOPT_TIMEOUT        => 15,
+            CURLOPT_TIMEOUT        => 30,
         ]);
         curl_multi_add_handle($multi, $ch);
         $handles[$key] = $ch;
@@ -90,35 +91,64 @@ add_action('rest_api_init', function () {
 
 function myplugin_get_medias(WP_REST_Request $request) {
     $token = defined('KDRIVE_TOKEN') ? KDRIVE_TOKEN : get_option('mon_plugin_token');
-    $kdrive_id = defined('KDRIVE_DRIVE_ID') ? KDRIVE_DRIVE_ID : get_option('mon_plugin_kdrive_id');
+    $kdrive_id = get_option('mon_plugin_kdrive_id');
     $kdrive_directory_default = defined('KDRIVE_DIRECTORY_ID') ? KDRIVE_DIRECTORY_ID : get_option('mon_plugin_kdrive_directory_id');
-    $kdrive_directory_id = intval($request['directory_id']) ?? $kdrive_directory_default;
+    $request_directory_id = intval($request['directory_id']);
+    $kdrive_directory_id = $request_directory_id == 0 ? $kdrive_directory_default : $request_directory_id;
 
     if (empty($token) || empty($kdrive_id)) {
         return new WP_Error('kdrive_config_error', 'Configuration KDrive manquante.', ['status' => 505]);
     }
+    
 
     $url = "https://api.infomaniak.com/3/drive/{$kdrive_id}/files/{$kdrive_directory_id}/files";
+    error_log("Fetching medias from kDrive: $url");
+    error_log("Using token: $token");
+    
 
     $response = wp_remote_get($url, [
         'headers' => [
             'Authorization' => 'Bearer ' . $token,
+            'Content-Type'  => 'application/json',
         ],
     ]);
 
     if (is_wp_error($response)) {
+        error_log("Error fetching medias from kDrive: " . $response->get_error_message());
         return new WP_Error('kdrive_error', 'Erreur lors de la récupération des médias : ' . $response->get_error_message(), ['status' => 500]);
     }
 
     $body = json_decode(wp_remote_retrieve_body($response), true);
 
     if ($body["result"] !== "success") {
+        error_log("Invalid response from kDrive: " . wp_remote_retrieve_body($response));
         return new WP_Error('kdrive_response_error', 'Réponse kDrive invalide : ' . wp_remote_retrieve_body($response), ['status' => 500]);
+    }
+
+    $medias = $body['data'];
+    
+    $result = [];
+    $supported_types = ['file'];
+    $image_mime = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/generic-with-preview'];
+
+    foreach ($medias as $media) {
+        if (in_array($media['type'], $supported_types)) {
+            if (in_array($media['mime_type'], $image_mime)) {
+                $media['thumbnail_300'] = "https://api.infomaniak.com/2/drive/{$kdrive_id}/files/{$media['id']}/preview";
+            } else {
+                $media['thumbnail_300'] = "https://api.infomaniak.com/2/drive/{$kdrive_id}/files/{$media['id']}/thumbnail?height=400&width=400";
+            }
+            $media['thumbnail_100'] = "https://api.infomaniak.com/2/drive/{$kdrive_id}/files/{$media['id']}/thumbnail?height=100&width=100";
+        } else {
+            $media['thumbnail_300'] = null;
+            $media['thumbnail_100'] = null;
+        }
+        $result[$media['id']] = $media;
     }
 
     return rest_ensure_response([
         'success' => true,
-        'medias' => $body['data'],
+        'medias' => $result,
     ]);
 }
 
@@ -127,12 +157,12 @@ function myplugin_get_medias(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/medias', [
         'methods' => 'GET',
-        'callback' => 'myplugin_get_medias',
+        'callback' => 'myplugin_get_dir_medias',
         'permission_callback' => 'monplugin_verify_csrf'
     ]);
 });
 
-function myplugin_get_medias(WP_REST_Request $request) {
+function myplugin_get_dir_medias(WP_REST_Request $request) {
     global $wpdb;
 
     $table_medias = $wpdb->prefix . "medias";
@@ -153,7 +183,7 @@ function myplugin_get_medias(WP_REST_Request $request) {
         $media->parent_id = sanitize_text_field($media->parent_id);
 
         if (in_array($media->file_type, $supported_types)) {
-            $media->thumbnail_300 = "https://api.infomaniak.com/3/drive/{$drive_id}/files/{$media->kdrive_file_id}/thumbnail?height=300&width=250";
+            $media->thumbnail_300 = "https://api.infomaniak.com/3/drive/{$drive_id}/files/{$media->kdrive_file_id}/preview";
             $media->thumbnail_100 = "https://api.infomaniak.com/3/drive/{$drive_id}/files/{$media->kdrive_file_id}/thumbnail?height=100&width=100";
         } else {
             $media->thumbnail_300 = null;
@@ -195,7 +225,7 @@ function myplugin_upload_medias(WP_REST_Request $request) {
     $uploaded_by    = get_current_user_id(); // ✅ Côté serveur
     $folder_id      = intval($request->get_param('folder_id')) ?: 19;
 
-    if (empty($file_name) || empty($file_size) || empty($file_type)) {
+    if (empty($file_name) || empty($file_size)) {
         return new WP_Error('missing_params', 'Paramètres manquants.', ['status' => 400]);
     }
 

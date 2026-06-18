@@ -20,8 +20,8 @@
                 class="thumb"
             >
                 <img
-                    v-if="media.thumbnails_100"
-                    :src="media.thumbnails_100"
+                    v-if="media.thumbnail_100"
+                    :src="media.thumbnail_100"
                     :alt="media.name ?? media.id"
                     @click="handleClick(media)"
                 />

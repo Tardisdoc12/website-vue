@@ -79,6 +79,9 @@ export default {
       default: 'hidden'
     }
   },
+
+  emits: ['open'],
+  
   data() {
     return {
       Couleurs,
@@ -167,6 +170,7 @@ export default {
   methods: {
     toggle() {
       this.isOpen = !this.isOpen
+      this.$emit('open')
     }   
   }
 }

@@ -1,7 +1,8 @@
 <template>
     <div>{{ "Ceci sert de page test" }}</div>
     <depliantWindow
-        :title="'Media'"
+        v-if="root.files.length > 0 || root.directories.length > 0"
+        title="Media"
         :backgroundColorOpen="Couleurs.dark_blue"
         :writenColorOpen="Couleurs.white"
         :border-color="Couleurs.dark_blue"
@@ -10,79 +11,68 @@
         :width="'95%'"
         :isOpoenForced="true"
     >
-        <depliantWindow
-            v-for="(submedias_dir, subkey) in medias"
-            :title="submedias_dir.name"
-            :key="subkey"
-            :width="'100%'"
-            :backgroundColor="Couleurs.cyan"
-            :borderColorOpen="Couleurs.dark_blue"
-            :borderColor="Couleurs.dark_blue"
-            :backgroundColorOpen="Couleurs.cyan"
-            :writenColor="Couleurs.main_blue"
-            :writenColorOpen="Couleurs.main_blue"
-            :showBorder="false"
-            :isOpoenForced="true"
-            :borderRadius="'0px'"
-        >
-            <MediaViewer
-                :medias="submedias_dir.files"
-                :loading="loading"
-                :error="error"
-                @media-clicked="handleMediaClick"
-            />
-        </depliantWindow>
+        <!-- fichiers de la racine -->
+        <MediaViewer
+            v-if="root.files.length > 0"
+            :medias="root.files"
+            :loading="loading"
+            @media-clicked="handleMediaClick"
+        />
+
+        <!-- dossiers de la racine -->
+        <MediaDirectory
+            v-for="dir in root.directories"
+            :key="dir.id"
+            :directory="dir"
+            @media-clicked="handleMediaClick"
+        />
     </depliantWindow>
-    <div class="test-controls">
-        <button @click="addPlaceholders" :disabled="loading">
-            + Ajouter des placeholders
-        </button>
-        <button @click="simulateLoading" :disabled="loading">
-            ⟳ Simuler chargement
-        </button>
-    </div>
+
+    <Modal 
+        v-if="isOpenModal"
+        :title="mediaSelected.name"
+        @changeBool="Cancel"
+        :width="'80%'"
+    >
+        <div style="display: flex; gap: 1rem; padding: 1rem;">
+            <!-- Image -->
+            <div style="flex: 1;">
+                <img 
+                    :src="mediaSelected.thumbnail_300" 
+                    alt="Media"
+                    style="width: 100%; height: auto; display: block; border-radius: 4px;"
+                />
+            </div>
+
+            <!-- Infos -->
+            <div style="flex: 1; display: flex; flex-direction: column; gap: 0.5rem;">
+                <p><strong>Nom :</strong> {{ mediaSelected.name }}</p>
+                <p><strong>Type :</strong> {{ mediaSelected.type }}</p>
+                <p><strong>Taille :</strong> {{ mediaSelected.size }}</p>
+                <p><strong>Modifié le :</strong> {{ formatDate(mediaSelected.last_modified_at) }}</p>
+            </div>
+        </div>
+    </Modal>
 </template>
 
 <script>
 import MediaViewer from "@/subcomponents/unitary_elements/media_viewer.vue";
 import depliantWindow from "@/subcomponents/unitary_elements/depliantWindow.vue";
+import MediaDirectory from "@/subcomponents/depliants/media_depliant_directory.vue";
 import { Couleurs } from "@/javascript/constants/colors";
-
+import apiMedia from "@/javascript/api/api_media.js";
+import Modal from "@/subcomponents/unitary_elements/modalComponent.vue";
 export default{
 
-    mounted(){
+    async mounted(){
         this.loading = true;
-        let aftermedia = {}
-        let initialmedia = [
-            { id: 1, thumbnails_100: "https://picsum.photos/seed/1/100/100", name: "Media 1", type:"image/jpeg", parent_id: 7},
-            { id: 2, thumbnails_100: "https://picsum.photos/seed/2/100/100", name: "Media 2", type:"image/jpeg", parent_id: 7},
-            { id: 3, thumbnails_100: null, name: "Media 3", type:"image/jpeg", parent_id: 7}, // Placeholder
-            { id: 4, thumbnails_100: "https://picsum.photos/seed/4/100/100", name: "Media 4", type:"image/jpeg", parent_id: 7},
-            { id: 5, thumbnails_100: null, name: "Media 5", type:"image/jpeg", parent_id: 7}, // Placeholder
-            { id: 6, thumbnails_100: "https://picsum.photos/seed/6/100/100", name: "Media 6", type:"image/jpeg", parent_id: 7},
-            { id: 7, thumbnails_100: null, name: "Directory 1", type: "directory"},
-        ]
-
-        initialmedia.filter(media => media.type === "directory").forEach(
-            media => {
-                aftermedia[media.id] = {
-                    name: media.name,
-                    files: []
-                }
-            }
-        )
-
-        initialmedia.forEach(
-            media => {
-
-                if (media.type !== "directory"){
-                    aftermedia[media.parent_id]["files"].push(media)
-                }
-            }
-        )
-
-        this.medias = aftermedia
-        this.loading = false
+        const result = await apiMedia.get_children_directory(0);
+        const response = result.data;
+        if (response.success) {
+            this.root.files = Object.values(response.medias).filter(media => media.type !== "dir");
+            this.root.directories = Object.values(response.medias).filter(media => media.type === "dir");
+        }
+        this.loading = false;
     },
 
     data() {
@@ -90,48 +80,39 @@ export default{
             Couleurs,
             loading: false,
             error: null,
-            medias: [],
-            nextId: 1,
+            mediaSelected: null,
+            isOpenModal: false,
+            root: {
+                files: [],
+                directories: []
+            },
         };
     },
 
     components:{
         MediaViewer,
-        depliantWindow
+        depliantWindow,
+        MediaDirectory,
+        Modal
     },
     methods: {
-        // Ajoute 6 placeholders immédiatement
-        addPlaceholders() {
-            const batch = Array.from({ length: 6 }, (_, i) => ({
-                id: this.nextId + i,
-                thumbnails_100: null,   // null → affiche le fallback ✕
-                name: `Media ${this.nextId + i}`,
-            }));
-            this.medias[7]["files"].push(...batch);
-            this.nextId += 6;
+        formatDate(timestamp){
+            return new Date(timestamp * 1000).toLocaleDateString('fr-FR', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            })
         },
-
-        // Simule un appel API : spinner 2s puis ajoute les médias
-        simulateLoading() {
-            this.loading = true;
-            this.error   = null;
-
-            setTimeout(() => {
-                const batch = Array.from({ length: 6 }, (_, i) => ({
-                    id: this.nextId + i,
-                    thumbnails_100: `https://picsum.photos/seed/${this.nextId + i}/100/100`,
-                    name: `Media ${this.nextId + i}`,
-                    type: "image/jpeg",
-                    parent_id: 7,
-                }));
-                this.medias[7]["files"].push(...batch);
-                this.nextId  += 6;
-                this.loading  = false;
-            }, 2000);
+        Cancel() {
+            this.isOpenModal = false
+            this.mediaSelected = null
         },
-
         handleMediaClick(media) {
             console.log("Media clicked:", media);
+            this.mediaSelected = media;
+            this.isOpenModal = true;
         },
     },
 }
