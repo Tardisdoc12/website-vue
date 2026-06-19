@@ -17,7 +17,7 @@ import EventsFunctions from '@/javascript/constants/events_functions'
 import { computed } from 'vue'
 import { createApp, h } from 'vue'
 import EventCard from "@/subcomponents/unitary_elements/event_card.vue"
-import { isEncadrant } from "@/javascript/constants/roles";
+import { isEncadrant, isBureau } from "@/javascript/constants/roles";
 
 function isOutdated(event) {
     const now = new Date();
@@ -226,7 +226,12 @@ export default{
                 places_available = "inscriptions fermées"
             }
             else if(Number(arg.event.extendedProps.closed_inscription) === 2) {
-                places_available = "complet"
+                if (isBureau(this.userConnected?.roles ?? [])) {
+                    places_available = "rendu complet"
+                }
+                else{
+                    places_available = "complet"
+                }
             }
             else if(Number(arg.event.extendedProps.closed_inscription) === 3) {
                 places_available = "évènement dépassé"
