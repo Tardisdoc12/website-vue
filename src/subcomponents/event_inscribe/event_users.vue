@@ -71,8 +71,7 @@
                     <th class="border border-gray-300 p-2 text-left">Moto</th>
                     <th class="border border-gray-300 p-2 text-left">Expérience</th>
                     <th class="border border-gray-300 p-2 text-center">Encadrant</th>
-                    <th class="border border-gray-300 p-2 text-center">Liste d'attente</th>
-                    <th class="border border-gray-300 p-2 text-center">Passer Inscrit</th>
+                    <th class="border border-gray-300 p-2 text-center">Statut</th>
                     <th class="border border-gray-300 p-2 text-center">Actions</th>
                     </tr>
                 </thead>
@@ -89,7 +88,6 @@
                     <td class="border border-gray-300 p-2">{{ user.bike }}</td>
                     <td class="border border-gray-300 p-2">{{ user.experience }}</td>
                     <td class="border border-gray-300 p-2 text-center">{{ user.encadrant }}</td>
-                    <td class="border border-gray-300 p-2 text-center">{{ user.status }}</td>
                     <td class="border border-gray-300 p-2 text-center">
                         <button
                             v-if="user.status === 'attente'"
@@ -101,7 +99,7 @@
                                 '--btn-hover-bg': hasAttente ? Couleurs.dark_blue : Couleurs.gray
                             }"
                         >
-                            Passer inscrit
+                            {{user.status === 'attente' ? 'liste d\'attente' : 'inscrit'}}
                         </button>
                         <button
                             v-if="user.status === 'inscrit'"
@@ -113,7 +111,7 @@
                                 '--btn-hover-bg': hasAttente ? Couleurs.dark_blue : Couleurs.gray
                             }"
                         >
-                            Passer en attente
+                            {{user.status === 'attente' ? 'liste d\'attente' : 'inscrit'}}
                         </button>
                     </td>
                     <td class="border border-gray-300 p-2 text-center">

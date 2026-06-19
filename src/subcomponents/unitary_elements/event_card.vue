@@ -24,7 +24,6 @@
                     display: flex; align-items: center; justify-content: center;
                 "
             >!</div>
-            
         </div>
 
         <div class="event-row">
