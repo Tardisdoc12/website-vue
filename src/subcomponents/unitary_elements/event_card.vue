@@ -2,30 +2,33 @@
     <div
         class="background-card"
         :style="{
-            'background-color': `${backgroundColorCard}`,
-            'border': '1px solid ' + `${BackgroundColor}`
+            'background-color': backgroundColorCard,
+            'border': '1px solid ' + backgroundColor
         }"
         @click="OnClickEventCard"
     >
         <div class="event-row">
             <div
                 class="event-card"
-                :style="{
-                    'background-color': `${BackgroundColor}`
-                }"
+                :style="{ 'background-color': backgroundColor }"
             ></div>
-            <div class="event-content" :style="{ 'color':'#000000', }">
+            <div class="event-content" :style="{ 
+                color: colorWriting,
+                overflow: 'hidden',
+                'min-width': '0',
+            }">
                 <span class="event-font" style="font-size: 15px;">
                     {{ hour }}
                 </span>
                 <div>
-                    <span class="event-font" style="font-size: 15px;">{{ title }}</span>
+                    <b class="event-font" style="display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ title }}</b>
                 </div>
-                <p
-                    v-if="isEncadrant"
-                    class="event-font"
-                >
-                    {{ `${event.users.length} ` + "inscrits" }}
+                <small class="event-font">{{ place }}</small>
+                <div>
+                    <small class="event-font"><i>{{ placesAvailable }}</i></small>
+                </div>
+                <p v-if="isEncadrant" class="event-font">
+                    {{ users.length }} inscrits
                 </p>
             </div>
         </div>
@@ -33,54 +36,63 @@
 </template>
 
 <script>
-import EventsFunctions from '@/javascript/constants/events_functions'
-
-export default{
-    props:{
-        event:{
+export default {
+    props: {
+        event: {
             type: Object,
             required: true,
         },
-
-        isEncadrant:{
+        hour: {
+            type: String,
+            required: false,
+            default: ""
+        },
+        title: {
+            type: String,
+            required: false,
+            default: ""
+        },
+        place: {
+            type: String,
+            required: false,
+            default: ""
+        },
+        placesAvailable: {
+            type: String,
+            required: false,
+            default: ""
+        },
+        backgroundColor: {
+            type: String,
+            required: false,
+            default: "rgba(211, 211, 211, 1)"
+        },
+        backgroundColorCard: {
+            type: String,
+            required: false,
+            default: "rgba(211, 211, 211, 0.2)"
+        },
+        colorWriting: {
+            type: String,
+            required: false,
+            default: "rgba(0, 0, 0, 1)"
+        },
+        isEncadrant: {
             type: Boolean,
             required: false,
             default: false
-        }
-    },
-
-    data() {
-        return {
-            title: this.event?.title ?? "Title",
-            hour: this.event?.startDate ?? "18h",
-            places_available: 0,
-        }
-    },
-
-    computed:{
-        ColorsCard() {
-            const colors = EventsFunctions.colorBg(this.event.categorie)
-            return colors
         },
-
-        BackgroundColor(){
-            return this.ColorsCard[0]
-        },
-
-        backgroundColorCard() {
-            return this.ColorsCard[1]
+        users: {
+            type: Array,
+            required: false,
+            default: () => []
         },
     },
 
-    methods:{
+    methods: {
         OnClickEventCard() {
             this.$emit('click-event-card', this.event)
         }
     }
-
-
 }
 </script>
-
-<style>
-</style>

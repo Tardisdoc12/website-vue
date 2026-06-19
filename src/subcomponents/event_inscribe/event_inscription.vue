@@ -376,6 +376,12 @@ export default {
             this.isSubmitting = true
             try {
                 for (const participant of this.participants) {
+                    const alreadyRegistered = this.event.users.some(u => u.email === participant.email)
+                    const billeterie_url = this.event.billeterie_url != "" ? this.event.billeterie_url : 'https://www.helloasso.com/associations/mps-moto/evenements/inscription-seance'
+                    console.log(`Billeterie URL: ${billeterie_url}`, `alreadyRegistered: ${alreadyRegistered}`)
+                    if (alreadyRegistered) {
+                        alert(`Vous etes deja inscit pour cet evenement. Si vous avec deja effectué le reglement sur helloasso, vous pouvez ignorer ce message.\n\nsinon vous pouvez suivre ce lien pour acceder a la billeterie :\n${billeterie_url}`)
+                    }
                     participant.status = this.isAttente ? "attente" : "inscrit"
                     const res = await inscritAPI.create_inscrit(this.event.event_id, participant)
                     if (!res?.data?.success) throw new Error("Échec pour " + participant.name)

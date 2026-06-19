@@ -214,26 +214,21 @@ export default {
             const isFullAdherent = (this.event.subscribePlace > 0 && this.event.subscribePlace - (this.event.nbr_adherents) <= 0)
             const isFullNonAdherent = this.event.nonsubscribePlace - (this.event.nbr_non_adherents) <= 0
             const isAdherent = this.isAdherentComp
-            let isOkay = false
-            if(isAdherent){
-                isOkay = isFullAdherent
-            }
-            else{
-                isOkay = isFullNonAdherent
-            }
+            const isFull = isAdherent ? isFullAdherent : isFullNonAdherent
+            
             if(this.event.isInscript){
                 return "Se désinscrire"
             }
             else if(Number(this.event.closed_inscription) === 1){
                 return "Inscriptions fermées"
             }
-            else if(Number(this.event.closed_inscription) === 2 && (!this.isAttente)){
+            else if(Number(this.event.closed_inscription) === 2 && (!this.isAttente && isFull)){
                 return "Évènement complet"
             }
             else if(Number(this.event.closed_inscription) === 3){
                 return "Évènement dépassé"
             }
-            else if (this.isAttente && isOkay){
+            else if (this.isAttente && isFull){
                 return "Inscription (liste d'attente)"
             }
             else{
@@ -242,19 +237,23 @@ export default {
         },
 
         colorButton() {
+            const isFullAdherent = (this.event.subscribePlace > 0 && this.event.subscribePlace - (this.event.nbr_adherents) <= 0)
+            const isFullNonAdherent = this.event.nonsubscribePlace - (this.event.nbr_non_adherents) <= 0
+            const isAdherent = this.isAdherentComp
+            const isFull = isAdherent ? isFullAdherent : isFullNonAdherent
              if(this.event.isInscript){
                 return Couleurs.main_red
              }
              else if(Number(this.event.closed_inscription) === 1){
                 return Couleurs.gris_pale
              }
-             else if(Number(this.event.closed_inscription) === 2 && (!this.isAttente)){
+             else if(Number(this.event.closed_inscription) === 2 && (!this.isAttente && isFull)){
                 return Couleurs.gris_pale
              }
              else if(Number(this.event.closed_inscription) === 3){
                 return Couleurs.gris_pale
              }
-             else if (this.isAttente){
+             else if (this.isAttente && isFull){
                 return Couleurs.vert
              }
              else{
@@ -263,19 +262,23 @@ export default {
         },
 
         colorHoverButton() {
+            const isFullAdherent = (this.event.subscribePlace > 0 && this.event.subscribePlace - (this.event.nbr_adherents) <= 0)
+            const isFullNonAdherent = this.event.nonsubscribePlace - (this.event.nbr_non_adherents) <= 0
+            const isAdherent = this.isAdherentComp
+            const isFull = isAdherent ? isFullAdherent : isFullNonAdherent
             if(this.event.isInscript){
                 return Couleurs.dark_red
             }
             else if(Number(this.event.closed_inscription) === 1){
                 return Couleurs.gris_pale
             }
-            else if(Number(this.event.closed_inscription) === 2 && (!this.isAttente)){
+            else if(Number(this.event.closed_inscription) === 2 && (!this.isAttente && isFull)){
                 return Couleurs.gris_pale
             }
             else if(Number(this.event.closed_inscription) === 3){
                 return Couleurs.gris_pale
             }
-            else if (this.isAttente){
+            else if (this.isAttente && isFull){
                 return Couleurs.dark_vert
             }
             else{
@@ -284,28 +287,26 @@ export default {
         },
 
         disableSubscribe() {
-            if (this.event.isInscript) {
+            const isFullAdherent = (this.event.subscribePlace > 0 && this.event.subscribePlace - (this.event.nbr_adherents) <= 0)
+            const isFullNonAdherent = this.event.nonsubscribePlace - (this.event.nbr_non_adherents) <= 0
+            const isAdherent = this.isAdherentComp
+            const isFull = isAdherent ? isFullAdherent : isFullNonAdherent
+            if(this.event.isInscript){
                 return false
             }
-            if(Number(this.event.closed_inscription) !== 0){
+            else if(Number(this.event.closed_inscription) === 1){
                 return true
             }
-            if (this.isAdherentComp && this.event.attentePlace <= 0) {
-                if (this.event.subscribePlace - this.event.nbr_adherents === 0) {
-                    return true
-                }
+            else if(Number(this.event.closed_inscription) === 2 && (!this.isAttente && isFull)){
+                return true
+            }
+            else if(Number(this.event.closed_inscription) === 3){
+                return true
+            }
+            else if (this.isAttente && isFull){
                 return false
             }
-            else if(this.event.attentePlace > 0) {
-                if (!this.isAttente) {
-                    return true
-                }
-                return false
-            }
-            else {
-                if (this.event.nonsubscribePlace - this.event.nbr_non_adherents<= 0) {
-                    return true
-                }
+            else{
                 return false
             }
         },
