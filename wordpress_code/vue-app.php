@@ -27,6 +27,15 @@ $includes = [
     'templates/admin-settings.php'
 ];
 
+
+add_filter('wp_mail_from', function($email) {
+    return get_option('mon_plugin_mail_from') ?: $email;
+});
+
+add_filter('wp_mail_from_name', function($name) {
+    return get_option('mon_plugin_mail_name') ?: $name;
+});
+
 foreach ($includes as $file) {
     require_once plugin_dir_path(__FILE__) . $file;
 }

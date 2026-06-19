@@ -9,6 +9,8 @@ add_action('admin_init', function() {
     register_setting('mon_plugin_options', 'mon_plugin_kdrive_id');
     register_setting('mon_plugin_options', 'mon_plugin_kdrive_directory_id');
     register_setting('mon_plugin_options', 'mon_plugin_token');
+    register_setting('mon_plugin_options', 'mon_plugin_mail_from');
+    register_setting('mon_plugin_options', 'mon_plugin_mail_name');
 });
 
 // Ajout de la page dans le menu admin
@@ -52,6 +54,22 @@ function mon_plugin_render_settings_page() {
                         <input type="password" name="mon_plugin_token"
                                value="<?php echo esc_attr(get_option('mon_plugin_token')); ?>"
                                class="regular-text" />
+                    </td>
+                </tr>
+                <tr>
+                <th>Email expéditeur</th>
+                <td>
+                    <input type="email" name="mon_plugin_mail_from"
+                        value="<?php echo esc_attr(get_option('mon_plugin_mail_from')); ?>"
+                        class="regular-text" />
+                </td>
+                </tr>
+                <tr>
+                    <th>Nom expéditeur</th>
+                    <td>
+                        <input type="text" name="mon_plugin_mail_name"
+                            value="<?php echo esc_attr(get_option('mon_plugin_mail_name')); ?>"
+                            class="regular-text" />
                     </td>
                 </tr>
             </table>
