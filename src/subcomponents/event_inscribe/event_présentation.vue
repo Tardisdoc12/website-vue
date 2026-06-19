@@ -32,17 +32,33 @@
             >
                 <font-awesome-icon
                     v-if="Number(event.closed_inscription) !== 1"
-                    icon="fa-solid fa-lock-open"
+                    icon ="fa-solid fa-file-circle-xmark"
+                />
+                <font-awesome-icon
+                    v-else
+                    icon="fa-solid fa-file-circle-check"
+                />
+            </button>
+
+            <button
+                type="button"
+                :style="{
+                    '--btn-bg': Number(event.closed_inscription) === 2 ? Couleurs.main_red : Couleurs.main_blue,
+                    '--btn-hover-bg': Number(event.closed_inscription) === 2 ? Couleurs.dark_red : Couleurs.dark_blue
+                }"
+                @click="FullEvent"
+                class="appearance-none button-base"
+            >
+                <font-awesome-icon
+                        v-if="Number(event.closed_inscription) !== 2"
+                        icon ="fa-solid fa-lock-open"
                 />
                 <font-awesome-icon
                     v-else
                     icon="fa-solid fa-lock"
                 />
             </button>
-
-            <div>
-                <small @click="FullEvent">Rendre l'évènement complet</small>
-            </div>
+                
 
             <button
                 type="button"
