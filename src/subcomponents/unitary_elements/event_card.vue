@@ -23,8 +23,8 @@
                 <div>
                     <b class="event-font" style="display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ title }}</b>
                 </div>
-                <small class="event-font">{{ place }}</small>
-                <div>
+                <small v-if="isShow" class="event-font">{{ place }}</small>
+                <div v-if="isShow">
                     <small class="event-font"><i>{{ placesAvailable }}</i></small>
                 </div>
                 <p v-if="isEncadrant" class="event-font">
@@ -87,6 +87,12 @@ export default {
             required: false,
             default: () => []
         },
+
+        isShow:{
+            type: Boolean,
+            required: false,
+            default: true
+        }
     },
 
     methods: {

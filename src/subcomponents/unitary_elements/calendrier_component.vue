@@ -184,208 +184,99 @@ export default{
         },
 
         renderEvent(arg) {
-                // ... tout ton calcul de places_available, bgColor, etc. (code commenté) ...
-                const users = Array.isArray(arg.event.extendedProps?.users)
-                    ? arg.event.extendedProps.users
-                    : [];
-                const nonAdherentsCount = computed(() =>
-                    {
-                        if (!users.length) return 0;
-                        return users.filter(u => u.is_adherent === "0" && u.status === "inscrit").length
-                    }
-                )
-                const adherentsCount = computed(() =>
-                    {
-                        if (!users.length) return 0;
-                        return users.filter(u => u.is_adherent === "1" && u.status === "inscrit").length
-                    }
-                )
-                let number = parseInt(arg.event.extendedProps.nonsubscribePlace) - nonAdherentsCount.value;
-                let places_available = "inscriptions ouvertes"
-                if (number <= 0) {
-                    places_available = "complet"
+            const users = Array.isArray(arg.event.extendedProps?.users)
+                ? arg.event.extendedProps.users
+                : [];
+            const nonAdherentsCount = computed(() =>
+                {
+                    if (!users.length) return 0;
+                    return users.filter(u => u.is_adherent === "0" && u.status === "inscrit").length
                 }
-                if (this.userConnected?.roles) {
-                    if(!this.userConnected.roles.includes("non_adherent")) {
-                        number = parseInt(arg.event.extendedProps.subscribePlace) - adherentsCount.value;
-                        if(number === 0){
-                            places_available = "complet"
-                        }
-                        else {
-                            places_available = "inscriptions ouvertes"
-                        }
+            )
+            const adherentsCount = computed(() =>
+                {
+                    if (!users.length) return 0;
+                    return users.filter(u => u.is_adherent === "1" && u.status === "inscrit").length
+                }
+            )
+            let number = parseInt(arg.event.extendedProps.nonsubscribePlace) - nonAdherentsCount.value;
+            let places_available = "inscriptions ouvertes"
+            if (number <= 0) {
+                places_available = "complet"
+            }
+            if (this.userConnected?.roles) {
+                if(!this.userConnected.roles.includes("non_adherent")) {
+                    number = parseInt(arg.event.extendedProps.subscribePlace) - adherentsCount.value;
+                    if(number === 0){
+                        places_available = "complet"
+                    }
+                    else {
+                        places_available = "inscriptions ouvertes"
                     }
                 }
-                if (isOutdated(arg.event)) {
-                    places_available = "inscriptions fermées"
-                }
-                const alreadyInscript = this.userEvents?.some(obj => Number(obj.event_id) === Number(arg.event.extendedProps.event_id)) ?? false
-                if(alreadyInscript) {
-                    places_available = "déjà inscrit"
-                }
-                if(Number(arg.event.extendedProps.closed_inscription) === 1) {
-                    places_available = "inscriptions fermées"
-                }
-                else if(Number(arg.event.extendedProps.closed_inscription) === 2) {
-                    places_available = "complet"
-                }
-                else if(Number(arg.event.extendedProps.closed_inscription) === 3) {
-                    places_available = "évènement dépassé"
-                }
+            }
+            if (isOutdated(arg.event)) {
+                places_available = "inscriptions fermées"
+            }
+            const alreadyInscript = this.userEvents?.some(obj => Number(obj.event_id) === Number(arg.event.extendedProps.event_id)) ?? false
+            if(alreadyInscript) {
+                places_available = "déjà inscrit"
+            }
+            if(Number(arg.event.extendedProps.closed_inscription) === 1) {
+                places_available = "inscriptions fermées"
+            }
+            else if(Number(arg.event.extendedProps.closed_inscription) === 2) {
+                places_available = "complet"
+            }
+            else if(Number(arg.event.extendedProps.closed_inscription) === 3) {
+                places_available = "évènement dépassé"
+            }
 
-                let bgColor;
-                let backgroundColorCard;
-                let colorWritting = "rgba(0, 0, 0, 1)";
-                if(new Date() < arg.event.start) {
-                    let categorie = arg.event.extendedProps.categorie
-                    if(arg.event.extendedProps.categorie === "") {
-                        categorie = "seance"
-                    }
-                    const duoColor = EventsFunctions.colorBg(categorie)
-                    bgColor = duoColor[0]
-                    backgroundColorCard = duoColor[1]
+            let bgColor;
+            let backgroundColorCard;
+            let colorWritting = "rgba(0, 0, 0, 1)";
+            if(new Date() < arg.event.start) {
+                let categorie = arg.event.extendedProps.categorie
+                if(arg.event.extendedProps.categorie === "") {
+                    categorie = "seance"
                 }
-                else {
-                    bgColor = 'rgba(211, 211, 211, 1)'
-                    backgroundColorCard = 'rgba(211, 211, 211, 0.2)'
-                    colorWritting = "rgba(12, 12, 12, 0.68)"
-                }
+                const duoColor = EventsFunctions.colorBg(categorie)
+                bgColor = duoColor[0]
+                backgroundColorCard = duoColor[1]
+            }
+            else {
+                bgColor = 'rgba(211, 211, 211, 1)'
+                backgroundColorCard = 'rgba(211, 211, 211, 0.2)'
+                colorWritting = "rgba(12, 12, 12, 0.68)"
+            }
+
+            arg.event.event_id = arg.event.extendedProps.event_id
 
 
-                const wrapper = document.createElement('div')
-                wrapper.style.width = "100%"
-                const app = createApp({
-                    render: () => h(EventCard, {
-                        event: arg.event.extendedProps,
-                        hour: arg.timeText,
-                        title: arg.event.title,
-                        place: arg.event.extendedProps.place,
-                        placesAvailable: places_available,
-                        backgroundColor: bgColor,
-                        backgroundColorCard: backgroundColorCard,
-                        colorWriting: colorWritting,
-                        isEncadrant: this.isEncadrantComp,
-                        users: arg.event.extendedProps.users ?? [],
-                        onClickEventCard: (event) => this.handleSelect({ event: event })
-                    })
+            const wrapper = document.createElement('div')
+            wrapper.style.width = "100%"
+            const app = createApp({
+                render: () => h(EventCard, {
+                    event: arg.event.extendedProps,
+                    hour: arg.timeText,
+                    title: arg.event.title,
+                    place: arg.event.extendedProps.place,
+                    placesAvailable: places_available,
+                    backgroundColor: bgColor,
+                    backgroundColorCard: backgroundColorCard,
+                    colorWriting: colorWritting,
+                    isEncadrant: this.isEncadrantComp,
+                    users: arg.event.extendedProps.users ?? [],
+                    onClickEventCard: (event) => this.handleSelect({ event: event })
                 })
+            })
 
-                app.mount(wrapper)
-                this._calendarApps = this._calendarApps ?? []
-                this._calendarApps.push(app)
+            app.mount(wrapper)
+            this._calendarApps = this._calendarApps ?? []
+            this._calendarApps.push(app)
 
-                return { domNodes: [wrapper] }
-            },
-
-        // renderEvent(arg) {
-        //     const title = arg.event.title;
-        //     const users = Array.isArray(arg.event.extendedProps?.users)
-        //         ? arg.event.extendedProps.users
-        //         : [];
-        //     const nonAdherentsCount = computed(() =>
-        //         {
-        //             if (!users.length) return 0;
-        //             return users.filter(u => u.is_adherent === "0" && u.status === "inscrit").length
-        //         }
-        //     )
-        //     const adherentsCount = computed(() =>
-        //         {
-        //             if (!users.length) return 0;
-        //             return users.filter(u => u.is_adherent === "1" && u.status === "inscrit").length
-        //         }
-        //     )
-        //     let number = parseInt(arg.event.extendedProps.nonsubscribePlace) - nonAdherentsCount.value;
-        //     let places_available = "inscriptions ouvertes"
-        //     if (number <= 0) {
-        //         places_available = "complet"
-        //     }
-        //     if (this.userConnected?.roles) {
-        //         if(!this.userConnected.roles.includes("non_adherent")) {
-        //             number = parseInt(arg.event.extendedProps.subscribePlace) - adherentsCount.value;
-        //             if(number === 0){
-        //                 places_available = "complet"
-        //             }
-        //             else {
-        //                 places_available = "inscriptions ouvertes"
-        //             }
-        //         }
-        //     }
-        //     if (isOutdated(arg.event)) {
-        //         places_available = "inscriptions fermées"
-        //     }
-        //     const alreadyInscript = this.userEvents?.some(obj => Number(obj.event_id) === Number(arg.event.extendedProps.event_id)) ?? false
-        //     if(alreadyInscript) {
-        //         places_available = "déjà inscrit"
-        //     }
-        //     if(Number(arg.event.extendedProps.closed_inscription) === 1) {
-        //         places_available = "inscriptions fermées"
-        //     }
-        //     else if(Number(arg.event.extendedProps.closed_inscription) === 2) {
-        //         places_available = "complet"
-        //     }
-        //     else if(Number(arg.event.extendedProps.closed_inscription) === 3) {
-        //         places_available = "évènement dépassé"
-        //     }
-        //     const hour = arg.timeText
-        //     const wrapper = document.createElement('div');
-
-        //     wrapper.style.width = "100%";        // prend toute la largeur
-        //     wrapper.style.boxSizing = "border-box"; // évite les débordements
-        //     wrapper.style.overflow = "hidden";   // coupe si trop long
-        //     wrapper.style.display = "block"; // étendre comme un block
-            
-        //     let line_inscrit = `<div><p class="event-font">${users.length} inscrits</p></div>`
-        //     if(!this.isEncadrantComp){
-        //         line_inscrit = ''
-        //     }
-        //     const place = arg.event.extendedProps.place
-        //     wrapper.innerHTML = `
-        //         <div class="background-card">
-        //             <div class="event-row">
-        //                 <div class="event-card"></div>
-        //                 <div class="event-content">
-        //                     <span class="event-font">
-        //                         ${hour}
-        //                     </span>
-        //                     <div>
-        //                         <b class="event-font">${title}</b>
-        //                     </div>
-        //                         <small class="event-font">${place}<small/>
-        //                     <div>
-        //                         <small class="event-font">
-        //                             <i>${places_available}</i>
-        //                         </small>
-        //                     </div>
-        //                     ${line_inscrit}
-        //                 </div>
-        //             </div>
-        //         </div>
-        //     `;
-           
-        //     let bgColor;
-        //     let backgroundColorCard;
-        //     let colorWritting = "rgba(0, 0, 0, 1)";
-        //     if(new Date() < arg.event.start) {
-        //         let categorie = arg.event.extendedProps.categorie
-        //         if(arg.event.extendedProps.categorie === "") {
-        //             categorie = "seance"
-        //         }
-        //         const duoColor = EventsFunctions.colorBg(categorie)
-        //         bgColor = duoColor[0]
-        //         backgroundColorCard = duoColor[1]
-        //     }
-        //     else {
-        //         bgColor = 'rgba(211, 211, 211, 1)'
-        //         backgroundColorCard = 'rgba(211, 211, 211, 0.2)'
-        //         colorWritting = "rgba(12, 12, 12, 0.68)"
-        //     }
-
-        //     wrapper.querySelector('.background-card').style.backgroundColor = backgroundColorCard;
-        //     wrapper.querySelector('.event-card').style.backgroundColor = bgColor;
-        //     wrapper.querySelector('.event-content').style.color = colorWritting;
-
-        //     return { domNodes: [wrapper] };
-        // },
+            return { domNodes: [wrapper] }
+        },
 
         handleSelect(e){
             const isBureau = this.userConnected?.roles ? this.userConnected.roles.includes("bureau") : false

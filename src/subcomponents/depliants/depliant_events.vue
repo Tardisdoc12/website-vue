@@ -21,6 +21,7 @@
             :background-color-card="args.backgroundColorCard"
             :color-writing="args.colorWriting"
             :key="args.event.id"
+            :is-show="false"
             @click-event-card="OnClickEventCard"
         />
     </DepliantWindow>
