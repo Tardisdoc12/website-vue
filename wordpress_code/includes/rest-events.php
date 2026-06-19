@@ -64,6 +64,7 @@ function monplugin_get_events(WP_REST_Request $request) {
                 i.bike,
                 i.status,
                 i.encadrement,
+                i.date_inscrit,
                 wp_users.ID AS wp_user_id
             FROM $table_inscrits i
             JOIN $table_users u ON u.id = i.user_id
@@ -88,6 +89,7 @@ function monplugin_get_events(WP_REST_Request $request) {
             'attente_places'     => $event->attente_places,
             'closed_inscription' => $event->closed_inscription,
             'billeterie_url'     => $event->billeterie_url,
+            'update_date'        => $event->update_date,
             'users'       => $users
         ];
     }
@@ -165,7 +167,7 @@ function monplugin_get_event_id(WP_REST_Request $request) {
     // Récupérer les utilisateurs inscrits
     $users = $wpdb->get_results(
         $wpdb->prepare(
-            "SELECT u.id, u.user_name, u.email, u.phone, u.experience, i.goal, u.is_adherent, i.bike, i.status
+            "SELECT u.id, u.user_name, u.email, u.phone, u.experience, i.goal, u.is_adherent, i.bike, i.status, i.date_inscrit
              FROM $table_inscrits i
              JOIN $table_users u ON u.id = i.user_id
              WHERE i.event_id = %d",
@@ -189,6 +191,7 @@ function monplugin_get_event_id(WP_REST_Request $request) {
         'attente_places'       => $event->attente_places,
         'closed_inscription'   => $event->closed_inscription,
         'billeterie_url'       => $event->billeterie_url,
+        'update_date'          => $event->update_date,
         'users'               => $users
     ];
 
@@ -240,6 +243,7 @@ function monplugin_get_event_post_id(WP_REST_Request $request) {
                 u.is_adherent, 
                 i.bike,
                 i.status,
+                i.date_inscrit,
                 i.encadrement,
                 wp_users.ID AS wp_user_id
             FROM $table_inscrits i
@@ -266,6 +270,7 @@ function monplugin_get_event_post_id(WP_REST_Request $request) {
         'attente_places'       => $event->attente_places,
         'closed_inscription'   => $event->closed_inscription,
         'billeterie_url'       => $event->billeterie_url,
+        'update_date'          => $event->update_date,
         'users'               => $users
     ];
 
@@ -380,6 +385,7 @@ function monplugin_update_event(WP_REST_Request $request) {
         'attente_places' => intval($request['attente_places']) ?? 0,
         'closed_inscription' => intval($request['closed_inscription']),
         'billeterie_url' => sanitize_text_field($request['billeterie_url']),
+        'update_date' => current_time('mysql'),
     ];
 
     $where = ['id' => $id];

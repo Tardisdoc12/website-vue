@@ -26,10 +26,20 @@ function monplugin_run_migrations() {
         $wpdb->query("ALTER TABLE $table_medias ADD parent_id VARCHAR(200) UNSIGNED NULL AFTER file_type");
     }
 
+    $column = $wpdb->get_results("SHOW COLUMNS FROM $table_events LIKE 'update_date'");
+    if (empty($column)) {
+        $wpdb->query("ALTER TABLE $table_events ADD update_date DATETIME NULL AFTER billeterie_url");
+    }
+
     $column = $wpdb->get_results("SHOW COLUMNS FROM $table_inscribes LIKE 'status'");
     if (empty($column)) {
         $wpdb->query("ALTER TABLE $table_inscribes ADD status ENUM('inscrit', 'attente') NOT NULL DEFAULT 'inscrit' AFTER encadrement");
         // Tous les inscrits existants héritent de 'inscrit' grâce au DEFAULT
+    }
+
+    $column = $wpdb->get_results("SHOW COLUMNS FROM $table_inscribes LIKE 'date_inscrit'");
+    if (empty($column)) {
+        $wpdb->query("ALTER TABLE $table_inscribes ADD date_inscrit DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL AFTER status");
     }
 
     $column = $wpdb->get_results("SHOW COLUMNS FROM $table_events LIKE 'attente_places'");

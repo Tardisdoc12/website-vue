@@ -34,6 +34,7 @@ function mon_plugin_creer_tables() {
         attente_places INT UNSIGNED NOT NULL,
         closed_inscription TINYINT(1) NOT NULL DEFAULT 0,
         billeterie_url VARCHAR(500) NULL,
+        update_date DATETIME NULL,
         PRIMARY KEY (id)
     ) $charset_collate;";
 
@@ -47,6 +48,7 @@ function mon_plugin_creer_tables() {
         goal VARCHAR(200) NULL,
         encadrement TINYINT(1) NOT NULL DEFAULT 0,
         status ENUM('inscrit', 'attente') NOT NULL DEFAULT 'inscrit',
+        date_inscrit DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
         PRIMARY KEY (id)
     ) $charset_collate;";
 

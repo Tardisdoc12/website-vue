@@ -267,6 +267,8 @@ export default{
                     colorWriting: colorWritting,
                     isEncadrant: this.isEncadrantComp,
                     users: arg.event.extendedProps.users ?? [],
+                    isInscrit: alreadyInscript,
+                    userConnected: this.userConnected,
                     onClickEventCard: (event) => this.handleSelect({ event: event })
                 })
             })

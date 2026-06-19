@@ -22,6 +22,8 @@
             :color-writing="args.colorWriting"
             :key="args.event.id"
             :is-show="false"
+            :user-connected="user"
+            :isInscrit="true"
             @click-event-card="OnClickEventCard"
         />
     </DepliantWindow>
