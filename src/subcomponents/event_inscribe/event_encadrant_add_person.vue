@@ -57,6 +57,14 @@
                     <label class="block font-medium">Thème particulier?</label>
                     <textarea v-model="participant.goal" class="w-full border p-1 rounded" rows="2"></textarea>
                 </div>
+                <div v-if="participant.canEncadrant" style="margin-bottom:10px;">
+                    <label class="block font-medium">Souhaitez-vous encadrer? <span style="color:red">*</span></label>
+                    <select v-model="participant.wantsEncadrant" class="w-full border p-1 rounded" required>
+                        <option disabled value="">-- Choisir --</option>
+                        <option :value="1">Je viens encadrer</option>
+                        <option :value="0">Je ne viens pas encadrer</option>
+                    </select>
+                </div>
             </template>
         </template>
 
@@ -108,6 +116,7 @@ import SearchComponent from '@/subcomponents/unitary_elements/search_component.v
 import { Events } from "@/javascript/constants/events_type"
 import { Couleurs } from "@/javascript/constants/colors.js"
 import api from "@/javascript/api/users_wp.js"
+import { isEncadrant } from "@/javascript/constants/roles";
 
 export default{
 
@@ -137,7 +146,9 @@ export default{
                 phone: "",
                 bike: "",
                 experience: "",
-                goal: ""
+                goal: "",
+                wantsEncadrant: false,
+                roles: [],
             },
             isSubmitting: false,
             Couleurs,
@@ -167,6 +178,7 @@ export default{
             this.participant.bike = ""
             this.participant.experience = ""
             this.participant.goal = ""
+            this.participant.wantsEncadrant = false
         },
 
         searchParticipant(element) {
@@ -180,7 +192,8 @@ export default{
                         phone: u.telephone,
                         bike:  u.moto,
                         roles: u.roles ?? ["non_adherent"],
-                        searchResult: 'found'
+                        searchResult: 'found',
+                        canEncadrant: isEncadrant(u.roles ?? []),
                     }
                 } else {
                     this.participant.searchResult = 'not_found'
