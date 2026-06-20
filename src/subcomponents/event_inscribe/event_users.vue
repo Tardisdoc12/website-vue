@@ -185,7 +185,7 @@ export default {
 
     methods: {
         async UpdateUser(user) {
-            const response = await api.change_status_inscrit(this.event_id, user.email)
+            const response = await api.change_status_inscrit(this.event_id, user.id)
             if(response.data.success) {
                 if (user.status === "inscrit") {
                     user.status = "attente"

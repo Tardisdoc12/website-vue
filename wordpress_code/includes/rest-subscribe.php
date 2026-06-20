@@ -202,7 +202,7 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
 //------------------------------------------------------------------------------
 
 add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1','/subscribe/(?P<event_id>\d+)',[
+    register_rest_route('vue-plugin/v1','/subscribe/(?P<event_id>\d+)/(?P<user_id>\d+)/',[
         'methods' => 'POST',
         'callback' => 'monplugin_update_subscribe',
         'permission_callback' => 'monplugin_verify_csrf'
@@ -215,15 +215,16 @@ function monplugin_update_subscribe(WP_REST_Request $request) {
     $table_users    = $wpdb->prefix . "users_inscrits";
     $table_inscrits = $wpdb->prefix . "inscrits";
 
-    $user_email = $request->get_param('email');
     $event_id = $request->get_param('event_id');
 
-    $user_id = $wpdb->get_var($wpdb->prepare(
-        "SELECT id FROM $table_users WHERE email = %s",
-        $user_email
+    $user_id = $request->get_param('user_id');
+
+    $result = $wpdb->get_row($wpdb->prepare(
+        "SELECT * FROM $table_inscrits WHERE user_id = %d AND event_id = %d",
+        $user_id, $event_id
     ));
 
-    if (!$user_id) {
+    if (empty($result)) {
         return new WP_Error(
             'user_not_found',
             'Utilisateur non trouvé.',

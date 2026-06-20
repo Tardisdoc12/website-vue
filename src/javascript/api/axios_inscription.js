@@ -6,8 +6,8 @@ export default {
         return response
     },
 
-    async change_status_inscrit(event_id, email) {
-        const response = await api.post(`/subscribe/${event_id}`, { email })
+    async change_status_inscrit(event_id, user_id) {
+        const response = await api.post(`/subscribe/${event_id}/${user_id}`)
         return response
     },
 
