@@ -274,7 +274,13 @@ export default{
                     users: arg.event.extendedProps.users ?? [],
                     isInscrit: alreadyInscript,
                     userConnected: this.userConnected,
-                    onClickEventCard: (event) => this.handleSelect({ event: event })
+                    onClickEventCard: (event) => this.handleSelect({ 
+                        event: {
+                            extendedProps: event,
+                            title: arg.event.title,
+                            start: arg.event.start,
+                        }
+                    })
                 })
             })
 
