@@ -373,6 +373,28 @@ function monplugin_update_event(WP_REST_Request $request) {
     $table = $wpdb->prefix . "events";
     $id = intval($request['id']);
 
+    $results = $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT title, start_date, end_date, place FROM $table WHERE id = %d",
+            $id
+        )
+    );
+
+    if (empty($results)) {
+        return new WP_Error('event_not_found', 'Événement non trouvé', ['status' => 404]);
+    }
+
+    $title_from_request = sanitize_text_field($request['title']);
+    $start_date_from_request = sanitize_text_field($request['start_date']);
+    $end_date_from_request = sanitize_text_field($request['end_date']);
+    $place_from_request = sanitize_text_field($request['place']);
+
+    $same_title = $results[0]->title === $title_from_request;
+    $same_start_date = $results[0]->start_date === $start_date_from_request;
+    $same_end_date = $results[0]->end_date === $end_date_from_request;
+    $same_place = $results[0]->place === $place_from_request;
+
+
     $data = [
         'title' => sanitize_text_field($request['title']),
         'start_date' => sanitize_text_field($request['start_date']),
@@ -385,8 +407,14 @@ function monplugin_update_event(WP_REST_Request $request) {
         'attente_places' => intval($request['attente_places']) ?? 0,
         'closed_inscription' => intval($request['closed_inscription']),
         'billeterie_url' => sanitize_text_field($request['billeterie_url']),
-        'update_date' => current_time('mysql'),
+        
     ];
+
+    if (!$same_title || !$same_start_date || !$same_end_date || !$same_place) {
+        $data['update_date'] = current_time('mysql');
+    }
+
+    
 
     $where = ['id' => $id];
 
