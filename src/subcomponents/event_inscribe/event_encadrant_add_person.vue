@@ -75,19 +75,15 @@
                 <input v-model="participant.name" type="text" class="w-full border p-1 rounded" />
             </div>
             <div class="flex flex-col gap-1">
-                <label class="block font-medium">E-mail <span style="color:red">*</span></label>
-                <input v-model="participant.email" type="email" class="w-full border p-1 rounded" />
+                <label class="block font-medium">Téléphone</label>
+                <input v-model="participant.phone" type="text" class="w-full border p-1 rounded" />
             </div>
             <div class="flex flex-col gap-1">
-                <label class="block font-medium">Téléphone <span style="color:red">*</span></label>
-                <input v-model="participant.phone" type="tel" class="w-full border p-1 rounded" pattern="[0-9]{10}" />
-            </div>
-            <div class="flex flex-col gap-1">
-                <label class="block font-medium">Moto/Cylindré <span style="color:red">*</span></label>
+                <label class="block font-medium">Moto/Cylindré</label>
                 <input v-model="participant.bike" type="text" class="w-full border p-1 rounded" />
             </div>
             <div class="flex flex-col gap-1">
-                <label class="block font-medium">Expérience à moto <span style="color:red">*</span></label>
+                <label class="block font-medium">Expérience à moto</label>
                 <textarea v-model="participant.experience" class="w-full border p-1 rounded" rows="3"></textarea>
             </div>
             <div v-if="isSeance" class="flex flex-col gap-1">
@@ -210,7 +206,15 @@ export default{
         async handleSubmit() {
             this.isSubmitting = true
             try {
-                const res = await inscritAPI.create_inscrit(this.event.event_id, this.participant)
+                const isAddAdmin = this.participant.hasAccount === false
+                if(isAddAdmin){
+                    this.participant.bike = this.participant.bike || "Non renseigné"
+                    this.participant.experience = this.participant.experience || "Non renseigné"
+                    this.participant.goal = this.participant.goal || "Non renseigné"
+                    this.participant.phone = this.participant.phone || "0000000000"
+                    this.participant.roles = ["non_adherent"]
+                }
+                const res = await inscritAPI.create_inscrit(this.event.event_id, this.participant, isAddAdmin)
                 if (!res?.data?.success) throw new Error("Échec pour " + this.participant.name)
                 this.$emit('inscrit')
             } catch (err) {

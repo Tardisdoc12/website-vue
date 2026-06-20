@@ -85,6 +85,9 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
     $event_id = $request->get_param('event_id'); 
     $user_d = $request->get_param('user');
     $roles    = isset($user_d['roles']) && is_array($user_d['roles']) ? array_map('sanitize_text_field', $user_d['roles']) : ['non_adherent'];
+    $isAddAdmin = boolval($request->get_param('isAddAdmin'));
+
+    error_log("isAddAdmin: " . ($isAddAdmin ? "true" : "false"));
 
     // Vérifier si l’événement existe
     $event = $wpdb->get_row($wpdb->prepare(
@@ -100,18 +103,28 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
         );
     }
 
+    $email = !$isAddAdmin ? $user_d['email'] : 'admin-add-' . uniqid() . '@placeholder.local';
+    if(!$isAddAdmin && !is_email($email)) {
+        error_log("Adresse email invalide: " . $email);
+        return new WP_Error(
+            'invalid_email',
+            'Adresse email invalide.',
+            ['status' => 400]
+        );
+    }
+
     // verifier si l'utilisateur existe
     $user = $wpdb->get_row($wpdb->prepare(
         "SELECT * FROM $table_users WHERE email = %s",
-        $user_d["email"]
+        $email
     ));
 
     if (!$user) {
         $isAdherent = in_array('non_adherent', $roles, true) ? 0 : 1;
         $wpdb->insert($table_users, [
             "user_name" => isset($user_d['name']) ? sanitize_text_field($user_d['name']) : '',
-            "phone" => isset($user_d['phone']) ? sanitize_text_field($user_d['phone']) : '',
-            "email" => isset($user_d['email']) ? sanitize_text_field($user_d['email']) : '',
+            "phone" => isset($user_d['phone']) ? sanitize_text_field($user_d['phone']) : '0000000000',
+            "email" => $email,
             "experience" => isset($user_d['experience']) ? sanitize_text_field($user_d['experience']) : '',
             "is_adherent" => $isAdherent
         ]);
@@ -131,14 +144,6 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
             ],
             ['id' => $user_id]
         );
-        // Mettre à jour l'expérience si elle est fournie
-        if (!empty($user_d['experience'])) {
-            $wpdb->update(
-                $table_users,
-                ['experience' => sanitize_text_field($user_d['experience'])],
-                ['id' => $user_id]
-            );
-        }
     }
 
     // Vérifier si l’utilisateur est déjà inscrit à cet event
@@ -154,6 +159,7 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
         ];
     }
 
+    error_log("User roles: " . implode(", ", $roles));
     // Décider quelle colonne décrémenter
     if (empty($roles) || in_array('non_adherent', $roles, true)) {
         $column = 'nonsubscribe_places';
