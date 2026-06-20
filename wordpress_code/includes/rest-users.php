@@ -268,6 +268,7 @@ function myplugin_update_user(WP_REST_Request $request) {
     ]);
 
     if (is_wp_error($user_update)) {
+        error_log("Erreur lors de la mise à jour de l'utilisateur ID $user_id : " . print_r($user_update, true));
         return $user_update;
     }
 
@@ -276,6 +277,8 @@ function myplugin_update_user(WP_REST_Request $request) {
     update_user_meta($user_id, 'moto', $moto);
     update_user_meta($user_id, 'urgence_phone', $urgence_phone);
     update_user_meta($user_id, 'urgence_name', $urgence_name);
+    update_user_meta($user_id, 'firstName', $firstName);
+    update_user_meta($user_id, 'lastName', $lastName);
 
     return [
         'success' => true,
