@@ -219,9 +219,7 @@ export default{
                 places_available = "inscriptions fermées"
             }
             const alreadyInscript = this.userEvents?.some(obj => Number(obj.event_id) === Number(arg.event.extendedProps.event_id)) ?? false
-            if(alreadyInscript) {
-                places_available = "déjà inscrit"
-            }
+            
             if(Number(arg.event.extendedProps.closed_inscription) === 1) {
                 places_available = "inscriptions fermées"
             }
@@ -236,7 +234,9 @@ export default{
             else if(Number(arg.event.extendedProps.closed_inscription) === 3) {
                 places_available = "évènement dépassé"
             }
-
+            if(alreadyInscript) {
+                places_available = "vous êtes inscrit"
+            }
             let bgColor;
             let backgroundColorCard;
             let colorWritting = "rgba(0, 0, 0, 1)";
