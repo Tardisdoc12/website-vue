@@ -24,6 +24,7 @@ $includes = [
     'includes/rest-conseils.php',
     'includes/rest-notes.php',
     'includes/rest-media.php',
+    'includes/rest-places.php',
     'templates/admin-settings.php'
 ];
 

@@ -128,6 +128,13 @@ function mon_plugin_creer_tables() {
         KEY parent_id (parent_id)
     ) $charset_collate;";
 
+    $table_places = $wpdb->prefix . "places";
+    $sql10 = "CREATE TABLE $table_places (
+        id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+        name VARCHAR(200) NOT NULL,
+        PRIMARY KEY (id)
+    ) $charset_collate;";
+
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     $sqls = [
         $sql1,
@@ -138,7 +145,8 @@ function mon_plugin_creer_tables() {
         $sql6,
         $sql7,
         $sql8,
-        $sql9
+        $sql9,
+        $sql10
     ];
 
     foreach ($sqls as $sql) {

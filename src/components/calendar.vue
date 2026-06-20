@@ -8,9 +8,11 @@
     />
     <ModalCreateEvent
         v-if="startCreateEvent"
+        :placesEvent="placesEvent"
+        :onSuccess="creationSuccess"
         @cancelSignal="startCreateEvent=false"
         @createEvents="AddEventCreated"
-        :onSuccess="creationSuccess"
+        @updatePlaces="UpdatePlaces"
     />
 
     <ModalEventInscription
@@ -31,6 +33,7 @@ import ModalCreateEvent from "@/subcomponents/modals/modal_formulaire_events.vue
 import ModalEventInscription from "@/subcomponents/modals/modal_events.vue"
 import eventsService from '@/javascript/api/axios_events.js';
 import EventsFunctions from '@/javascript/constants/events_functions'
+import placesApi from '@/javascript/api/axios_places.js'
 
 export default {
     
@@ -41,13 +44,18 @@ export default {
             startCreateEvent:false,
             allowedCreateEvent: false,
             eventSelected: {},
+            placesEvent: [],
             events: [],
         }
     },
 
     async mounted() {
         this.events = await eventsService.getAllEvents();
-        this.user = await EventsFunctions.isUserConnected()        
+        const result = await placesApi.get_places();
+        if(result.data.success){
+            this.placesEvent = result.data.places
+        }
+        this.user = await EventsFunctions.isUserConnected()      
         if(Object.keys(this.user).length !== 0){
             const eventsInscript = await eventsService.getEventUser(this.user.ID, this.user.email)
             this.user.events = eventsInscript.results
@@ -74,6 +82,9 @@ export default {
         },
     },
     methods: {
+        UpdatePlaces(newPlaces) {
+            this.placesEvent = newPlaces;
+        },
         AddEventCreated(event){
             this.events.push(
                 {

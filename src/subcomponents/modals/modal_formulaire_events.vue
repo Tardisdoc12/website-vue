@@ -6,7 +6,9 @@
         <CreateEventForm
             :onSuccess="onSuccess"
             :eventSelected="eventSelected"
+            :placesEvent="placesEvent"
             @createEvents="EventCreated"
+            @updatePlaces="PlacesUpdated"
         />
     </Modal>
 </template>
@@ -23,6 +25,10 @@ export default {
         eventSelected: {
             type: Object,
             default: null,
+        },
+        placesEvent: {
+            type: Array,
+            default: () => [],
         }
     },
 
@@ -34,6 +40,9 @@ export default {
     },
 
     methods:{
+        PlacesUpdated(newPlaces) {
+            this.$emit('updatePlaces', newPlaces);
+        },
         EventCreated(new_event) {
             this.$emit("createEvents", new_event)
         },

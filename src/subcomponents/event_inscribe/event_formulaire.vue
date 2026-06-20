@@ -85,7 +85,7 @@
             </div>
 
             <!-- Liste d'attentes -->
-            <div style="margin-bottom: 10px;" v-if="categorieForm !== Events.balade">
+            <div style="margin-bottom: 10px;display: flex; align-items: center; gap: 8px;" v-if="categorieForm !== Events.balade">
                 <label class="block font-medium">Ajouter une liste d'attente?</label>
                 <input type="checkbox" v-model="isCheckedAttente"/>
             </div>
@@ -95,8 +95,15 @@
                 <input type="number" v-model.number="attentePlaceForm" min="0" class="w-full border p-1 rounded" required />
             </div>
 
+            
+            <!-- Ajout de nouveau lieu -->
+            <div style="margin-bottom: 10px;display: flex; align-items: center; gap: 8px;">
+                <label class="block font-medium">Ajouter un nouveau lieu</label>
+                <input type="checkbox" v-model="isCheckedPlace"/>
+            </div>
+
             <!-- Lieu -->
-            <div style="margin-bottom:10px;">
+            <div style="margin-bottom:10px;" v-if="isCheckedPlace">
                 <label class="block font-medium">Lieu</label>
                 <input
                     v-model="placeForm"
@@ -104,6 +111,19 @@
                     class="w-full border p-1 rounded"
                     required
                 />
+            </div>
+            <div style="margin-bottom:10px;" v-else>
+                <label class="block font-medium">Lieu</label>
+                <select
+                    v-model="placeForm"
+                    class="w-full border p-1 rounded"
+                    required
+                >
+                    <option disabled value="">-- Choisir un lieu --</option>
+                    <option v-for="place in placesEvent" :key="place.id" :value="place.name">
+                        {{ place.name }}
+                    </option>
+                </select>
             </div>
 
             <!-- limité dans le nombre de place -->
@@ -143,6 +163,7 @@ import StarterKit from '@tiptap/starter-kit'
 import { Color } from '@tiptap/extension-color'
 import { TextStyle } from '@tiptap/extension-text-style'
 import { Underline } from '@tiptap/extension-underline'
+import placesApi from '@/javascript/api/axios_places.js'
 
 export default {
     props: {
@@ -153,6 +174,10 @@ export default {
         eventSelected: {
             type: Object,
             default: null,
+        },
+        placesEvent: {
+            type: Array,
+            default: () => [],
         }
     },
 
@@ -213,6 +238,7 @@ export default {
             isCheckedAttente: false || this?.eventSelected?.attentePlace > 0,
             Events: Events,
             isUpdate:false,
+            isCheckedPlace: false || this?.eventSelected?.place === '',
             currentColor: Couleurs.main_blue,
         }
     },
@@ -353,6 +379,14 @@ export default {
         },
 
         async handleSubmit() {
+            const places = this.placesEvent.filter(place => place.name === this.event.place);
+            if (!places.length) {
+                const response = await placesApi.add_place({ name: this.event.place });
+                if (response?.data?.success) {
+                    this.$emit('updatePlaces', response.data.places);
+                }
+            }
+            
             if (!this.isChecked){
                 this.subscribePlaceForm = -1
             }
