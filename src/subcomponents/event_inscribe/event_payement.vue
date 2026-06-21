@@ -35,7 +35,10 @@ export default {
     computed: {
         getBilleterieURL() {
             if (this.billeterie_url && this.billeterie_url !== "") {
-                return this.billeterie_url;
+                const url = this.billeterie_url.endsWith('/widget')
+                    ? this.billeterie_url
+                    : this.billeterie_url + '/widget';
+                return url;
             }
 
             const match = Object.entries(this.dates).find(([key]) => {
