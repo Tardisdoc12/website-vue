@@ -74,7 +74,11 @@
             </div>
 
             <!-- Lien billetterie -->
-            <div style="margin-bottom:10px;" v-if="categorieForm === Events.stage">
+            <div style="margin-bottom: 10px;display: flex; align-items: center; gap: 8px;">
+                <label class="block font-medium">Billetterie helloAsso?</label>
+                <input type="checkbox" v-model="isCheckedHelloAsso"/>
+            </div>
+            <div style="margin-bottom:10px;" v-if="!isCheckedHelloAsso">
                 <label class="block font-medium">Lien billetterie (optionnel)</label>
                 <input
                     v-model="billeterieForm"
@@ -82,6 +86,19 @@
                     class="w-full border p-1 rounded"
                     placeholder="https://example.com/billetterie"
                 />
+            </div>
+            <div style="margin-bottom:10px;" v-if="isCheckedHelloAsso">
+                <label class="block font-medium">Lien billetterie helloAsso</label>
+                <select
+                    v-model="billeterieForm"
+                    class="w-full border p-1 rounded"
+                    required
+                >
+                    <option disabled value="">-- Choisir une billetterie --</option>
+                    <option v-for="billeterie in billeteries" :key="billeterie.id" :value="billeterie.url">
+                        {{ billeterie.title }}
+                    </option>
+                </select>
             </div>
 
             <!-- Liste d'attentes -->
@@ -178,7 +195,11 @@ export default {
         placesEvent: {
             type: Array,
             default: () => [],
-        }
+        },
+        billeteries: {
+            type: Array,
+            default: () => [],
+        },
     },
 
     watch: {
@@ -233,9 +254,11 @@ export default {
                 nonsubscribePlace: 0,
                 attentePlace: 0,
                 billeterie_url: '',
+                billeterie_id: null,
             },
             isChecked:false || this?.eventSelected?.subscribePlace >= 0,
             isCheckedAttente: false || this?.eventSelected?.attentePlace > 0,
+            isCheckedHelloAsso: false || this?.eventSelected?.billeterie_id != null,
             Events: Events,
             isUpdate:false,
             isCheckedPlace: false || this?.eventSelected?.place === '',
@@ -266,6 +289,8 @@ export default {
                 return this.event.billeterie_url
             },
             set(newValue) {
+                const billeterieID = this.billeteries.find(b => b.url === newValue)?.id || null;
+                this.event.billeterie_id = billeterieID;
                 this.event.billeterie_url = newValue
             }
         },

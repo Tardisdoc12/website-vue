@@ -7,6 +7,7 @@
             :onSuccess="onSuccess"
             :eventSelected="eventSelected"
             :placesEvent="placesEvent"
+            :billeteries="billeteries"
             @createEvents="EventCreated"
             @updatePlaces="PlacesUpdated"
         />
@@ -29,7 +30,11 @@ export default {
         placesEvent: {
             type: Array,
             default: () => [],
-        }
+        },
+        billeteries: {
+            type: Array,
+            default: () => [],
+        },
     },
 
     data() {

@@ -9,6 +9,7 @@
     <ModalCreateEvent
         v-if="startCreateEvent"
         :placesEvent="placesEvent"
+        :billeteries="billeteries"
         :onSuccess="creationSuccess"
         @cancelSignal="startCreateEvent=false"
         @createEvents="AddEventCreated"
@@ -34,6 +35,7 @@ import ModalEventInscription from "@/subcomponents/modals/modal_events.vue"
 import eventsService from '@/javascript/api/axios_events.js';
 import EventsFunctions from '@/javascript/constants/events_functions'
 import placesApi from '@/javascript/api/axios_places.js'
+import billApi from '@/javascript/api/api_billeterie.js'
 
 export default {
     
@@ -46,6 +48,7 @@ export default {
             eventSelected: {},
             placesEvent: [],
             events: [],
+            billeteries: []
         }
     },
 
@@ -62,6 +65,11 @@ export default {
             const listB = this.user.roles
             const listA = ['bureau', 'administrator']
             this.allowedCreateEvent = listB.some(el => listA.includes(el));
+        }
+
+        const bills = await billApi.get_billeteries();
+        if (bills.data.success) {
+            this.billeteries = bills.data.billeteries
         }
     },
 
