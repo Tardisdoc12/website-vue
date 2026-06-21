@@ -11,6 +11,7 @@ add_action('admin_init', function() {
     register_setting('mon_plugin_options', 'mon_plugin_token');
     register_setting('mon_plugin_options', 'mon_plugin_mail_from');
     register_setting('mon_plugin_options', 'mon_plugin_mail_name');
+    register_setting('mon_plugin_options', 'helloasso_form_slug_adherent');
 });
 
 // Ajout de la page dans le menu admin
@@ -69,6 +70,20 @@ function mon_plugin_render_settings_page() {
                     <td>
                         <input type="text" name="mon_plugin_mail_name"
                             value="<?php echo esc_attr(get_option('mon_plugin_mail_name')); ?>"
+                            class="regular-text" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>Endpoint pour les notifications HelloAsso</th>
+                    <td>
+                        <input type="text" readonly value="<?php echo esc_url(rest_url('helloasso/v1/notification')); ?>" class="regular-text" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>HelloAsso Form Slug Adherent</th>
+                    <td>
+                        <input type="text" name="helloasso_form_slug_adherent"
+                            value="<?php echo esc_attr(get_option('helloasso_form_slug_adherent', 'devenir-adherent')); ?>"
                             class="regular-text" />
                     </td>
                 </tr>

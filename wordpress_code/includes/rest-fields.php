@@ -12,7 +12,8 @@ add_action('rest_api_init', function() {
         'telephone',
         'moto',
         'urgence_phone',
-        'urgence_name'
+        'urgence_name',
+        'subscriber_date',
     ];
 
     foreach ($custom_fields as $field) {

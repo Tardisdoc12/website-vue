@@ -44,13 +44,21 @@ function monplugin_get_events(WP_REST_Request $request) {
     $table_events   = $wpdb->prefix . "events";
     $table_inscrits = $wpdb->prefix . "inscrits";
     $table_users    = $wpdb->prefix . "users_inscrits";
+    $table_billeterie = $wpdb->prefix . "billeteries";
 
     // Récupérer tous les événements
     $events = $wpdb->get_results("SELECT * FROM $table_events");
 
+
     $result = [];
 
     foreach ($events as $event) {
+        if($event->billeterie_id) {
+            $billeterie = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_billeterie WHERE id = %d", $event->billeterie_id));
+            if ($billeterie) {
+                $event->billeterie_url = $billeterie->url;
+            }
+        }
         // Récupérer les utilisateurs inscrits pour cet événement
         $users = $wpdb->get_results($wpdb->prepare(
             "SELECT 
@@ -65,6 +73,7 @@ function monplugin_get_events(WP_REST_Request $request) {
                 i.status,
                 i.encadrement,
                 i.date_inscrit,
+                i.payement_status,
                 wp_users.ID AS wp_user_id
             FROM $table_inscrits i
             JOIN $table_users u ON u.id = i.user_id
@@ -148,6 +157,7 @@ function monplugin_get_event_id(WP_REST_Request $request) {
     $table_events   = $wpdb->prefix . "events";
     $table_inscrits = $wpdb->prefix . "inscrits";
     $table_users    = $wpdb->prefix . "users_inscrits";
+    $table_billeterie = $wpdb->prefix . "billeteries";
 
     $event_id = intval($request['id']);
 
@@ -164,10 +174,18 @@ function monplugin_get_event_id(WP_REST_Request $request) {
         );
     }
 
+    
+    if ($event && $event->billeterie_id) {
+        $billeterie = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_billeterie WHERE id = %d", $event->billeterie_id));
+        if ($billeterie) {
+            $event->billeterie_url = $billeterie->url;
+        }
+    }
+
     // Récupérer les utilisateurs inscrits
     $users = $wpdb->get_results(
         $wpdb->prepare(
-            "SELECT u.id, u.user_name, u.email, u.phone, u.experience, i.goal, u.is_adherent, i.bike, i.status, i.date_inscrit
+            "SELECT u.id, u.user_name, u.email, u.phone, u.experience, i.goal, u.is_adherent, i.bike, i.status, i.date_inscrit, i.payement_status
              FROM $table_inscrits i
              JOIN $table_users u ON u.id = i.user_id
              WHERE i.event_id = %d",
@@ -245,6 +263,7 @@ function monplugin_get_event_post_id(WP_REST_Request $request) {
                 i.status,
                 i.date_inscrit,
                 i.encadrement,
+                i.payement_status,
                 wp_users.ID AS wp_user_id
             FROM $table_inscrits i
             JOIN $table_users u ON u.id = i.user_id
@@ -324,6 +343,7 @@ function monplugin_create_events(WP_REST_Request $request) {
             'attente_places' => intval($request['attente_places']) ?? 0,
             'closed_inscription' => intval($request['closed_inscription']),
             'billeterie_url' => sanitize_text_field($request['billeterie_url']),
+            'billeterie_id' => intval($request['billeterie_id']) ?? null,
         ]
     );
 
@@ -406,8 +426,8 @@ function monplugin_update_event(WP_REST_Request $request) {
         'nonsubscribe_places' => intval($request['nonsubscribe_places']),
         'attente_places' => intval($request['attente_places']) ?? 0,
         'closed_inscription' => intval($request['closed_inscription']),
-        'billeterie_url' => sanitize_text_field($request['billeterie_url']),
-        
+        'billeterie_url' => sanitize_text_field($request['billeterie_url']) ?? null,
+        'billeterie_id' => intval($request['billeterie_id']) ?? null,
     ];
 
     if (!$same_title || !$same_start_date || !$same_end_date || !$same_place) {

@@ -85,6 +85,17 @@ function monplugin_run_migrations() {
         ");
     }
 
+    $column = $wpdb->get_results("SHOW COLUMNS FROM $table_events LIKE 'billeterie_url'");
+    
+    if (empty($column)) {
+        $wpdb->query("ALTER TABLE $table_events ADD billeterie_id BIGINT(20) UNSIGNED NULL AFTER billeterie_url");
+    }
+
+    $column = $wpdb->get_results("SHOW COLUMNS FROM $table_inscribes LIKE 'payement_status'");
+    if (empty($column)) {
+        $wpdb->query("ALTER TABLE $table_inscribes ADD payement_status ENUM('pending', 'completed', 'failed') NOT NULL DEFAULT 'pending' AFTER date_inscrit");
+    }
+
     // --- 3️⃣ Flag pour éviter de relancer la migration ---
     update_option('monplugin_last_migration', time());
 }

@@ -34,6 +34,7 @@ function mon_plugin_creer_tables() {
         attente_places INT UNSIGNED NOT NULL,
         closed_inscription TINYINT(1) NOT NULL DEFAULT 0,
         billeterie_url VARCHAR(500) NULL,
+        billeterie_id BIGINT(20) UNSIGNED NULL,
         update_date DATETIME NULL,
         PRIMARY KEY (id)
     ) $charset_collate;";
@@ -49,6 +50,7 @@ function mon_plugin_creer_tables() {
         encadrement TINYINT(1) NOT NULL DEFAULT 0,
         status ENUM('inscrit', 'attente') NOT NULL DEFAULT 'inscrit',
         date_inscrit DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+        payement_status ENUM('pending', 'completed', 'failed') NOT NULL DEFAULT 'pending',
         PRIMARY KEY (id)
     ) $charset_collate;";
 
@@ -135,6 +137,15 @@ function mon_plugin_creer_tables() {
         PRIMARY KEY (id)
     ) $charset_collate;";
 
+    $table_billeterie = $wpdb->prefix . "billetteries";
+    $sql11 = "CREATE TABLE $table_billeterie (
+        id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+        title VARCHAR(200) NOT NULL,
+        slug VARCHAR(200) NOT NULL UNIQUE,
+        url VARCHAR(500) NOT NULL,
+        PRIMARY KEY (id)
+    ) $charset_collate;";
+
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     $sqls = [
         $sql1,
@@ -146,7 +157,8 @@ function mon_plugin_creer_tables() {
         $sql7,
         $sql8,
         $sql9,
-        $sql10
+        $sql10,
+        $sql11
     ];
 
     foreach ($sqls as $sql) {
