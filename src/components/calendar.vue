@@ -55,7 +55,7 @@ export default {
         if(result.data.success){
             this.placesEvent = result.data.places
         }
-        this.user = await EventsFunctions.isUserConnected()      
+        this.user = await EventsFunctions.isUserConnected()    
         if(Object.keys(this.user).length !== 0){
             const eventsInscript = await eventsService.getEventUser(this.user.ID, this.user.email)
             this.user.events = eventsInscript.results

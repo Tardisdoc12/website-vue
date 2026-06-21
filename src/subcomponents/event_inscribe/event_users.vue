@@ -72,6 +72,7 @@
                     <th class="border border-gray-300 p-2 text-left">Expérience</th>
                     <th class="border border-gray-300 p-2 text-center">Encadrant</th>
                     <th class="border border-gray-300 p-2 text-center">Statut</th>
+                    <th class="border border-gray-300 p-2 text-center">Paiement</th>
                     <th class="border border-gray-300 p-2 text-center">Actions</th>
                     </tr>
                 </thead>
@@ -113,6 +114,10 @@
                         >
                             {{user.status === 'attente' ? 'liste d\'attente' : 'inscrit'}}
                         </button>
+                    </td>
+                    <td class="border border-gray-300 p-2 text-center">
+                        <span v-if="user.hasPay" class="text-green-600 font-semibold">Payé</span>
+                        <span v-else class="text-red-600 font-semibold">Non payé</span>
                     </td>
                     <td class="border border-gray-300 p-2 text-center">
                         <button 
@@ -178,6 +183,7 @@ export default {
                 experience: user.is_adherent === "1" ? "" : user.experience,
                 encadrant: user.encadrement === "1" ? "Oui" : "Non",
                 status: user.status,
+                hasPay: user.payement_status === 'completed',
                 wp_user_id: user.wp_user_id
             }))
         },
