@@ -28,7 +28,7 @@ function myplugin_handle_helloasso_notification(WP_REST_Request $request) {
     $payload  = $data['data'];
 
     
-    if ($eventType === 'form') {
+    if ($eventType === 'form' && $payload['formType'] === 'Event') {
         treat_creation_form_notification($payload);
     }
 
