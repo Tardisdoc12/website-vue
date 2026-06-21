@@ -27,8 +27,8 @@ function myplugin_handle_helloasso_notification(WP_REST_Request $request) {
     $eventType = $data['eventType'];
     $payload  = $data['data'];
 
-    
-    if ($eventType === 'form' && $payload['formType'] === 'Event') {
+    if ($eventType === 'Form' && $payload['formType'] === 'Event') {
+        error_log('Notification de création de formulaire reçue : ' . print_r($payload, true));
         treat_creation_form_notification($payload);
     }
 
@@ -188,10 +188,27 @@ function treat_creation_form_notification($data) {
 
     $title = $data['title'] ?? null;
     $slug = $data['formSlug'] ?? null;
+    $url = $data['url'] ?? null;
+
+    error_log('Titre du formulaire : ' . $title);
+    error_log('Slug du formulaire : ' . $slug);
+    error_log('URL du formulaire : ' . ($url ?? 'N/A'));
+
+    $result = $wpdb->get_var(
+        $wpdb->prepare(
+            "SELECT id FROM $table_billeterie WHERE slug = %s",
+            $slug
+        )
+    );
+
+    if ($result) {
+        error_log('Formulaire déjà existant avec le slug : ' . $slug);
+        return new WP_Error('form_exists', 'Formulaire déjà existant avec le slug.', ['status' => 400]);
+    }
 
     $result = $wpdb->insert(
         $table_billeterie,
-        ['title' => $title, 'slug' => $slug, 'url' => $data['url'] ?? null],
+        ['title' => $title, 'slug' => $slug, 'url' => $url],
         ['%s', '%s', '%s']
     );
 

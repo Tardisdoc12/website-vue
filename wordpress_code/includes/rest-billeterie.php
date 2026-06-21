@@ -24,7 +24,7 @@ add_action('rest_api_init', function () {
 
 function myplugin_get_billeterie(WP_REST_Request $request) {
     global $wpdb;
-    $table_billeterie = $wpdb->prefix . "billeteries";
+    $table_billeterie = $wpdb->prefix . "billetteries";
 
     $billeteries = $wpdb->get_results(
         "SELECT * FROM $table_billeterie"
@@ -49,7 +49,7 @@ add_action('rest_api_init', function () {
 
 function myplugin_create_billeterie(WP_REST_Request $request) {
     global $wpdb;
-    $table_billeterie = $wpdb->prefix . "billeteries";
+    $table_billeterie = $wpdb->prefix . "billetteries";
 
     $data = $request->get_json_params();
     $title = sanitize_text_field($data['title']);
@@ -87,7 +87,7 @@ add_action('rest_api_init', function () {
 
 function myplugin_delete_billeterie(WP_REST_Request $request) {
     global $wpdb;
-    $table_billeterie = $wpdb->prefix . "billeteries";
+    $table_billeterie = $wpdb->prefix . "billetteries";
     $billeterie_id = (int) $request->get_param('id');
 
     if (!$billeterie_id) {

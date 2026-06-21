@@ -23,7 +23,7 @@ function monplugin_run_migrations() {
 
     $column = $wpdb->get_results("SHOW COLUMNS FROM $table_medias LIKE 'parent_id'");
     if (empty($column)) {
-        $wpdb->query("ALTER TABLE $table_medias ADD parent_id VARCHAR(200) UNSIGNED NULL AFTER file_type");
+        $wpdb->query("ALTER TABLE $table_medias ADD parent_id VARCHAR(200) NULL AFTER file_type");
     }
 
     $column = $wpdb->get_results("SHOW COLUMNS FROM $table_events LIKE 'update_date'");
@@ -63,7 +63,7 @@ function monplugin_run_migrations() {
         $wpdb->query("ALTER TABLE $table_inscribes ADD encadrement TINYINT(1) NOT NULL DEFAULT 0 AFTER goal");
     }
 
-    $column2 = $wpdb->get_results("SHOW COLUMNS FROM $table_source LIKE 'ip_wp'");
+    $column2 = $wpdb->get_results("SHOW COLUMNS FROM $table_source LIKE 'id_wp'");
     if (empty($column2)) {
         $wpdb->query("ALTER TABLE $table_source ADD id_wp BIGINT(20) UNSIGNED NULL AFTER tag");
     }
@@ -85,8 +85,7 @@ function monplugin_run_migrations() {
         ");
     }
 
-    $column = $wpdb->get_results("SHOW COLUMNS FROM $table_events LIKE 'billeterie_url'");
-    
+    $column = $wpdb->get_results("SHOW COLUMNS FROM $table_events LIKE 'billeterie_id'");
     if (empty($column)) {
         $wpdb->query("ALTER TABLE $table_events ADD billeterie_id BIGINT(20) UNSIGNED NULL AFTER billeterie_url");
     }

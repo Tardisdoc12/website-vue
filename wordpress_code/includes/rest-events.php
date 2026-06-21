@@ -44,7 +44,7 @@ function monplugin_get_events(WP_REST_Request $request) {
     $table_events   = $wpdb->prefix . "events";
     $table_inscrits = $wpdb->prefix . "inscrits";
     $table_users    = $wpdb->prefix . "users_inscrits";
-    $table_billeterie = $wpdb->prefix . "billeteries";
+    $table_billeterie = $wpdb->prefix . "billetteries";
 
     // Récupérer tous les événements
     $events = $wpdb->get_results("SELECT * FROM $table_events");

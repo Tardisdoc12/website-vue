@@ -69,7 +69,8 @@ export default {
 
         const bills = await billApi.get_billeteries();
         if (bills.data.success) {
-            this.billeteries = bills.data.billeteries
+            this.billeteries = bills.data.data
+            console.log('billeteries', this.billeteries)
         }
     },
 

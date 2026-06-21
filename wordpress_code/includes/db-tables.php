@@ -141,9 +141,10 @@ function mon_plugin_creer_tables() {
     $sql11 = "CREATE TABLE $table_billeterie (
         id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
         title VARCHAR(200) NOT NULL,
-        slug VARCHAR(200) NOT NULL UNIQUE,
+        slug VARCHAR(200) NOT NULL,
         url VARCHAR(500) NOT NULL,
-        PRIMARY KEY (id)
+        PRIMARY KEY (id),
+        UNIQUE KEY slug (slug)
     ) $charset_collate;";
 
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
