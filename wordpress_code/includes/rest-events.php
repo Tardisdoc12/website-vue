@@ -98,6 +98,7 @@ function monplugin_get_events(WP_REST_Request $request) {
             'attente_places'     => $event->attente_places,
             'closed_inscription' => $event->closed_inscription,
             'billeterie_url'     => $event->billeterie_url,
+            'billeterie_id'      => $event->billeterie_id,
             'update_date'        => $event->update_date,
             'users'       => $users
         ];
@@ -209,6 +210,7 @@ function monplugin_get_event_id(WP_REST_Request $request) {
         'attente_places'       => $event->attente_places,
         'closed_inscription'   => $event->closed_inscription,
         'billeterie_url'       => $event->billeterie_url,
+        'billeterie_id'       => $event->billeterie_id,
         'update_date'          => $event->update_date,
         'users'               => $users
     ];
@@ -289,6 +291,7 @@ function monplugin_get_event_post_id(WP_REST_Request $request) {
         'attente_places'       => $event->attente_places,
         'closed_inscription'   => $event->closed_inscription,
         'billeterie_url'       => $event->billeterie_url,
+        'billeterie_id'        => $event->billeterie_id,
         'update_date'          => $event->update_date,
         'users'               => $users
     ];
@@ -427,8 +430,11 @@ function monplugin_update_event(WP_REST_Request $request) {
         'attente_places' => intval($request['attente_places']) ?? 0,
         'closed_inscription' => intval($request['closed_inscription']),
         'billeterie_url' => sanitize_text_field($request['billeterie_url']) ?? null,
-        'billeterie_id' => intval($request['billeterie_id']) ?? null,
     ];
+
+    if ($request['billeterie_id'] != null) {
+        $data['billeterie_id'] = intval($request['billeterie_id']);
+    }
 
     if (!$same_title || !$same_start_date || !$same_end_date || !$same_place) {
         $data['update_date'] = current_time('mysql');

@@ -383,6 +383,13 @@ export default {
                         alert(`Vous etes deja inscit pour cet evenement. Si vous avec deja effectué le reglement sur helloasso, vous pouvez ignorer ce message.\n\nsinon vous pouvez suivre ce lien pour acceder a la billeterie :\n${billeterie_url}`)
                     }
                     participant.status = this.isAttente ? "attente" : "inscrit"
+                    const isAdherent = !participant.roles.includes("non_adherent")
+                    const categorie = this.event.categorie
+
+                    const isSeance = categorie === Events.seance
+
+                    participant.payement_status = ((isAdherent && isSeance) || !this.event.billeterie_id) ? "completed" : "pending"
+
                     const res = await inscritAPI.create_inscrit(this.event.event_id, participant)
                     if (!res?.data?.success) throw new Error("Échec pour " + participant.name)
                 }

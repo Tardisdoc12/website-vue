@@ -214,6 +214,7 @@ export default{
                     this.participant.phone = this.participant.phone || "0000000000"
                     this.participant.roles = ["non_adherent"]
                 }
+                this.participant.payement_status = "completed"
                 const res = await inscritAPI.create_inscrit(this.event.event_id, this.participant, isAddAdmin)
                 if (!res?.data?.success) throw new Error("Échec pour " + this.participant.name)
                 this.$emit('inscrit')

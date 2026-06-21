@@ -14,6 +14,7 @@ function conversion_to_bdd(datas) {
         attente_places: datas['attentePlace'] ?? 0,
         closed_inscription: datas['closed_inscription'] ?? 0,
         billeterie_url: datas['billeterie_url'] ?? '',
+        billeterie_id: datas['billeterie_id'] ?? null,
     }
 }
 
@@ -34,6 +35,7 @@ function conversion_from_bdd(datas) {
         closed_inscription: datas['closed_inscription'] ?? 0,
         billeterie_url: datas['billeterie_url'] ?? '',
         update_date: datas['update_date'] ?? null,
+        billeterie_id: datas['billeterie_id'] ?? null,
         users: datas?.["users"] ?? []
     }
 }

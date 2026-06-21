@@ -190,7 +190,8 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
         'goal'=> isset($user_d['goal']) ? sanitize_text_field($user_d['goal']) : '',
         'encadrement' => isset($user_d['wantsEncadrant']) ? intval($user_d['wantsEncadrant']) : 0,
         'status' => isset($user_d['status']) && in_array($user_d['status'], ['inscrit', 'attente']) ? sanitize_text_field($user_d['status']) : 'inscrit',
-        'date_inscrit' => current_time('mysql')
+        'date_inscrit' => current_time('mysql'),
+        'payement_status' => isset($user_d['payement_status']) && in_array($user_d['payement_status'], ['completed', 'pending']) ? sanitize_text_field($user_d['payement_status']) : 'pending'
     ]);
 
     if ($wpdb->last_error) {
