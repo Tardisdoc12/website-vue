@@ -194,28 +194,13 @@ function treat_creation_form_notification($data) {
     error_log('Slug du formulaire : ' . $slug);
     error_log('URL du formulaire : ' . ($url ?? 'N/A'));
 
-    $result = $wpdb->get_var(
+    $result = $wpdb->query(
         $wpdb->prepare(
-            "SELECT id FROM $table_billeterie WHERE slug = %s",
-            $slug
+            "INSERT INTO $table_billeterie (title, slug, url) VALUES (%s, %s, %s)
+            ON DUPLICATE KEY UPDATE title = VALUES(title), url = VALUES(url)",
+            $title, $slug, $url
         )
     );
-
-    if ($result) {
-        error_log('Formulaire déjà existant avec le slug : ' . $slug);
-        return new WP_Error('form_exists', 'Formulaire déjà existant avec le slug.', ['status' => 400]);
-    }
-
-    $result = $wpdb->insert(
-        $table_billeterie,
-        ['title' => $title, 'slug' => $slug, 'url' => $url],
-        ['%s', '%s', '%s']
-    );
-
-    if ($result === false) {
-        error_log('Erreur lors de l\'insertion du formulaire dans la base de données : ' . $wpdb->last_error);
-        return new WP_Error('db_insert_error', 'Erreur lors de l\'insertion du formulaire dans la base de données.', ['status' => 500]);
-    }
 
     return ['success' => true, 'message' => 'Formulaire inséré avec succès.', 'formulaire' => $result];
 }
