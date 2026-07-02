@@ -19,6 +19,7 @@
     <ModalEventInscription
         v-if="seeModalEvent"
         :event="eventSelected"
+        :placesEvent="placesEvent"
         :userConnected="user"
         @cancelSignal="closeEvent"
         @userDeleted="userToDelete"

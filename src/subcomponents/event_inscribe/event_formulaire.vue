@@ -231,6 +231,17 @@ export default {
             content: this.event.description || '<p>Écris ton texte ici...</p>',
             extensions: [StarterKit, TextStyle, Color, Underline],
         })
+        if(this.eventSelected) {
+            console.log("eventSelected", this.eventSelected)
+            this.event.place = this.eventSelected.place
+            const filteredPlaces = this.placesEvent.filter(place => place.name === this.eventSelected.place)
+            if(filteredPlaces.length === 0){
+                this.isCheckedPlace = true
+            }
+            else{
+                this.isCheckedPlace = false
+            }
+        }
     },
 
     beforeUnmount() {
@@ -258,7 +269,7 @@ export default {
             },
             isChecked:false || this?.eventSelected?.subscribePlace >= 0,
             isCheckedAttente: false || this?.eventSelected?.attentePlace > 0,
-            isCheckedHelloAsso: false || this?.eventSelected?.billeterie_id != null,
+            isCheckedHelloAsso: false || (this?.eventSelected?.billeterie_id != null && this?.eventSelected?.billeterie_id != "0"),
             Events: Events,
             isUpdate:false,
             isCheckedPlace: false || this?.eventSelected?.place === '',

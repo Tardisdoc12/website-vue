@@ -28,6 +28,7 @@
     <ModificationEvent
         v-if="stepsComputed == 3"
         :event-selected="event"
+        :places-event="placesEvent"
         @cancelSignal="Cancel"
     />
     <UsersInEvent
@@ -74,6 +75,11 @@ export default{
         event: {
             type: Object,
             required: true
+        },
+        placesEvent: {
+            type: Array,
+            required: false,
+            default: () => []
         },
         userConnected: {
             type: Object,

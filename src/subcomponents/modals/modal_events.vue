@@ -6,6 +6,7 @@
     >
         <EventPipeline
             :event="event"
+            :placesEvent="placesEvent"
             :user-connected="userConnected"
             @incrementSteps="incrementSteps"
             @inscritEvent="inscritEvent"
@@ -26,6 +27,11 @@ export default{
         event: {
             type: Object,
             required: true
+        },
+        placesEvent: {
+            type: Array,
+            required: false,
+            default: () => []
         },
         userConnected: {
             type: Object,
