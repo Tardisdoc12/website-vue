@@ -1,20 +1,75 @@
 <?php
 /**
-* Page de paramètres du plugin
-*/
+ * Page de paramètres du plugin
+ */
 if (!defined('ABSPATH')) exit;
 
-// Enregistrement des settings
+// ============================================
+// 1. CHARGEMENT DES ONGLETS (ordre explicite)
+// ============================================
+function mon_plugin_get_settings_fields() {
+    static $tabs = null;
+    if ($tabs !== null) return $tabs;
+
+    $order = ['general', 'kdrive', 'helloasso']; // ordre d'affichage voulu
+    $tabs = [];
+
+    foreach ($order as $tab_key) {
+        $file = plugin_dir_path(__FILE__) . "settings-tabs/{$tab_key}.php";
+        if (file_exists($file)) {
+            $tabs[$tab_key] = require $file;
+        }
+    }
+
+    return $tabs;
+}
+
+// ============================================
+// 2. ENREGISTREMENT DES SETTINGS
+// ============================================
 add_action('admin_init', function() {
-    register_setting('mon_plugin_options', 'mon_plugin_kdrive_id');
-    register_setting('mon_plugin_options', 'mon_plugin_kdrive_directory_id');
-    register_setting('mon_plugin_options', 'mon_plugin_token');
-    register_setting('mon_plugin_options', 'mon_plugin_mail_from');
-    register_setting('mon_plugin_options', 'mon_plugin_mail_name');
-    register_setting('mon_plugin_options', 'helloasso_form_slug_adherent');
+    foreach (mon_plugin_get_settings_fields() as $tab) {
+        foreach ($tab['fields'] as $key => $field) {
+            if (($field['type'] ?? '') === 'readonly_url') continue;
+
+            $args = [];
+            if ($field['type'] === 'repeater') {
+                $args['sanitize_callback'] = function($value) use ($field) {
+                    return mon_plugin_sanitize_repeater($value, $field['columns']);
+                };
+            }
+
+            register_setting('mon_plugin_options', $key, $args);
+        }
+    }
 });
 
-// Ajout de la page dans le menu admin
+function mon_plugin_sanitize_repeater($value, $columns) {
+    if (!is_array($value)) return [];
+
+    $clean = [];
+    foreach ($value as $row) {
+        if (!is_array($row)) continue;
+
+        $clean_row = [];
+        $has_content = false;
+
+        foreach ($columns as $col_key => $col) {
+            $val = sanitize_text_field($row[$col_key] ?? '');
+            $clean_row[$col_key] = $val;
+            if ($val !== '') $has_content = true;
+        }
+
+        // On ignore les lignes totalement vides
+        if ($has_content) $clean[] = $clean_row;
+    }
+
+    return $clean;
+}
+
+// ============================================
+// 3. MENU ADMIN
+// ============================================
 add_action('admin_menu', function() {
     add_options_page(
         'Plugin Vue – Paramètres',
@@ -25,71 +80,167 @@ add_action('admin_menu', function() {
     );
 });
 
-// Rendu de la page
+// ============================================
+// 4. RENDU D'UN CHAMP
+// ============================================
+function mon_plugin_render_field($key, $field) {
+    $type = $field['type'];
+
+    if ($type === 'repeater') {
+        mon_plugin_render_repeater_field($key, $field);
+        return;
+    }
+
+    $value = get_option($key, $field['default'] ?? '');
+    ?>
+    <tr>
+        <th><label for="<?php echo esc_attr($key); ?>"><?php echo esc_html($field['label']); ?></label></th>
+        <td>
+            <?php if ($type === 'readonly_url'): ?>
+                <input type="text" readonly
+                       value="<?php echo esc_url($field['callback']()); ?>"
+                       class="regular-text" />
+            <?php else: ?>
+                <input type="<?php echo esc_attr($type); ?>"
+                       id="<?php echo esc_attr($key); ?>"
+                       name="<?php echo esc_attr($key); ?>"
+                       value="<?php echo esc_attr($value); ?>"
+                       class="regular-text" />
+            <?php endif; ?>
+        </td>
+    </tr>
+    <?php
+}
+
+// ============================================
+// 5. RENDU D'UN CHAMP "REPEATER" (liste dynamique)
+// ============================================
+function mon_plugin_render_repeater_field($key, $field) {
+    $columns = $field['columns'];
+    $rows = get_option($key, []);
+    if (!is_array($rows)) $rows = [];
+    ?>
+    <tr>
+        <th><?php echo esc_html($field['label']); ?></th>
+        <td>
+            <table class="widefat mon-plugin-repeater" data-key="<?php echo esc_attr($key); ?>">
+                <thead>
+                    <tr>
+                        <?php foreach ($columns as $col): ?>
+                            <th><?php echo esc_html($col['label']); ?></th>
+                        <?php endforeach; ?>
+                        <th style="width:40px;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($rows as $i => $row): ?>
+                        <?php mon_plugin_render_repeater_row($key, $columns, $i, $row); ?>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <button type="button" class="button mon-plugin-add-row" data-key="<?php echo esc_attr($key); ?>">
+                + Ajouter une ligne
+            </button>
+
+            <!-- Template caché utilisé par le JS pour cloner une nouvelle ligne -->
+            <template id="tpl-<?php echo esc_attr($key); ?>">
+                <?php mon_plugin_render_repeater_row($key, $columns, '__INDEX__', []); ?>
+            </template>
+        </td>
+    </tr>
+    <?php
+}
+
+function mon_plugin_render_repeater_row($key, $columns, $index, $row) {
+    ?>
+    <tr>
+        <?php foreach ($columns as $col_key => $col): ?>
+            <td>
+                <input type="text"
+                       name="<?php echo esc_attr($key); ?>[<?php echo esc_attr($index); ?>][<?php echo esc_attr($col_key); ?>]"
+                       value="<?php echo esc_attr($row[$col_key] ?? ''); ?>"
+                       class="regular-text" />
+            </td>
+        <?php endforeach; ?>
+        <td>
+            <button type="button" class="button mon-plugin-remove-row">✕</button>
+        </td>
+    </tr>
+    <?php
+}
+
+// ============================================
+// 6. RENDU DE LA PAGE
+// ============================================
 function mon_plugin_render_settings_page() {
+    $tabs = mon_plugin_get_settings_fields();
+    $current_tab = $_GET['tab'] ?? array_key_first($tabs);
+
+    if (!isset($tabs[$current_tab])) {
+        $current_tab = array_key_first($tabs);
+    }
     ?>
     <div class="wrap">
         <h1>Paramètres Plugin Vue</h1>
+
+        <h2 class="nav-tab-wrapper">
+            <?php foreach ($tabs as $tab_key => $tab): ?>
+                <a href="?page=mon-plugin-settings&tab=<?php echo esc_attr($tab_key); ?>"
+                   class="nav-tab <?php echo $current_tab === $tab_key ? 'nav-tab-active' : ''; ?>">
+                    <?php echo esc_html($tab['label']); ?>
+                </a>
+            <?php endforeach; ?>
+        </h2>
+
         <form method="post" action="options.php">
             <?php settings_fields('mon_plugin_options'); ?>
             <table class="form-table">
-                <tr>
-                    <th>kDrive ID</th>
-                    <td>
-                        <input type="text" name="mon_plugin_kdrive_id"
-                               value="<?php echo esc_attr(get_option('mon_plugin_kdrive_id')); ?>"
-                               class="regular-text" />
-                    </td>
-                </tr>
-                <tr>
-                    <th>kDrive Directory ID</th>
-                    <td>
-                        <input type="text" name="mon_plugin_kdrive_directory_id"
-                               value="<?php echo esc_attr(get_option('mon_plugin_kdrive_directory_id')); ?>"
-                               class="regular-text" />
-                    </td>
-                </tr>
-                <tr>
-                    <th>Token</th>
-                    <td>
-                        <input type="password" name="mon_plugin_token"
-                               value="<?php echo esc_attr(get_option('mon_plugin_token')); ?>"
-                               class="regular-text" />
-                    </td>
-                </tr>
-                <tr>
-                <th>Email expéditeur</th>
-                <td>
-                    <input type="email" name="mon_plugin_mail_from"
-                        value="<?php echo esc_attr(get_option('mon_plugin_mail_from')); ?>"
-                        class="regular-text" />
-                </td>
-                </tr>
-                <tr>
-                    <th>Nom expéditeur</th>
-                    <td>
-                        <input type="text" name="mon_plugin_mail_name"
-                            value="<?php echo esc_attr(get_option('mon_plugin_mail_name')); ?>"
-                            class="regular-text" />
-                    </td>
-                </tr>
-                <tr>
-                    <th>Endpoint pour les notifications HelloAsso</th>
-                    <td>
-                        <input type="text" readonly value="<?php echo esc_url(rest_url('helloasso/v1/notification')); ?>" class="regular-text" />
-                    </td>
-                </tr>
-                <tr>
-                    <th>HelloAsso Form Slug Adherent</th>
-                    <td>
-                        <input type="text" name="helloasso_form_slug_adherent"
-                            value="<?php echo esc_attr(get_option('helloasso_form_slug_adherent', 'devenir-adherent')); ?>"
-                            class="regular-text" />
-                    </td>
-                </tr>
+                <?php foreach ($tabs[$current_tab]['fields'] as $key => $field): ?>
+                    <?php mon_plugin_render_field($key, $field); ?>
+                <?php endforeach; ?>
             </table>
             <?php submit_button(); ?>
         </form>
     </div>
+
+    <style>
+    .mon-plugin-repeater {
+        width: auto;
+        max-width: 700px;
+        border-collapse: collapse;
+    }
+    .mon-plugin-repeater th,
+    .mon-plugin-repeater td {
+        padding: 8px 12px;
+        text-align: left;
+    }
+    .mon-plugin-repeater input[type="text"] {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    </style>
+
+    <script>
+    document.addEventListener('click', function(e) {
+        // Ajouter une ligne
+        if (e.target.classList.contains('mon-plugin-add-row')) {
+            const key = e.target.dataset.key;
+            const table = document.querySelector(`.mon-plugin-repeater[data-key="${key}"] tbody`);
+            const template = document.getElementById(`tpl-${key}`);
+
+            const newIndex = table.children.length;
+            const html = template.innerHTML.replaceAll('__INDEX__', newIndex);
+
+            const wrapper = document.createElement('tbody');
+            wrapper.innerHTML = html;
+            table.appendChild(wrapper.firstElementChild);
+        }
+
+        // Supprimer une ligne
+        if (e.target.classList.contains('mon-plugin-remove-row')) {
+            e.target.closest('tr').remove();
+        }
+    });
+    </script>
     <?php
 }
