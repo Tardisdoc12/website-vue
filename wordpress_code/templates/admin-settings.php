@@ -156,10 +156,21 @@ function mon_plugin_render_repeater_row($key, $columns, $index, $row) {
     <tr>
         <?php foreach ($columns as $col_key => $col): ?>
             <td>
-                <input type="text"
-                       name="<?php echo esc_attr($key); ?>[<?php echo esc_attr($index); ?>][<?php echo esc_attr($col_key); ?>]"
-                       value="<?php echo esc_attr($row[$col_key] ?? ''); ?>"
-                       class="regular-text" />
+                <?php
+                $input_type = $col['type'] ?? 'text';
+                $value = $row[$col_key] ?? ($input_type === 'color' ? '#172acc' : '');
+                $name = esc_attr($key) . '[' . esc_attr($index) . '][' . esc_attr($col_key) . ']';
+                ?>
+                <?php if ($input_type === 'color'): ?>
+                    <input type="color"
+                           name="<?php echo $name; ?>"
+                           value="<?php echo esc_attr($value); ?>" />
+                <?php else: ?>
+                    <input type="text"
+                           name="<?php echo $name; ?>"
+                           value="<?php echo esc_attr($value); ?>"
+                           class="regular-text" />
+                <?php endif; ?>
             </td>
         <?php endforeach; ?>
         <td>

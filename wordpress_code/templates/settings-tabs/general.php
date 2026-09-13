@@ -16,8 +16,8 @@ return [
             'label'   => 'Catégories',
             'type'    => 'repeater',
             'columns' => [
-                'nom'     => ['label' => 'Nom'],
-                'couleur' => ['label' => 'Couleur'],
+                'nom'     => ['label' => 'Nom', 'type' => 'text'],
+                'couleur' => ['label' => 'Couleur', 'type' => 'color'],
             ],
         ],
     ],
