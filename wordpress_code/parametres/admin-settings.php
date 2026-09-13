@@ -11,7 +11,7 @@ function mon_plugin_get_settings_fields() {
     static $tabs = null;
     if ($tabs !== null) return $tabs;
 
-    $order = ['general', 'kdrive', 'helloasso']; // ordre d'affichage voulu
+    $order = ['general', 'kdrive', 'helloasso', 'mailing']; // ordre d'affichage voulu
     $tabs = [];
 
     foreach ($order as $tab_key) {
