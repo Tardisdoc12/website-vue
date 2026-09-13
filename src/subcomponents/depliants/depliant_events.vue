@@ -75,7 +75,6 @@ export default{
         upcomingEvents() {
             if (!this.user || !this.user.events) return [];
 
-
             const today = new Date();
             const todayDateOnly = new Date(
                 today.getFullYear(),
@@ -96,9 +95,13 @@ export default{
                 return eventDateOnly.getTime() + 24 * 60 * 60 * 1000 > todayDateOnly.getTime();
             });
 
+            // Tri du plus proche au plus lointain
+            events.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+
             events = events.map(event => {
                 return this.returnCorrectedEvent(event);
             });
+
             return events;
         }
     },
