@@ -27,6 +27,7 @@ document.querySelectorAll('.vue-root').forEach(el => {
   if (moduleName === "event-page"){
     const app = createApp(component,{postId: el.dataset.postId})
     app.component('font-awesome-icon', FontAwesomeIcon)
+    app.config.globalProperties.$settings = MON_PLUGIN_SETTINGS
     app.mount(el)
     return
   }
@@ -34,6 +35,7 @@ document.querySelectorAll('.vue-root').forEach(el => {
   if (component) {
     const app = createApp(component)
     app.component('font-awesome-icon', FontAwesomeIcon)
+    app.config.globalProperties.$settings = MON_PLUGIN_SETTINGS
     app.mount(el)
   }
 })

@@ -99,6 +99,11 @@ class ShortcodesHookers {
             $this->shortcodes_name
         );
 
+        wp_localize_script($name_modules, 'MON_PLUGIN_SETTINGS', [
+            'categories'         => get_option('mon_plugin_categories', []),
+            'helloassoFormSlug'  => get_option('helloasso_form_slug_adherent', 'devenir-adherent'),
+        ]);
+
         wp_localize_script($name_modules, 'MyPluginData', [
             'rest_url' => esc_url_raw(rest_url()),
             'site_url' => esc_url_raw(get_site_url()),
