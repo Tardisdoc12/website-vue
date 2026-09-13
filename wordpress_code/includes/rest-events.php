@@ -85,7 +85,7 @@ function monplugin_get_events(WP_REST_Request $request) {
         $users = [];
         foreach ($users_to_add as $user) {
             $users[] = $user;
-            $user->champs_speciaux = json_decode($user->champs_speciaux, true);
+            $user->specialField = json_decode($user->champs_speciaux, true);
         }
 
         // Ajouter l’événement dans la réponse avec ses utilisateurs
@@ -202,7 +202,7 @@ function monplugin_get_event_id(WP_REST_Request $request) {
 
     $users = [];
     foreach ($users_to_add as $user) {
-        $user->champs_speciaux = json_decode($user->champs_speciaux, true);
+        $user->specialField = json_decode($user->champs_speciaux, true);
         $users[] = $user;
     }
 
@@ -288,7 +288,7 @@ function monplugin_get_event_post_id(WP_REST_Request $request) {
     );
     $users = [];
     foreach ($users_to_add as $user) {
-        $user->champs_speciaux = json_decode($user->champs_speciaux, true);
+        $user->specialField = json_decode($user->champs_speciaux, true);
         $users[] = $user;
     }
 

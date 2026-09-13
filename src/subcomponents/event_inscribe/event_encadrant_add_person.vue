@@ -47,15 +47,15 @@
                 Aucun compte trouvé pour cette recherche.
             </p>
 
-            <!-- Expérience + goal après compte trouvé -->
+            <!-- Expérience après compte trouvé -->
             <template v-if="participant.searchResult === 'found'">
                 <div class="flex flex-col gap-1" v-if="!isAdherentParticipant()">
                     <label class="block font-medium">Expérience à moto <span style="color:red">*</span></label>
                     <textarea v-model="participant.experience" class="w-full border p-1 rounded" rows="3"></textarea>
                 </div>
-                <div v-if="isSeance" class="flex flex-col gap-1">
-                    <label class="block font-medium">Thème particulier?</label>
-                    <textarea v-model="participant.goal" class="w-full border p-1 rounded" rows="2"></textarea>
+                <div v-for="field in getSpecialFields()" :key="field" class="flex flex-col gap-1">
+                    <label class="block font-medium">{{ field }}?</label>
+                    <textarea v-model="participant.specialField[field]" class="w-full border p-1 rounded" rows="2"></textarea>
                 </div>
                 <div v-if="participant.canEncadrant" style="margin-bottom:10px;">
                     <label class="block font-medium">Souhaitez-vous encadrer? <span style="color:red">*</span></label>
@@ -86,9 +86,9 @@
                 <label class="block font-medium">Expérience à moto</label>
                 <textarea v-model="participant.experience" class="w-full border p-1 rounded" rows="3"></textarea>
             </div>
-            <div v-if="isSeance" class="flex flex-col gap-1">
-                <label class="block font-medium">Thème particulier?</label>
-                <textarea v-model="participant.goal" class="w-full border p-1 rounded" rows="2"></textarea>
+            <div v-for="field in getSpecialFields()" :key="field" class="flex flex-col gap-1">
+                <label class="block font-medium">{{ field }}?</label>
+                <textarea v-model="participant.specialField[field]" class="w-full border p-1 rounded" rows="2"></textarea>
             </div>
         </template>
 
@@ -109,7 +109,6 @@
 <script>
 import inscritAPI from "@/javascript/api/axios_inscription"
 import SearchComponent from '@/subcomponents/unitary_elements/search_component.vue';
-import { Events } from "@/javascript/constants/events_type"
 import { Couleurs } from "@/javascript/constants/colors.js"
 import api from "@/javascript/api/users_wp.js"
 import { isEncadrant } from "@/javascript/constants/roles";
@@ -131,6 +130,19 @@ export default{
         this.listMembers = usersMembers.data.users
     },
 
+    watch: {
+        getSpecialFields: {
+            immediate: true,
+            handler(champs) {
+                champs.forEach(champ => {
+                    if (!(champ in this.participant.specialField)) {
+                        this.participant.specialField[champ] = ''
+                    }
+                })
+            }
+        }
+    },
+
     data() {
         return {
             participant: {
@@ -142,7 +154,7 @@ export default{
                 phone: "",
                 bike: "",
                 experience: "",
-                goal: "",
+                specialField: {},
                 wantsEncadrant: false,
                 roles: [],
             },
@@ -157,9 +169,10 @@ export default{
     },
     
     computed: {
-        isSeance() {
-            return this.event.categorie === Events.seance
-        },
+        getSpecialFields() {
+            const found = this.$settings.categories?.find(cat => cat.nom.toLowerCase() === this.event.categorie.toLowerCase())
+            return found?.champs_speciaux ?? []
+        }
     },
 
     methods: {
@@ -173,7 +186,7 @@ export default{
             this.participant.phone = ""
             this.participant.bike = ""
             this.participant.experience = ""
-            this.participant.goal = ""
+            this.participant.specialField = {}
             this.participant.wantsEncadrant = false
         },
 
@@ -210,9 +223,11 @@ export default{
                 if(isAddAdmin){
                     this.participant.bike = this.participant.bike || "Non renseigné"
                     this.participant.experience = this.participant.experience || "Non renseigné"
-                    this.participant.goal = this.participant.goal || "Non renseigné"
                     this.participant.phone = this.participant.phone || "0000000000"
                     this.participant.roles = ["non_adherent"]
+                    Object.keys(this.participant.specialField).forEach(key => {
+                        this.participant.specialField[key] = this.participant.specialField[key] || "Non renseigné"
+                    })
                 }
                 this.participant.payement_status = "completed"
                 const res = await inscritAPI.create_inscrit(this.event.event_id, this.participant, isAddAdmin)

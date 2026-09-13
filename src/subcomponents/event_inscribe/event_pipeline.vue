@@ -52,7 +52,6 @@
 </template>
 
 <script>
-import { Events } from "@/javascript/constants/events_type"
 import ModificationEvent from "@/subcomponents/event_inscribe/event_formulaire.vue"
 import PresentationsEvent from "@/subcomponents/event_inscribe/event_présentation.vue"
 import PayementEvent from "@/subcomponents/event_inscribe/event_payement.vue"
@@ -99,7 +98,6 @@ export default{
 
     data() {
         return {
-            Events,
             steps: 0,
             lastParticipants: [],
             listMembers: null,

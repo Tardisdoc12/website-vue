@@ -181,11 +181,16 @@ function mon_plugin_render_repeater_row($key, $columns, $index, $row) {
                 <?php
                 $input_type = $col['type'] ?? 'text';
                 $name = esc_attr($key) . '[' . esc_attr($index) . '][' . esc_attr($col_key) . ']';
+                $raw_value = $row[$col_key] ?? '';
+
+                // Si la valeur est un tableau (ex: champs_speciaux), on la réaffiche en string séparée par virgules
+                if (is_array($raw_value)) {
+                    $raw_value = implode(', ', $raw_value);
+                }
                 ?>
 
                 <?php if ($input_type === 'checkbox'): ?>
                     <?php $checked = !empty($row[$col_key]); ?>
-                    <!-- hidden AVANT la checkbox : si décochée, c'est cette valeur "0" qui part -->
                     <input type="hidden" name="<?php echo $name; ?>" value="0" />
                     <input type="checkbox"
                            name="<?php echo $name; ?>"
@@ -193,12 +198,10 @@ function mon_plugin_render_repeater_row($key, $columns, $index, $row) {
                            <?php checked($checked); ?> />
 
                 <?php elseif ($input_type === 'color'): ?>
-                    <?php $value = $row[$col_key] ?? '#000000'; ?>
-                    <input type="color" name="<?php echo $name; ?>" value="<?php echo esc_attr($value); ?>" />
+                    <input type="color" name="<?php echo $name; ?>" value="<?php echo esc_attr($raw_value ?: '#000000'); ?>" />
 
                 <?php else: ?>
-                    <?php $value = $row[$col_key] ?? ''; ?>
-                    <input type="text" name="<?php echo $name; ?>" value="<?php echo esc_attr($value); ?>" class="regular-text" />
+                    <input type="text" name="<?php echo $name; ?>" value="<?php echo esc_attr($raw_value); ?>" class="regular-text" />
                 <?php endif; ?>
             </td>
         <?php endforeach; ?>

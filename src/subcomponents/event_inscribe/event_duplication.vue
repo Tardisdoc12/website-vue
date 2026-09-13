@@ -137,7 +137,6 @@
 
 <script>
 import eventsService from '@/javascript/api/axios_events.js';
-import { Events } from "@/javascript/constants/events_type"
 import { Couleurs } from "@/javascript/constants/colors"
 
 export default {
@@ -152,7 +151,6 @@ export default {
     data() {
         return {
             categoriesSettings: this.$settings.categories,
-            Events,
             Couleurs,
             errorString: null,
             listEvents: [

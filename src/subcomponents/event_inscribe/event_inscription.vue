@@ -60,9 +60,9 @@
                     <label class="block font-medium">Quelle est votre expérience à moto? <span style="color:red">*</span></label>
                     <textarea v-model="participants[0].experience" class="w-full border p-1 rounded" rows="3" required></textarea>
                 </div>
-                <div v-if="isSeance" class="flex flex-col gap-1">
-                    <label class="block font-medium">Souhaitez-vous travailler un thème particulier?</label>
-                    <textarea v-model="participants[0].goal" class="w-full border p-1 rounded" rows="3"></textarea>
+                <div v-for="field in getSpecialFields" :key="field" class="flex flex-col gap-1">
+                    <label class="block font-medium">{{ field }}</label>
+                    <textarea v-model="participants[currentStep].specialField[field]" class="w-full border p-1 rounded" rows="2"></textarea>
                 </div>
             </template>
 
@@ -115,15 +115,15 @@
                         Aucun compte trouvé pour cette recherche.
                     </p>
 
-                    <!-- Expérience + goal après compte trouvé -->
+                    <!-- Expérience + champs spéciaux après compte trouvé -->
                     <template v-if="participants[currentStep].searchResult === 'found'">
                         <div class="flex flex-col gap-1" v-if="!isAdherentParticipant(currentStep)">
                             <label class="block font-medium">Expérience à moto <span style="color:red">*</span></label>
                             <textarea v-model="participants[currentStep].experience" class="w-full border p-1 rounded" rows="3"></textarea>
                         </div>
-                        <div v-if="isSeance" class="flex flex-col gap-1">
-                            <label class="block font-medium">Thème particulier?</label>
-                            <textarea v-model="participants[currentStep].goal" class="w-full border p-1 rounded" rows="2"></textarea>
+                        <div v-for="field in getSpecialFields" :key="field" class="flex flex-col gap-1">
+                            <label class="block font-medium">{{ field }}</label>
+                            <textarea v-model="participants[currentStep].specialField[field]" class="w-full border p-1 rounded" rows="2"></textarea>
                         </div>
                     </template>
                 </template>
@@ -150,9 +150,9 @@
                         <label class="block font-medium">Expérience à moto <span style="color:red">*</span></label>
                         <textarea v-model="participants[currentStep].experience" class="w-full border p-1 rounded" rows="3"></textarea>
                     </div>
-                    <div v-if="isSeance" class="flex flex-col gap-1">
-                        <label class="block font-medium">Thème particulier?</label>
-                        <textarea v-model="participants[currentStep].goal" class="w-full border p-1 rounded" rows="2"></textarea>
+                    <div v-for="field in getSpecialFields" :key="field" class="flex flex-col gap-1">
+                        <label class="block font-medium">{{ field }}</label>
+                        <textarea v-model="participants[currentStep].specialField[field]" class="w-full border p-1 rounded" rows="2"></textarea>
                     </div>
                 </template>
 
@@ -206,7 +206,6 @@
 
 <script>
 import inscritAPI from "@/javascript/api/axios_inscription"
-import { Events } from "@/javascript/constants/events_type"
 import { Couleurs } from "@/javascript/constants/colors"
 import { isEncadrant } from "@/javascript/constants/roles"
 
@@ -217,13 +216,13 @@ function emptyParticipant() {
         phone: "",
         bike: "",
         experience: "",
-        goal: "",
         wantsEncadrant: null,
         isAdherent: null,
         hasAccount: null,
         roles: ["non_adherent"],
         searchQuery: "",
         searchResult: null, // null | 'found' | 'not_found'
+        specialField: {},
     }
 }
 
@@ -236,7 +235,6 @@ export default {
 
     data() {
         return {
-            Events,
             Couleurs,
             currentStep: 0,
             maxParticipants: 3,
@@ -258,6 +256,16 @@ export default {
     },
 
     watch: {
+        getSpecialFields: {
+            immediate: true,
+            handler(champs) {
+                champs.forEach(champ => {
+                    if (!(champ in this.participants[0].specialField)) {
+                        this.participants[0].specialField[champ] = ''
+                    }
+                })
+            }
+        },
         user: {
             immediate: true,
             deep: true,
@@ -287,8 +295,9 @@ export default {
             return isEncadrant(this.user?.roles ?? [])
         },
 
-        isSeance() {
-            return this.event.categorie === Events.seance
+        getSpecialFields() {
+            const found = this.$settings.categories?.find(cat => cat.nom.toLowerCase() === this.event.categorie.toLowerCase())
+            return found?.champs_speciaux ?? []
         },
 
         isAdherent() {
@@ -335,7 +344,7 @@ export default {
             this.participants[index].phone = ""
             this.participants[index].bike = ""
             this.participants[index].experience = ""
-            this.participants[index].goal = ""
+            this.participants[index].specialField = {}
         },
 
         isAdherentParticipant(index) {

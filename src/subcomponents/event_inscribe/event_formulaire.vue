@@ -183,7 +183,6 @@
 
 <script>
 import eventsService from '@/javascript/api/axios_events.js';
-import { Events } from "@/javascript/constants/events_type.js"
 import { Couleurs } from "@/javascript/constants/colors"
 import { Editor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
@@ -283,7 +282,6 @@ export default {
             isChecked:false || this?.eventSelected?.subscribePlace >= 0,
             isCheckedAttente: false || this?.eventSelected?.attentePlace > 0,
             isCheckedHelloAsso: false || (this?.eventSelected?.billeterie_id != null && this?.eventSelected?.billeterie_id != "0"),
-            Events: Events,
             isUpdate:false,
             isCheckedPlace: false || this?.eventSelected?.place === '',
             isCheckedSavePlace: false || this?.eventSelected?.place === '',

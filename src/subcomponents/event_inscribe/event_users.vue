@@ -67,7 +67,7 @@
                     <th class="border border-gray-300 p-2 text-left">Nom</th>
                     <th class="border border-gray-300 p-2 text-left">Email</th>
                     <th class="border border-gray-300 p-2 text-left">Téléphone</th>
-                    <th class="border border-gray-300 p-2 text-left">Thème demandé</th>
+                    <th v-if="hasGoalIn" class="border border-gray-300 p-2 text-left">Thème demandé</th>
                     <th class="border border-gray-300 p-2 text-left">Moto</th>
                     <th class="border border-gray-300 p-2 text-left">Expérience</th>
                     <th class="border border-gray-300 p-2 text-center">Encadrant</th>
@@ -85,7 +85,7 @@
                     <td class="border border-gray-300 p-2">{{ user.user_name }}</td>
                     <td class="border border-gray-300 p-2">{{ user.email }}</td>
                     <td class="border border-gray-300 p-2">{{ user.phone }}</td>
-                    <td class="border border-gray-300 p-2">{{ user.goal }}</td>
+                    <td v-if="hasGoalIn" class="border border-gray-300 p-2">{{ user.specialField?.["Objectif"] ? user.specialField?.["Objectif"] : 'non renseigné' }}</td>
                     <td class="border border-gray-300 p-2">{{ user.bike }}</td>
                     <td class="border border-gray-300 p-2">{{ user.experience }}</td>
                     <td class="border border-gray-300 p-2 text-center">{{ user.encadrant }}</td>
@@ -172,13 +172,21 @@ export default {
     },
 
     computed: {
+        hasGoalIn() {
+            for (const user of this.usersToShow) {
+                if (user.specialField && user.specialField?.["Objectif"]) {
+                    return true;
+                }
+            }
+            return false;
+        },
         usersToShow() {
             return this.usersRegistered.map(user => ({
                 id: user.id,
                 user_name: user.user_name,
                 email: user.email,
                 phone: user.phone,
-                goal: user.goal,
+                specialField: user.specialField,
                 bike: user.bike,
                 experience: user.is_adherent === "1" ? "" : user.experience,
                 encadrant: user.encadrement === "1" ? "Oui" : "Non",
@@ -241,7 +249,7 @@ export default {
                     obj.user_name,
                     obj.email,
                     obj.phone,
-                    obj.goal,
+                    obj.specialField["Objectif"],
                     obj.bike,
                     obj.is_adherent === "0" ? "" : obj.experience
                 ].map(value => `"${String(value).replace(/"/g, '""')}"`); // Échappe les guillemets

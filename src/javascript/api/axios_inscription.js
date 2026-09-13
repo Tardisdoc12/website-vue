@@ -2,7 +2,14 @@ import api from "./api.js"
 
 export default {
     async create_inscrit(event_id, userForm, isAddAdmin = false) {
-        const response = await api.post(`/subscribe/`, {"event_id":event_id,"user":userForm, "isAddAdmin": isAddAdmin})
+        const champs_speciaux = userForm.specialField || userForm.champs_speciaux || {}
+
+        const response = await api.post(`/subscribe/`, {
+            "event_id": event_id,
+            "user": userForm,
+            "champs_speciaux": champs_speciaux,  // ← à la racine, comme attendu par le PHP
+            "isAddAdmin": isAddAdmin
+        })
         return response
     },
 
