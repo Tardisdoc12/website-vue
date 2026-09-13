@@ -115,7 +115,7 @@
             
             <!-- Ajout de nouveau lieu -->
             <div style="margin-bottom: 10px;display: flex; align-items: center; gap: 8px;">
-                <label class="block font-medium">Ajouter un nouveau lieu</label>
+                <label class="block font-medium">Nouveau lieu</label>
                 <input type="checkbox" v-model="isCheckedPlace"/>
             </div>
 
@@ -141,6 +141,11 @@
                         {{ place.name }}
                     </option>
                 </select>
+            </div>
+
+            <div v-if="isCheckedPlace" style="margin-bottom: 10px;display: flex; align-items: center; gap: 8px;">
+                <label class="block font-medium">Sauvegarder le nouveau lieu</label>
+                <input type="checkbox" v-model="isCheckedSavePlace"/>
             </div>
 
             <!-- limité dans le nombre de place -->
@@ -237,9 +242,11 @@ export default {
             const filteredPlaces = this.placesEvent.filter(place => place.name === this.eventSelected.place)
             if(filteredPlaces.length === 0){
                 this.isCheckedPlace = true
+                this.isCheckedSavePlace = true
             }
             else{
                 this.isCheckedPlace = false
+                this.isCheckedSavePlace = false
             }
         }
     },
@@ -273,6 +280,7 @@ export default {
             Events: Events,
             isUpdate:false,
             isCheckedPlace: false || this?.eventSelected?.place === '',
+            isCheckedSavePlace: false || this?.eventSelected?.place === '',
             currentColor: Couleurs.main_blue,
         }
     },
@@ -416,7 +424,7 @@ export default {
 
         async handleSubmit() {
             const places = this.placesEvent.filter(place => place.name === this.event.place);
-            if (!places.length) {
+            if (!places.length && this.isCheckedSavePlace) {
                 const response = await placesApi.add_place({ name: this.event.place });
                 if (response?.data?.success) {
                     this.$emit('updatePlaces', response.data.places);
