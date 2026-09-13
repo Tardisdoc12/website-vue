@@ -28,7 +28,9 @@ function mon_plugin_get_settings_fields() {
 // 2. ENREGISTREMENT DES SETTINGS
 // ============================================
 add_action('admin_init', function() {
-    foreach (mon_plugin_get_settings_fields() as $tab) {
+    foreach (mon_plugin_get_settings_fields() as $tab_key => $tab) {
+        $group = 'mon_plugin_options_' . $tab_key; // groupe unique par onglet
+
         foreach ($tab['fields'] as $key => $field) {
             if (($field['type'] ?? '') === 'readonly_url') continue;
 
@@ -39,7 +41,7 @@ add_action('admin_init', function() {
                 };
             }
 
-            register_setting('mon_plugin_options', $key, $args);
+            register_setting($group, $key, $args);
         }
     }
 });
@@ -190,6 +192,8 @@ function mon_plugin_render_settings_page() {
     if (!isset($tabs[$current_tab])) {
         $current_tab = array_key_first($tabs);
     }
+
+    $current_group = 'mon_plugin_options_' . $current_tab;
     ?>
     <div class="wrap">
         <h1>Paramètres Plugin Vue</h1>
@@ -204,7 +208,7 @@ function mon_plugin_render_settings_page() {
         </h2>
 
         <form method="post" action="options.php">
-            <?php settings_fields('mon_plugin_options'); ?>
+            <?php settings_fields($current_group); ?>
             <table class="form-table">
                 <?php foreach ($tabs[$current_tab]['fields'] as $key => $field): ?>
                     <?php mon_plugin_render_field($key, $field); ?>
