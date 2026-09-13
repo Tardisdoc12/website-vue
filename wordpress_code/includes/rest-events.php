@@ -60,20 +60,20 @@ function monplugin_get_events(WP_REST_Request $request) {
             }
         }
         // Récupérer les utilisateurs inscrits pour cet événement
-        $users = $wpdb->get_results($wpdb->prepare(
+        $users_to_add = $wpdb->get_results($wpdb->prepare(
             "SELECT 
                 u.id, 
                 u.user_name, 
                 u.email, 
                 u.phone, 
-                u.experience, 
-                i.goal, 
+                u.experience,
                 u.is_adherent, 
                 i.bike,
                 i.status,
                 i.encadrement,
                 i.date_inscrit,
                 i.payement_status,
+                i.champs_speciaux,
                 wp_users.ID AS wp_user_id
             FROM $table_inscrits i
             JOIN $table_users u ON u.id = i.user_id
@@ -81,6 +81,12 @@ function monplugin_get_events(WP_REST_Request $request) {
             WHERE i.event_id = %d",
             $event->id
         ));
+
+        $users = [];
+        foreach ($users_to_add as $user) {
+            $users[] = $user;
+            $user->champs_speciaux = json_decode($user->champs_speciaux, true);
+        }
 
         // Ajouter l’événement dans la réponse avec ses utilisateurs
         $result[$event->id] = [
@@ -158,7 +164,7 @@ function monplugin_get_event_id(WP_REST_Request $request) {
     $table_events   = $wpdb->prefix . "events";
     $table_inscrits = $wpdb->prefix . "inscrits";
     $table_users    = $wpdb->prefix . "users_inscrits";
-    $table_billeterie = $wpdb->prefix . "billeteries";
+    $table_billeterie = $wpdb->prefix . "billetteries";
 
     $event_id = intval($request['id']);
 
@@ -184,15 +190,21 @@ function monplugin_get_event_id(WP_REST_Request $request) {
     }
 
     // Récupérer les utilisateurs inscrits
-    $users = $wpdb->get_results(
+    $users_to_add = $wpdb->get_results(
         $wpdb->prepare(
-            "SELECT u.id, u.user_name, u.email, u.phone, u.experience, i.goal, u.is_adherent, i.bike, i.status, i.date_inscrit, i.payement_status
+            "SELECT u.id, u.user_name, u.email, u.phone, u.experience, u.is_adherent, i.bike, i.status, i.date_inscrit, i.payement_status, i.champs_speciaux
              FROM $table_inscrits i
              JOIN $table_users u ON u.id = i.user_id
              WHERE i.event_id = %d",
             $event->id
         )
     );
+
+    $users = [];
+    foreach ($users_to_add as $user) {
+        $user->champs_speciaux = json_decode($user->champs_speciaux, true);
+        $users[] = $user;
+    }
 
     // Construire la réponse
     $result = [
@@ -251,21 +263,21 @@ function monplugin_get_event_post_id(WP_REST_Request $request) {
     }
 
     // Récupérer les utilisateurs inscrits
-    $users = $wpdb->get_results(
+    $users_to_add = $wpdb->get_results(
         $wpdb->prepare(
             "SELECT 
                 u.id, 
                 u.user_name, 
-                u.email, 
-                u.phone, 
-                u.experience, 
-                i.goal, 
+                u.email,
+                u.phone,
+                u.experience,
                 u.is_adherent, 
                 i.bike,
                 i.status,
                 i.date_inscrit,
                 i.encadrement,
                 i.payement_status,
+                i.champs_speciaux,
                 wp_users.ID AS wp_user_id
             FROM $table_inscrits i
             JOIN $table_users u ON u.id = i.user_id
@@ -274,6 +286,11 @@ function monplugin_get_event_post_id(WP_REST_Request $request) {
             $event->id
         )
     );
+    $users = [];
+    foreach ($users_to_add as $user) {
+        $user->champs_speciaux = json_decode($user->champs_speciaux, true);
+        $users[] = $user;
+    }
 
     // Construire la réponse
     $result = [

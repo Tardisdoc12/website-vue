@@ -82,10 +82,12 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
     $table_events   = $wpdb->prefix . "events";
     $table_inscrits = $wpdb->prefix . "inscrits";
     $table_users    = $wpdb->prefix . "users_inscrits";
+
     $event_id = $request->get_param('event_id');
     $user_d = $request->get_param('user');
     $roles    = isset($user_d['roles']) && is_array($user_d['roles']) ? array_map('sanitize_text_field', $user_d['roles']) : ['non_adherent'];
     $isAddAdmin = boolval($request->get_param('isAddAdmin'));
+    $champs_speciaux = $request->get_param('champs_speciaux');
 
     error_log("isAddAdmin: " . ($isAddAdmin ? "true" : "false"));
 
@@ -187,7 +189,7 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
         'user_id' => $user_id,
         'event_id' => $event_id,
         'bike' => isset($user_d['bike']) ? sanitize_text_field($user_d['bike']) : '',
-        'goal'=> isset($user_d['goal']) ? sanitize_text_field($user_d['goal']) : '',
+        'champs_speciaux' => wp_json_encode($champs_speciaux),
         'encadrement' => isset($user_d['wantsEncadrant']) ? intval($user_d['wantsEncadrant']) : 0,
         'status' => isset($user_d['status']) && in_array($user_d['status'], ['inscrit', 'attente']) ? sanitize_text_field($user_d['status']) : 'inscrit',
         'date_inscrit' => current_time('mysql'),

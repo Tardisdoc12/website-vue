@@ -60,20 +60,26 @@ function mon_plugin_sanitize_repeater($value, $columns) {
             $type = $col['type'] ?? 'text';
             $raw = $row[$col_key] ?? '';
 
-            switch ($type) {
-                case 'checkbox':
-                    $val = !empty($raw) ? 1 : 0;
-                    break;
-                case 'color':
-                    $val = sanitize_hex_color($raw) ?: '';
-                    break;
-                default:
-                    $val = sanitize_text_field($raw);
+            // Cas spécial : champs_speciaux (liste séparée par virgules -> tableau)
+            if ($col_key === 'champs_speciaux') {
+                $val = array_map('trim', explode(',', sanitize_text_field($raw)));
+                $val = array_filter($val); // retire les entrées vides
+                $val = array_values($val);
+            } else {
+                switch ($type) {
+                    case 'checkbox':
+                        $val = !empty($raw) ? 1 : 0;
+                        break;
+                    case 'color':
+                        $val = sanitize_hex_color($raw) ?: '';
+                        break;
+                    default:
+                        $val = sanitize_text_field($raw);
+                }
             }
 
             $clean_row[$col_key] = $val;
 
-            // On considère qu'une ligne a du contenu si au moins le "nom" est rempli
             if ($col_key === 'nom' && $val !== '') $has_content = true;
         }
 
@@ -242,7 +248,7 @@ function mon_plugin_render_settings_page() {
     <style>
     .mon-plugin-repeater {
         width: auto;
-        max-width: 700px;
+        max-width: 800px;
         border-collapse: collapse;
     }
     .mon-plugin-repeater th,

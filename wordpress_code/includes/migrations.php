@@ -95,6 +95,34 @@ function monplugin_run_migrations() {
         $wpdb->query("ALTER TABLE $table_inscribes ADD payement_status ENUM('pending', 'completed', 'failed') NOT NULL DEFAULT 'pending' AFTER date_inscrit");
     }
 
+    $column = $wpdb->get_results("SHOW COLUMNS FROM $table_inscribes LIKE 'champs_speciaux'");
+    if (empty($column)) {
+        $wpdb->query("ALTER TABLE $table_inscribes ADD COLUMN champs_speciaux JSON NULL AFTER goal");
+    }
+
+    $column_goal = $wpdb->get_results("SHOW COLUMNS FROM $table_inscribes LIKE 'goal'");
+    if (!empty($column_goal)) {
+
+        // 1. Récupérer tous les inscrits ayant une valeur dans 'goal'
+        $inscrits_avec_goal = $wpdb->get_results(
+            "SELECT id, goal, champs_speciaux FROM $table_inscribes WHERE goal IS NOT NULL AND goal != ''"
+        );
+
+        foreach ($inscrits_avec_goal as $inscrit) {
+            $champs_speciaux = json_decode($inscrit->champs_speciaux, true) ?: [];
+            $champs_speciaux['Objectif'] = $inscrit->goal;
+
+            $wpdb->update(
+                $table_inscribes,
+                ['champs_speciaux' => wp_json_encode($champs_speciaux)],
+                ['id' => $inscrit->id]
+            );
+        }
+
+        // 2. Supprimer l'ancienne colonne
+        $wpdb->query("ALTER TABLE $table_inscribes DROP COLUMN goal");
+    }
+
     // --- 3️⃣ Flag pour éviter de relancer la migration ---
     update_option('monplugin_last_migration', time());
 }

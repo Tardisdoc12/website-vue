@@ -16,7 +16,7 @@ return [
                 'adherent_payant'      => ['label' => 'Adhérent doit payer', 'type' => 'checkbox'],
                 'non_adherent_payant'  => ['label' => 'Non-adhérent doit payer', 'type' => 'checkbox'],
                 'liste_attente'        => ['label' => 'Liste d\'attente possible', 'type' => 'checkbox'],
-                'champ_special'        => ['label' => 'Nom du champ spécial (optionnel)', 'type' => 'text'],
+                'champs_speciaux'     => ['label' => 'Champs spéciaux (séparés par virgule)', 'type' => 'text'],
             ],
         ],
     ],
