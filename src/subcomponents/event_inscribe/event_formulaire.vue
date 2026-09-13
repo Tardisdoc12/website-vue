@@ -67,9 +67,13 @@
                     required
                 >
                     <option disabled value="">-- Choisir une catégorie --</option>
-                    <option :value="Events.seance">Seance</option>
-                    <option :value="Events.stage">Stage</option>
-                    <option :value="Events.balade">Balade</option>
+                    <option
+                        v-for="cat in settingsCategories"
+                        :key="cat.nom"
+                        :value="cat.nom"
+                    >
+                        {{ cat.nom }}
+                    </option>
                 </select>
             </div>
 
@@ -101,17 +105,18 @@
                 </select>
             </div>
 
-            <!-- Liste d'attentes -->
-            <div style="margin-bottom: 10px;display: flex; align-items: center; gap: 8px;" v-if="categorieForm !== Events.balade">
-                <label class="block font-medium">Ajouter une liste d'attente?</label>
-                <input type="checkbox" v-model="isCheckedAttente"/>
-            </div>
+            <template v-if="canAttente">
+                <!-- Liste d'attentes -->
+                <div style="margin-bottom: 10px;display: flex; align-items: center; gap: 8px;">
+                    <label class="block font-medium">Ajouter une liste d'attente?</label>
+                    <input type="checkbox" v-model="isCheckedAttente"/>
+                </div>
 
-            <div style="margin-bottom: 10px;" v-if="categorieForm !== Events.balade && isCheckedAttente">
-                <label class="block font-medium">Nombre de place dans la liste d'attente</label>
-                <input type="number" v-model.number="attentePlaceForm" min="0" class="w-full border p-1 rounded" required />
-            </div>
-
+                <div style="margin-bottom: 10px;" v-if="isCheckedAttente">
+                    <label class="block font-medium">Nombre de place dans la liste d'attente</label>
+                    <input type="number" v-model.number="attentePlaceForm" min="0" class="w-full border p-1 rounded" required />
+                </div>
+            </template>
             
             <!-- Ajout de nouveau lieu -->
             <div style="margin-bottom: 10px;display: flex; align-items: center; gap: 8px;">
@@ -259,6 +264,7 @@ export default {
 
     data() {
         return {
+            settingsCategories: this.$settings.categories,
             Couleurs,
             editor: null,
             event: {
@@ -286,6 +292,12 @@ export default {
     },
 
     computed: {
+        canAttente() {
+            const found = this.settingsCategories.find(
+                cat => cat.nom?.toLowerCase() === this.event.categorie?.toLowerCase()
+            );
+            return found ? !!found.liste_attente : false;
+        },
         buttonName() {
             return this.isUpdate ? "Modifier l'évènement" : "Créer l'événement"
         },

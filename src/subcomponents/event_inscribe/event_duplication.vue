@@ -61,8 +61,7 @@
         </div>
     </div>
 
-
-    <div class="flex" style="margin-bottom:10px;justify-content: center;margin-left: 10px;margin-right: 10px;" v-if="categorieForm === Events.stage">
+    <div class="flex" style="margin-bottom:10px;justify-content: center;margin-left: 10px;margin-right: 10px;">
         <label class="block font-medium">Lien billetterie (optionnel)</label>
         <input
             v-model="urlBilleterieComp"
@@ -72,14 +71,16 @@
         />
     </div>
 
-    <div class="flex gap-2" style="margin-bottom: 10px;justify-content: center;margin-left: 10px;margin-right: 10px;" v-if="categorieForm !== Events.balade">
-        <label class="block font-medium">Ajouter une liste d'attente?</label>
-        <input type="checkbox" v-model="isCheckedAttente"/>
-    </div>
+    <div v-if="!canAttente">
+        <div class="flex gap-2" style="margin-bottom: 10px;justify-content: center;margin-left: 10px;margin-right: 10px;">
+            <label class="block font-medium">Ajouter une liste d'attente?</label>
+            <input type="checkbox" v-model="isCheckedAttente"/>
+        </div>
 
-    <div class="flex gap-2" style="margin-bottom: 10px;justify-content: center;margin-left: 10px;margin-right: 10px;" v-if="categorieForm !== Events.balade && isCheckedAttente">
-        <label class="block font-medium">Nombre de place dans la liste d'attente</label>
-        <input type="number" v-model.number="attentePlaceComp" min="0" class="w-full border p-1 rounded" required />
+        <div class="flex gap-2" style="margin-bottom: 10px;justify-content: center;margin-left: 10px;margin-right: 10px;" v-if="isCheckedAttente">
+            <label class="block font-medium">Nombre de place dans la liste d'attente</label>
+            <input type="number" v-model.number="attentePlaceComp" min="0" class="w-full border p-1 rounded" required />
+        </div>
     </div>
 
     <div class="flex justify-center gap-3" style="margin-right:10px;margin-bottom:10px;">
@@ -150,6 +151,7 @@ export default {
 
     data() {
         return {
+            categoriesSettings: this.$settings.categories,
             Events,
             Couleurs,
             errorString: null,
@@ -163,10 +165,24 @@ export default {
     },
 
     computed: {
-        categorieForm:{
-            get() {
-                return this.event.categorie
-            }
+        canBilletterieHelloAsso() {
+            const found = this.categoriesSettings.find(
+                cat => cat.nom?.toLowerCase() === this.event.categorie?.toLowerCase()
+            );
+            return found ? !!found.billetterie_helloasso : false;
+        },
+        canAttente() {
+            const found = this.categoriesSettings.find(
+                cat => cat.nom?.toLowerCase() === this.event.categorie?.toLowerCase()
+            );
+            return found ? !!found.liste_attente : false;
+        },
+
+        categorieForm() {
+            const found = this.categoriesSettings.find(
+                cat => cat.nom?.toLowerCase() === this.event.categorie?.toLowerCase()
+            );
+            return found ? found.nom : this.event.categorie
         },
         startDateComp: {
             get() {

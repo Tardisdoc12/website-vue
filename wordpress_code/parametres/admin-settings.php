@@ -57,12 +57,26 @@ function mon_plugin_sanitize_repeater($value, $columns) {
         $has_content = false;
 
         foreach ($columns as $col_key => $col) {
-            $val = sanitize_text_field($row[$col_key] ?? '');
+            $type = $col['type'] ?? 'text';
+            $raw = $row[$col_key] ?? '';
+
+            switch ($type) {
+                case 'checkbox':
+                    $val = !empty($raw) ? 1 : 0;
+                    break;
+                case 'color':
+                    $val = sanitize_hex_color($raw) ?: '';
+                    break;
+                default:
+                    $val = sanitize_text_field($raw);
+            }
+
             $clean_row[$col_key] = $val;
-            if ($val !== '') $has_content = true;
+
+            // On considère qu'une ligne a du contenu si au moins le "nom" est rempli
+            if ($col_key === 'nom' && $val !== '') $has_content = true;
         }
 
-        // On ignore les lignes totalement vides
         if ($has_content) $clean[] = $clean_row;
     }
 
@@ -160,18 +174,25 @@ function mon_plugin_render_repeater_row($key, $columns, $index, $row) {
             <td>
                 <?php
                 $input_type = $col['type'] ?? 'text';
-                $value = $row[$col_key] ?? ($input_type === 'color' ? '#172acc' : '');
                 $name = esc_attr($key) . '[' . esc_attr($index) . '][' . esc_attr($col_key) . ']';
                 ?>
-                <?php if ($input_type === 'color'): ?>
-                    <input type="color"
+
+                <?php if ($input_type === 'checkbox'): ?>
+                    <?php $checked = !empty($row[$col_key]); ?>
+                    <!-- hidden AVANT la checkbox : si décochée, c'est cette valeur "0" qui part -->
+                    <input type="hidden" name="<?php echo $name; ?>" value="0" />
+                    <input type="checkbox"
                            name="<?php echo $name; ?>"
-                           value="<?php echo esc_attr($value); ?>" />
+                           value="1"
+                           <?php checked($checked); ?> />
+
+                <?php elseif ($input_type === 'color'): ?>
+                    <?php $value = $row[$col_key] ?? '#000000'; ?>
+                    <input type="color" name="<?php echo $name; ?>" value="<?php echo esc_attr($value); ?>" />
+
                 <?php else: ?>
-                    <input type="text"
-                           name="<?php echo $name; ?>"
-                           value="<?php echo esc_attr($value); ?>"
-                           class="regular-text" />
+                    <?php $value = $row[$col_key] ?? ''; ?>
+                    <input type="text" name="<?php echo $name; ?>" value="<?php echo esc_attr($value); ?>" class="regular-text" />
                 <?php endif; ?>
             </td>
         <?php endforeach; ?>
@@ -232,6 +253,11 @@ function mon_plugin_render_settings_page() {
     .mon-plugin-repeater input[type="text"] {
         width: 100%;
         box-sizing: border-box;
+    }
+    .mon-plugin-repeater input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
     }
     </style>
 

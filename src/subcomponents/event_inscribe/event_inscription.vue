@@ -385,10 +385,10 @@ export default {
                     participant.status = this.isAttente ? "attente" : "inscrit"
                     const isAdherent = !participant.roles.includes("non_adherent")
                     const categorie = this.event.categorie
+                    const found = this.$settings.categories.find(c => c.nom.toLowerCase() === categorie.toLowerCase())
+                    const onlyNonAdherent = found.non_adherent_payant && !found.adherent_payant
 
-                    const isSeance = categorie === Events.seance
-
-                    participant.payement_status = ((isAdherent && isSeance) || !this.event.billeterie_id) ? "completed" : "pending"
+                    participant.payement_status = ((isAdherent && onlyNonAdherent) || !this.event.billeterie_id) ? "completed" : "pending"
 
                     const res = await inscritAPI.create_inscrit(this.event.event_id, participant)
                     if (!res?.data?.success) throw new Error("Échec pour " + participant.name)

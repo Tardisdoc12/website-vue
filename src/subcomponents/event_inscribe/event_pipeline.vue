@@ -189,16 +189,18 @@ export default{
                 this.$emit("inscritEvent", this.event)
 
                 const categorie = this.event.categorie
+                const found = this.$settings.categories.find(c => c.nom.toLowerCase() === categorie.toLowerCase())
+
 
                 const hasNonAdherent = this.lastParticipants.some(p =>
                     p.roles?.includes("non_adherent")
                 )
 
-                // Stage → toujours paiement
-                if (categorie === Events.stage) return
+                //toujours paiement
+                if (found && found.adherent_payant && found.non_adherent_payant) return
 
                 // Séance → paiement si au moins un non-adhérent parmi les inscrits
-                if (categorie === Events.seance && hasNonAdherent) return
+                if (found && found.non_adherent_payant && hasNonAdherent) return
 
                 // Tous les autres cas → ferme
                 this.$emit("cancelSignal", this.isCancel)
