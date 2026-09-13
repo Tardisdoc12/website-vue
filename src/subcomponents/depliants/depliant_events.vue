@@ -155,7 +155,7 @@ export default{
                 if(event.categorie === "") {
                     categorie = "seance"
                 }
-                const duoColor = EventsFunctions.colorBg(categorie)
+                const duoColor = EventsFunctions.get_color_events_by_categorie(categorie)
                 bgColor = duoColor[0]
                 backgroundColorCard = duoColor[1]
             }

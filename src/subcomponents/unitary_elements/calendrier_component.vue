@@ -243,9 +243,9 @@ export default{
             if(new Date() < arg.event.start) {
                 let categorie = arg.event.extendedProps.categorie
                 if(arg.event.extendedProps.categorie === "") {
-                    categorie = "seance"
+                    categorie = "Seance"
                 }
-                const duoColor = EventsFunctions.colorBg(categorie)
+                const duoColor = EventsFunctions.get_color_events_by_categorie(categorie)
                 bgColor = duoColor[0]
                 backgroundColorCard = duoColor[1]
             }

@@ -1,6 +1,6 @@
-const seance = "seance"
-const stage = "stage"
-const balade = "balade"
+const seance = "Seance"
+const stage = "Stage"
+const balade = "Balade"
 
 
 export const Events = {
