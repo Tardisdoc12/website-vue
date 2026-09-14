@@ -32,7 +32,7 @@ add_action('admin_init', function() {
         $group = 'mon_plugin_options_' . $tab_key; // groupe unique par onglet
 
         foreach ($tab['fields'] as $key => $field) {
-            if (($field['type'] ?? '') === 'readonly_url') continue;
+            if (in_array($field['type'] ?? '', ['readonly_url', 'heading'])) continue;
 
             $args = [];
             if ($field['type'] === 'repeater') {
@@ -108,6 +108,11 @@ add_action('admin_menu', function() {
 function mon_plugin_render_field($key, $field) {
     $type = $field['type'];
 
+    if ($type === 'heading') {
+        mon_plugin_render_heading($field);
+        return;
+    }
+
     if ($type === 'repeater') {
         mon_plugin_render_repeater_field($key, $field);
         return;
@@ -121,14 +126,26 @@ function mon_plugin_render_field($key, $field) {
             <?php if ($type === 'readonly_url'): ?>
                 <input type="text" readonly
                        value="<?php echo esc_url($field['callback']()); ?>"
-                       class="regular-text" />
+                       class="regular-text  mon-plugin-global" />
             <?php else: ?>
                 <input type="<?php echo esc_attr($type); ?>"
                        id="<?php echo esc_attr($key); ?>"
                        name="<?php echo esc_attr($key); ?>"
                        value="<?php echo esc_attr($value); ?>"
-                       class="regular-text" />
+                       class="regular-text mon-plugin-global" />
             <?php endif; ?>
+        </td>
+    </tr>
+    <?php
+}
+
+function mon_plugin_render_heading($field) {
+    ?>
+    <tr>
+        <td colspan="2" style="padding-top: 24px; padding-bottom: 4px;">
+            <h3 style="margin: 0; border-bottom: 1px solid #ccc; padding-bottom: 6px;">
+                <?php echo esc_html($field['label']); ?>
+            </h3>
         </td>
     </tr>
     <?php
@@ -266,6 +283,16 @@ function mon_plugin_render_settings_page() {
     .mon-plugin-repeater input[type="checkbox"] {
         width: 18px;
         height: 18px;
+        cursor: pointer;
+    }
+    .mon-plugin-global {
+        /* styles communs à tous les champs globaux, si besoin */
+    }
+    .mon-plugin-global[type="color"] {
+        width: 60px;
+        height: 34px;
+        padding: 0;
+        border: none;
         cursor: pointer;
     }
     </style>

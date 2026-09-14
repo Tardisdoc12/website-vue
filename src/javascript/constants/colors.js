@@ -1,5 +1,9 @@
+const colors = MON_PLUGIN_SETTINGS.colors;
+
+
 export const Couleurs = {
     //website colors
+    ...colors,
     main_blue: "#245473",
     dark_blue: '#2d5c7f',
     cyan: "#d4e3ed",
