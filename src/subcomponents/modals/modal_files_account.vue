@@ -115,8 +115,12 @@
                     <button
                         :disabled="isDisable"
                         type="submit"
-                        class="px-4 py-2 rounded-lg font-medium text-white transition"
-                        :class="isDisable ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'"
+                        class="px-4 py-2 rounded-lg button-base font-medium transition"
+                        :style="{
+                            '--btn-color': 'var(--writing-main-color)',
+                            '--btn-bg': isDisable ? 'var(--deactivate-button-classic-color)' : 'var(--main-color)',
+                            '--btn-hover-bg': isDisable ? 'var(--deactivate-button-classic-color)' : 'var(--main-hover-color)'
+                        }"
                     >
                         Ajouter le document
                     </button>

@@ -18,7 +18,7 @@
                     width: 18px; height: 18px;
                     border-radius: 50%;
                     background-color: orange;
-                    color: white;
+                    color: var(--writing-main-color);
                     font-size: 11px;
                     font-weight: bold;
                     display: flex; align-items: center; justify-content: center;
@@ -52,7 +52,7 @@
                             border-radius: 50%;
                             background-color: var(--validate-color);
                             border: 1px solid var(--validate-hover-color);
-                            color: white;
+                            color: var(--writing-main-color);
                             font-size: 11px;
                             display: flex; align-items: center; justify-content: center;
                         "

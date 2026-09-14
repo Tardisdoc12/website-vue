@@ -78,9 +78,9 @@
                 </thead>
                 <tbody>
                     <tr 
-                    v-for="(user, index) in usersToShow" 
-                    :key="user.id || index"
-                    class="hover:bg-gray-50"
+                        v-for="(user, index) in usersToShow" 
+                        :key="user.id || index"
+                        class="hover:bg-gray-50"
                     >
                     <td class="border border-gray-300 p-2">{{ user.user_name }}</td>
                     <td class="border border-gray-300 p-2">{{ user.email }}</td>

@@ -118,7 +118,7 @@
                 type="button"
                 class="appearance-none button-base"
                 :style="{
-                    '--btn-color': Couleurs.white,
+                    '--btn-color': 'var(--writing-main-color)',
                     '--btn-bg': colorButton,
                     '--btn-hover-bg': colorHoverButton
                 }"

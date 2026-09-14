@@ -27,7 +27,7 @@
 /* Bouton CSS */
 .button-base {
     --btn-bg: var(--main-color);
-    --btn-color: white;
+    --btn-color: var(--writing-main-color);
     --btn-hover-bg: var(--secondary-color);
 
     background-color: var(--btn-bg);

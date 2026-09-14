@@ -4,7 +4,7 @@
         v-if="root.files.length > 0 || root.directories.length > 0"
         title="Media"
         :backgroundColorOpen="'var(--secondary-color)'"
-        :writenColorOpen="Couleurs.white"
+        :writenColorOpen="'var(--writing-main-color)'"
         :border-color="'var(--secondary-color)'"
         :border-color-open="'var(--secondary-color)'"
         :borderWindowColor="'var(--secondary-color)'"

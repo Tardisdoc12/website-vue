@@ -5,7 +5,7 @@
         <div :style="{padding:'0px 20px'}">
             <button
                 v-if="stepsToPass !== 0"
-                class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                class="mt-4 px-4 py-2 button-base"
                 @click="ReturnToStart"
             >
                 {{ "Retour en arrière" }}

@@ -336,7 +336,7 @@ export default {
 .step-dot.done {
     border-color: var(--secondary-color);
     background: var(--secondary-color);
-    color: white;
+    color: var(--writing-main-color);
     cursor: pointer;
 }
 

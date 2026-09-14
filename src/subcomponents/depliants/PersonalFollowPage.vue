@@ -10,7 +10,7 @@
                     color: 'var(--main-color)',
                     padding: '1.0rem 1.0rem',
                     borderRadius: '9999px',
-                    backgroundColor: Couleurs.white,
+                    backgroundColor: 'var(--writing-main-color)',
                     border: `2px solid ${'var(--main-color)'}`,
                 }"
             >
@@ -21,7 +21,7 @@
                 type="button"
                 :style="{
                     display: 'inline-block',
-                    color: Couleurs.white,
+                    color: 'var(--writing-main-color)',
                     padding: '1.0rem 1.0rem',
                     borderRadius: '9999px',
                     backgroundColor: 'var(--main-color)',

@@ -92,15 +92,15 @@ export default {
   computed: {
     AccordionHeader() {
       let color = this.backgroundColor ? this.backgroundColor : 'var(--secondary-color)'
-      let borderColor = this.borderColor ? this.borderColor : Couleurs.white
+      let borderColor = this.borderColor ? this.borderColor : 'var(--writing-main-color)'
       if (this.isOpen) {
-        color = this.backgroundColorOpen ? this.backgroundColorOpen : Couleurs.white
+        color = this.backgroundColorOpen ? this.backgroundColorOpen : 'var(--writing-main-color)'
         borderColor = this.borderColorOpen ? this.borderColorOpen : 'var(--secondary-color)'
       }
       return {
         "background-color": color,
         "border": "1px solid " + (borderColor),
-        "color": "white",
+        "color": "'var(--writing-main-color)'",
         "padding": "10px 15px",
         "cursor": "pointer",
         "font-weight": "bold",
@@ -111,7 +111,7 @@ export default {
       }
     },
     AccordionTitle() {
-        let color = this.backgroundColorOpen ? this.backgroundColorOpen : Couleurs.white 
+        let color = this.backgroundColorOpen ? this.backgroundColorOpen : 'var(--writing-main-color)' 
         if (this.isOpen) {
             color = this.backgroundColor ? this.backgroundColor : 'var(--secondary-color)'
         }
@@ -125,7 +125,7 @@ export default {
         }
 
         if ( this.backgroundColor && this.backgroundColorOpen && this.backgroundColor === this.backgroundColorOpen && !this?.writenColor && !this?.writenColorOpen) {
-            color = "white"
+            color = "var(--writing-main-color)"
         }
         return {
             "flex": 1,
@@ -134,7 +134,7 @@ export default {
         }
     },
     AccordionArrow() {
-        let color = this.backgroundColorOpen ? this.backgroundColorOpen : Couleurs.white 
+        let color = this.backgroundColorOpen ? this.backgroundColorOpen : 'var(--writing-main-color)' 
         if (this.isOpen) {
             color = this.backgroundColor ? this.backgroundColor : 'var(--secondary-color)'
         }
@@ -148,7 +148,7 @@ export default {
         }
 
         if ( this.backgroundColor && this.backgroundColorOpen && this.backgroundColor === this.backgroundColorOpen && !this?.writenColor && !this?.writenColorOpen) {
-            color = Couleurs.white
+            color = 'var(--writing-main-color)'
         }
         return {
             "position": "absolute",
@@ -160,7 +160,7 @@ export default {
       return {
         "border": this.showBorder ? `${this.sizeBorder} solid ${this.borderWindowColor}` : "none",
         "border-radius": this.borderRadius,
-        "background-color": Couleurs.white,
+        "background-color": 'var(--writing-main-color)',
         "overflow": this.overflow,
         "font-family": "Arial, sans-serif",
       }

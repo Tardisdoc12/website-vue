@@ -28,7 +28,7 @@
                             class="appearance-none"
                             :style="{
                                 display: 'inline-block',
-                                color: 'white',
+                                color: 'var(--writing-main-color)',
                                 padding: '0.5rem 1rem',
                                 borderRadius: '0.375rem',
                                 backgroundColor: 'var(--color-button-file)',

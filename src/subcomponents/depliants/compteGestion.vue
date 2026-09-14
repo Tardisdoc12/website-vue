@@ -2,7 +2,7 @@
     <DepliantWindow
         :title="titleInformations"
         :backgroundColorOpen="'var(--secondary-color)'"
-        :writenColorOpen="Couleurs.white"
+        :writenColorOpen="'var(--writing-main-color)'"
         :border-color="'var(--secondary-color)'"
         :border-color-open="'var(--secondary-color)'"
         :is-opoen-forced="true"
@@ -74,7 +74,7 @@
                     border: '1px solid ' + `${'var(--main-color)'}`,
                     padding: '0.3rem 0.3rem',
                     borderRadius: '0.375rem',
-                    backgroundColor: Couleurs.white,
+                    backgroundColor: 'var(--writing-main-color)', //TODO : Jean à voir s'il ne faut pas une autre classe pour ça ou juste se dire que ce sera tout le temps blanc
                 }"
                 @click="validationChangement"
             >
@@ -89,7 +89,7 @@
                     border: '1px solid ' + `${'var(--main-color)'}`,
                     padding: '0.3rem 0.3rem',
                     borderRadius: '0.375rem',
-                    backgroundColor: Couleurs.white,
+                    backgroundColor: 'var(--writing-main-color)',
                 }"
                 @click="modifierInformations"
             >
@@ -152,7 +152,7 @@
                     border: '1px solid ' + 'var(--main-color)',
                     padding: '0.3rem 0.3rem',
                     borderRadius: '0.375rem',
-                    backgroundColor: 'white',
+                    backgroundColor: 'var(--writing-main-color)',
                 }"
                 @click="validationChangement"
             >
@@ -167,7 +167,7 @@
                     border: '1px solid ' + 'var(--main-color)',
                     padding: '0.3rem 0.3rem',
                     borderRadius: '0.375rem',
-                    backgroundColor: 'white',
+                    backgroundColor: 'var(--writing-main-color)',
                 }"
                 @click="modifierUrgences"
             >

@@ -5,7 +5,7 @@
         v-for="(cats, key) in filteredSubcats"
         :title="cats.categorie_title"
         :backgroundColorOpen="'var(--secondary-color)'"
-        :writenColorOpen="Couleurs.white"
+        :writenColorOpen="'var(--writing-main-color)'"
         :border-color="'var(--secondary-color)'"
         :border-color-open="'var(--secondary-color)'"
         :borderWindowColor="'var(--secondary-color)'"

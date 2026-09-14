@@ -87,7 +87,7 @@ export default {
     justify-content: center;
 
     background-color: rgba(192, 23, 23, 0.8);
-    color: white;
+    color: var(--writing-main-color);
     cursor: pointer;
     border-radius: 4px;
 
