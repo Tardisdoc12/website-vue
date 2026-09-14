@@ -4,16 +4,67 @@
  */
 if (!defined('ABSPATH')) exit;
 
+function monplugin_get_email_tags($context) {
+    $common = [
+        'date' => date_i18n('d/m/Y'),
+    ];
+
+    switch ($context) {
+        case 'modification_events':
+            return array_merge($common, [
+                'event_name'        => '', // rempli au moment de l'envoi
+                'modification_date'       => '',
+                'event_date'  => '',
+                'event_place'       => '',
+            ]);
+
+        case 'changement_mot_de_passe':
+            return array_merge($common, [
+                'user_name'        => '',
+                'url_reset'       => '',
+                'date'  => '',
+            ]);
+
+        default:
+            return $common;
+    }
+}
+
 return [
     'label' => 'Mailing',
     'fields' => [
-        'mon_plugin_mail_from' => [
-            'label' => 'Email expéditeur',
-            'type'  => 'email',
+        '_heading_modification_events' => [
+            'type' => 'heading',
+            'label' => 'Email - Modification des événements',
         ],
-        'mon_plugin_mail_name' => [
-            'label' => 'Nom expéditeur',
-            'type'  => 'text',
+        '_info_confirmation' => [
+            'type' => 'paragraph',
+            'text' => 'Balises disponibles : ' . implode(', ', array_map(
+                fn($tag) => '{{' . $tag . '}}',
+                array_keys(monplugin_get_email_tags('modification_events'))
+            )),
+        ],
+        'mon_plugin_mail_modification_events' => [
+            'label' => 'Email en cas de modification des événements',
+            'type'  => 'textarea',
+        ],
+
+
+        '_heading_changement_mot_de_passe' => [
+            'type' => 'heading',
+            'label' => 'Email - Changement de mot de passe',
+        ],
+        '_info_changement_mot_de_passe' => [
+            'type' => 'paragraph',
+            'text' => 'Balises disponibles : ' . implode(', ', array_map(
+                fn($tag) => '{{' . $tag . '}}',
+                array_keys(monplugin_get_email_tags('changement_mot_de_passe'))
+            )),
+        ],
+        'mon_plugin_mail_password_recuperation' => [
+            'label' => 'Mail pour la récupération du mot de passe',
+            'type'  => 'textarea',
+            'default' => "Cliquez ici pour réinitialiser votre mot de passe :\n\n{{url_reset}}\n\nSi vous n'avez pas demandé cette réinitialisation, ignorez cet email.",
         ],
     ],
 ];

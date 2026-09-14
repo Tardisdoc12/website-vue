@@ -32,13 +32,16 @@ add_action('admin_init', function() {
         $group = 'mon_plugin_options_' . $tab_key; // groupe unique par onglet
 
         foreach ($tab['fields'] as $key => $field) {
-            if (in_array($field['type'] ?? '', ['readonly_url', 'heading'])) continue;
+            if (in_array($field['type'] ?? '', ['readonly_url', 'heading', 'paragraph'])) continue;
 
             $args = [];
             if ($field['type'] === 'repeater') {
                 $args['sanitize_callback'] = function($value) use ($field) {
                     return mon_plugin_sanitize_repeater($value, $field['columns']);
                 };
+            }
+            if ($field['type'] === 'textarea') {
+                $args['sanitize_callback'] = 'sanitize_textarea_field'; // préserve les retours à la ligne
             }
 
             register_setting($group, $key, $args);
@@ -108,6 +111,16 @@ add_action('admin_menu', function() {
 function mon_plugin_render_field($key, $field) {
     $type = $field['type'];
 
+    if ($type === 'paragraph') {
+        mon_plugin_render_paragraph($field);
+        return;
+    }
+
+    if ($type === 'textarea') {
+        mon_plugin_render_textarea($key, $field);
+        return;
+    }
+
     if ($type === 'heading') {
         mon_plugin_render_heading($field);
         return;
@@ -146,6 +159,38 @@ function mon_plugin_render_heading($field) {
             <h3 style="margin: 0; border-bottom: 1px solid #ccc; padding-bottom: 6px;">
                 <?php echo esc_html($field['label']); ?>
             </h3>
+        </td>
+    </tr>
+    <?php
+}
+
+function mon_plugin_render_paragraph($field) {
+    ?>
+    <tr>
+        <td colspan="2" style="padding: 4px 0 16px;">
+            <p style="color: #555; font-style: italic; margin: 0;">
+                <?php echo esc_html($field['text']); ?>
+            </p>
+        </td>
+    </tr>
+    <?php
+}
+
+function mon_plugin_render_textarea($key, $field) {
+    $value = get_option($key, $field['default'] ?? '');
+    ?>
+    <tr>
+        <th><label for="<?php echo esc_attr($key); ?>"><?php echo esc_html($field['label']); ?></label></th>
+        <td>
+            <textarea
+                id="<?php echo esc_attr($key); ?>"
+                name="<?php echo esc_attr($key); ?>"
+                rows="6"
+                class="large-text"
+            ><?php echo esc_textarea($value); ?></textarea>
+            <?php if (!empty($field['description'])): ?>
+                <p class="description"><?php echo esc_html($field['description']); ?></p>
+            <?php endif; ?>
         </td>
     </tr>
     <?php
