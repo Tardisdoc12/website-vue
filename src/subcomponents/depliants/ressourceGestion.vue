@@ -20,8 +20,8 @@
             :borderColorOpen="'var(--secondary-color)'"
             :borderColor="'var(--secondary-color)'"
             :backgroundColorOpen="Couleurs.cyan"
-            :writenColor="Couleurs.main_color"
-            :writenColorOpen="Couleurs.main_color"
+            :writenColor="'var(--main-color)'"
+            :writenColorOpen="'var(--main-color)'"
             :showBorder="false"
             :borderRadius="'0px'"
         >

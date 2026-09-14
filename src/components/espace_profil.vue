@@ -13,11 +13,11 @@
                 type="button"
                 :style="{
                     display: 'inline-block',
-                    color: activeIndex === i ? Couleurs.white : Couleurs.main_color,
+                    color: activeIndex === i ? Couleurs.white : 'var(--main-color)',
                     padding: '1.0rem 1.0rem',
                     borderRadius: '9999px',
-                    backgroundColor: activeIndex === i ? Couleurs.main_color : Couleurs.white,
-                    border: `2px solid ${Couleurs.main_color}`,
+                    backgroundColor: activeIndex === i ? 'var(--main-color)' : Couleurs.white,
+                    border: `2px solid ${'var(--main-color)'}`,
                 }"
             >
                 {{ label }}

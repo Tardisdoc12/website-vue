@@ -9,9 +9,9 @@
                     class="toggle-btn"
                     :class="{ 'toggle-btn--active': participant.hasAccount === true }"
                     :style="{
-                        color: participant.hasAccount === true ? Couleurs.white : Couleurs.main_color,
-                        backgroundColor: participant.hasAccount === true ? Couleurs.main_color : Couleurs.white,
-                        border: `2px solid ${Couleurs.main_color}`,
+                        color: participant.hasAccount === true ? Couleurs.white : 'var(--main-color)',
+                        backgroundColor: participant.hasAccount === true ? 'var(--main-color)' : Couleurs.white,
+                        border: `2px solid ${'var(--main-color)'}`,
                     }"
                     @click="setHasAccount(true)"
                 >Oui</button>
@@ -20,9 +20,9 @@
                     class="toggle-btn"
                     :class="{ 'toggle-btn--active': participant.hasAccount === false }"
                     :style="{
-                        color: participant.hasAccount === false ? Couleurs.white : Couleurs.main_color,
-                        backgroundColor: participant.hasAccount === false ? Couleurs.main_color : Couleurs.white,
-                        border: `2px solid ${Couleurs.main_color}`,
+                        color: participant.hasAccount === false ? Couleurs.white : 'var(--main-color)',
+                        backgroundColor: participant.hasAccount === false ? 'var(--main-color)' : Couleurs.white,
+                        border: `2px solid ${'var(--main-color)'}`,
                     }"
                     @click="setHasAccount(false)"
                 >Non</button>

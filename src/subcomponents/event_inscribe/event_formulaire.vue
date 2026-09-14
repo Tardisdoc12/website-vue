@@ -285,7 +285,7 @@ export default {
             isUpdate:false,
             isCheckedPlace: false || this?.eventSelected?.place === '',
             isCheckedSavePlace: false || this?.eventSelected?.place === '',
-            currentColor: Couleurs.main_color,
+            currentColor: 'var(--main-color)',
         }
     },
 

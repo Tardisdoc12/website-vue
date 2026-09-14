@@ -24,7 +24,7 @@
             <button
                 type="button"
                 :style="{
-                    '--btn-bg': Number(event.closed_inscription) === 1 ? Couleurs.main_red : Couleurs.main_color,
+                    '--btn-bg': Number(event.closed_inscription) === 1 ? Couleurs.main_red : 'var(--main-color)',
                     '--btn-hover-bg': Number(event.closed_inscription) === 1 ? Couleurs.dark_red : 'var(--secondary-color)'
                 }"
                 @click="LockEvent"
@@ -43,7 +43,7 @@
             <button
                 type="button"
                 :style="{
-                    '--btn-bg': Number(event.closed_inscription) === 2 ? Couleurs.main_red : Couleurs.main_color,
+                    '--btn-bg': Number(event.closed_inscription) === 2 ? Couleurs.main_red : 'var(--main-color)',
                     '--btn-hover-bg': Number(event.closed_inscription) === 2 ? Couleurs.dark_red : 'var(--secondary-color)'
                 }"
                 @click="FullEvent"
@@ -63,7 +63,7 @@
             <button
                 type="button"
                 :style="{
-                    '--btn-bg': Couleurs.main_color,
+                    '--btn-bg': 'var(--main-color)',
                     '--btn-hover-bg': 'var(--secondary-color)'
                 }"
                 @click="ajoutPerson"
@@ -75,7 +75,7 @@
             <button
                 type="button"
                 :style="{
-                    '--btn-bg': Couleurs.main_color,
+                    '--btn-bg': 'var(--main-color)',
                     '--btn-hover-bg': 'var(--secondary-color)'
                 }"
                 @click="CopyEvent"

@@ -18,7 +18,7 @@
                     @click="Validate"
                     class="appearance-none button-base"
                     :style="{
-                        '--btn-bg' : isDisable ? Couleurs.cyan : Couleurs.main_color,
+                        '--btn-bg' : isDisable ? Couleurs.cyan : 'var(--main-color)',
                         '--btn-hover-bg' : isDisable ? Couleurs.cyan : 'var(--secondary-color)'
                     }"
                 >

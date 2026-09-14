@@ -103,7 +103,7 @@
                             type="submit"
                             class="appearance-none button-base"
                             :style="{
-                                '--btn-bg' : isDisable ? Couleurs.gris_pale : Couleurs.main_color,
+                                '--btn-bg' : isDisable ? Couleurs.gris_pale : 'var(--main-color)',
                                 '--btn-hover-bg' : isDisable ? Couleurs.gris_pale : 'var(--secondary-color)',
                             }"
                         >

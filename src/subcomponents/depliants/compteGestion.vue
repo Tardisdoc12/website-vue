@@ -70,8 +70,8 @@
                 class="appearance-none"
                 :style="{
                     display: 'inline-block',
-                    color: Couleurs.main_color,
-                    border: '1px solid ' + `${Couleurs.main_color}`,
+                    color: 'var(--main-color)',
+                    border: '1px solid ' + `${'var(--main-color)'}`,
                     padding: '0.3rem 0.3rem',
                     borderRadius: '0.375rem',
                     backgroundColor: Couleurs.white,
@@ -85,8 +85,8 @@
                 class="appearance-none"
                 :style="{
                     display: 'inline-block',
-                    color: Couleurs.main_color,
-                    border: '1px solid ' + `${Couleurs.main_color}`,
+                    color: 'var(--main-color)',
+                    border: '1px solid ' + `${'var(--main-color)'}`,
                     padding: '0.3rem 0.3rem',
                     borderRadius: '0.375rem',
                     backgroundColor: Couleurs.white,
@@ -148,8 +148,8 @@
                 class="appearance-none"
                 :style="{
                     display: 'inline-block',
-                    color: Couleurs.main_color,
-                    border: '1px solid ' + Couleurs.main_color,
+                    color: 'var(--main-color)',
+                    border: '1px solid ' + 'var(--main-color)',
                     padding: '0.3rem 0.3rem',
                     borderRadius: '0.375rem',
                     backgroundColor: 'white',
@@ -163,8 +163,8 @@
                 class="appearance-none"
                 :style="{
                     display: 'inline-block',
-                    color: Couleurs.main_color,
-                    border: '1px solid ' + Couleurs.main_color,
+                    color: 'var(--main-color)',
+                    border: '1px solid ' + 'var(--main-color)',
                     padding: '0.3rem 0.3rem',
                     borderRadius: '0.375rem',
                     backgroundColor: 'white',

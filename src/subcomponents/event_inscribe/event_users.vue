@@ -96,7 +96,7 @@
                             :disabled="!hasAttente"
                             class="appearance-none button-base"
                             :style="{
-                                '--btn-bg': hasAttente ? Couleurs.main_color : Couleurs.gray,
+                                '--btn-bg': hasAttente ? 'var(--main-color)' : Couleurs.gray,
                                 '--btn-hover-bg': hasAttente ? 'var(--secondary-color)' : Couleurs.gray
                             }"
                         >
@@ -108,7 +108,7 @@
                             class="appearance-none button-base"
                             :disabled="!hasAttente"
                             :style="{
-                                '--btn-bg': hasAttente ? Couleurs.main_color : Couleurs.gray,
+                                '--btn-bg': hasAttente ? 'var(--main-color)' : Couleurs.gray,
                                 '--btn-hover-bg': hasAttente ? 'var(--secondary-color)' : Couleurs.gray
                             }"
                         >
