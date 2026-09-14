@@ -183,7 +183,6 @@
 
 <script>
 import eventsService from '@/javascript/api/axios_events.js';
-import { Couleurs } from "@/javascript/constants/colors"
 import { Editor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import { Color } from '@tiptap/extension-color'
@@ -264,7 +263,6 @@ export default {
     data() {
         return {
             settingsCategories: this.$settings.categories,
-            Couleurs,
             editor: null,
             event: {
                 title: '',

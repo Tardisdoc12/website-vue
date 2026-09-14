@@ -96,8 +96,8 @@
                             :disabled="!hasAttente"
                             class="appearance-none button-base"
                             :style="{
-                                '--btn-bg': hasAttente ? 'var(--main-color)' : Couleurs.gray,
-                                '--btn-hover-bg': hasAttente ? 'var(--secondary-color)' : Couleurs.gray
+                                '--btn-bg': hasAttente ? 'var(--main-color)' : 'var(--deactivate-button-classic-color)',
+                                '--btn-hover-bg': hasAttente ? 'var(--secondary-color)' : 'var(--deactivate-button-classic-color)'
                             }"
                         >
                             {{user.status === 'attente' ? 'liste d\'attente' : 'inscrit'}}
@@ -108,16 +108,16 @@
                             class="appearance-none button-base"
                             :disabled="!hasAttente"
                             :style="{
-                                '--btn-bg': hasAttente ? 'var(--main-color)' : Couleurs.gray,
-                                '--btn-hover-bg': hasAttente ? 'var(--secondary-color)' : Couleurs.gray
+                                '--btn-bg': hasAttente ? 'var(--main-color)' : 'var(--deactivate-button-classic-color)',
+                                '--btn-hover-bg': hasAttente ? 'var(--secondary-color)' : 'var(--deactivate-button-classic-color)'
                             }"
                         >
                             {{user.status === 'attente' ? 'liste d\'attente' : 'inscrit'}}
                         </button>
                     </td>
                     <td class="border border-gray-300 p-2 text-center">
-                        <span v-if="user.hasPay" class="text-green-600 font-semibold">Payé</span>
-                        <span v-else class="text-red-600 font-semibold">Non payé</span>
+                        <span v-if="user.hasPay" class="text-[var(--validate-color)] font-semibold">Payé</span>
+                        <span v-else class="text-[var(--cancel-color)] font-semibold">Non payé</span>
                     </td>
                     <td class="border border-gray-300 p-2 text-center">
                         <button 
@@ -140,7 +140,6 @@
 
 <script>
 import api from "@/javascript/api/axios_inscription"
-import { Couleurs } from "@/javascript/constants/colors"
 
 export default {
     props: {
@@ -162,7 +161,6 @@ export default {
 
     data() {
         return {
-            Couleurs,
             fields_csv: ["Nom", "Email", "Téléphone", "Thème demandé", "Moto", "Experience"],
             isPhoneCopied: false,
             isEmailCopied: false,

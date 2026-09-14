@@ -31,7 +31,7 @@
                     <li
                         v-for="rule in passwordRules"
                         :key="rule.text"
-                        :class="rule.valid ? 'text-green-600' : 'text-gray-500'"
+                        :class="rule.valid ? 'text-[var(--validate-color)]' : 'text-[var(--deactivate-button-classic-color)]'"
                         style="padding: 0px 8px"
                     >
                         {{ rule.text }}

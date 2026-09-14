@@ -120,7 +120,6 @@
 import ModalComponent from '@/subcomponents/unitary_elements/modalComponent.vue';
 import apiUpload from '@/javascript/api/axios_upload';
 import apiSource from '@/javascript/api/axios_sources';
-import { Couleurs } from '@/javascript/constants/colors'
 
 export default {
     props: {
@@ -135,7 +134,6 @@ export default {
     },
     data() {
         return {
-            Couleurs,
             isOpen: true,
             fileCopy : {...this.file},
             typeAdd: this.file.path_file !== '' ? 'Fichier' : 'Url',

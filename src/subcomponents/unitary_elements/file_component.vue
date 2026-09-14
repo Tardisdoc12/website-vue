@@ -71,7 +71,6 @@ import api_upload from '@/javascript/api/axios_upload.js'
 import apiFavoris from '@/javascript/api/axios_favoris'
 import apiConseils from '@/javascript/api/axios_conseils'
 import axios_sources from "@/javascript/api/axios_sources.js";
-import { Couleurs } from '@/javascript/constants/colors'
 
 export default {
     emits:[
@@ -95,12 +94,6 @@ export default {
             type: Boolean,
             required: false,
             default: false,
-        }
-    },
-
-    data() {
-        return {
-            Couleurs,
         }
     },
 

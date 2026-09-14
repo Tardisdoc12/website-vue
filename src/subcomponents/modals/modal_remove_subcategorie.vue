@@ -61,7 +61,6 @@
 <script>
 import apiSource from '@/javascript/api/axios_sources';
 import ModalComponent from '@/subcomponents/unitary_elements/modalComponent.vue';
-import { Couleurs } from "@/javascript/constants/colors"
 
 export default {
     props: {
@@ -72,7 +71,6 @@ export default {
     },
     data() {
         return {
-            Couleurs,
             isOpen: true,
             categories: [
                 "Fiches et Exos",

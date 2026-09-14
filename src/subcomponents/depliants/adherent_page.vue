@@ -90,7 +90,6 @@
 <script>
 import EspaceProfil from "@/subcomponents/depliants/compteGestion.vue"
 import FicheSuivi from "@/subcomponents/depliants/fiche_suivi.vue"
-import { Couleurs } from "@/javascript/constants/colors";
 import ModalExercises from "../modals/modal_exercises.vue";
 import ModalSelectList from '@/subcomponents/modals/modal_select_list.vue'
 import apiSources from '@/javascript/api/axios_sources'
@@ -132,7 +131,6 @@ export default {
 
     data() {
         return {
-            Couleurs,
             labels: ['Profil', 'Fiche de suivi'],
             activeIndex: 0,
             isStartingAddConseil: false,

@@ -158,7 +158,6 @@
 </template>
 
 <script>
-import { Couleurs } from "@/javascript/constants/colors"
 import api from "@/javascript/api/axios_events"
 import { isAdherent, isEncadrant, isBureau } from "@/javascript/constants/roles";
 
@@ -193,7 +192,6 @@ export default {
 
     data() {
         return {
-            Couleurs,
             isAttente: this.event.attentePlace - this.event.nbr_attente > 0,
         }
     },

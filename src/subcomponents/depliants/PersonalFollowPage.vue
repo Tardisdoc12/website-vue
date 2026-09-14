@@ -47,7 +47,6 @@ import FicheSuivi from '@/subcomponents/depliants/fiche_suivi.vue'
 import apiFavoris from '@/javascript/api/axios_favoris'
 import apiConseils from '@/javascript/api/axios_conseils'
 import apiNotes from '@/javascript/api/axios_notes';
-import { Couleurs } from '@/javascript/constants/colors';
 
 export default{
     emits:["cancelSignal"],
@@ -77,7 +76,6 @@ export default{
 
     data(){
         return {
-            Couleurs,
             listConseil:[],
             listFavoris:[],
             notes: [],

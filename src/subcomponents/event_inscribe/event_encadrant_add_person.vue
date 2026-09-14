@@ -109,7 +109,6 @@
 <script>
 import inscritAPI from "@/javascript/api/axios_inscription"
 import SearchComponent from '@/subcomponents/unitary_elements/search_component.vue';
-import { Couleurs } from "@/javascript/constants/colors.js"
 import api from "@/javascript/api/users_wp.js"
 import { isEncadrant } from "@/javascript/constants/roles";
 
@@ -159,7 +158,6 @@ export default{
                 roles: [],
             },
             isSubmitting: false,
-            Couleurs,
             listColumn: {
                 "firstName":"Prénom",
                 "lastName":"Nom",

@@ -17,7 +17,6 @@
 </template>
 
 <script>
-import { Couleurs } from "@/javascript/constants/colors"
 
 export default {
   props: {
@@ -84,7 +83,6 @@ export default {
   
   data() {
     return {
-      Couleurs,
       isOpen: this.isOpoenForced,
     }
   },

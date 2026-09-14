@@ -59,7 +59,6 @@
 import MediaViewer from "@/subcomponents/unitary_elements/media_viewer.vue";
 import depliantWindow from "@/subcomponents/unitary_elements/depliantWindow.vue";
 import MediaDirectory from "@/subcomponents/depliants/media_depliant_directory.vue";
-import { Couleurs } from "@/javascript/constants/colors";
 import apiMedia from "@/javascript/api/api_media.js";
 import Modal from "@/subcomponents/unitary_elements/modalComponent.vue";
 export default{
@@ -77,7 +76,6 @@ export default{
 
     data() {
         return {
-            Couleurs,
             loading: false,
             error: null,
             mediaSelected: null,

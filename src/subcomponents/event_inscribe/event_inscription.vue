@@ -206,7 +206,6 @@
 
 <script>
 import inscritAPI from "@/javascript/api/axios_inscription"
-import { Couleurs } from "@/javascript/constants/colors"
 import { isEncadrant } from "@/javascript/constants/roles"
 
 function emptyParticipant() {
@@ -235,7 +234,6 @@ export default {
 
     data() {
         return {
-            Couleurs,
             currentStep: 0,
             maxParticipants: 3,
             isSubmitting: false,

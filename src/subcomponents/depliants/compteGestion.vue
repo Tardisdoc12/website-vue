@@ -180,7 +180,6 @@
 <script>
 import api_user from "@/javascript/api/users_wp.js"
 import DepliantWindow from '@/subcomponents/unitary_elements/depliantWindow.vue';
-import { Couleurs } from '@/javascript/constants/colors'
 import EventsUser from '@/subcomponents/depliants/depliant_events.vue'
 import { isAdherent } from "@/javascript/constants/roles"
 
@@ -203,7 +202,6 @@ export default {
 
     data() {
         return {
-            Couleurs,
             titleInformations: "Mes Informations",
             titleUrgences: "Urgences",
             isInformationsChange: false,

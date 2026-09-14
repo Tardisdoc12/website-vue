@@ -138,14 +138,12 @@ import apiSources from "@/javascript/api/axios_sources"
 import apiEvents from "@/javascript/api/axios_events"
 import { jwtDecode } from "jwt-decode"
 import api from "@/javascript/api/users_wp.js"
-import { Couleurs } from "@/javascript/constants/colors.js"
 import { isEncadrant } from "@/javascript/constants/roles";
 import EspaceAdherent from "@/subcomponents/depliants/adherent_page.vue"
 import apiFavoris from "@/javascript/api/axios_favoris"
 
 export default {
     async mounted() {
-        console.log(this.$settings.colors)
         const results_2 = await apiSources.get_sources()
         const data = results_2.data
         // On recherche qui est l'utilisateur connecté pour afficher les bonnes informations
@@ -216,7 +214,6 @@ export default {
         return {
             labels: ['Profil', 'Ressources', 'Médias'],
             
-            Couleurs,
             structuresRessources: {
                 0:{"categorie_title":RessourcesCategories[0],"subcats":{}},
                 1:{"categorie_title":RessourcesCategories[1],"subcats":{}},

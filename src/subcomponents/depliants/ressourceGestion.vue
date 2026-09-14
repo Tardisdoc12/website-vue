@@ -50,7 +50,6 @@
 import DepliantWindow from '@/subcomponents/unitary_elements/depliantWindow.vue';
 import ModalFileUpdate from '@/subcomponents/modals/modal_update_file.vue';
 import FileComponent from "../unitary_elements/file_component.vue";
-import { Couleurs } from "@/javascript/constants/colors";
 import { toRaw } from "vue"
 
 export default {
@@ -70,7 +69,6 @@ export default {
 
     data(){
         return {
-            Couleurs,
             subCategoriesAndSourcesCopy : null,
             isUpdateFile: false,
             fileToUpdate: null

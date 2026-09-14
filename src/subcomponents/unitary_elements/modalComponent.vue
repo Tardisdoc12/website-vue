@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import { Couleurs } from '@/javascript/constants/colors'
 
 export default {
     props: {
@@ -30,12 +29,6 @@ export default {
             type: String,
             required: false,
             default: null
-        }
-    },
-
-    data() {
-        return {
-            Couleurs
         }
     },
 

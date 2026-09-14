@@ -39,7 +39,6 @@
 
 <script>
 import event_card from '@/subcomponents/unitary_elements/event_card.vue';
-import { Couleurs } from '@/javascript/constants/colors'
 import DepliantWindow from '@/subcomponents/unitary_elements/depliantWindow.vue';
 import ModalEventUninscript from '@/subcomponents/modals/modal_event_uninscript.vue'
 import EventsFunctions from '@/javascript/constants/events_functions'
@@ -65,7 +64,6 @@ export default{
 
     data() {
         return {
-            Couleurs,
             OpenModalInscription: false,
             eventSelected: null,
         }

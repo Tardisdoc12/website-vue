@@ -80,7 +80,6 @@ export default{
 
     data(){
         return {
-            Couleurs: this.$settings.colors,
             notesCopy: this.notes?.note_write,
             isModify: this.canUpdate,
         }

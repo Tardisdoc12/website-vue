@@ -21,7 +21,6 @@
 import DepliantWindow from '../unitary_elements/depliantWindow.vue';
 import DepliantExercies from './depliantExercies.vue';
 import ExercicesConseils from './ExercicesConseils.vue';
-import { Couleurs } from '@/javascript/constants/colors';
 
 export default {
     props:{
@@ -33,12 +32,6 @@ export default {
         conseils:{
             type:Array,
             required: true
-        }
-    },
-
-    data() {
-        return {
-            Couleurs
         }
     },
 
