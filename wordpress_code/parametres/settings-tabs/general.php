@@ -1,4 +1,7 @@
 <?php
+/**
+ * General settings tab for the theme.
+ */
 if (!defined('ABSPATH')) exit;
 
 return [
@@ -14,7 +17,7 @@ return [
             'type' => 'color',
         ],
         'depliant_background_color' => [
-            'label' => 'Couleur de fond des dépliants',
+            'label' => 'Couleur de fond des dépliants secondaires',
             'type' => 'color',
         ],
 
@@ -36,27 +39,33 @@ return [
             'label' => 'Couleur au survol des boutons d\'annulation',
             'type' => 'color',
         ],
-        
-        
-        '_heading_deactivate' => ['type' => 'heading', 'label' => 'Désactivation'],
-        'deactivate_button_classic_color' => [
-            'label' => 'Couleur de désactivation des boutons classiques',
-            'type' => 'color',
-        ],
-        'disable_main_color' => [
-            'label' => 'Couleur de désactivation générale',
-            'type' => 'color',
-        ],
 
         'color_button_file' => [
             'label' => 'Couleur des boutons de gestion defichier',
             'type' => 'color',
         ],
 
+        '_heading_deactivate' => ['type' => 'heading', 'label' => 'Désactivation'],
+        'deactivate_button_classic_color' => [
+            'label' => 'Couleur de désactivation des boutons classiques',
+            'type' => 'color',
+        ],
+        'validate_disabled_color' => [
+            'label' => 'Couleur des boutons de validation désactivés',
+            'type' => 'color',
+        ],
+        'cancel_disabled_color' => [
+            'label' => 'Couleur des boutons d\'annulation désactivés',
+            'type' => 'color',
+        ],
+        
+        
+
         '_heading_writing' => ['type' => 'heading', 'label' => 'Écriture'],
         'writing_main_color' => [
             'label' => 'Couleur principale de l\'écriture',
             'type' => 'color',
+            'default' => '#FFFFFF',
         ],
 
     ],

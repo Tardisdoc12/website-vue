@@ -111,6 +111,8 @@ class ShortcodesHookers {
             'cancel_hover_color'        => get_option('cancel_hover_color', '#000000'),
             'color_button_file' => get_option('color_button_file', '#000000'),
             'writing_main_color' => get_option('writing_main_color', '#FFFFFF'),
+            'validate_disabled_color' => get_option('validate_disabled_color', '#000000'),
+            'cancel_disabled_color' => get_option('cancel_disabled_color', '#000000'),
         ];
 
         wp_localize_script($name_modules, 'MON_PLUGIN_SETTINGS', [

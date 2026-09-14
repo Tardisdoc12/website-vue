@@ -199,7 +199,9 @@ function mon_plugin_render_repeater_row($key, $columns, $index, $row) {
                 $input_type = $col['type'] ?? 'text';
                 $name = esc_attr($key) . '[' . esc_attr($index) . '][' . esc_attr($col_key) . ']';
                 $raw_value = $row[$col_key] ?? '';
+                $default = $col['default'] ?? ($input_type === 'color' ? '#000000' : '');
 
+                $raw_value = $row[$col_key] ?? $default;
                 // Si la valeur est un tableau (ex: champs_speciaux), on la réaffiche en string séparée par virgules
                 if (is_array($raw_value)) {
                     $raw_value = implode(', ', $raw_value);
@@ -215,7 +217,7 @@ function mon_plugin_render_repeater_row($key, $columns, $index, $row) {
                            <?php checked($checked); ?> />
 
                 <?php elseif ($input_type === 'color'): ?>
-                    <input type="color" name="<?php echo $name; ?>" value="<?php echo esc_attr($raw_value ?: '#000000'); ?>" />
+                    <input type="color" name="<?php echo $name; ?>" value="<?php echo esc_attr($raw_value); ?>" />
 
                 <?php else: ?>
                     <input type="text" name="<?php echo $name; ?>" value="<?php echo esc_attr($raw_value); ?>" class="regular-text" />
