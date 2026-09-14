@@ -31,7 +31,7 @@
                                 color: 'white',
                                 padding: '0.5rem 1rem',
                                 borderRadius: '0.375rem',
-                                backgroundColor: '#000000',
+                                backgroundColor: 'var(--color-button-file)',
                             }"
                         >
                             <font-awesome-icon icon="fa-solid fa-eye"/>
@@ -103,8 +103,8 @@
                             type="submit"
                             class="appearance-none button-base"
                             :style="{
-                                '--btn-bg' : isDisable ? Couleurs.gris_pale : 'var(--main-color)',
-                                '--btn-hover-bg' : isDisable ? Couleurs.gris_pale : 'var(--secondary-color)',
+                                '--btn-bg' : isDisable ? 'var(--disable-main-color)' : 'var(--main-color)',
+                                '--btn-hover-bg' : isDisable ? 'var(--disable-main-color)' : 'var(--secondary-color)',
                             }"
                         >
                             Mettre à jour le document

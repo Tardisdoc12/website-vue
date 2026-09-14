@@ -45,8 +45,8 @@
                         type="submit"
                         class="appearance-none button-base"
                         :style="{
-                            '--btn-bg': isDisable ? Couleurs.gris_pale : 'var(--cancel-color)',
-                            '--btn-hover-bg' : isDisable ? Couleurs.gris_pale : 'var(--cancel-hover-color)',
+                            '--btn-bg': isDisable ? 'var(--cancel-disabled-color)' : 'var(--cancel-color)',
+                            '--btn-hover-bg' : isDisable ? 'var(--cancel-disabled-color)' : 'var(--cancel-hover-color)',
                         }"
                     >
                         Supprimer la sous-catégorie

@@ -24,8 +24,8 @@
                 @click="UpdateFile(file)"
                 class="appearance-none button-base"
                 :style="{
-                    '--btn-bg':Couleurs.black,
-                    '--btn-hover-bg': Couleurs.black,
+                    '--btn-bg':'var(--color-button-file)',
+                    '--btn-hover-bg': 'var(--color-button-file)',
                 }"
             >
                 <font-awesome-icon icon="fa-solid fa-pen-to-square"/>
@@ -45,8 +45,8 @@
                 @click="openUrl(file.url_file, file.path_file)"
                 class="appearance-none button-base"
                 :style="{
-                    '--btn-bg':Couleurs.black,
-                    '--btn-hover-bg': Couleurs.black,
+                    '--btn-bg':'var(--color-button-file)',
+                    '--btn-hover-bg': 'var(--color-button-file)',
                 }"
             >
                 <font-awesome-icon icon="fa-solid fa-eye"/>
@@ -56,8 +56,8 @@
                 @click="DownloadUrl(file)"
                 class="appearance-none button-base"
                 :style="{
-                    '--btn-bg':Couleurs.black,
-                    '--btn-hover-bg': Couleurs.black,
+                    '--btn-bg':'var(--color-button-file)',
+                    '--btn-hover-bg': 'var(--color-button-file)',
                 }"
             >
                 <font-awesome-icon icon="fa-solid fa-download"/>

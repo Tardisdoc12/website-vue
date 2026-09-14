@@ -5,6 +5,4 @@ export const Couleurs = {
     //website colors
     ...colors,
     white : "#FFFFFF",
-    gris_pale: '#9ca3af',
-    black: "#000000",
 }

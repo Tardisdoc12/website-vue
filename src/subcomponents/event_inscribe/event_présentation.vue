@@ -261,13 +261,13 @@ export default {
                 return 'var(--cancel-color)'
              }
              else if(Number(this.event.closed_inscription) === 1){
-                return Couleurs.gris_pale
+                return 'var(--validate-disabled-color)'
              }
              else if(Number(this.event.closed_inscription) === 2 && (!this.isAttente && isFull)){
-                return Couleurs.gris_pale
+                return 'var(--validate-disabled-color)'
              }
              else if(Number(this.event.closed_inscription) === 3){
-                return Couleurs.gris_pale
+                return 'var(--validate-disabled-color)'
              }
              else if (this.isAttente && isFull){
                 return 'var(--validate-color)'
@@ -286,13 +286,13 @@ export default {
                 return 'var(--cancel-hover-color)'
             }
             else if(Number(this.event.closed_inscription) === 1){
-                return Couleurs.gris_pale
+                return 'var(--validate-disabled-color)'
             }
             else if(Number(this.event.closed_inscription) === 2 && (!this.isAttente && isFull)){
-                return Couleurs.gris_pale
+                return 'var(--validate-disabled-color)'
             }
             else if(Number(this.event.closed_inscription) === 3){
-                return Couleurs.gris_pale
+                return 'var(--validate-disabled-color)'
             }
             else if (this.isAttente && isFull){
                 return 'var(--validate-hover-color)'
