@@ -76,16 +76,6 @@ class ShortcodesHookers {
             array(),
             filemtime($path_file)
         );
-    }
-
-    private function enqueue_js_scripts($name_modules, $path_file, $url_file) {
-        wp_enqueue_script(
-            $name_modules,
-            $url_file,
-            ['elementor-frontend'],
-            filemtime($path_file),
-            true
-        );
 
         $custom_css = ":root {
             --main-color: " . esc_attr(get_option('main_color', '#245473')) . ";
@@ -99,6 +89,16 @@ class ShortcodesHookers {
         }";
 
         wp_add_inline_style($name_modules, $custom_css);
+    }
+
+    private function enqueue_js_scripts($name_modules, $path_file, $url_file) {
+        wp_enqueue_script(
+            $name_modules,
+            $url_file,
+            ['elementor-frontend'],
+            filemtime($path_file),
+            true
+        );
 
         wp_localize_script($name_modules, 'vueAppData', [
             'nonce'   => wp_create_nonce('wp_rest'),
