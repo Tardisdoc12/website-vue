@@ -6,7 +6,7 @@
                 <span>
                     <label style="color:rgb(255, 255, 255);"> {{ title }} </label>
                 </span>
-                <button class="appearance-none button-base" :style="{ '--btn-bg': Couleurs.main_red, '--btn-hover-bg': Couleurs.dark_red }" @click="Cancel">
+                <button class="appearance-none button-base" :style="{ '--btn-bg': 'var(--cancel-color)', '--btn-hover-bg': 'var(--cancel-hover-color)' }" @click="Cancel">
                     <font-awesome-icon icon="fa-solid fa-xmark" />
                 </button>
             </div>

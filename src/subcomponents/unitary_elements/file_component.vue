@@ -35,8 +35,8 @@
                 @click="DeleteFile(file)"
                 class="appearance-none button-base"
                 :style="{
-                    '--btn-bg':Couleurs.main_red,
-                    '--btn-hover-bg': Couleurs.dark_red,
+                    '--btn-bg':'var(--cancel-color)',
+                    '--btn-hover-bg': 'var(--cancel-hover-color)',
                 }"
             >
                 <font-awesome-icon icon="fa-solid fa-trash"/>

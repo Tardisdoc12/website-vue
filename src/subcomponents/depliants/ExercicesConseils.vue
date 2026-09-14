@@ -2,10 +2,10 @@
     <DepliantWindow
         :title="'Exercices Conseillés'"
         :width="'100%'"
-        :backgroundColor="Couleurs.cyan"
+        :backgroundColor="'var(--depliant-background-color)'"
         :borderColorOpen="'var(--secondary-color)'"
         :borderColor="'var(--secondary-color)'"
-        :backgroundColorOpen="Couleurs.cyan"
+        :backgroundColorOpen="'var(--depliant-background-color)'"
         :writenColor="'var(--main-color)'"
         :writenColorOpen="'var(--main-color)'"
         :showBorder="false"
@@ -23,19 +23,12 @@
 <script>
 import DepliantWindow from '../unitary_elements/depliantWindow.vue';
 import FileComponent from '../unitary_elements/file_component.vue';
-import { Couleurs } from '@/javascript/constants/colors';
 
 export default{
     props:{
         files:{
             type : Array,
             required: true,
-        }
-    },
-
-    data(){
-        return {
-            Couleurs,
         }
     },
 

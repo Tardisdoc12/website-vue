@@ -12,8 +12,8 @@
             <button
                 type="button"
                 :style="{
-                    '--btn-bg': Couleurs.main_red,
-                    '--btn-hover-bg': Couleurs.dark_red
+                    '--btn-bg': 'var(--cancel-color)',
+                    '--btn-hover-bg': 'var(--cancel-hover-color)'
                 }"
                 @click="RemoveEvent"
                 class="appearance-none button-base"
@@ -24,8 +24,8 @@
             <button
                 type="button"
                 :style="{
-                    '--btn-bg': Number(event.closed_inscription) === 1 ? Couleurs.main_red : 'var(--main-color)',
-                    '--btn-hover-bg': Number(event.closed_inscription) === 1 ? Couleurs.dark_red : 'var(--secondary-color)'
+                    '--btn-bg': Number(event.closed_inscription) === 1 ? 'var(--cancel-color)' : 'var(--main-color)',
+                    '--btn-hover-bg': Number(event.closed_inscription) === 1 ? 'var(--cancel-hover-color)' : 'var(--secondary-color)'
                 }"
                 @click="LockEvent"
                 class="appearance-none button-base"
@@ -43,8 +43,8 @@
             <button
                 type="button"
                 :style="{
-                    '--btn-bg': Number(event.closed_inscription) === 2 ? Couleurs.main_red : 'var(--main-color)',
-                    '--btn-hover-bg': Number(event.closed_inscription) === 2 ? Couleurs.dark_red : 'var(--secondary-color)'
+                    '--btn-bg': Number(event.closed_inscription) === 2 ? 'var(--cancel-color)' : 'var(--main-color)',
+                    '--btn-hover-bg': Number(event.closed_inscription) === 2 ? 'var(--cancel-hover-color)' : 'var(--secondary-color)'
                 }"
                 @click="FullEvent"
                 class="appearance-none button-base"
@@ -258,7 +258,7 @@ export default {
             const isAdherent = this.isAdherentComp
             const isFull = isAdherent ? isFullAdherent : isFullNonAdherent
              if(this.event.isInscript){
-                return Couleurs.main_red
+                return 'var(--cancel-color)'
              }
              else if(Number(this.event.closed_inscription) === 1){
                 return Couleurs.gris_pale
@@ -270,10 +270,10 @@ export default {
                 return Couleurs.gris_pale
              }
              else if (this.isAttente && isFull){
-                return Couleurs.vert
+                return 'var(--validate-color)'
              }
              else{
-                return Couleurs.vert
+                return 'var(--validate-color)'
              }
         },
 
@@ -283,7 +283,7 @@ export default {
             const isAdherent = this.isAdherentComp
             const isFull = isAdherent ? isFullAdherent : isFullNonAdherent
             if(this.event.isInscript){
-                return Couleurs.dark_red
+                return 'var(--cancel-hover-color)'
             }
             else if(Number(this.event.closed_inscription) === 1){
                 return Couleurs.gris_pale
@@ -295,10 +295,10 @@ export default {
                 return Couleurs.gris_pale
             }
             else if (this.isAttente && isFull){
-                return Couleurs.dark_vert
+                return 'var(--validate-hover-color)'
             }
             else{
-                return Couleurs.dark_vert
+                return 'var(--validate-hover-color)'
             }
         },
 

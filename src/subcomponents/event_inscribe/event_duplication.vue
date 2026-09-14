@@ -30,8 +30,8 @@
             v-if="currentStep > 0"
             type="button"
             :style="{
-                '--btn-bg': Couleurs.main_red,
-                '--btn-hover-bg': Couleurs.dark_red
+                '--btn-bg': 'var(--cancel-color)',
+                '--btn-hover-bg': 'var(--cancel-hover-color)'
             }"
             @click="removeRange(currentStep)"
             class="appearance-none button-base"
@@ -90,8 +90,8 @@
             :disabled="currentStep === 0"
             class="appearance-none button-base"
             :style="{
-                '--btn-bg': Couleurs.main_green,
-                '--btn-hover-bg': Couleurs.dark_green
+                '--btn-bg': 'var(--validate-color)',
+                '--btn-hover-bg': 'var(--validate-hover-color)'
             }"
         >
             Précédent
@@ -101,8 +101,8 @@
             @click="Cancel"
             class="appearance-none button-base"
             :style="{
-                '--btn-bg': Couleurs.main_red,
-                '--btn-hover-bg': Couleurs.dark_red
+                '--btn-bg': 'var(--cancel-color)',
+                '--btn-hover-bg': 'var(--cancel-hover-color)'
             }"
         >
             Annuler
@@ -113,8 +113,8 @@
             @click="nextStep"
             class="appearance-none button-base"
             :style="{
-                '--btn-bg': Couleurs.main_green,
-                '--btn-hover-bg': Couleurs.dark_green
+                '--btn-bg': 'var(--validate-color)',
+                '--btn-hover-bg': 'var(--validate-hover-color)'
             }"
         >
             Suivant
@@ -125,8 +125,8 @@
             @click="CreateEvents"
             class="appearance-none button-base"
             :style="{
-                '--btn-bg': Couleurs.main_green,
-                '--btn-hover-bg': Couleurs.dark_green
+                '--btn-bg': 'var(--validate-color)',
+                '--btn-hover-bg': 'var(--validate-hover-color)'
             }"
         >
             Dupliquer les évènements
@@ -137,7 +137,6 @@
 
 <script>
 import eventsService from '@/javascript/api/axios_events.js';
-import { Couleurs } from "@/javascript/constants/colors"
 
 export default {
     emits: ['cancelSignal'],
@@ -151,7 +150,6 @@ export default {
     data() {
         return {
             categoriesSettings: this.$settings.categories,
-            Couleurs,
             errorString: null,
             listEvents: [
                 {

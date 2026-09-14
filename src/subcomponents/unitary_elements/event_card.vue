@@ -50,7 +50,8 @@
                         style="
                             width: 13px; height: 13px;
                             border-radius: 50%;
-                            background-color: #22c55e;
+                            background-color: var(--validate-color);
+                            border: 1px solid var(--validate-hover-color);
                             color: white;
                             font-size: 11px;
                             display: flex; align-items: center; justify-content: center;

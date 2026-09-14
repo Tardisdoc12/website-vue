@@ -18,8 +18,8 @@
                     @click="Validate"
                     class="appearance-none button-base"
                     :style="{
-                        '--btn-bg' : isDisable ? Couleurs.cyan : 'var(--main-color)',
-                        '--btn-hover-bg' : isDisable ? Couleurs.cyan : 'var(--secondary-color)'
+                        '--btn-bg' : isDisable ? 'var(--deactivate-button-classic-color)' : 'var(--main-color)',
+                        '--btn-hover-bg' : isDisable ? 'var(--deactivate-button-classic-color)' : 'var(--secondary-color)'
                     }"
                 >
                     Valider le choix
@@ -31,7 +31,6 @@
 
 <script>
 import ModalComponent from '../unitary_elements/modalComponent.vue';
-import { Couleurs } from '@/javascript/constants/colors';
 
 export default {
     emits:[
@@ -58,7 +57,6 @@ export default {
 
     data(){
         return {
-            Couleurs,
             valueSelected: null,
         }
     },

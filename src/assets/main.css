@@ -4,10 +4,24 @@
 :root {
     --main-color: #245473;
     --secondary-color: #2d5c7f;
+    
     --validate-color: #2e7d32;
     --validate-hover-color: #1b5e20;
+
     --cancel-color: #c62828;
     --cancel-hover-color: #8e0000;
+    
+    --color-button-file: #000000;
+    
+    --disable-main-color: #9e9e9e;
+    
+    --writing-main-color: #FFFFFF;
+
+    --depliant-background-color: #d4e3ed;
+    
+    --deactivate-button-classic-color: #d4e3ed;
+    --cancel-disabled-color: #9ca3af;
+    --validate-disabled-color: #9ca3af;
 }
 
 /* Bouton CSS */

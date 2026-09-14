@@ -3,10 +3,10 @@
         :title="directory.name"
         :width="'100%'"
         :isOpoenForced="false"
-        :backgroundColor="Couleurs.cyan"
+        :backgroundColor="'var(--depliant-background-color)'"
         :borderColorOpen="'var(--secondary-color)'"
         :borderColor="'var(--secondary-color)'"
-        :backgroundColorOpen="Couleurs.cyan"
+        :backgroundColorOpen="'var(--depliant-background-color)'"
         :writenColor="'var(--main-color)'"
         :writenColorOpen="'var(--main-color)'"
         :showBorder="false"
@@ -36,7 +36,6 @@ import apiMedia from '@/javascript/api/api_media.js'
 import MediaViewer from '@/subcomponents/unitary_elements/media_viewer.vue'
 import MediaDirectory from '@/subcomponents/depliants/media_depliant_directory.vue' // récursif
 import depliantWindow from '@/subcomponents/unitary_elements/depliantWindow.vue'   // 👈 manquant
-import { Couleurs } from '@/javascript/constants/colors.js'
 
 const props = defineProps({
     directory: Object

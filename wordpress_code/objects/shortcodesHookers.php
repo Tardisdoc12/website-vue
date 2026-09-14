@@ -85,7 +85,12 @@ class ShortcodesHookers {
             --cancel-color: " . esc_attr(get_option('cancel_color', '#c62828')) . ";
             --cancel-hover-color: " . esc_attr(get_option('cancel_hover_color', '#8e0000')) . ";
             --disable-main-color: " . esc_attr(get_option('disable_main_color', '#9e9e9e')) . ";
-            --writing-main-color: " . esc_attr(get_option('writing_main_color', '#000000')) . ";
+            --writing-main-color: " . esc_attr(get_option('writing_main_color', '#FFFFFF')) . ";
+            --depliant-background-color: " . esc_attr(get_option('depliant_background_color', '#d4e3ed')) . ";
+            --deactivate-button-classic-color: " . esc_attr(get_option('deactivate_button_classic_color', '#d4e3ed')) . ";
+            --color-button-file: " . esc_attr(get_option('color_button_file', '#000000')) . ";
+            --cancel-disabled-color: " . esc_attr(get_option('cancel_disabled_color', '#9ca3af')) . ";
+            --validate-disabled-color: " . esc_attr(get_option('validate_disabled_color', '#9ca3af')) . ";
         }";
 
         wp_add_inline_style($name_modules, $custom_css);

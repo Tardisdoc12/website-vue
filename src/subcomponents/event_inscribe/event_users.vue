@@ -16,8 +16,8 @@
                 type="button"
                 class="appearance-none button-base"
                 :style="{
-                    '--btn-bg': Couleurs.vert,
-                    '--btn-hover-bg':Couleurs.dark_vert,
+                    '--btn-bg': 'var(--validate-color)',
+                    '--btn-hover-bg':'var(--validate-hover-color)',
                 }"
                 @click="CopyPhoneOrEmail(true)"
             >
@@ -31,8 +31,8 @@
                 type="button"
                 class="appearance-none button-base"
                 :style="{
-                    '--btn-bg': Couleurs.vert,
-                    '--btn-hover-bg':Couleurs.dark_vert,
+                    '--btn-bg': 'var(--validate-color)',
+                    '--btn-hover-bg':'var(--validate-hover-color)',
                 }"
                 @click="CopyPhoneOrEmail(false)"
             >
@@ -47,8 +47,8 @@
                 type="button"
                 class="appearance-none button-base"
                 :style="{
-                    '--btn-bg': Couleurs.vert,
-                    '--btn-hover-bg':Couleurs.dark_vert,
+                    '--btn-bg': 'var(--validate-color)',
+                    '--btn-hover-bg':'var(--validate-hover-color)',
                 }"
                 @click="downloadCSV"
             >
@@ -124,8 +124,8 @@
                         @click="DeleteUser(user)"
                         class="appearance-none button-base"
                         :style="{
-                            '--btn-bg': Couleurs.main_red,
-                            '--btn-hover-bg': Couleurs.dark_red
+                            '--btn-bg': 'var(--cancel-color)',
+                            '--btn-hover-bg': 'var(--cancel-hover-color)'
                         }"
                         >
                             Supprimer l'inscrit
