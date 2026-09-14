@@ -24,8 +24,8 @@
             <button
                 type="button"
                 :style="{
-                    '--btn-bg': Number(event.closed_inscription) === 1 ? Couleurs.main_red : Couleurs.main_blue,
-                    '--btn-hover-bg': Number(event.closed_inscription) === 1 ? Couleurs.dark_red : Couleurs.dark_blue
+                    '--btn-bg': Number(event.closed_inscription) === 1 ? Couleurs.main_red : Couleurs.main_color,
+                    '--btn-hover-bg': Number(event.closed_inscription) === 1 ? Couleurs.dark_red : 'var(--secondary-color)'
                 }"
                 @click="LockEvent"
                 class="appearance-none button-base"
@@ -43,8 +43,8 @@
             <button
                 type="button"
                 :style="{
-                    '--btn-bg': Number(event.closed_inscription) === 2 ? Couleurs.main_red : Couleurs.main_blue,
-                    '--btn-hover-bg': Number(event.closed_inscription) === 2 ? Couleurs.dark_red : Couleurs.dark_blue
+                    '--btn-bg': Number(event.closed_inscription) === 2 ? Couleurs.main_red : Couleurs.main_color,
+                    '--btn-hover-bg': Number(event.closed_inscription) === 2 ? Couleurs.dark_red : 'var(--secondary-color)'
                 }"
                 @click="FullEvent"
                 class="appearance-none button-base"
@@ -63,8 +63,8 @@
             <button
                 type="button"
                 :style="{
-                    '--btn-bg': Couleurs.main_blue,
-                    '--btn-hover-bg': Couleurs.dark_blue
+                    '--btn-bg': Couleurs.main_color,
+                    '--btn-hover-bg': 'var(--secondary-color)'
                 }"
                 @click="ajoutPerson"
                 class="appearance-none button-base"
@@ -75,8 +75,8 @@
             <button
                 type="button"
                 :style="{
-                    '--btn-bg': Couleurs.main_blue,
-                    '--btn-hover-bg': Couleurs.dark_blue
+                    '--btn-bg': Couleurs.main_color,
+                    '--btn-hover-bg': 'var(--secondary-color)'
                 }"
                 @click="CopyEvent"
                 class="appearance-none button-base"

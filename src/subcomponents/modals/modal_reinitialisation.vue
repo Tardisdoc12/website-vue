@@ -17,8 +17,8 @@
             <button @click="handleRequest" :disabled="!email"
                 class="appearance-none button-base"
                 :style="{
-                    '--btn-bg' : !email ? Couleurs.cyan : Couleurs.main_blue,
-                    '--btn-hover-bg' : !email ? Couleurs.cyan : Couleurs.dark_blue
+                    '--btn-bg' : !email ? Couleurs.cyan : Couleurs.main_color,
+                    '--btn-hover-bg' : !email ? Couleurs.cyan : 'var(--secondary-color)'
                 }"
             >Envoyer</button>
         </div>

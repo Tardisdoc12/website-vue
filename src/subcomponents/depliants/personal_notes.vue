@@ -1,10 +1,10 @@
 <template>
     <DepliantWindow
         :title="Title"
-        :backgroundColorOpen="'#2d5c7f'"
+        :backgroundColorOpen="'var(--secondary-color)'"
         :writenColorOpen="'#FFFFFF'"
-        :border-color="'#2d5c7f'"
-        :border-color-open="'#2d5c7f'"
+        :border-color="'var(--secondary-color)'"
+        :border-color-open="'var(--secondary-color)'"
         :is-opoen-forced="true"
         :width="'95%'"
     >
@@ -80,6 +80,7 @@ export default{
 
     data(){
         return {
+            Couleurs: this.$settings.colors,
             notesCopy: this.notes?.note_write,
             isModify: this.canUpdate,
         }

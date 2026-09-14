@@ -330,14 +330,14 @@ export default {
 }
 
 .step-dot.active {
-    border-color: #2d5c7f;
-    color: #2d5c7f;
+    border-color: var(--secondary-color);
+    color: var(--secondary-color);
     background: #eaf2fa;
 }
 
 .step-dot.done {
-    border-color: #2d5c7f;
-    background: #2d5c7f;
+    border-color: var(--secondary-color);
+    background: var(--secondary-color);
     color: white;
     cursor: pointer;
 }

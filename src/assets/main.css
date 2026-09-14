@@ -1,11 +1,20 @@
 @import "tailwindcss";
 
 /*---------------------------------------------------------*/
+:root {
+    --main-color: #245473;
+    --secondary-color: #2d5c7f;
+    --validate-color: #2e7d32;
+    --validate-hover-color: #1b5e20;
+    --cancel-color: #c62828;
+    --cancel-hover-color: #8e0000;
+}
+
 /* Bouton CSS */
 .button-base {
-    --btn-bg: #245473;
+    --btn-bg: var(--main-color);
     --btn-color: white;
-    --btn-hover-bg: #2d5c7f;
+    --btn-hover-bg: var(--secondary-color);
 
     background-color: var(--btn-bg);
     color: var(--btn-color);
@@ -18,7 +27,6 @@
 .button-base:hover {
   background-color: var(--btn-hover-bg);
 }
-
 /*---------------------------------------------------------*/
 /* Event CSS */
 .background-card {

@@ -7,11 +7,11 @@
                 type="button"
                 :style="{
                     display: 'inline-block',
-                    color: Couleurs.main_blue,
+                    color: Couleurs.main_color,
                     padding: '1.0rem 1.0rem',
                     borderRadius: '9999px',
                     backgroundColor: Couleurs.white,
-                    border: `2px solid ${Couleurs.main_blue}`,
+                    border: `2px solid ${Couleurs.main_color}`,
                 }"
             >
                 {{ 'Retour Profil' }}
@@ -24,8 +24,8 @@
                     color: Couleurs.white,
                     padding: '1.0rem 1.0rem',
                     borderRadius: '9999px',
-                    backgroundColor: Couleurs.main_blue,
-                    border: `2px solid ${Couleurs.main_blue}`,
+                    backgroundColor: Couleurs.main_color,
+                    border: `2px solid ${Couleurs.main_color}`,
                 }"
             >
                 {{ 'Fiche De Suivi' }}

@@ -87,6 +87,19 @@ class ShortcodesHookers {
             true
         );
 
+        $custom_css = ":root {
+            --main-color: " . esc_attr(get_option('main_color', '#245473')) . ";
+            --secondary-color: " . esc_attr(get_option('secondary_color', '#2d5c7f')) . ";
+            --validate-color: " . esc_attr(get_option('validate_color', '#2e7d32')) . ";
+            --validate-hover-color: " . esc_attr(get_option('validate_hover_color', '#1b5e20')) . ";
+            --cancel-color: " . esc_attr(get_option('cancel_color', '#c62828')) . ";
+            --cancel-hover-color: " . esc_attr(get_option('cancel_hover_color', '#8e0000')) . ";
+            --disable-main-color: " . esc_attr(get_option('disable_main_color', '#9e9e9e')) . ";
+            --writing-main-color: " . esc_attr(get_option('writing_main_color', '#000000')) . ";
+        }";
+
+        wp_add_inline_style($name_modules, $custom_css);
+
         wp_localize_script($name_modules, 'vueAppData', [
             'nonce'   => wp_create_nonce('wp_rest'),
             'modules' => array_values($this->vue_requested_modules),

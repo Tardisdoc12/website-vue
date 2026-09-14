@@ -96,8 +96,8 @@
                             :disabled="!hasAttente"
                             class="appearance-none button-base"
                             :style="{
-                                '--btn-bg': hasAttente ? Couleurs.main_blue : Couleurs.gray,
-                                '--btn-hover-bg': hasAttente ? Couleurs.dark_blue : Couleurs.gray
+                                '--btn-bg': hasAttente ? Couleurs.main_color : Couleurs.gray,
+                                '--btn-hover-bg': hasAttente ? 'var(--secondary-color)' : Couleurs.gray
                             }"
                         >
                             {{user.status === 'attente' ? 'liste d\'attente' : 'inscrit'}}
@@ -108,8 +108,8 @@
                             class="appearance-none button-base"
                             :disabled="!hasAttente"
                             :style="{
-                                '--btn-bg': hasAttente ? Couleurs.main_blue : Couleurs.gray,
-                                '--btn-hover-bg': hasAttente ? Couleurs.dark_blue : Couleurs.gray
+                                '--btn-bg': hasAttente ? Couleurs.main_color : Couleurs.gray,
+                                '--btn-hover-bg': hasAttente ? 'var(--secondary-color)' : Couleurs.gray
                             }"
                         >
                             {{user.status === 'attente' ? 'liste d\'attente' : 'inscrit'}}

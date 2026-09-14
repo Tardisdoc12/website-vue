@@ -1,11 +1,11 @@
 <template>
     <DepliantWindow
         :title="'Exercices'"
-        :backgroundColorOpen="Couleurs.dark_blue"
+        :backgroundColorOpen="'var(--secondary-color)'"
         :writenColorOpen="Couleurs.white"
-        :border-color="Couleurs.dark_blue"
-        :border-color-open="Couleurs.dark_blue"
-        :borderWindowColor="Couleurs.dark_blue"
+        :border-color="'var(--secondary-color)'"
+        :border-color-open="'var(--secondary-color)'"
+        :borderWindowColor="'var(--secondary-color)'"
         :width="'95%'"
     >
         <DepliantExercies

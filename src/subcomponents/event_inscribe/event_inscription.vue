@@ -437,14 +437,14 @@ export default {
 }
 
 .step-dot.active {
-    border-color: #2d5c7f;
-    color: #2d5c7f;
+    border-color: var(--secondary-color);
+    color: var(--secondary-color);
     background: #eaf2fa;
 }
 
 .step-dot.done {
-    border-color: #2d5c7f;
-    background: #2d5c7f;
+    border-color: var(--secondary-color);
+    background: var(--secondary-color);
     color: white;
     cursor: pointer;
 }
@@ -505,9 +505,9 @@ export default {
 }
 
 .toggle-btn--active {
-    border-color: #2d5c7f;
+    border-color: var(--secondary-color);
     background: #eaf2fa;
-    color: #2d5c7f;
+    color: var(--secondary-color);
 }
 
 .button-remove {
@@ -537,8 +537,8 @@ export default {
 }
 
 .button-add:hover {
-    border-color: #2d5c7f;
-    color: #2d5c7f;
+    border-color: var(--secondary-color);
+    color: var(--secondary-color);
 }
 
 .flex { display: flex; }

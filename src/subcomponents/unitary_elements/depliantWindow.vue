@@ -91,11 +91,11 @@ export default {
 
   computed: {
     AccordionHeader() {
-      let color = this.backgroundColor ? this.backgroundColor : Couleurs.dark_blue
+      let color = this.backgroundColor ? this.backgroundColor : 'var(--secondary-color)'
       let borderColor = this.borderColor ? this.borderColor : Couleurs.white
       if (this.isOpen) {
         color = this.backgroundColorOpen ? this.backgroundColorOpen : Couleurs.white
-        borderColor = this.borderColorOpen ? this.borderColorOpen : Couleurs.dark_blue
+        borderColor = this.borderColorOpen ? this.borderColorOpen : 'var(--secondary-color)'
       }
       return {
         "background-color": color,
@@ -113,7 +113,7 @@ export default {
     AccordionTitle() {
         let color = this.backgroundColorOpen ? this.backgroundColorOpen : Couleurs.white 
         if (this.isOpen) {
-            color = this.backgroundColor ? this.backgroundColor : Couleurs.dark_blue
+            color = this.backgroundColor ? this.backgroundColor : 'var(--secondary-color)'
         }
 
         if (this.writenColorOpen) {
@@ -136,7 +136,7 @@ export default {
     AccordionArrow() {
         let color = this.backgroundColorOpen ? this.backgroundColorOpen : Couleurs.white 
         if (this.isOpen) {
-            color = this.backgroundColor ? this.backgroundColor : Couleurs.dark_blue
+            color = this.backgroundColor ? this.backgroundColor : 'var(--secondary-color)'
         }
 
         if (this.writenColorOpen) {

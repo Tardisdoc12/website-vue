@@ -103,8 +103,8 @@
                             type="submit"
                             class="appearance-none button-base"
                             :style="{
-                                '--btn-bg' : isDisable ? Couleurs.gris_pale : Couleurs.main_blue,
-                                '--btn-hover-bg' : isDisable ? Couleurs.gris_pale : Couleurs.dark_blue,
+                                '--btn-bg' : isDisable ? Couleurs.gris_pale : Couleurs.main_color,
+                                '--btn-hover-bg' : isDisable ? Couleurs.gris_pale : 'var(--secondary-color)',
                             }"
                         >
                             Mettre à jour le document

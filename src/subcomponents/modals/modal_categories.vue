@@ -39,8 +39,8 @@
                         type="submit"
                         class="appearance-none button-base"
                         :style="{
-                            '--btn-bg' : isDisable ? Couleurs.cyan : Couleurs.main_blue,
-                            '--btn-hover-bg' : isDisable ? Couleurs.cyan : Couleurs.dark_blue
+                            '--btn-bg' : isDisable ? Couleurs.cyan : Couleurs.main_color,
+                            '--btn-hover-bg' : isDisable ? Couleurs.cyan : 'var(--secondary-color)'
                         }"
                     >
                         Ajouter la catégorie

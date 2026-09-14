@@ -1,10 +1,10 @@
 <template>
     <DepliantWindow
         :title="titleInformations"
-        :backgroundColorOpen="Couleurs.dark_blue"
+        :backgroundColorOpen="'var(--secondary-color)'"
         :writenColorOpen="Couleurs.white"
-        :border-color="Couleurs.dark_blue"
-        :border-color-open="Couleurs.dark_blue"
+        :border-color="'var(--secondary-color)'"
+        :border-color-open="'var(--secondary-color)'"
         :is-opoen-forced="true"
         :width="'95%'"
     >
@@ -70,8 +70,8 @@
                 class="appearance-none"
                 :style="{
                     display: 'inline-block',
-                    color: Couleurs.main_blue,
-                    border: '1px solid ' + `${Couleurs.main_blue}`,
+                    color: Couleurs.main_color,
+                    border: '1px solid ' + `${Couleurs.main_color}`,
                     padding: '0.3rem 0.3rem',
                     borderRadius: '0.375rem',
                     backgroundColor: Couleurs.white,
@@ -85,8 +85,8 @@
                 class="appearance-none"
                 :style="{
                     display: 'inline-block',
-                    color: Couleurs.main_blue,
-                    border: '1px solid ' + `${Couleurs.main_blue}`,
+                    color: Couleurs.main_color,
+                    border: '1px solid ' + `${Couleurs.main_color}`,
                     padding: '0.3rem 0.3rem',
                     borderRadius: '0.375rem',
                     backgroundColor: Couleurs.white,
@@ -106,10 +106,10 @@
 
     <DepliantWindow
         :title="titleUrgences"
-        :backgroundColorOpen="'#2d5c7f'"
+        :backgroundColorOpen="'var(--secondary-color)'"
         :writenColorOpen="'#FFFFFF'"
-        :border-color="'#2d5c7f'"
-        :border-color-open="'#2d5c7f'"
+        :border-color="'var(--secondary-color)'"
+        :border-color-open="'var(--secondary-color)'"
         :is-opoen-forced="true"
         :width="'95%'"
     >
@@ -148,8 +148,8 @@
                 class="appearance-none"
                 :style="{
                     display: 'inline-block',
-                    color: '#245473',
-                    border: '1px solid #245473',
+                    color: Couleurs.main_color,
+                    border: '1px solid ' + Couleurs.main_color,
                     padding: '0.3rem 0.3rem',
                     borderRadius: '0.375rem',
                     backgroundColor: 'white',
@@ -163,8 +163,8 @@
                 class="appearance-none"
                 :style="{
                     display: 'inline-block',
-                    color: '#245473',
-                    border: '1px solid #245473',
+                    color: Couleurs.main_color,
+                    border: '1px solid ' + Couleurs.main_color,
                     padding: '0.3rem 0.3rem',
                     borderRadius: '0.375rem',
                     backgroundColor: 'white',

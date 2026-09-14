@@ -13,11 +13,11 @@
                 type="button"
                 :style="{
                     display: 'inline-block',
-                    color: activeIndex === i ? Couleurs.white : Couleurs.main_blue,
+                    color: activeIndex === i ? Couleurs.white : Couleurs.main_color,
                     padding: '1.0rem 1.0rem',
                     borderRadius: '9999px',
-                    backgroundColor: activeIndex === i ? Couleurs.main_blue : Couleurs.white,
-                    border: `2px solid ${Couleurs.main_blue}`,
+                    backgroundColor: activeIndex === i ? Couleurs.main_color : Couleurs.white,
+                    border: `2px solid ${Couleurs.main_color}`,
                 }"
             >
                 {{ label }}
@@ -145,6 +145,7 @@ import apiFavoris from "@/javascript/api/axios_favoris"
 
 export default {
     async mounted() {
+        console.log(this.$settings.colors)
         const results_2 = await apiSources.get_sources()
         const data = results_2.data
         // On recherche qui est l'utilisateur connecté pour afficher les bonnes informations
