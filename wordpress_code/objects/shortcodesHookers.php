@@ -117,25 +117,8 @@ class ShortcodesHookers {
             $this->shortcodes_name
         );
 
-        $color = [
-            'main_color'          => get_option('main_color', '#000000'),
-            'secondary_color'     => get_option('secondary_color', '#000000'),
-            'validate_color'      => get_option('validate_color', '#000000'),
-            'cancel_color'        => get_option('cancel_color', '#000000'),
-            'depliant_background_color' => get_option('depliant_background_color', '#000000'),
-            'deactivate_button_classic_color'      => get_option('deactivate_button_classic_color', '#000000'),
-            'disable_main_color'      => get_option('disable_main_color', '#000000'),
-            'validate_hover_color'      => get_option('validate_hover_color', '#000000'),
-            'cancel_hover_color'        => get_option('cancel_hover_color', '#000000'),
-            'color_button_file' => get_option('color_button_file', '#000000'),
-            'writing_main_color' => get_option('writing_main_color', '#FFFFFF'),
-            'validate_disabled_color' => get_option('validate_disabled_color', '#000000'),
-            'cancel_disabled_color' => get_option('cancel_disabled_color', '#000000'),
-        ];
-
         wp_localize_script($name_modules, 'MON_PLUGIN_SETTINGS', [
             'categories'         => get_option('mon_plugin_categories', []),
-            'colors' => $color,
         ]);
 
         wp_localize_script($name_modules, 'MyPluginData', [
