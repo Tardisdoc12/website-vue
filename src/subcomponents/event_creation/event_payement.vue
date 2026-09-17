@@ -115,9 +115,9 @@ export default {
     data() {
         return {
             isChangedTitle: false,
-            payementTitle: "",
-            payementAmountAdherent: 0,
-            payementAmountNonAdherent: 0
+            payementTitle: this.EventPayementTitle,
+            payementAmountAdherent: this.EventsPayementAdherent,
+            payementAmountNonAdherent: this.EventsPayementNonAdherent
         };
     },
 
