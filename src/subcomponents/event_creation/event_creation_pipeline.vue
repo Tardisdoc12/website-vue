@@ -1,5 +1,24 @@
 <template>
     <div style="margin-left: 20px; margin-right: 20px;margin-top: 10px;">
+         <!-- Onglets de navigation -->
+        <div class="steps-tabs">
+            <button
+                v-for="(tab, index) in OngletList"
+                :key="index"
+                type="button"
+                class="step-tab"
+                :class="{ active: steps === index }"
+                @click="goToStep(index)"
+            >
+                <span class="step-tab-index">{{ index + 1 }}</span>
+                {{ tab }}
+            </button>
+        </div>
+
+        <div v-if="!checkRequireField">
+            <p style="color: red;">Veuillez remplir tous les champs requis.</p>
+        </div>
+
         <EventGeneral
             v-if="steps == 0"
             v-model:titleForm="event.title"
@@ -16,6 +35,7 @@
             v-model:categorieSelected="event.categorie"
             v-model:placeSelected="event.place"
             v-model:categorieToSelect="categorieSelectedForEvent"
+            v-model:isCheckedSavePlace="isCheckedSavePlace",
             :placesEvent="placesEvent"
             @next="handleNext"
             @previous="handlePrevious"
@@ -37,12 +57,40 @@
             v-if="steps == 3"
             :canAdherentPayement="categorieSelectedForEvent.adherent_payant"
             :canNonAdherentPayement="categorieSelectedForEvent.non_adherent_payant"
-            v-model:payementTitle="event.payementTitle"
-            v-model:payementAmountAdherent="event.payementAmountAdherent"
-            v-model:payementAmountNonAdherent="event.payementAmountNonAdherent"
+            v-model:EventPayementTitle="event.payementTitle"
+            v-model:EventsPayementAdherent="event.payementAmountAdherent"
+            v-model:EventsPayementNonAdherent="event.payementAmountNonAdherent"
             @create="handleCreate"
             @previous="handlePrevious"
         />
+
+                
+        <div style="margin-top:10px;margin-bottom:10px;" class="flex justify-center gap-3">
+            <button
+                type="button"
+                class="appearance-none button-base"
+                :style="{
+                    '--btn-bg':'var(--cancel-color)',
+                    '--btn-hover-bg':'var(--cancel-hover-color)'
+                }"
+                @click="handleCancel"
+            >
+                Annuler
+            </button>
+
+            <button
+                type="button"
+                @click="handleCreate"
+                class="appearance-none button-base"
+                :disabled="!checkRequireField"
+                :style="{
+                    '--btn-bg': checkRequireField ? 'var(--validate-color)' : 'var(--validate-disabled-color)',
+                    '--btn-hover-bg': checkRequireField ? 'var(--validate-hover-color)' : 'var(--validate-disabled-color)',
+                }"
+            >
+                Créer
+            </button>
+        </div>
     </div>
 </template>
 
@@ -140,6 +188,7 @@ export default {
         return {
             editor: null,
             categorieSelectedForEvent: {},
+            isCheckedSavePlace: false,
             event: {
                 title: '',
                 startDate: '',
@@ -164,26 +213,63 @@ export default {
     },
 
     computed: {
+        checkRequireField(){
+            const requiredFields = [
+                this.event.categorie,
+                this.event.place,
+                this.event.title,
+                this.event.startDate,
+            ]
+            for (const field of requiredFields) {
+                if (!field) {
+                    return false
+                }
+            }
+
+            if (this.HasPayement) {
+                const payementFields = [
+                ]
+                if (this.categorieSelectedForEvent.adherent_payant) {
+                    payementFields.push(this.event.payementAmountAdherent)
+                }
+                if (this.categorieSelectedForEvent.non_adherent_payant) {
+                    payementFields.push(this.event.payementAmountNonAdherent)
+                }
+
+                for (const field of payementFields) {
+                    if (!field) {
+                        return false
+                    }
+                }
+            }
+
+            return true
+        },
+        OngletList() {
+            let tablist = ['Général', 'Catégorie & lieu', 'Places',]
+            if (this.HasPayement) {
+                tablist.push('Paiement')
+            }
+
+            return tablist
+        },
+
         descriptionForm: {
             get() { return this.editor.getHTML() },
             set(newValue) { this.editor.commands.setContent(newValue) }
+        },
+
+        HasPayement: {
+            get() {
+                return this.categorieSelectedForEvent.adherent_payant || this.categorieSelectedForEvent.non_adherent_payant
+            },
+            set(val) {
+                // This setter can be used if you want to update the underlying data when HasPayement changes
+            }
         }
     },
 
     methods: {
-        handleNext() {
-            if (this.event.description !== this.descriptionForm) {
-                this.event.description = this.descriptionForm
-            }
-            this.isFree = !(this.categorieSelectedForEvent.adherent_payant || this.categorieSelectedForEvent.non_adherent_payant)
-            
-            this.steps++
-        },
-
-        handlePrevious() {
-            this.steps--
-        },
-
         async createEvent(event) {
             if (event.endDate !== '') {
                 if (new Date(event.startDate) >= new Date(event.endDate)) {
@@ -195,12 +281,28 @@ export default {
                 event.endDate = null;
             }
 
+            this.event.description = this.descriptionForm
+            if (!this.event.payementTitle){
+                this.event.payementTitle = this.event.title + " - " + this.event.startDate
+            }
             const response = await eventsService.createEvent(event)
             return response;
         },
 
+        goToStep(index) {
+            this.steps = index
+        },
+
 
         async handleCreate() {
+            const places = this.placesEvent.filter(place => place.name === this.event.place);
+            if (!places.length && this.isCheckedSavePlace) {
+                const response = await placesApi.add_place({ name: this.event.place });
+                if (response?.data?.success) {
+                    this.$emit('update:placeSelected', response.data.places);
+                }
+            }
+
             if(!this.isUpdate){
                 const response = await this.createEvent(this.event)
                 if (this.onSuccess) {
@@ -228,3 +330,55 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.steps-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.step-tab {
+    appearance: none;
+    background: none;
+    border: none;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    color: #888;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.step-tab:hover {
+    color: var(--main-color, #333);
+}
+
+.step-tab.active {
+    color: var(--main-color, #333);
+    font-weight: 600;
+    border-bottom-color: var(--main-color, #333);
+}
+
+.step-tab-index {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #e0e0e0;
+    color: #666;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.step-tab.active .step-tab-index {
+    background: var(--main-color, #333);
+    color: white;
+}
+</style>

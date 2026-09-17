@@ -1,67 +1,46 @@
 <template>
-    <form @submit.prevent="handleSubmit" class="space-y-4">
-        <!-- Titre -->
-        <div class="flex flex-col gap-1" style="margin-bottom:10px;">
-            <label class="block font-medium">Titre</label>
-            <input v-model="Title" type="text" class="w-full border p-1 rounded" required />
-        </div>
+    <!-- Titre -->
+    <div class="flex flex-col gap-1" style="margin-bottom:10px;">
+        <label class="block font-medium">Titre <span style="color:darkred">*</span></label>
+        <input v-model="Title" type="text" class="w-full border p-1 rounded" required />
+    </div>
 
-        <!-- Date de début -->
-        <div style="margin-bottom:10px;">
-            <label class="block font-medium">Date et heure de début</label>
-            <input v-model="StartDate" type="datetime-local" class="w-full border p-1 rounded" required />
-        </div>
+    <!-- Date de début -->
+    <div style="margin-bottom:10px;">
+        <label class="block font-medium">Date et heure de début <span style="color:darkred">*</span></label>
+        <input v-model="StartDate" type="datetime-local" class="w-full border p-1 rounded" required />
+    </div>
 
-        <!-- Date de fin -->
-        <div style="margin-bottom:10px;">
-            <label class="block font-medium">Date et heure de fin</label>
-            <input v-model="EndDate" type="datetime-local" class="w-full border p-1 rounded" />
-        </div>
+    <!-- Date de fin -->
+    <div style="margin-bottom:10px;">
+        <label class="block font-medium">Date et heure de fin</label>
+        <input v-model="EndDate" type="datetime-local" class="w-full border p-1 rounded" />
+    </div>
 
-        <!-- Description -->
-        <div class="rte-wrap">
-            <label class="block font-medium">Description</label>
-            <div class="rte-box">
-                <div class="rte-toolbar" v-if="editor">
-                    <button type="button" class="rte-btn" @click="editor.chain().focus().toggleBold().run()" :class="{ active: editor.isActive('bold') }">
-                        <b>G</b>
-                    </button>
-                    <button type="button" class="rte-btn" @click="editor.chain().focus().toggleItalic().run()" :class="{ active: editor.isActive('italic') }">
-                        <i>I</i>
-                    </button>
-                    <button type="button" class="rte-btn" @click="editor.chain().focus().toggleUnderline().run()" :class="{ active: editor.isActive('underline') }">
-                        <u>S</u>
-                    </button>
-                    <div class="rte-sep"></div>
-                    <div class="rte-color-wrap">
-                        <div class="rte-color-btn" :style="{ background: Color }">
-                            <input type="color" v-model="Color" />
-                        </div>
+    <!-- Description -->
+    <div class="rte-wrap">
+        <label class="block font-medium">Description</label>
+        <div class="rte-box">
+            <div class="rte-toolbar" v-if="editor">
+                <button type="button" class="rte-btn" @click="editor.chain().focus().toggleBold().run()" :class="{ active: editor.isActive('bold') }">
+                    <b>G</b>
+                </button>
+                <button type="button" class="rte-btn" @click="editor.chain().focus().toggleItalic().run()" :class="{ active: editor.isActive('italic') }">
+                    <i>I</i>
+                </button>
+                <button type="button" class="rte-btn" @click="editor.chain().focus().toggleUnderline().run()" :class="{ active: editor.isActive('underline') }">
+                    <u>S</u>
+                </button>
+                <div class="rte-sep"></div>
+                <div class="rte-color-wrap">
+                    <div class="rte-color-btn" :style="{ background: Color }">
+                        <input type="color" v-model="Color" />
                     </div>
                 </div>
-                <EditorContent :editor="editor" class="rte-content" />
             </div>
+            <EditorContent :editor="editor" class="rte-content" />
         </div>
-
-        <!-- Submit Button -->
-        <div style="margin-top:10px;margin-bottom:10px;" class="flex justify-center gap-3">
-            <button
-                type="button"
-                class="appearance-none button-base"
-                @click="Cancel"
-                :style="{
-                    '--btn-bg': 'var(--cancel-color)',
-                    '--btn-hover-bg': 'var(--cancel-hover-color)',
-                }"
-            >
-                Annuler
-            </button>
-
-            <button type="submit" class="appearance-none button-base">
-                Suivant
-            </button>
-        </div>
-    </form>
+    </div>
 </template>
 
 <script>

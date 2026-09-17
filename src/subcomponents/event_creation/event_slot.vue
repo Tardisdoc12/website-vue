@@ -1,63 +1,35 @@
 <template>
-    <form @submit.prevent="handleSubmit" class="space-y-4">
-        
-         <!-- limité dans le nombre de place -->
-        <div class="flex items-center space-x-2" style="margin-bottom:10px;">
-            <label class="font-medium" style="padding: 2px;">Nombre de place limité pour les adhérents :</label>
-            <input type="checkbox" v-model="isChecked"/>
+    <!-- limité dans le nombre de place -->
+    <div class="flex items-center space-x-2" style="margin-bottom:10px;">
+        <label class="font-medium" style="padding: 2px;">Nombre de place limité pour les adhérents :</label>
+        <input type="checkbox" v-model="isChecked"/>
+    </div>
+
+    <!-- Nombre de places -->
+    <div v-if="isChecked" style="margin-bottom:10px;">
+        <label class="block font-medium">Nombre de places pour les adhérents</label>
+        <input v-model.number="subscribeSlotsCount" type="number" min="1" class="w-full border p-1 rounded" required />
+    </div>
+
+    <!-- Nombre de places -->
+    <div style="margin-bottom:10px;">
+        <label class="block font-medium">Nombre de places pour les non-adhérents</label>
+        <input v-model.number="nonsubscribeSlotsCount" type="number" min="0" class="w-full border p-1 rounded" required />
+    </div>
+
+    <template v-if="canAttente">
+        <!-- Liste d'attentes -->
+        <div style="margin-bottom: 10px;display: flex; align-items: center; gap: 8px;">
+            <label class="block font-medium">Ajouter une liste d'attente?</label>
+            <input type="checkbox" v-model="isCheckedAttente"/>
         </div>
 
-        <!-- Nombre de places -->
-        <div v-if="isChecked" style="margin-bottom:10px;">
-            <label class="block font-medium">Nombre de places pour les adhérents</label>
-            <input v-model.number="subscribeSlotsCount" type="number" min="1" class="w-full border p-1 rounded" required />
+        <div style="margin-bottom: 10px;" v-if="isCheckedAttente">
+            <label class="block font-medium">Nombre de place dans la liste d'attente</label>
+            <input type="number" v-model.number="attenteSlotsCount" min="0" class="w-full border p-1 rounded" required />
         </div>
+    </template>
 
-        <!-- Nombre de places -->
-        <div style="margin-bottom:10px;">
-            <label class="block font-medium">Nombre de places pour les non-adhérents</label>
-            <input v-model.number="nonsubscribeSlotsCount" type="number" min="0" class="w-full border p-1 rounded" required />
-        </div>
-
-        <template v-if="canAttente">
-            <!-- Liste d'attentes -->
-            <div style="margin-bottom: 10px;display: flex; align-items: center; gap: 8px;">
-                <label class="block font-medium">Ajouter une liste d'attente?</label>
-                <input type="checkbox" v-model="isCheckedAttente"/>
-            </div>
-
-            <div style="margin-bottom: 10px;" v-if="isCheckedAttente">
-                <label class="block font-medium">Nombre de place dans la liste d'attente</label>
-                <input type="number" v-model.number="attenteSlotsCount" min="0" class="w-full border p-1 rounded" required />
-            </div>
-        </template>
-        
-        <!-- Submit Button -->
-        <div style="margin-top:10px;margin-bottom:10px;" class="flex justify-center gap-3">
-            <button
-                type="button"
-                class="appearance-none button-base"
-                @click="handlePrevious"
-            >
-                Précédent
-            </button>
-
-            <button v-if="!isFree" type="submit" class="appearance-none button-base">
-                Suivant
-            </button>
-            <button v-else
-                type="button"
-                @click="handleCreate"
-                class="appearance-none button-base"
-                :style="{
-                    '--btn-bg': 'var(--validate-color)',
-                    '--btn-hover-bg': 'var(--validate-hover-color)'
-                }"
-            >
-                Créer
-            </button>
-        </div>
-    </form>
 </template>
 
 <script>
@@ -144,18 +116,5 @@ export default {
             }
         }
     },
-
-    methods: {
-        handlePrevious() {
-            this.$emit('previous')
-        },
-
-        handleSubmit() {
-            this.$emit('next')
-        },
-        handleCreate() {
-            this.$emit('create')
-        }
-    }
 }
 </script>

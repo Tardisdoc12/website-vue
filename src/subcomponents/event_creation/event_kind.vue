@@ -1,73 +1,60 @@
 <template>
-    <form @submit.prevent="handleSubmit" class="space-y-4">
-        <!-- Catégorie -->
-        <div style="margin-bottom:10px;">
-            <select
-                v-model="categorieComp"
-                class="w-full border p-1 rounded"
-                required
+    <!-- Catégorie -->
+    <div style="margin-bottom:10px;">
+        <label class="block font-medium">
+            Catégorie <span style="color:darkred">*</span>
+        </label>
+        <select
+            v-model="categorieComp"
+            class="w-full border p-1 rounded"
+            required
+        >
+            <option disabled value="">-- Choisir une catégorie --</option>
+            <option
+                v-for="cat in settingsCategories"
+                :key="cat.nom"
+                :value="cat"
             >
-                <option disabled value="">-- Choisir une catégorie --</option>
-                <option
-                    v-for="cat in settingsCategories"
-                    :key="cat.nom"
-                    :value="cat"
-                >
-                    {{ cat.nom }}
-                </option>
-            </select>
-        </div>
+                {{ cat.nom }}
+            </option>
+        </select>
+    </div>
 
-        <!-- Ajout de nouveau lieu -->
-        <div style="margin-bottom: 10px;display: flex; align-items: center; gap: 8px;">
-            <label class="block font-medium">Nouveau lieu</label>
-            <input type="checkbox" v-model="isCheckedPlace"/>
-        </div>
+    <!-- Ajout de nouveau lieu -->
+    <div style="margin-bottom: 10px;display: flex; align-items: center; gap: 8px;">
+        <label class="block font-medium">Nouveau lieu</label>
+        <input type="checkbox" v-model="isCheckedPlace"/>
+    </div>
 
-        <!-- Lieu -->
-        <div style="margin-bottom:10px;" v-if="isCheckedPlace">
-            <label class="block font-medium">Lieu</label>
-            <input
-                v-model="place"
-                type="text"
-                class="w-full border p-1 rounded"
-                required
-            />
-        </div>
-        <div style="margin-bottom:10px;" v-else>
-            <label class="block font-medium">Lieu</label>
-            <select
-                v-model="place"
-                class="w-full border p-1 rounded"
-                required
-            >
-                <option disabled value="">-- Choisir un lieu --</option>
-                <option v-for="place in placesEvent" :key="place.id" :value="place.name">
-                    {{ place.name }}
-                </option>
-            </select>
-        </div>
+    <!-- Lieu -->
+    <div style="margin-bottom:10px;" v-if="isCheckedPlace">
+        <label class="block font-medium">Lieu <span style="color:darkred">*</span></label>
+        <input
+            v-model="place"
+            type="text"
+            class="w-full border p-1 rounded"
+            required
+        />
+    </div>
+    <div style="margin-bottom:10px;" v-else>
+        <label class="block font-medium">Lieu <span style="color:darkred">*</span></label>
+        <select
+            v-model="place"
+            class="w-full border p-1 rounded"
+            required
+        >
+            <option disabled value="">-- Choisir un lieu --</option>
+            <option v-for="place in placesEvent" :key="place.id" :value="place.name">
+                {{ place.name }}
+            </option>
+        </select>
+    </div>
 
-        <div v-if="isCheckedPlace" style="margin-bottom: 10px;display: flex; align-items: center; gap: 8px;">
-            <label class="block font-medium">Sauvegarder le nouveau lieu</label>
-            <input type="checkbox" v-model="isCheckedSavePlace"/>
-        </div>
+    <div v-if="isCheckedPlace" style="margin-bottom: 10px;display: flex; align-items: center; gap: 8px;">
+        <label class="block font-medium">Sauvegarder le nouveau lieu</label>
+        <input type="checkbox" v-model="isCheckedSavePlaceComp"/>
+    </div>
 
-        <!-- Submit Button -->
-        <div style="margin-top:10px;margin-bottom:10px;" class="flex justify-center gap-3">
-            <button
-                type="button"
-                class="appearance-none button-base"
-                @click="handlePrevious"
-            >
-                Précédent
-            </button>
-
-            <button type="submit" class="appearance-none button-base">
-                Suivant
-            </button>
-        </div>
-    </form>
 </template>
 
 <script>
@@ -80,6 +67,7 @@ export default {
         'update:categorieSelected',
         'update:placeSelected',
         'update:categorieToSelect',
+        'update:isCheckedSavePlace',
         'next',
         'previous',
     ],
@@ -108,6 +96,11 @@ export default {
         placeSelected: {
             type: String,
             default: '',
+        },
+
+        isCheckedSavePlace: {
+            type: Boolean,
+            default: false,
         }
     },
 
@@ -115,12 +108,17 @@ export default {
         return {
             settingsCategories: this.$settings.categories,
             isCheckedPlace: false || this.placeSelected === '',
-            isCheckedSavePlace: false,
+            isCheckedSavePlaceBool: this.isCheckedSavePlace,
             categorieToSelectEvent: this.categorieToSelect,
         }
     },
 
     computed: {
+        isCheckedSavePlaceComp: {
+            get() { return this.isCheckedSavePlace },
+            set(val) { this.$emit('update:isCheckedSavePlace', val) }
+        },
+
         categorieComp: {
             get() { return this.categorieToSelectEvent },
             set(val) {
@@ -135,26 +133,5 @@ export default {
             set(val) { this.$emit('update:placeSelected', val) }
         }
     },
-
-    methods:{
-        selectCanAttente(categorie) {
-            this.categorieComp = categorie
-        },
-
-        async handleSubmit() {
-            const places = this.placesEvent.filter(place => place.name === this.place);
-            if (!places.length && this.isCheckedSavePlace) {
-                const response = await placesApi.add_place({ name: this.place });
-                if (response?.data?.success) {
-                    this.$emit('update:placeSelected', response.data.places);
-                }
-            }
-            this.$emit('next')
-        },
-
-        handlePrevious() {
-            this.$emit('previous')
-        }
-    }
 }
 </script>
