@@ -25,11 +25,11 @@
         :Date="event.startDate"
         :billeterie_url="event.billeterie_url"
     />
-    <ModificationEvent
+    <EventCreationPipeline
         v-if="stepsComputed == 3"
         :event-selected="event"
         :places-event="placesEvent"
-        @cancelSignal="Cancel"
+        @cancel="Cancel"
     />
     <UsersInEvent
         v-if="stepsComputed == 4"
@@ -44,21 +44,25 @@
         :event="event"
         @inscrit="() => {this.$emit('cancelSignal', this.isCancel)}"
     />
-    <DuplicationEvent
+    <DuplicationPipeline
         v-if="stepsComputed == 6"
         :event="event"
-        @cancelSignal="Cancel"
+        :places-events="placesEvent"
+        @cancel="Cancel"
     />
 </template>
 
 <script>
-import ModificationEvent from "@/subcomponents/event_inscribe/event_formulaire.vue"
+import EventCreationPipeline from "@/subcomponents/event_creation/event_creation_pipeline.vue"
+
 import PresentationsEvent from "@/subcomponents/event_inscribe/event_présentation.vue"
 import PayementEvent from "@/subcomponents/event_inscribe/event_payement.vue"
 import UsersInEvent from "@/subcomponents/event_inscribe/event_users.vue"
 import InscriptionEvent from "@/subcomponents/event_inscribe/event_inscription.vue"
 import EncadrantAddPerson from "@/subcomponents/event_inscribe/event_encadrant_add_person.vue"
-import DuplicationEvent from "@/subcomponents/event_inscribe/event_duplication.vue"
+
+import DuplicationPipeline from "@/subcomponents/event_duplication/duplication_pipeline.vue"
+
 import api from "@/javascript/api/axios_inscription"
 
 export default{
@@ -250,13 +254,13 @@ export default{
     },
 
     components: {
-        ModificationEvent,
+        EventCreationPipeline,
         PresentationsEvent,
         PayementEvent,
         UsersInEvent,
         InscriptionEvent,
         EncadrantAddPerson,
-        DuplicationEvent
+        DuplicationPipeline
     }
 }
 </script>

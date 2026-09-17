@@ -89,11 +89,14 @@ export default {
     },
     
     data() {
+        console.log(this.EventsPayementAdherent)
+        console.log(this.EventsPayementNonAdherent)
+        console.log(this.EventPayementTitle)
         return {
             isChangedTitle: this.EventPayementTitle !== "",
             payementTitle: this.EventPayementTitle,
-            payementAmountAdherent: this.EventsPayementAdherent,
-            payementAmountNonAdherent: this.EventsPayementNonAdherent
+            payementAmountAdherent: this.EventsPayementAdherent / 100,
+            payementAmountNonAdherent: this.EventsPayementNonAdherent / 100
         };
     },
 

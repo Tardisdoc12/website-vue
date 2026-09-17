@@ -15,10 +15,6 @@
             </button>
         </div>
 
-        <div v-if="!checkRequireField">
-            <p style="color: red;">Veuillez remplir tous les champs requis.</p>
-        </div>
-
         <EventGeneral
             v-if="steps == 0"
             v-model:titleForm="event.title"
@@ -55,34 +51,6 @@
             v-model:EventsPayementAdherent="event.payementAmountAdherent"
             v-model:EventsPayementNonAdherent="event.payementAmountNonAdherent"
         />
-
-                
-        <div style="margin-top:10px;margin-bottom:10px;" class="flex justify-center gap-3">
-            <button
-                type="button"
-                class="appearance-none button-base"
-                :style="{
-                    '--btn-bg':'var(--cancel-color)',
-                    '--btn-hover-bg':'var(--cancel-hover-color)'
-                }"
-                @click="handleCancel"
-            >
-                Annuler
-            </button>
-
-            <button
-                type="button"
-                @click="handleCreate"
-                class="appearance-none button-base"
-                :disabled="!checkRequireField"
-                :style="{
-                    '--btn-bg': checkRequireField ? 'var(--validate-color)' : 'var(--validate-disabled-color)',
-                    '--btn-hover-bg': checkRequireField ? 'var(--validate-hover-color)' : 'var(--validate-disabled-color)',
-                }"
-            >
-                {{ !isUpdate ? "Créer" : "Modifier"}}
-            </button>
-        </div>
     </div>
 </template>
 
@@ -93,12 +61,10 @@ import { Color } from '@tiptap/extension-color'
 import { TextStyle } from '@tiptap/extension-text-style'
 import { Underline } from '@tiptap/extension-underline'
 
-import EventKind from './event_kind.vue';
-import EventGeneral from './event_general.vue';
-import EventSlot from './event_slot.vue';
-import EventPayement from './event_payement.vue';
-
-import eventsService from '@/javascript/api/axios_events.js';
+import EventKind from '@/subcomponents/event_creation/event_kind.vue';
+import EventGeneral from '@/subcomponents/event_creation/event_general.vue';
+import EventSlot from '@/subcomponents/event_creation/event_slot.vue';
+import EventPayement from '@/subcomponents/event_creation/event_payement.vue';
 
 function formatDateFr(dateString) {
     if (!dateString) return ''
@@ -116,24 +82,15 @@ export default {
     name: "EventCreationPipeline",
 
     signals:[
-        'validate',
-        'cancel'
+        'update:eventSelected',
     ],
 
     props: {
-        onSuccess: {
-            type: Function,
-            default: null,
-        },
         eventSelected: {
             type: Object,
             default: null,
         },
         placesEvent: {
-            type: Array,
-            default: () => [],
-        },
-        billeteries: {
             type: Array,
             default: () => [],
         },
@@ -163,7 +120,7 @@ export default {
         }
     },
 
-        data() {
+    data() {
         return {
             editor: null,
             categorieSelectedForEvent: {},
@@ -192,6 +149,31 @@ export default {
     },
 
     computed: {
+        eventToDuplicate: {
+            get() {
+                return this.event
+            },
+            set(newValue) {
+                if (newValue.endDate !== '') {
+                    if (new Date(newValue.startDate) >= new Date(newValue.endDate)) {
+                            return
+                    }
+                }
+                else {
+                    newValue.endDate = null;
+                }
+
+                newValue.description = this.descriptionForm
+                if (!newValue.payementTitle){
+                    newValue.payementTitle = newValue.title + " - " + formatDateFr(newValue.startDate)
+                }
+
+                this.event = { ...newValue }
+                this.$emit('update:eventSelected', this.event)
+            }
+
+        },
+
         checkRequireField(){
             const requiredFields = [
                 this.event.categorie,
@@ -224,6 +206,7 @@ export default {
 
             return true
         },
+
         OngletList() {
             let tablist = ['Général', 'Catégorie & lieu', 'Places',]
             if (this.HasPayement) {
@@ -249,68 +232,9 @@ export default {
     },
 
     methods: {
-        async createEvent(event) {
-            if (event.endDate !== '') {
-                if (new Date(event.startDate) >= new Date(event.endDate)) {
-                    alert("La date de fin doit être après la date de début.")
-                    return
-                }
-            }
-            else {
-                event.endDate = null;
-            }
-
-            this.event.description = this.descriptionForm
-            if (!this.event.payementTitle){
-                this.event.payementTitle = this.event.title + " - " + formatDateFr(this.event.startDate)
-            }
-            const response = await eventsService.createEvent(event)
-            return response;
-        },
-
         goToStep(index) {
             this.steps = index
         },
-
-        formatDateFr(dateString) {
-            if (!dateString) return ''
-            const date = new Date(dateString)
-            if (isNaN(date.getTime())) return ''
-
-            const day = String(date.getDate()).padStart(2, '0')
-            const month = String(date.getMonth() + 1).padStart(2, '0')
-            const year = date.getFullYear()
-
-            return `${day}/${month}/${year}`
-        },
-
-
-        async handleCreate() {
-            const places = this.placesEvent.filter(place => place.name === this.event.place);
-            if (!places.length && this.isCheckedSavePlace) {
-                const response = await placesApi.add_place({ name: this.event.place });
-                if (response?.data?.success) {
-                    this.$emit('update:placeSelected', response.data.places);
-                }
-            }
-
-            if(!this.isUpdate){
-                const response = await this.createEvent(this.event)
-                if (this.onSuccess) {
-                    await this.onSuccess()
-                }
-            }
-            else{
-                const response = await eventsService.updateEvent(this.event.event_id, payload)
-                alert("Évènement modifié avec succés !")
-            }
-            this.$emit('validate', this.event)
-            this.$emit('cancel')
-        },
-
-        handleCancel() {
-            this.$emit('cancel')
-        }
     },
 
     components: {
