@@ -84,6 +84,7 @@ function emptyEvents() {
         payementTitle: '',
         payementAmountAdherent: 0,
         payementAmountNonAdherent: 0,
+        isCheckedSavePlace: false,
     }
 }
 
@@ -103,6 +104,7 @@ export default {
             events: [
                 {
                     ...this.event,
+                    isCheckedSavePlace: false,
                 }
             ]
         }
@@ -119,6 +121,7 @@ export default {
             this.events.push({
                 ...this.event,
                 startDate: this.events[this.currentStep].startDate,
+                isCheckedSavePlace: false,
             })
             this.currentStep = this.events.length - 1
         },
@@ -133,14 +136,32 @@ export default {
             this.currentStep++
         },
 
+        async createOneEvent(event) {
+            const places = this.placesEvents.filter(place => place.name === event.place);
+            if (!places.length && event.isCheckedSavePlace) {
+                
+                const response = await placesApi.add_place({ name: event.place });
+                if (!response?.data?.success) {
+                    console.error("❌ Erreur lors de l'ajout du lieu:", response?.data?.message || "Unknown error");
+                }
+            }
+
+            const response = await this.createEvent(this.event)
+            if (response?.data?.success) {
+                return true
+            }
+            return false
+        },
 
         async handleSubmit() {
             this.isSubmitting = true
             try {
-                console.log("on aurait dupliquer pour:")
+                let successCount = 0
                 for (const event of this.events) {
-                    console.log(event)
+                    const success = await this.createOneEvent(event)
+                    if (success) successCount++
                 }
+                console.log(`✅ ${successCount} sur ${this.events.length} événements créés avec succès.`)
             } catch (err) {
                 console.error("❌ Erreur inscription:", err)
             } finally {

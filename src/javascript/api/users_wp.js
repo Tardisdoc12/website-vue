@@ -13,6 +13,15 @@ export default {
         }
     },
 
+    async get_user_connected() {
+        try {
+            const response = await api.get("/user_connected")
+            return response
+        } catch (err) {
+            throw err
+        }
+    },
+
     async get_adherents() {
         try{
             const response = await api.get("/adherents/")

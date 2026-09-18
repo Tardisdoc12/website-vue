@@ -86,7 +86,6 @@ async function loadDirectory() {
             apiMedia.get_thumbnails_medias(urls_preview)
         ])
 
-        console.log("Thumbnails fetched:", resPreview.data.thumbnails)
 
         // Forcer la réactivité avec map() au lieu de muter directement
         content.value.files = content.value.files.map(file => ({
@@ -94,7 +93,6 @@ async function loadDirectory() {
             thumbnail_100: res100.data.thumbnails[file.id] ?? file.thumbnail_100,
             thumbnail_300: resPreview.data.thumbnails[file.id] ?? file.thumbnail_300,
         }))
-        console.log("Thumbnails updated:", content.value.files)
     }
     
 

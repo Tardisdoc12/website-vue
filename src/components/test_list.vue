@@ -108,7 +108,6 @@ export default{
             this.mediaSelected = null
         },
         handleMediaClick(media) {
-            console.log("Media clicked:", media);
             this.mediaSelected = media;
             this.isOpenModal = true;
         },

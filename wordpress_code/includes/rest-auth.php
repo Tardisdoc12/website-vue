@@ -62,31 +62,13 @@ function monplugin_login_user(WP_REST_Request $request) {
     ]);
 }
 
-// function myplugin_connect_user(WP_REST_Request $request) {
-//     $user_id = $request->get_param('user_id');
-//     $user = get_user_by('id', $user_id);
-
-//     if (!$user) {
-//         return new WP_REST_Response(array(
-//             'message' => 'Utilisateur introuvable'
-//         ), 404);
-//     }
-
-//     // Définit l’utilisateur courant
-//     wp_set_current_user($user->ID);
-//     wp_set_auth_cookie($user->ID);
-
-//     $connexion_time = get_option('JWT_TIME_CONNEXION', 3600);
-
-//     $jwt_token = AssoSimpleJWT::generate(['wp_user_id' => $user->ID], $connexion_time);
-
-//     return array(
-//         'message' => 'Utilisateur défini',
-//         'id' => $user->ID,
-//         'username' => $user->user_login,
-//         'jwt_token' => $jwt_token
-//     );
-// }
+add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1', '/get_user_from_jwt', [
+        'methods' => 'GET',
+        'callback' => 'monplugin_get_user_from_jwt',
+        'permission_callback' => 'monplugin_verify_csrf',
+    ]);
+});
 
 //------------------------------------------------------------------------------
 // End of File

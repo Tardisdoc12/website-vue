@@ -31,7 +31,8 @@
 <script>
 import axiosEvent from '@/javascript/api/axios_events.js'
 import EventPipeline from '@/subcomponents/event_inscribe/event_pipeline.vue'
-import EventsFunctions from '@/javascript/constants/events_functions'
+
+import usersApi from '@/javascript/api/users_wp.js'
 
 export default {
     props:{
@@ -53,7 +54,7 @@ export default {
         try {
             const res = await axiosEvent.getEventByPostId(this.postId)
             this.eventData = {...res, event_id: res.id}
-            this.user = await EventsFunctions.isUserConnected()
+            this.user = (await usersApi.get_user_connected()).data.user
             if (this.eventData.users.filter(user => Number(user.wp_user_id == Number(this.user.ID)))){
                 this.user.events = [{event_id:this.eventData.event_id}]
             }

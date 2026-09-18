@@ -33,8 +33,9 @@ import CalendarModule from "@/subcomponents/unitary_elements/calendrier_componen
 import ModalCreateEvent from "@/subcomponents/modals/modal_creation_event.vue"
 import ModalEventInscription from "@/subcomponents/modals/modal_events.vue"
 import eventsService from '@/javascript/api/axios_events.js';
-import EventsFunctions from '@/javascript/constants/events_functions'
+
 import placesApi from '@/javascript/api/axios_places.js'
+import usersApi from '@/javascript/api/users_wp.js'
 
 export default {
     
@@ -56,7 +57,7 @@ export default {
         if(result.data.success){
             this.placesEvent = result.data.places
         }
-        this.user = await EventsFunctions.isUserConnected()
+        this.user = (await usersApi.get_user_connected()).data.user
         if(Object.keys(this.user).length !== 0){
             const eventsInscript = await eventsService.getEventUser(this.user.ID, this.user.email)
             this.user.events = eventsInscript.results ?? []

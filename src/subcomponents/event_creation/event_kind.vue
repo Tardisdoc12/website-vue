@@ -111,7 +111,6 @@ export default {
     },
 
     data() {
-        console.log(this.categorieToSelect)
         return {
             settingsCategories: this.$settings.categories,
             isCheckedPlaceBool: this.isCheckedPlace,

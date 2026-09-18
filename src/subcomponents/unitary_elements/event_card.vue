@@ -140,13 +140,9 @@ export default {
     computed: {
         isUpdated() {
             if (this.isInscrit) {
-                console.log("userEvents:", this.event.users)
-                console.log("userConnected:", this.userConnected)
                 const updateDate = this.event.update_date ? new Date(this.event.update_date) : null
                 const userInscription = this.event.users?.find(u => u.email === this.userConnected?.email)
-                console.log("userInscription:", userInscription)
                 const inscritDate = userInscription?.date_inscrit ? new Date(userInscription.date_inscrit) : null
-                console.log("updateDate:", updateDate, "inscritDate:", inscritDate)
                 const isUpdatedAfterInscription = updateDate && inscritDate && updateDate > inscritDate
                 return isUpdatedAfterInscription
             }

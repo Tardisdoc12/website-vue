@@ -418,7 +418,6 @@ export default {
         async handleSubmit() {
             this.isSubmitting = true
             try {
-                console.log("Submitting participants:", this.participants)
                 for (const participant of this.participants) {
                     const alreadyRegistered = this.event.users.some(u => u.email === participant.email)
                     if (alreadyRegistered) {

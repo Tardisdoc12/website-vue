@@ -93,7 +93,6 @@ export default {
                 if (!this.isChecked){
                     this.subscribePlace = -1;
                 }
-                console.log("subscribeSlots:", this.subscribeSlots, "isChecked:", this.isChecked);
                 this.$emit('update:subscribePlace', value);
             }
         },

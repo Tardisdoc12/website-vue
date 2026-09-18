@@ -120,6 +120,53 @@ function monplugin_get_user(WP_REST_Request $request) {
     ];
 }
 
+//------------------------------------------------------------------------------
+
+add_action('rest_api_init', function () {
+    register_rest_route('vue-plugin/v1','/user_connected',[
+        'methods' => 'GET',
+        'callback' => 'monplugin_get_user_connected',
+        'permission_callback' => 'monplugin_verify_csrf'
+    ]);
+});
+
+function monplugin_get_user_connected(WP_REST_Request $request) {
+    $user_id = get_current_user_id();
+    if (!$user_id) {
+        return [
+            "message" => "Utilisateur non connecté",
+            "user"    => null
+        ];
+    }
+
+    $user = get_userdata($user_id);
+
+    if (!$user) {
+        return [
+            "message" => "Utilisateur non trouvé",
+            "user"    => null
+        ];
+    }
+
+    // Construction de l'objet utilisateur
+    $user_data = [
+        "ID"            => $user->ID,
+        "email"         => $user->user_email,
+        "firstName"     => get_user_meta($user->ID, 'firstName', true),
+        "lastName"      => get_user_meta($user->ID, 'lastName', true),
+        "telephone"     => get_user_meta($user->ID, 'telephone', true),
+        "moto"          => get_user_meta($user->ID, 'moto', true),
+        "roles"         => $user->roles,
+        "urgence_phone" => get_user_meta($user->ID, 'urgence_phone', true),
+        "urgence_name"  => get_user_meta($user->ID, 'urgence_name', true),
+    ];
+
+    return [
+        "message" => "Success",
+        "user"    => $user_data
+    ];
+}
+
 //--------------------------------------------------------------------------------------
 
 add_action('rest_api_init', function () {

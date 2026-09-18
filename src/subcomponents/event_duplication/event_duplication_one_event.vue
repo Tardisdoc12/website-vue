@@ -29,7 +29,8 @@
             v-model:categorieSelected="event.categorie"
             v-model:placeSelected="event.place"
             v-model:categorieToSelect="categorieSelectedForEvent"
-            v-model:isCheckedSavePlace="isCheckedSavePlace",
+            v-model:isCheckedSavePlace="event.isCheckedSavePlace",
+            v-model:isCheckPlace="isCheckPlace"
             :placesEvent="placesEvent"
         />
 
@@ -124,7 +125,8 @@ export default {
         return {
             editor: null,
             categorieSelectedForEvent: {},
-            isCheckedSavePlace: false,
+            
+            isCheckPlace: false,
             event: {
                 title: '',
                 startDate: '',
@@ -138,6 +140,7 @@ export default {
                 payementTitle: '',
                 payementAmountAdherent: 0,
                 payementAmountNonAdherent: 0,
+                isCheckedSavePlace: false,
             },
             isFree: false,
             isCheckedHelloAsso: false || (this?.eventSelected?.billeterie_id != null && this?.eventSelected?.billeterie_id != "0"),

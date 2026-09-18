@@ -72,7 +72,6 @@ export default {
     },
 
     async mounted(){
-        console.log("Mounted EventPayement component")
         if (this.getBilleterieURL !== '') {
             return;
         }
@@ -87,10 +86,8 @@ export default {
             lastName: this.user.lastName,
             email: this.user.email,
         }
-        console.log("Data to send for payment intent:", data_to_send)
         try {
             const result = await apiPayment.createPaymentIntent(data_to_send);
-            console.log("Result from createPaymentIntent:", result);
             if (result?.data?.redirectUrl) {
                 this.redirectUrl = result.data.redirectUrl;
                 this.loading = false;

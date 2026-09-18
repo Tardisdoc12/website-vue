@@ -89,9 +89,6 @@ export default {
     },
     
     data() {
-        console.log(this.EventsPayementAdherent)
-        console.log(this.EventsPayementNonAdherent)
-        console.log(this.EventPayementTitle)
         return {
             isChangedTitle: this.EventPayementTitle !== "",
             payementTitle: this.EventPayementTitle,

@@ -1,6 +1,3 @@
-import { jwtDecode } from "jwt-decode"
-import api from "@/javascript/api/users_wp.js"
-
 function hexToRgb(hex) {
     // Supprime le # s'il est présent
     hex = hex.replace('#', '');
@@ -28,17 +25,5 @@ export default {
             return [main_color, second_color]
         }
         return [null, null]
-    }, 
-
-    async isUserConnected() {
-        const token = localStorage.getItem("mps_moto")
-        if (token) {
-            const decoded = jwtDecode(token)
-            const user_id = decoded.data.user.id
-            const user_info = await api.get_user(user_id)
-            const user = {...user_info.user}
-            return user
-        }
-        return {}
-    },     
+    },    
 }
