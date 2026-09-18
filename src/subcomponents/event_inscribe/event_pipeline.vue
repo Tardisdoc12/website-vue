@@ -17,9 +17,11 @@
         v-if="stepsComputed == 1"
         :event="event"
         :user="userConnected"
+        :participant-problem="participantProblem"
         :isAttente="isAttenteComp"
         @inscrit="onInscrit"
         @created_inscriptionId="onInscriptionId"
+        @no_places_available="onNoPlacesAvailable"
     />
     <PayementEvent
         v-if="stepsComputed == 2"
@@ -56,6 +58,12 @@
         :onSuccess="onSuccess"
         @cancel="Cancel"
     />
+    <EventProblemPlace
+        v-if="stepsComputed == 7"
+        v-model:participant-problem="participantProblem"
+        @cancelSignal="Cancel"
+        @continueSignal="ContinueInscribe"
+    />
 </template>
 
 <script>
@@ -66,6 +74,7 @@ import PayementEvent from "@/subcomponents/event_inscribe/event_payement.vue"
 import UsersInEvent from "@/subcomponents/event_inscribe/event_users.vue"
 import InscriptionEvent from "@/subcomponents/event_inscribe/event_inscription.vue"
 import EncadrantAddPerson from "@/subcomponents/event_inscribe/event_encadrant_add_person.vue"
+import EventProblemPlace from "@/subcomponents/event_inscribe/event_problem_place.vue"
 
 import DuplicationPipeline from "@/subcomponents/event_duplication/duplication_pipeline.vue"
 
@@ -119,6 +128,7 @@ export default{
             totalAmountPrice: 0,
             userToPay: {},
             inscriptionId: [],
+            participantProblem: null,
         }
     },
 
@@ -155,6 +165,14 @@ export default{
     },
 
     methods: {
+        ContinueInscribe() {
+            this.steps = 1
+        },
+        onNoPlacesAvailable(participantProblem) {
+            this.participantProblem = participantProblem
+            this.steps = 7
+        },
+
         onInscriptionId(inscriptionId) {
             this.inscriptionId.push(inscriptionId)
         },
@@ -290,7 +308,8 @@ export default{
         UsersInEvent,
         InscriptionEvent,
         EncadrantAddPerson,
-        DuplicationPipeline
+        DuplicationPipeline,
+        EventProblemPlace
     }
 }
 </script>

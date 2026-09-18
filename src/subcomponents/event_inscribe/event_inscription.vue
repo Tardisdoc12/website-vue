@@ -215,6 +215,7 @@
 <script>
 import inscritAPI from "@/javascript/api/axios_inscription"
 import { isEncadrant } from "@/javascript/constants/roles"
+import { computed } from 'vue'
 
 function emptyParticipant() {
     return {
@@ -237,21 +238,23 @@ function emptyParticipant() {
 export default {
     signals:[
         'inscrit',
-        'created_inscriptionId'
+        'created_inscriptionId',
+        'no_places_available'
     ],
 
     props: {
         event:  { type: Object, required: true },
         user:   { type: Object, required: true },
         isAttente: { type: Boolean, required: false, default: false },
+        participantProblem: { type: Object, required: false, default: null },
     },
 
     data() {
         return {
-            currentStep: 0,
+            currentStep: this.participantProblem ? this.participantProblem.length - 1 : 0,
             maxParticipants: 3,
             isSubmitting: false,
-            participants: [
+            participants: this.participantProblem ? this.participantProblem.map(p => ({...p })) : [
                 {
                     ...emptyParticipant(),
                     firstName: this.user?.firstName ?? "",
@@ -417,23 +420,70 @@ export default {
 
         async handleSubmit() {
             this.isSubmitting = true
+            const nonAdherentsCount = computed(() =>
+                {
+                    if (!this.event.users.length) return 0;
+                    return this.event.users.filter(u => u.is_adherent === "0" && u.status === "inscrit").length
+                }
+            )
+            const adherentsCount = computed(() =>
+                {
+                    if (!this.event.users.length) return 0;
+                    return this.event.users.filter(u => u.is_adherent === "1" && u.status === "inscrit").length
+                }
+            )
+
+            let placeAdherent = this.event.subscribePlace - adherentsCount.value
+            let placeNonAdherent = this.event.nonsubscribePlace - nonAdherentsCount.value
+            const hasInfinitePlaces = this.event.subscribePlace < 0
+
+            for (const participant of this.participants) {
+                this.event.users = this.event.users || []
+                const alreadyRegistered = this.event.users.some(u => u.email === participant.email)
+                if (alreadyRegistered) {
+                    alert(`Vous etes deja inscit pour cet evenement. Si vous avec deja effectué le reglement sur helloasso, vous pouvez ignorer ce message.`)
+                    return
+                }
+                participant.status = this.isAttente ? "attente" : "inscrit"
+
+                participant.payement_status = this.verify_payement_status(participant)
+
+                participant.name = `${participant.firstName} ${participant.lastName}`
+
+
+                const isAdherent = !participant.roles?.includes("non_adherent")
+
+                let probleme= {
+                    'participant_problem': participant,
+                    'all_participants': this.participants,
+                    'type': isAdherent ? 'adherent' : 'non_adherent'
+                }
+
+                if (isAdherent && !hasInfinitePlaces && placeAdherent <= 0) {
+                    alert(`Il n'y a plus de places disponibles pour les adhérents.`)
+                    this.$emit('no_places_available', probleme)
+                    return
+                }
+
+                if (!isAdherent && placeNonAdherent <= 0) {
+                    alert(`Il n'y a plus de places disponibles pour les non-adhérents.`)
+                    this.$emit('no_places_available', probleme)
+                    return
+                }
+
+                if (isAdherent) {
+                    placeAdherent--
+                } else {
+                    placeNonAdherent--
+                }
+            }
+
             try {
                 for (const participant of this.participants) {
-                    const alreadyRegistered = this.event.users.some(u => u.email === participant.email)
-                    if (alreadyRegistered) {
-                        alert(`Vous etes deja inscit pour cet evenement. Si vous avec deja effectué le reglement sur helloasso, vous pouvez ignorer ce message.`)
-                        return
-                    }
-                    participant.status = this.isAttente ? "attente" : "inscrit"
-
-                    participant.payement_status = this.verify_payement_status(participant)
-
-                    participant.name = `${participant.firstName} ${participant.lastName}`
-
+                    console.log("Participant being registered:", participant)
                     const res = await inscritAPI.create_inscrit(this.event.event_id, participant)
                     if (!res?.data?.success) throw new Error("Échec pour " + participant.name)
                     this.$emit('created_inscriptionId', res.data.inscription_id)
-
                 }
                 this.$emit('inscrit', this.participants)
             } catch (err) {
