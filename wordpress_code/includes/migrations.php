@@ -123,6 +123,34 @@ function monplugin_run_migrations() {
         $wpdb->query("ALTER TABLE $table_inscribes DROP COLUMN goal");
     }
 
+    $column = $wpdb->get_results("SHOW COLUMNS FROM $table_events LIKE 'billeterie_url'");
+    if (!empty($column)) {
+        $wpdb->query("ALTER TABLE $table_events DROP COLUMN billeterie_url");
+    }
+
+    $column = $wpdb->get_results("SHOW COLUMNS FROM $table_events LIKE 'billeterie_id'");
+    if (!empty($column)) {
+        $wpdb->query("ALTER TABLE $table_events DROP COLUMN billeterie_id");
+    }
+
+    $column_adherent_price = $wpdb->get_results("SHOW COLUMNS FROM $table_events LIKE 'adherent_price'");
+    if (empty($column_adherent_price)) {
+        $wpdb->query("ALTER TABLE $table_events ADD adherent_price DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER closed_inscription");
+    }
+
+    $column_non_adherent_price = $wpdb->get_results("SHOW COLUMNS FROM $table_events LIKE 'non_adherent_price'");
+    if (empty($column_non_adherent_price)) {
+        $wpdb->query("ALTER TABLE $table_events ADD non_adherent_price DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER adherent_price");
+    }
+
+    $column_payement_title = $wpdb->get_results("SHOW COLUMNS FROM $table_events LIKE 'payement_title'");
+    if (empty($column_payement_title)) {
+        $wpdb->query("ALTER TABLE $table_events ADD payement_title VARCHAR(255) DEFAULT NULL AFTER non_adherent_price");
+    }
+
+    $table_billeterie = $wpdb->prefix . "billetteries";
+    $wpdb->query("DROP TABLE IF EXISTS $table_billeterie");
+
     // --- 3️⃣ Flag pour éviter de relancer la migration ---
     update_option('monplugin_last_migration', time());
 }

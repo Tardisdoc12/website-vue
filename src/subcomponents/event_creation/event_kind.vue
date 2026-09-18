@@ -108,7 +108,7 @@ export default {
         console.log(this.categorieToSelect)
         return {
             settingsCategories: this.$settings.categories,
-            isCheckedPlace: false || this.placeSelected === '',
+            isCheckedPlace: false || !this.placeSelected === '',
             isCheckedSavePlaceBool: this.isCheckedSavePlace,
             categorieToSelectEvent: this.categorieToSelect,
         }

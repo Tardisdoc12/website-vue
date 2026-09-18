@@ -53,12 +53,7 @@ function monplugin_get_events(WP_REST_Request $request) {
     $result = [];
 
     foreach ($events as $event) {
-        if($event->billeterie_id) {
-            $billeterie = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_billeterie WHERE id = %d", $event->billeterie_id));
-            if ($billeterie) {
-                $event->billeterie_url = $billeterie->url;
-            }
-        }
+        
         // Récupérer les utilisateurs inscrits pour cet événement
         $users_to_add = $wpdb->get_results($wpdb->prepare(
             "SELECT 
@@ -103,8 +98,9 @@ function monplugin_get_events(WP_REST_Request $request) {
             'nonsubscribe_places'=> $event->nonsubscribe_places,
             'attente_places'     => $event->attente_places,
             'closed_inscription' => $event->closed_inscription,
-            'billeterie_url'     => $event->billeterie_url,
-            'billeterie_id'      => $event->billeterie_id,
+            'payement_title'       => $event->payement_title,
+            'adherent_price'       => $event->adherent_price,
+            'non_adherent_price'   => $event->non_adherent_price,
             'update_date'        => $event->update_date,
             'users'       => $users
         ];
@@ -181,14 +177,6 @@ function monplugin_get_event_id(WP_REST_Request $request) {
         );
     }
 
-    
-    if ($event && $event->billeterie_id) {
-        $billeterie = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_billeterie WHERE id = %d", $event->billeterie_id));
-        if ($billeterie) {
-            $event->billeterie_url = $billeterie->url;
-        }
-    }
-
     // Récupérer les utilisateurs inscrits
     $users_to_add = $wpdb->get_results(
         $wpdb->prepare(
@@ -221,8 +209,9 @@ function monplugin_get_event_id(WP_REST_Request $request) {
         'nonsubscribe_places' => $event->nonsubscribe_places,
         'attente_places'       => $event->attente_places,
         'closed_inscription'   => $event->closed_inscription,
-        'billeterie_url'       => $event->billeterie_url,
-        'billeterie_id'       => $event->billeterie_id,
+        'payement_title'       => $event->payement_title,
+        'adherent_price'       => $event->adherent_price,
+        'non_adherent_price'   => $event->non_adherent_price,
         'update_date'          => $event->update_date,
         'users'               => $users
     ];
@@ -307,8 +296,9 @@ function monplugin_get_event_post_id(WP_REST_Request $request) {
         'nonsubscribe_places' => $event->nonsubscribe_places,
         'attente_places'       => $event->attente_places,
         'closed_inscription'   => $event->closed_inscription,
-        'billeterie_url'       => $event->billeterie_url,
-        'billeterie_id'        => $event->billeterie_id,
+        'payement_title'       => $event->payement_title,
+        'adherent_price'       => $event->adherent_price,
+        'non_adherent_price'   => $event->non_adherent_price,
         'update_date'          => $event->update_date,
         'users'               => $users
     ];
@@ -362,8 +352,9 @@ function monplugin_create_events(WP_REST_Request $request) {
             'nonsubscribe_places' => intval($request['nonsubscribe_places']),
             'attente_places' => intval($request['attente_places']) ?? 0,
             'closed_inscription' => intval($request['closed_inscription']),
-            'billeterie_url' => sanitize_text_field($request['billeterie_url']),
-            'billeterie_id' => intval($request['billeterie_id']) ?? null,
+            'payement_title'       => sanitize_text_field($request['payement_title']),
+            'adherent_price'       => intval($request['adherent_price']) ?? 0,
+            'non_adherent_price'   => intval($request['non_adherent_price']) ?? 0,
         ]
     );
 
@@ -446,12 +437,11 @@ function monplugin_update_event(WP_REST_Request $request) {
         'nonsubscribe_places' => intval($request['nonsubscribe_places']),
         'attente_places' => intval($request['attente_places']) ?? 0,
         'closed_inscription' => intval($request['closed_inscription']),
-        'billeterie_url' => sanitize_text_field($request['billeterie_url']) ?? null,
+        'payement_title'       => sanitize_text_field($request['payement_title']),
+        'adherent_price'       => intval($request['adherent_price']) ?? 0,
+        'non_adherent_price'   => intval($request['non_adherent_price']) ?? 0,
     ];
 
-    if ($request['billeterie_id'] != null) {
-        $data['billeterie_id'] = intval($request['billeterie_id']);
-    }
 
     if (!$same_title || !$same_start_date || !$same_end_date || !$same_place) {
         $data['update_date'] = current_time('mysql');

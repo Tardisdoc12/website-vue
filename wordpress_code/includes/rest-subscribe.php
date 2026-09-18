@@ -177,14 +177,6 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
         }
     }
 
-
-
-    // Décrémenter le nombre de places
-    //$wpdb->query($wpdb->prepare(
-    //    "UPDATE $table_events SET $column = $column - 1 WHERE id = %d",
-    //    $event_id
-    //));
-
     $wpdb->insert($table_inscrits, [
         'user_id' => $user_id,
         'event_id' => $event_id,
@@ -200,10 +192,13 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
         return new WP_Error('db_insert_error', 'Erreur SQL (inscrits) : ' . $wpdb->last_error, ['status' => 500]);
     }
 
+    $inscription_id = $wpdb->insert_id;
+
     return [
         'success' => true,
         'event_id' => $event_id,
         'user_id' => $user_id,
+        'inscription_id' => $inscription_id,
         'message' => 'Inscription réussie.'
     ];
 }

@@ -99,6 +99,7 @@ import EventSlot from './event_slot.vue';
 import EventPayement from './event_payement.vue';
 
 import eventsService from '@/javascript/api/axios_events.js';
+import placesApi from '@/javascript/api/axios_places.js'
 
 function formatDateFr(dateString) {
     if (!dateString) return ''
@@ -130,10 +131,6 @@ export default {
             default: null,
         },
         placesEvent: {
-            type: Array,
-            default: () => [],
-        },
-        billeteries: {
             type: Array,
             default: () => [],
         },

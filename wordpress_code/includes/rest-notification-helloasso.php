@@ -30,6 +30,7 @@ function myplugin_handle_helloasso_notification(WP_REST_Request $request) {
     if ($eventType === 'Form' && $payload['formType'] === 'Event') {
         error_log('Notification de création de formulaire reçue : ' . print_r($payload, true));
         treat_creation_form_notification($payload);
+        return ['success' => true];
     }
 
     $payer = $payload['payer'] ?? null;

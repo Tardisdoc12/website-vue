@@ -44,6 +44,16 @@ add_action('admin_init', function() {
                 $args['sanitize_callback'] = 'sanitize_textarea_field'; // préserve les retours à la ligne
             }
 
+             if ($field['type'] === 'password') {
+                $args['sanitize_callback'] = function($value) use ($key) {
+                    // Champ vide soumis = l'utilisateur n'a rien changé, on garde l'ancienne valeur
+                    if ($value === '') {
+                        return get_option($key, '');
+                    }
+                    return sanitize_text_field($value);
+                };
+            }
+
             register_setting($group, $key, $args);
         }
     }
@@ -121,6 +131,11 @@ function mon_plugin_render_field($key, $field) {
         return;
     }
 
+    if ($type === 'password') {
+        mon_plugin_render_secret_field($key, $field);
+        return;
+    }
+
     if ($type === 'heading') {
         mon_plugin_render_heading($field);
         return;
@@ -159,6 +174,28 @@ function mon_plugin_render_heading($field) {
             <h3 style="margin: 0; border-bottom: 1px solid #ccc; padding-bottom: 6px;">
                 <?php echo esc_html($field['label']); ?>
             </h3>
+        </td>
+    </tr>
+    <?php
+}
+
+function mon_plugin_render_secret_field($key, $field) {
+    $current_value = get_option($key, $field['default'] ?? '');
+    $has_value = !empty($current_value);
+    ?>
+    <tr>
+        <th><label for="<?php echo esc_attr($key); ?>"><?php echo esc_html($field['label']); ?></label></th>
+        <td>
+            <input type="password"
+                   id="<?php echo esc_attr($key); ?>"
+                   name="<?php echo esc_attr($key); ?>"
+                   value=""
+                   placeholder="<?php echo $has_value ? '••••••••••••••••' : 'Non configuré'; ?>"
+                   autocomplete="new-password"
+                   class="regular-text mon-plugin-global" />
+            <?php if ($has_value): ?>
+                <p class="description">Laissez vide pour conserver la valeur actuelle. Remplissez uniquement pour la remplacer.</p>
+            <?php endif; ?>
         </td>
     </tr>
     <?php

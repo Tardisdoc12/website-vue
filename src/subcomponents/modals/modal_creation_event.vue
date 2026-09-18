@@ -6,8 +6,7 @@
     >
         <EventCreationPipeline 
             :eventSelected="eventSelected" 
-            :placesEvent="placesEvent"
-            :billeteries="billeteries" 
+            :placesEvent="placesEvent" 
             @validate="HandleValidate"
             @cancel="HandleCancel"
         />
@@ -36,10 +35,6 @@ export default {
             default: null,
         },
         placesEvent: {
-            type: Array,
-            default: () => [],
-        },
-        billeteries: {
             type: Array,
             default: () => [],
         },

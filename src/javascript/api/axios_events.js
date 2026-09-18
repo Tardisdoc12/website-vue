@@ -13,8 +13,9 @@ function conversion_to_bdd(datas) {
         nonsubscribe_places: datas['nonsubscribePlace'],
         attente_places: datas['attentePlace'] ?? 0,
         closed_inscription: datas['closed_inscription'] ?? 0,
-        billeterie_url: datas['billeterie_url'] ?? '',
-        billeterie_id: datas['billeterie_id'] ?? null,
+        payement_title: datas['payementTitle'] ?? '',
+        adherent_price: datas['payementAmountAdherent'] ?? 0,
+        non_adherent_price: datas['payementAmountNonAdherent'] ?? 0,
     }
 }
 
@@ -32,10 +33,12 @@ function conversion_from_bdd(datas) {
         subscribePlace: datas['subscribe_places'],
         nonsubscribePlace: datas['nonsubscribe_places'],
         attentePlace: datas['attente_places'] ?? 0,
+        payement_title: datas['payement_title'] ?? '',
         closed_inscription: datas['closed_inscription'] ?? 0,
-        billeterie_url: datas['billeterie_url'] ?? '',
+        payementAmountAdherent: datas['adherent_price'] ?? 0,
+        payementAmountNonAdherent: datas['non_adherent_price'] ?? 0,
+        payementTitle: datas['payement_title'] ?? '',
         update_date: datas['update_date'] ?? null,
-        billeterie_id: datas['billeterie_id'] ?? null,
         users: datas?.["users"] ?? []
     }
 }

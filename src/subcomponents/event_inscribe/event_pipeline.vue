@@ -19,11 +19,16 @@
         :user="userConnected"
         :isAttente="isAttenteComp"
         @inscrit="onInscrit"
+        @created_inscriptionId="onInscriptionId"
     />
     <PayementEvent
         v-if="stepsComputed == 2"
         :Date="event.startDate"
-        :billeterie_url="event.billeterie_url"
+        :inscription_id="inscriptionId"
+        :total-amount-price="totalAmountPrice"
+        :payement_title="event.payement_title"
+        :event_id="event.event_id"
+        :user="userToPay"
     />
     <EventCreationPipeline
         v-if="stepsComputed == 3"
@@ -105,6 +110,9 @@ export default{
             steps: 0,
             lastParticipants: [],
             listMembers: null,
+            totalAmountPrice: 0,
+            userToPay: {},
+            inscriptionId: [],
         }
     },
 
@@ -141,6 +149,9 @@ export default{
     },
 
     methods: {
+        onInscriptionId(inscriptionId) {
+            this.inscriptionId.push(inscriptionId)
+        },
         userToUpdate(user) {
             this.$emit("userUpdated", user)
         },
@@ -152,17 +163,21 @@ export default{
             this.lastParticipants = participants
             let isFulladherent = this.event.subscribePlace > 0 && this.event.subscribePlace - (this.event.nbr_non_adherents) <= 0
             let isFullNonAdherent = this.event.nonsubscribePlace - (this.event.nbr_adherents) <= 0
+            let quantityAdherent = 0
+            let quantityNonAdherent = 0
             for (const participant of participants) {
                 if (participant.roles?.includes("adherent") ) {
                     if(isFulladherent){
                         participant.status = "attente"
                         this.event.nbr_attente += 1
                         if(this.event.attentePlace - this.event.nbr_attente < 0){
+                            quantityAdherent += 1
                             this.lastParticipants = this.lastParticipants.filter(p => p.id !== participant.id)
                             this.event.nbr_attente -= 1
                         }
                         break
                     }
+                    quantityAdherent += 1
                     participant.status = "inscrit"
                     isFulladherent = this.event.subscribePlace - (this.event.nbr_non_adherents + 1) <= 0
                 }
@@ -173,12 +188,21 @@ export default{
                         if(this.event.attentePlace - this.event.nbr_attente < 0){
                             this.lastParticipants = this.lastParticipants.filter(p => p.id !== participant.id)
                             this.event.nbr_attente -= 1
+                            quantityNonAdherent += 1
                         }
                         break
                     }
+                    quantityNonAdherent += 1
                     participant.status = "inscrit"
                     isFullNonAdherent = this.event.nonsubscribePlace - (this.event.nbr_adherents + 1) <= 0
                 }
+            }
+            this.totalAmountPrice = (quantityAdherent * this.event.payementAmountAdherent) + (quantityNonAdherent * this.event.payementAmountNonAdherent)
+            let firstConnected = participants[0]
+            this.userToPay = {
+                'email' : firstConnected.email,
+                'firstName' : firstConnected.firstName,
+                'lastName' : firstConnected.lastName
             }
             this.incrementSteps()
         },

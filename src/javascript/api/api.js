@@ -55,6 +55,7 @@ api.interceptors.response.use(
     return response
   },
   error => {
+    console.log(error)
     return Promise.reject(error)
   }
 )

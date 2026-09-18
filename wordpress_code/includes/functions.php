@@ -126,6 +126,7 @@ function get_vue_shortcodes() {
         'test'             => 'test_list',
         'event-page'       => 'event_page_proper',
         'reinitialisation' => 'reset_password_page',
+        'render_payement'  => 'payement_render'
     ];
 }
 

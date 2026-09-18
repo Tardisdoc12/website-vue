@@ -33,8 +33,9 @@ function mon_plugin_creer_tables() {
         nonsubscribe_places INT UNSIGNED NOT NULL,
         attente_places INT UNSIGNED NOT NULL,
         closed_inscription TINYINT(1) NOT NULL DEFAULT 0,
-        billeterie_url VARCHAR(500) NULL,
-        billeterie_id BIGINT(20) UNSIGNED NULL,
+        adherent_price DECIMAL(10,2) NOT NULL DEFAULT 0,
+        non_adherent_price DECIMAL(10,2) NOT NULL DEFAULT 0,
+        payement_title VARCHAR(255) DEFAULT NULL,
         update_date DATETIME NULL,
         PRIMARY KEY (id)
     ) $charset_collate;";
@@ -137,16 +138,6 @@ function mon_plugin_creer_tables() {
         PRIMARY KEY (id)
     ) $charset_collate;";
 
-    $table_billeterie = $wpdb->prefix . "billetteries";
-    $sql11 = "CREATE TABLE $table_billeterie (
-        id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-        title VARCHAR(200) NOT NULL,
-        slug VARCHAR(200) NOT NULL,
-        url VARCHAR(500) NOT NULL,
-        PRIMARY KEY (id),
-        UNIQUE KEY slug (slug)
-    ) $charset_collate;";
-
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     $sqls = [
         $sql1,
@@ -159,7 +150,6 @@ function mon_plugin_creer_tables() {
         $sql8,
         $sql9,
         $sql10,
-        $sql11
     ];
 
     foreach ($sqls as $sql) {

@@ -33,8 +33,12 @@
             <!-- ───── ÉTAPE 0 : formulaire principal (toi) ───── -->
             <template v-if="currentStep === 0">
                 <div class="flex flex-col gap-1">
-                    <label class="block font-medium">Prénom et Nom <span style="color:red">*</span></label>
-                    <input v-model="participants[0].name" type="text" class="w-full border p-1 rounded" required />
+                    <label class="block font-medium">Prénom<span style="color:red">*</span></label>
+                    <input v-model="participants[0].firstName" type="text" class="w-full border p-1 rounded" required />
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label class="block font-medium">Nom<span style="color:red">*</span></label>
+                    <input v-model="participants[0].lastName" type="text" class="w-full border p-1 rounded" required />
                 </div>
                 <div class="flex flex-col gap-1">
                     <label class="block font-medium">E-mail <span style="color:red">*</span></label>
@@ -131,8 +135,12 @@
                 <!-- 2b. NON → formulaire classique -->
                 <template v-if="participants[currentStep].hasAccount === false">
                     <div class="flex flex-col gap-1">
-                        <label class="block font-medium">Prénom et Nom <span style="color:red">*</span></label>
-                        <input v-model="participants[currentStep].name" type="text" class="w-full border p-1 rounded" />
+                        <label class="block font-medium">Prénom<span style="color:red">*</span></label>
+                        <input v-model="participants[currentStep].firstName" type="text" class="w-full border p-1 rounded" />
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="block font-medium">Nom<span style="color:red">*</span></label>
+                        <input v-model="participants[currentStep].lastName" type="text" class="w-full border p-1 rounded" />
                     </div>
                     <div class="flex flex-col gap-1">
                         <label class="block font-medium">E-mail <span style="color:red">*</span></label>
@@ -210,7 +218,8 @@ import { isEncadrant } from "@/javascript/constants/roles"
 
 function emptyParticipant() {
     return {
-        name: "",
+        firstName: "",
+        lastName: "",
         email: "",
         phone: "",
         bike: "",
@@ -226,6 +235,11 @@ function emptyParticipant() {
 }
 
 export default {
+    signals:[
+        'inscrit',
+        'created_inscriptionId'
+    ],
+
     props: {
         event:  { type: Object, required: true },
         user:   { type: Object, required: true },
@@ -240,8 +254,8 @@ export default {
             participants: [
                 {
                     ...emptyParticipant(),
-                    name:  this.user?.firstName && this.user?.lastName
-                                ? `${this.user.firstName} ${this.user.lastName}` : "",
+                    firstName: this.user?.firstName ?? "",
+                    lastName: this.user?.lastName ?? "",
                     phone: this.user?.telephone ?? "",
                     bike:  this.user?.moto ?? "",
                     isAdherent: this.user?.roles ? (!this.user.roles.includes("non_adherent") ? 1 : 0) : 0,
@@ -271,8 +285,8 @@ export default {
                 if (newUser) {
                     this.participants[0] = {
                         ...this.participants[0],
-                        name:  newUser.firstName && newUser.lastName
-                                    ? `${newUser.firstName} ${newUser.lastName}` : "",
+                        firstName: newUser.firstName ?? "",
+                        lastName: newUser.lastName ?? "",
                         phone: newUser.telephone ?? "",
                         bike:  newUser.moto ?? "",
                         email: newUser.email ?? "",
@@ -305,7 +319,7 @@ export default {
         isCurrentStepValid() {
             const p = this.participants[this.currentStep]
             if (this.currentStep === 0) {
-                const base = p.name && p.email && p.phone && p.bike
+                const base = p.firstName && p.lastName && p.email && p.phone && p.bike
                 const encadrant = !this.isEncadrantComp || p.wantsEncadrant !== null
                 return base && encadrant
             }
@@ -317,7 +331,7 @@ export default {
                 return exp
             }
             // hasAccount === false → formulaire classique
-            return !!(p.name && p.email && p.phone && p.bike && p.experience)
+            return !!(p.firstName && p.lastName && p.email && p.phone && p.bike && p.experience)
         }
     },
 
@@ -337,7 +351,8 @@ export default {
             this.participants[index].hasAccount = value
             this.participants[index].searchQuery = ""
             this.participants[index].searchResult = null
-            this.participants[index].name = ""
+            this.participants[index].firstName = ""
+            this.participants[index].lastName = ""
             this.participants[index].email = ""
             this.participants[index].phone = ""
             this.participants[index].bike = ""
@@ -364,7 +379,8 @@ export default {
                     const u = res.data.user
                     this.participants[index] = {
                         ...this.participants[index],
-                        name:  `${u.firstName} ${u.lastName}`,
+                        firstName: u.firstName,
+                        lastName: u.lastName,
                         email: u.email,
                         phone: u.telephone,
                         bike:  u.moto,
@@ -379,26 +395,46 @@ export default {
             }
         },
 
+        verify_payement_status(participant) {
+            const categorie = this.event.categorie
+            const found = this.$settings.categories.find(c => c.nom.toLowerCase() === categorie.toLowerCase())
+
+
+            const isNonAdherent = participant.roles?.includes("non_adherent")
+
+            //toujours paiement
+            if (found && found.adherent_payant && found.non_adherent_payant) {
+                return 'pending'
+            }
+
+            // Categorie seulement payante pour un non-adhérent ce qui est le cas
+            if (found && found.non_adherent_payant && isNonAdherent) return 'pending'
+
+            if (found && found.adherent_payant && !isNonAdherent) return 'pending'
+
+            return 'completed'
+        },
+
         async handleSubmit() {
             this.isSubmitting = true
             try {
+                console.log("Submitting participants:", this.participants)
                 for (const participant of this.participants) {
                     const alreadyRegistered = this.event.users.some(u => u.email === participant.email)
-                    const billeterie_url = this.event.billeterie_url != "" ? this.event.billeterie_url : 'https://www.helloasso.com/associations/mps-moto/evenements/inscription-seance'
-                    console.log(`Billeterie URL: ${billeterie_url}`, `alreadyRegistered: ${alreadyRegistered}`)
                     if (alreadyRegistered) {
-                        alert(`Vous etes deja inscit pour cet evenement. Si vous avec deja effectué le reglement sur helloasso, vous pouvez ignorer ce message.\n\nsinon vous pouvez suivre ce lien pour acceder a la billeterie :\n${billeterie_url}`)
+                        alert(`Vous etes deja inscit pour cet evenement. Si vous avec deja effectué le reglement sur helloasso, vous pouvez ignorer ce message.`)
+                        return
                     }
                     participant.status = this.isAttente ? "attente" : "inscrit"
-                    const isAdherent = !participant.roles.includes("non_adherent")
-                    const categorie = this.event.categorie
-                    const found = this.$settings.categories.find(c => c.nom.toLowerCase() === categorie.toLowerCase())
-                    const onlyNonAdherent = found.non_adherent_payant && !found.adherent_payant
 
-                    participant.payement_status = ((isAdherent && onlyNonAdherent) || !this.event.billeterie_id) ? "completed" : "pending"
+                    participant.payement_status = this.verify_payement_status(participant)
+
+                    participant.name = `${participant.firstName} ${participant.lastName}`
 
                     const res = await inscritAPI.create_inscrit(this.event.event_id, participant)
                     if (!res?.data?.success) throw new Error("Échec pour " + participant.name)
+                    this.$emit('created_inscriptionId', res.data.inscription_id)
+
                 }
                 this.$emit('inscrit', this.participants)
             } catch (err) {

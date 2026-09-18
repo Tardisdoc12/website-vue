@@ -25,7 +25,7 @@ $includes = [
     'includes/rest-notes.php',
     'includes/rest-media.php',
     'includes/rest-places.php',
-    'includes/rest-billeterie.php',
+    'includes/rest-payement.php',
     'includes/rest-notification-helloasso.php',
     'parametres/admin-settings.php'
 ];
