@@ -97,10 +97,17 @@ class ShortcodesHookers {
     }
 
     private function enqueue_js_scripts($name_modules, $path_file, $url_file) {
+         $dependencies = [];
+
+        // On n'ajoute la dépendance que si elle existe réellement
+        if (wp_script_is('elementor-frontend', 'registered')) {
+            $dependencies[] = 'elementor-frontend';
+        }
+
         wp_enqueue_script(
             $name_modules,
             $url_file,
-            ['elementor-frontend'],
+            $dependencies,
             filemtime($path_file),
             true
         );

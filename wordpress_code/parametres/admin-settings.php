@@ -44,7 +44,7 @@ add_action('admin_init', function() {
                 $args['sanitize_callback'] = 'sanitize_textarea_field'; // préserve les retours à la ligne
             }
 
-             if ($field['type'] === 'password') {
+            if ($field['type'] === 'password') {
                 $args['sanitize_callback'] = function($value) use ($key) {
                     // Champ vide soumis = l'utilisateur n'a rien changé, on garde l'ancienne valeur
                     if ($value === '') {
@@ -53,6 +53,29 @@ add_action('admin_init', function() {
                     return sanitize_text_field($value);
                 };
             }
+
+                if ($field['type'] === 'number') {
+                    $args['sanitize_callback'] = function($value) use ($field) {
+                        // Si vide ou non numérique, on retombe sur la valeur par défaut
+                        if ($value === '' || !is_numeric($value)) {
+                            return $field['default'] ?? 0;
+                        }
+
+                        $value = absint($value); // force en entier positif
+
+                        // Applique un minimum si défini dans le champ
+                        if (isset($field['min']) && $value < $field['min']) {
+                            $value = $field['min'];
+                        }
+
+                        // Applique un maximum si défini dans le champ
+                        if (isset($field['max']) && $value > $field['max']) {
+                            $value = $field['max'];
+                        }
+
+                        return $value;
+                    };
+                }
 
             register_setting($group, $key, $args);
         }

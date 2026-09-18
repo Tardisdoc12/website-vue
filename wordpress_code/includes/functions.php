@@ -5,6 +5,8 @@
 
 if (!defined('ABSPATH')) exit;
 
+require_once __DIR__ . '/../objects/jwt_generator.php';
+
 add_filter('safe_style_css', function($styles) {
     $styles[] = 'color';
     $styles[] = 'background-color';
@@ -91,18 +93,42 @@ function monplugin_verify_csrf(WP_REST_Request $request) {
     if ($auth_header && preg_match('/Bearer\s(\S+)/', $auth_header, $matches)) {
         $token = $matches[1];
 
-        // Vérifier le token via le hook du plugin JWT
-        $user = apply_filters('jwt_auth_token_before_dispatch', $token);
+        $verified_payload = AssoSimpleJWT::verify($token);
 
-        if ($user && !is_wp_error($user)) {
-            return true;
+        if (!$verified_payload) {
+            return new WP_Error(
+                'invalid_jwt_token',
+                'JWT token invalide ou expiré.',
+                ['status' => 403]
+            );
         }
 
-        return new WP_Error(
-            'invalid_jwt_token',
-            'JWT token invalide ou expiré.',
-            ['status' => 403]
-        );
+        // Le payload doit contenir un wp_user_id valide
+        if (empty($verified_payload['wp_user_id'])) {
+            return new WP_Error(
+                'invalid_jwt_token',
+                'JWT token invalide : utilisateur manquant.',
+                ['status' => 403]
+            );
+        }
+
+        $user_id = absint($verified_payload['wp_user_id']);
+        $user    = get_userdata($user_id);
+
+        // Vérifie que l'utilisateur existe bien en base
+        if (!$user) {
+            return new WP_Error(
+                'invalid_jwt_token',
+                'JWT token invalide : utilisateur introuvable.',
+                ['status' => 403]
+            );
+        }
+
+        // Optionnel mais recommandé : authentifier réellement l'utilisateur
+        // pour que current_user_can(), get_current_user_id(), etc. fonctionnent
+        wp_set_current_user($user_id);
+
+        return true;
     }
 
     // Aucun token fourni

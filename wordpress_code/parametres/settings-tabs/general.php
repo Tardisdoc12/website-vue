@@ -68,5 +68,18 @@ return [
             'default' => '#FFFFFF',
         ],
 
+        '_heading_time_connexion' => ['type' => 'heading', 'label' => 'Temps de connexion (en secondes)'],
+        '_info_confirmation' => [
+            'type' => 'paragraph',
+            'text' => 'le temps minimum est de 1min et au maximum de 30jours',
+        ],
+        'JWT_TIME_CONNEXION' => [
+            'label' => 'Durée de la connexion',
+            'type' => 'number',
+            'default' => 3600,
+            'min'     => 60,        // 1 minute minimum
+            'max'     => 2592000,   // 30 jours maximum
+        ],
+
     ],
 ];

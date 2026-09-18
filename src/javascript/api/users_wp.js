@@ -41,17 +41,8 @@ export default {
         return response.data
     },
 
-    async verify_connexion(email, password) {
-        const body = {
-            username: email,
-            password: password,
-        }
-        const response = await api.post(url_connect, body)
-        return response.data
-    },
-
-    async connect_user(user_id) {
-        const response = await api.post("/connect",{"user_id": user_id})
+    async connect_user(email, password) {
+        const response = await api.post("/connect",{"email": email, "password": password})
         return response
     },
 
