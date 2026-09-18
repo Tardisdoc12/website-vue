@@ -34,6 +34,7 @@
             v-model:placeSelected="event.place"
             v-model:categorieToSelect="categorieSelectedForEvent"
             v-model:isCheckedSavePlace="isCheckedSavePlace",
+            v-model:isCheckedPlace="isCheckPlace"
             :placesEvent="placesEvent"
         />
 
@@ -165,6 +166,7 @@ export default {
             editor: null,
             categorieSelectedForEvent: {},
             isCheckedSavePlace: false,
+            isCheckPlace: false,
             event: {
                 title: '',
                 startDate: '',
@@ -172,7 +174,7 @@ export default {
                 description: '',
                 place: '',
                 categorie: '',
-                subscribePlace: 1,
+                subscribePlace: -1,
                 nonsubscribePlace: 0,
                 attentePlace: 0,
                 payementTitle: '',

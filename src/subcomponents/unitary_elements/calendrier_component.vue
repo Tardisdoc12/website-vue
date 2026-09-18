@@ -199,43 +199,41 @@ export default{
                     return users.filter(u => u.is_adherent === "1" && u.status === "inscrit").length
                 }
             )
-            let number = parseInt(arg.event.extendedProps.nonsubscribePlace) - nonAdherentsCount.value;
-            let places_available = "inscriptions ouvertes"
-            if (number <= 0) {
-                places_available = "complet"
-            }
-            if (this.userConnected?.roles) {
-                if(!this.userConnected.roles.includes("non_adherent")) {
-                    number = parseInt(arg.event.extendedProps.subscribePlace) - adherentsCount.value;
-                    if(number === 0){
-                        places_available = "complet"
-                    }
-                    else {
-                        places_available = "inscriptions ouvertes"
-                    }
-                }
-            }
-            if (isOutdated(arg.event)) {
-                places_available = "inscriptions fermées"
-            }
+
+            const isNonAdherent = this.userConnected?.roles?.includes("non_adherent") ?? true;
+            let placesAvailableNonAdherent = parseInt(arg.event.extendedProps.nonsubscribePlace) - nonAdherentsCount.value
+            let placesAvailableAdherent = parseInt(arg.event.extendedProps.subscribePlace) - adherentsCount.value
+            let placesAvailableMessage = 'inscriptions ouvertes'
             const alreadyInscript = this.userEvents?.some(obj => Number(obj.event_id) === Number(arg.event.extendedProps.event_id)) ?? false
+
+            if(isNonAdherent && placesAvailableNonAdherent <= 0) {
+                placesAvailableMessage = 'complet'
+            }
+
+            if(!isNonAdherent && placesAvailableAdherent <= 0 && parseInt(arg.event.extendedProps.subscribePlace) > 0) {
+                placesAvailableMessage = 'complet'
+            }
+
+            if (isOutdated(arg.event)) {
+                placesAvailableMessage = "inscriptions fermées"
+            }
             
             if(Number(arg.event.extendedProps.closed_inscription) === 1) {
-                places_available = "inscriptions fermées"
+                placesAvailableMessage = "inscriptions fermées"
             }
             else if(Number(arg.event.extendedProps.closed_inscription) === 2) {
                 if (isBureau(this.userConnected?.roles ?? [])) {
-                    places_available = "rendu complet"
+                    placesAvailableMessage = "rendu complet"
                 }
                 else{
-                    places_available = "complet"
+                    placesAvailableMessage = "complet"
                 }
             }
             else if(Number(arg.event.extendedProps.closed_inscription) === 3) {
-                places_available = "évènement dépassé"
+                placesAvailableMessage = "évènement dépassé"
             }
             if(alreadyInscript) {
-                places_available = "vous êtes inscrit"
+                placesAvailableMessage = "vous êtes inscrit"
             }
             let bgColor;
             let backgroundColorCard;
@@ -266,7 +264,7 @@ export default{
                     hour: arg.timeText,
                     title: arg.event.title,
                     place: arg.event.extendedProps.place,
-                    placesAvailable: places_available,
+                    placesAvailable: placesAvailableMessage,
                     backgroundColor: bgColor,
                     backgroundColorCard: backgroundColorCard,
                     colorWriting: colorWritting,

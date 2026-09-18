@@ -1,6 +1,6 @@
 <template>
     <!-- On affiche l'ancien systeme pour les events qui ne sont pas encore passer -->
-    <div v-if="getBilleterieURL !== ''">
+    <div v-if="getBilleterieURL">
         <p style="margin-bottom: 10px; margin-top: 10px; margin-left: 10px;margin-right: 10px;">
             {{  "Votre inscription ne sera validée qu'après paiement. Merci de remplir le formulaire ci-dessous pour procéder au paiement." }}
         </p>
@@ -113,8 +113,8 @@ export default {
             error: false,
             redirectUrl: '',
             dates :{
-                "9_27_2026" : "stage-de-perfectionnement-27-septembre-2026/widget",
-                "10_11_2026" : "stage-de-perfectionnement-11-octobre-2026/widget",
+                "8_27_2026" : "stage-de-perfectionnement-27-septembre-2026/widget",
+                "9_11_2026" : "stage-de-perfectionnement-11-octobre-2026/widget",
             },
         }
     },

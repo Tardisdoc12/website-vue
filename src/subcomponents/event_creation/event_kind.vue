@@ -23,11 +23,11 @@
     <!-- Ajout de nouveau lieu -->
     <div style="margin-bottom: 10px;display: flex; align-items: center; gap: 8px;">
         <label class="block font-medium">Nouveau lieu</label>
-        <input type="checkbox" v-model="isCheckedPlace"/>
+        <input type="checkbox" v-model="isCheckedPlaceComp"/>
     </div>
 
     <!-- Lieu -->
-    <div style="margin-bottom:10px;" v-if="isCheckedPlace">
+    <div style="margin-bottom:10px;" v-if="isCheckedPlaceComp">
         <label class="block font-medium">Lieu <span style="color:darkred">*</span></label>
         <input
             v-model="place"
@@ -50,7 +50,7 @@
         </select>
     </div>
 
-    <div v-if="isCheckedPlace" style="margin-bottom: 10px;display: flex; align-items: center; gap: 8px;">
+    <div v-if="isCheckedPlaceComp" style="margin-bottom: 10px;display: flex; align-items: center; gap: 8px;">
         <label class="block font-medium">Sauvegarder le nouveau lieu</label>
         <input type="checkbox" v-model="isCheckedSavePlaceComp"/>
     </div>
@@ -68,6 +68,7 @@ export default {
         'update:placeSelected',
         'update:categorieToSelect',
         'update:isCheckedSavePlace',
+        'update:isCheckedPlace',
         'next',
         'previous',
     ],
@@ -101,14 +102,19 @@ export default {
         isCheckedSavePlace: {
             type: Boolean,
             default: false,
-        }
+        },
+
+        isCheckedPlace: {
+            type: Boolean,
+            default: false,
+        },
     },
 
     data() {
         console.log(this.categorieToSelect)
         return {
             settingsCategories: this.$settings.categories,
-            isCheckedPlace: false || !this.placeSelected === '',
+            isCheckedPlaceBool: this.isCheckedPlace,
             isCheckedSavePlaceBool: this.isCheckedSavePlace,
             categorieToSelectEvent: this.categorieToSelect,
         }
@@ -116,8 +122,13 @@ export default {
 
     computed: {
         isCheckedSavePlaceComp: {
-            get() { return this.isCheckedSavePlace },
-            set(val) { this.$emit('update:isCheckedSavePlace', val) }
+            get() { return this.isCheckedSavePlaceBool },
+            set(val) { this.isCheckedSavePlaceBool = val; this.$emit('update:isCheckedSavePlace', val) }
+        },
+
+        isCheckedPlaceComp: {
+            get() { return this.isCheckedPlaceBool },
+            set(val) { this.isCheckedPlaceBool = val; this.$emit('update:isCheckedPlace', val) }
         },
 
         categorieComp: {

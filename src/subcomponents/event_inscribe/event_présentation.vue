@@ -225,18 +225,19 @@ export default {
         },
 
         affichageInscribe(){
+
             const isFullAdherent = (this.event.subscribePlace > 0 && this.event.subscribePlace - (this.event.nbr_adherents) <= 0)
             const isFullNonAdherent = this.event.nonsubscribePlace - (this.event.nbr_non_adherents) <= 0
             const isAdherent = this.isAdherentComp
             const isFull = isAdherent ? isFullAdherent : isFullNonAdherent
-            
+
             if(this.event.isInscript){
                 return "Se désinscrire"
             }
             else if(Number(this.event.closed_inscription) === 1){
                 return "Inscriptions fermées"
             }
-            else if(Number(this.event.closed_inscription) === 2 && (!this.isAttente && isFull)){
+            else if(Number(this.event.closed_inscription) === 2 || (!this.isAttente && isFull)){
                 return "Évènement complet"
             }
             else if(Number(this.event.closed_inscription) === 3){
@@ -261,7 +262,7 @@ export default {
              else if(Number(this.event.closed_inscription) === 1){
                 return 'var(--validate-disabled-color)'
              }
-             else if(Number(this.event.closed_inscription) === 2 && (!this.isAttente && isFull)){
+             else if(Number(this.event.closed_inscription) === 2 || (!this.isAttente && isFull)){
                 return 'var(--validate-disabled-color)'
              }
              else if(Number(this.event.closed_inscription) === 3){
@@ -286,7 +287,7 @@ export default {
             else if(Number(this.event.closed_inscription) === 1){
                 return 'var(--validate-disabled-color)'
             }
-            else if(Number(this.event.closed_inscription) === 2 && (!this.isAttente && isFull)){
+            else if(Number(this.event.closed_inscription) === 2 || (!this.isAttente && isFull)){
                 return 'var(--validate-disabled-color)'
             }
             else if(Number(this.event.closed_inscription) === 3){
@@ -311,7 +312,7 @@ export default {
             else if(Number(this.event.closed_inscription) === 1){
                 return true
             }
-            else if(Number(this.event.closed_inscription) === 2 && (!this.isAttente && isFull)){
+            else if(Number(this.event.closed_inscription) === 2 || (!this.isAttente && isFull)){
                 return true
             }
             else if(Number(this.event.closed_inscription) === 3){
