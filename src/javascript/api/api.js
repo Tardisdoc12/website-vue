@@ -41,7 +41,6 @@ api.interceptors.request.use(config => {
         config.headers.Authorization = `Bearer ${token}`;
         delete config.headers["X-WP-Nonce"];
     } else {
-        // fallback CSRF
         localStorage.removeItem("mps_moto");
         delete config.headers.Authorization;
         config.headers["X-WP-Nonce"] = window.vueAppData.nonce;
@@ -55,7 +54,6 @@ api.interceptors.response.use(
     return response
   },
   error => {
-    console.log(error)
     return Promise.reject(error)
   }
 )

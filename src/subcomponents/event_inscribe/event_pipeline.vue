@@ -53,6 +53,7 @@
         v-if="stepsComputed == 6"
         :event="event"
         :places-events="placesEvent"
+        :onSuccess="onSuccess"
         @cancel="Cancel"
     />
 </template>
@@ -102,6 +103,11 @@ export default{
             type:Boolean,
             required:false,
             default:true
+        },
+        onSuccess: {
+            type: Function,
+            required: false,
+            default: () => {}
         }
     },
 

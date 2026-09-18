@@ -52,8 +52,7 @@ export default {
         },
 
         HandleValidate(new_event){
-            console.log("New event:", new_event)
-            // this.$emit("createEvents", new_event)
+            this.$emit("createEvents", new_event)
         }
     },
 

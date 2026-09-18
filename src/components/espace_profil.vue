@@ -136,7 +136,6 @@ import MediaSpace from "@/subcomponents/media_space.vue";
 import PersonalFollowPage from "@/subcomponents/depliants/PersonalFollowPage.vue";
 import apiSources from "@/javascript/api/axios_sources"
 import apiEvents from "@/javascript/api/axios_events"
-import { jwtDecode } from "jwt-decode"
 import api from "@/javascript/api/users_wp.js"
 import { isEncadrant } from "@/javascript/constants/roles";
 import EspaceAdherent from "@/subcomponents/depliants/adherent_page.vue"
@@ -149,11 +148,12 @@ export default {
         // On recherche qui est l'utilisateur connecté pour afficher les bonnes informations
         const token = localStorage.getItem("mps_moto")
         if (token) {
-            const decoded = jwtDecode(token)
-            const user_id = decoded.data.user.id
-            const user_info = await api.get_user(user_id)
-            this.user = user_info.user
             this.user.events = []
+            this.user = (await api.get_user_connected())?.data?.user
+            if (!this.user) {
+                console.error("Utilisateur non connecté ou introuvable.");
+                return;
+            }
             const events = await apiEvents.getEventUser(this.user.ID,this.user.email)
             
             for(const element of events.results){

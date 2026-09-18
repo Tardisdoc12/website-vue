@@ -20,6 +20,7 @@
         :event="eventSelected"
         :placesEvent="placesEvent"
         :userConnected="user"
+        :onSuccess="creationSuccess"
         @cancelSignal="closeEvent"
         @userDeleted="userToDelete"
         @deletedEvent="DeleteEvent"

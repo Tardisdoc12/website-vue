@@ -70,22 +70,19 @@
 <script>
 import EventDuplicationOneEvent from './event_duplication_one_event.vue'
 
-function emptyEvents() {
-    return {
-        title: '',
-        startDate: '',
-        endDate: '',
-        description: '',
-        place: '',
-        categorie: '',
-        subscribePlace: 1,
-        nonsubscribePlace: 0,
-        attentePlace: 0,
-        payementTitle: '',
-        payementAmountAdherent: 0,
-        payementAmountNonAdherent: 0,
-        isCheckedSavePlace: false,
-    }
+import eventsService from '@/javascript/api/axios_events.js';
+import placesApi from '@/javascript/api/axios_places.js'
+
+function formatDateFr(dateString) {
+    if (!dateString) return ''
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) return ''
+
+    const day = String(date.getDate()).padStart(2, '0')
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const year = date.getFullYear()
+
+    return `${day}/${month}/${year}`
 }
 
 export default {
@@ -94,6 +91,11 @@ export default {
     props: {
         event:  { type: Object, required: true },
         placesEvents: { type: Array, required: true },
+        onSuccess: {
+            type: Function,
+            required: false,
+            default: () => {}
+        }
     },
 
     data() {
@@ -105,6 +107,7 @@ export default {
                 {
                     ...this.event,
                     isCheckedSavePlace: false,
+                    payementTitle: ''
                 }
             ]
         }
@@ -122,6 +125,7 @@ export default {
                 ...this.event,
                 startDate: this.events[this.currentStep].startDate,
                 isCheckedSavePlace: false,
+                payementTitle: ''
             })
             this.currentStep = this.events.length - 1
         },
@@ -136,6 +140,25 @@ export default {
             this.currentStep++
         },
 
+        async createEvent(event) {
+            if (event.endDate !== '') {
+                if (new Date(event.startDate) >= new Date(event.endDate)) {
+                    alert("La date de fin doit être après la date de début.")
+                    return
+                }
+            }
+            else {
+                event.endDate = null;
+            }
+
+
+            if (!event.payementTitle){
+                event.payementTitle = event.title + " - " + formatDateFr(event.startDate)
+            }
+            const response = await eventsService.createEvent(event)
+            return response;
+        },
+
         async createOneEvent(event) {
             const places = this.placesEvents.filter(place => place.name === event.place);
             if (!places.length && event.isCheckedSavePlace) {
@@ -146,8 +169,8 @@ export default {
                 }
             }
 
-            const response = await this.createEvent(this.event)
-            if (response?.data?.success) {
+            const response = await this.createEvent(event)
+            if (Number(response?.status) == 200) {
                 return true
             }
             return false
@@ -162,6 +185,9 @@ export default {
                     if (success) successCount++
                 }
                 console.log(`✅ ${successCount} sur ${this.events.length} événements créés avec succès.`)
+                if (this.onSuccess) {
+                    this.onSuccess()
+                }
             } catch (err) {
                 console.error("❌ Erreur inscription:", err)
             } finally {

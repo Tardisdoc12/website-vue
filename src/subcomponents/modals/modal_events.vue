@@ -8,6 +8,7 @@
             :event="event"
             :placesEvent="placesEvent"
             :user-connected="userConnected"
+            :onSuccess="onSuccess"
             @incrementSteps="incrementSteps"
             @inscritEvent="inscritEvent"
             @cancelSignal="Cancel"
@@ -36,6 +37,12 @@ export default{
         userConnected: {
             type: Object,
             required: true
+        },
+
+        onSuccess: {
+            type: Function,
+            required: false,
+            default: () => {}
         }
     },
     data() {
