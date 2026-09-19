@@ -151,6 +151,16 @@ function monplugin_run_migrations() {
     $table_billeterie = $wpdb->prefix . "billetteries";
     $wpdb->query("DROP TABLE IF EXISTS $table_billeterie");
 
+    $column = $wpdb->get_results("SHOW COLUMNS FROM $table_inscribes LIKE 'payement_status'");
+
+    if (!empty($column)) {
+        $current_type = $column[0]->Type; // ex: "enum('pending','completed','failed')"
+
+        if (strpos($current_type, "'cash'") === false) {
+            $wpdb->query("ALTER TABLE $table_inscribes MODIFY payement_status ENUM('pending', 'completed', 'failed', 'cash') NOT NULL DEFAULT 'pending'");
+        }
+    }
+
     // --- 3️⃣ Flag pour éviter de relancer la migration ---
     update_option('monplugin_last_migration', time());
 }

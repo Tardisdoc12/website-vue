@@ -212,7 +212,8 @@ export default {
             "Gestion",
         ]
         return {
-            labels: ['Profil', 'Ressources', 'Médias'],
+            labels: 
+            !Boolean(Number(this.$settings.isKdriveConfigured)) ? ['Profil', 'Ressources'] : ['Profil', 'Ressources', 'Médias'],
             
             structuresRessources: {
                 0:{"categorie_title":RessourcesCategories[0],"subcats":{}},

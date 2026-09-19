@@ -68,6 +68,10 @@
                     <label class="block font-medium">{{ field }}</label>
                     <textarea v-model="participants[currentStep].specialField[field]" class="w-full border p-1 rounded" rows="2"></textarea>
                 </div>
+                <div v-if="isCashAllowed" class="flex flex-col gap-1">
+                    <label class="block font-medium">Souhaitez-vous payer en espèces ? <span style="color:red">*</span></label>
+                    <input type="checkbox" v-model="participants[currentStep].wantsCash"/>
+                </div>
             </template>
 
             <!-- ───── ÉTAPES 1+ : participants supplémentaires ───── -->
@@ -129,6 +133,10 @@
                             <label class="block font-medium">{{ field }}</label>
                             <textarea v-model="participants[currentStep].specialField[field]" class="w-full border p-1 rounded" rows="2"></textarea>
                         </div>
+                        <div v-if="isCashAllowed" class="flex flex-col gap-1">
+                            <label class="block font-medium">Souhaitez-vous payer en espèces ? <span style="color:red">*</span></label>
+                            <input type="checkbox" v-model="participants[currentStep].wantsCash"/>
+                        </div>
                     </template>
                 </template>
 
@@ -161,6 +169,10 @@
                     <div v-for="field in getSpecialFields" :key="field" class="flex flex-col gap-1">
                         <label class="block font-medium">{{ field }}</label>
                         <textarea v-model="participants[currentStep].specialField[field]" class="w-full border p-1 rounded" rows="2"></textarea>
+                    </div>
+                    <div v-if="isCashAllowed" class="flex flex-col gap-1">
+                        <label class="block font-medium">Souhaitez-vous payer en espèces ? <span style="color:red">*</span></label>
+                        <input type="checkbox" v-model="participants[currentStep].wantsCash"/>
                     </div>
                 </template>
 
@@ -232,6 +244,7 @@ function emptyParticipant() {
         searchQuery: "",
         searchResult: null, // null | 'found' | 'not_found'
         specialField: {},
+        wantsCash: false,
     }
 }
 
@@ -251,6 +264,7 @@ export default {
 
     data() {
         return {
+            isCashAllowed: Boolean(Number(MPS_TOOLS_SETTINGS.isCashAllowed)),
             currentStep: this.participantProblem ? this.participantProblem.length - 1 : 0,
             maxParticipants: 3,
             isSubmitting: false,
@@ -265,6 +279,7 @@ export default {
                     roles: this.user?.roles ?? ["non_adherent"],
                     email: this.user?.email ?? "",
                     isAttente: this.isAttente,
+                    wantsCash: false,
                 }
             ]
         }
@@ -295,6 +310,7 @@ export default {
                         email: newUser.email ?? "",
                         roles: newUser.roles ?? ["non_adherent"],
                         isAttente: this.isAttente,
+                        wantsCash: false,
                     }
                 }
             }
@@ -361,6 +377,7 @@ export default {
             this.participants[index].bike = ""
             this.participants[index].experience = ""
             this.participants[index].specialField = {}
+            this.participants[index].wantsCash = false
         },
 
         isAdherentParticipant(index) {
@@ -388,7 +405,8 @@ export default {
                         phone: u.telephone,
                         bike:  u.moto,
                         roles: u.roles ?? ["non_adherent"],
-                        searchResult: 'found'
+                        searchResult: 'found',
+                        wantsCash: false,
                     }
                 } else {
                     this.participants[index].searchResult = 'not_found'
@@ -404,6 +422,8 @@ export default {
 
 
             const isNonAdherent = participant.roles?.includes("non_adherent")
+
+            if (participant.wantsCash) return 'cash'
 
             //toujours paiement
             if (found && found.adherent_payant && found.non_adherent_payant) {

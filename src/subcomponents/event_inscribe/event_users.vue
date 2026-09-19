@@ -109,14 +109,16 @@
                             :disabled="!hasAttente"
                             :style="{
                                 '--btn-bg': hasAttente ? 'var(--main-color)' : 'var(--deactivate-button-classic-color)',
-                                '--btn-hover-bg': hasAttente ? 'var(--secondary-color)' : 'var(--deactivate-button-classic-color)'
+                                '--btn-hover-bg': hasAttente ? 'var(--secondary-color)' : 'var(--deactivate-button-classic-color)',
+                                '--btn-color': '#000000'
                             }"
                         >
                             {{user.status === 'attente' ? 'liste d\'attente' : 'inscrit'}}
                         </button>
                     </td>
                     <td class="border border-gray-300 p-2 text-center">
-                        <span v-if="user.hasPay" class="text-[var(--validate-color)] font-semibold">Payé</span>
+                        <span v-if="user.payement_status === 'completed'" class="text-[var(--validate-color)] font-semibold">Payé</span>
+                        <span v-else-if="user.payement_status === 'cash'" class="text-[var(--validate-color)] font-semibold">Payé en espèces</span>
                         <span v-else class="text-[var(--cancel-color)] font-semibold">Non payé</span>
                     </td>
                     <td class="border border-gray-300 p-2 text-center">
@@ -189,7 +191,7 @@ export default {
                 experience: user.is_adherent === "1" ? "" : user.experience,
                 encadrant: user.encadrement === "1" ? "Oui" : "Non",
                 status: user.status,
-                hasPay: user.payement_status === 'completed',
+                payement_status: user.payement_status,
                 wp_user_id: user.wp_user_id
             }))
         },

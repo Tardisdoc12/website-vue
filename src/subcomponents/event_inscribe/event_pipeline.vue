@@ -189,8 +189,11 @@ export default{
             let isFullNonAdherent = this.event.nonsubscribePlace - (this.event.nbr_adherents) <= 0
             let quantityAdherent = 0
             let quantityNonAdherent = 0
+            let adherentWantsCash = 0
+            let nonAdherentWantsCash = 0
             for (const participant of participants) {
                 if (participant.roles?.includes("adherent") ) {
+                    adherentWantsCash += participant.wantsCash ? 1 : 0
                     if(isFulladherent){
                         participant.status = "attente"
                         this.event.nbr_attente += 1
@@ -206,6 +209,7 @@ export default{
                     isFulladherent = this.event.subscribePlace - (this.event.nbr_non_adherents + 1) <= 0
                 }
                 else {
+                    nonAdherentWantsCash += participant.wantsCash ? 1 : 0
                     if(isFullNonAdherent){
                         participant.status = "attente"
                         this.event.nbr_attente += 1
@@ -221,7 +225,9 @@ export default{
                     isFullNonAdherent = this.event.nonsubscribePlace - (this.event.nbr_adherents + 1) <= 0
                 }
             }
-            this.totalAmountPrice = (quantityAdherent * this.event.payementAmountAdherent) + (quantityNonAdherent * this.event.payementAmountNonAdherent)
+            let totalQuantityAdherent = quantityAdherent - adherentWantsCash
+            let totalQuantityNonAdherent = quantityNonAdherent - nonAdherentWantsCash
+            this.totalAmountPrice = (totalQuantityAdherent * this.event.payementAmountAdherent) + (totalQuantityNonAdherent * this.event.payementAmountNonAdherent)
             let firstConnected = participants[0]
             this.userToPay = {
                 'email' : firstConnected.email,
@@ -237,6 +243,11 @@ export default{
 
             if (this.steps == 2) {
                 this.$emit("inscritEvent", this.event)
+
+                if (!Boolean(Number(this.$settings.isHelloAssoConfigured))) {
+                    this.$emit("cancelSignal",this.isCancel)
+                    return
+                }
 
                 const categorie = this.event.categorie
                 const found = this.$settings.categories.find(c => c.nom.toLowerCase() === categorie.toLowerCase())
