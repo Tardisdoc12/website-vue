@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: Wordpress Modules
- * Description: Intègre une application Vue dans WordPress via des shortcodes et des ajouts pour la base de donnée
- * Version: 1.5.0
+ * Plugin Name: MPS Tools
+ * Description: Plugin wordpress permettant de gérer divers outils et fonctionnalités pour association.
+ * Version: 1.5.2
  * Author: Jean
  */
 

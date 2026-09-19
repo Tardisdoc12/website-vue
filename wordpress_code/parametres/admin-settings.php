@@ -11,7 +11,15 @@ function mon_plugin_get_settings_fields() {
     static $tabs = null;
     if ($tabs !== null) return $tabs;
 
-    $order = ['general', 'events', 'kdrive', 'helloasso', 'mailing'];
+    $order = [
+        'general',
+        'theme',
+        'events',
+        'kdrive',
+        'helloasso',
+        'mailing',
+        'documentation'
+    ];
     $tabs = [];
 
     foreach ($order as $tab_key) {
@@ -32,7 +40,7 @@ add_action('admin_init', function() {
         $group = 'mon_plugin_options_' . $tab_key; // groupe unique par onglet
 
         foreach ($tab['fields'] as $key => $field) {
-            if (in_array($field['type'] ?? '', ['readonly_url', 'heading', 'paragraph'])) continue;
+            if (in_array($field['type'] ?? '', ['readonly_url', 'heading', 'paragraph', 'html_text'])) continue;
 
             $args = [];
             if ($field['type'] === 'repeater') {
@@ -130,8 +138,8 @@ function mon_plugin_sanitize_repeater($value, $columns) {
 // ============================================
 add_action('admin_menu', function() {
     add_options_page(
-        'Plugin Vue – Paramètres',
-        'Plugin Vue',
+        'Plugin MPS Tools – Paramètres',
+        'Plugin MPS Tools',
         'manage_options',
         'mon-plugin-settings',
         'mon_plugin_render_settings_page'
@@ -146,6 +154,11 @@ function mon_plugin_render_field($key, $field) {
 
     if ($type === 'paragraph') {
         mon_plugin_render_paragraph($field);
+        return;
+    }
+
+    if ($type === 'html_text') {
+        mon_plugin_render_html_text($field);
         return;
     }
 
@@ -185,6 +198,18 @@ function mon_plugin_render_field($key, $field) {
                        value="<?php echo esc_attr($value); ?>"
                        class="regular-text mon-plugin-global" />
             <?php endif; ?>
+        </td>
+    </tr>
+    <?php
+}
+
+function mon_plugin_render_html_text($field) {
+    ?>
+    <tr>
+        <td colspan="2" style="padding: 4px 0 16px;">
+            <p style="color: #555; font-style: italic; margin: 0;">
+                <?php echo $field['text']; ?>
+            </p>
         </td>
     </tr>
     <?php
@@ -350,7 +375,7 @@ function mon_plugin_render_settings_page() {
     $current_group = 'mon_plugin_options_' . $current_tab;
     ?>
     <div class="wrap">
-        <h1>Paramètres Plugin Vue</h1>
+        <h1>Paramètres MPS Tools</h1>
 
         <h2 class="nav-tab-wrapper">
             <?php foreach ($tabs as $tab_key => $tab): ?>
@@ -368,7 +393,7 @@ function mon_plugin_render_settings_page() {
                     <?php mon_plugin_render_field($key, $field); ?>
                 <?php endforeach; ?>
             </table>
-            <?php submit_button(); ?>
+            <?php if ($current_tab !== 'documentation') submit_button(); ?>
         </form>
     </div>
 
