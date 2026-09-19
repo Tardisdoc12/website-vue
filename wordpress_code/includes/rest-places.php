@@ -9,19 +9,19 @@ if (!defined('ABSPATH')) exit;
 //------------------------------------------------------------------------------
 // IMPORTS
 
-require_once plugin_dir_path(__FILE__) . 'functions.php';
+require_once MPS_TOOLS_FUNCTIONS_DIR . 'route_callback.php';
 
 //------------------------------------------------------------------------------
 
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/places', [
         'methods' => 'GET',
-        'callback' => 'myplugin_get_places',
-        'permission_callback' => 'monplugin_verify_csrf',
+        'callback' => 'mps_tools_get_places',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
     ]);
 });
 
-function myplugin_get_places(WP_REST_Request $request) {
+function mps_tools_get_places(WP_REST_Request $request) {
     global $wpdb;
 
     $table_places = $wpdb->prefix . "places";
@@ -36,12 +36,12 @@ function myplugin_get_places(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/places', [
         'methods' => 'POST',
-        'callback' => 'myplugin_create_place',
-        'permission_callback' => 'monplugin_verify_csrf',
+        'callback' => 'mps_tools_create_place',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
     ]);
 });
 
-function myplugin_create_place(WP_REST_Request $request) {
+function mps_tools_create_place(WP_REST_Request $request) {
     global $wpdb;
 
     $table_places = $wpdb->prefix . "places";

@@ -8,28 +8,45 @@
 
 if (!defined('ABSPATH')) exit;
 
+define('MPS_TOOLS_MAIN_FILE', __FILE__);
+define('MPS_TOOLS_FUNCTIONS_DIR', __DIR__ . '/functions/');
+define('MPS_TOOLS_OBJECTS_DIR', __DIR__ . '/objects/');
+define('MPS_TOOLS_INCLUDES_DIR', __DIR__ . '/includes/');
+define('MPS_TOOLS_BDD_DIR', __DIR__ . '/base_de_donnee/');
+define('MPS_TOOLS_PARAMETERS_DIR', __DIR__ . '/parametres/');
+
 // Charger tous les fichiers nécessaires
 $includes = [
-    'includes/shortcodes.php',
-    'includes/rest-fields.php',
-    'includes/db-tables.php',
-    'includes/rest-events.php',
-    'includes/rest-subscribe.php',
-    'includes/rest-users.php',
-    'includes/rest-auth.php',
-    'includes/rest-source.php',
-    'includes/rest_favoris.php',
-    'includes/migrations.php',
-    'includes/events_template.php',
-    'includes/rest-conseils.php',
-    'includes/rest-notes.php',
-    'includes/rest-media.php',
-    'includes/rest-places.php',
-    'includes/rest-payement.php',
-    'includes/rest-notification-helloasso.php',
-    'parametres/admin-settings.php'
+    'shortcodes.php',
+    'rest-fields.php',
+    'rest-events.php',
+    'rest-subscribe.php',
+    'rest-users.php',
+    'rest-auth.php',
+    'rest-source.php',
+    'rest_favoris.php',
+    'events_template.php',
+    'rest-conseils.php',
+    'rest-notes.php',
+    'rest-media.php',
+    'rest-places.php',
+    'rest-payement.php',
+    'rest-notification-helloasso.php',
+    
 ];
 
+$file_functions = [
+    'route_callback.php',
+    'mailing.php',
+    'render_field_parameters.php',
+    'sanitize_field_parameters.php',
+    'shortcodes.php'
+];
+
+$files_database = [
+    'table_creation.php',
+    'table_migration.php',
+];
 
 add_filter('wp_mail_from', function($email) {
     return get_option('mon_plugin_mail_from') ?: $email;
@@ -39,12 +56,37 @@ add_filter('wp_mail_from_name', function($name) {
     return get_option('mon_plugin_mail_name') ?: $name;
 });
 
-foreach ($includes as $file) {
-    require_once plugin_dir_path(__FILE__) . $file;
+
+foreach ($file_functions as $file) {
+    $file_path = MPS_TOOLS_FUNCTIONS_DIR . $file;
+    if (file_exists($file_path)) {
+        require_once $file_path;
+    } else {
+        error_log("MPS Tools : fichier de fonction manquant : {$file_path}");
+    }
 }
 
-register_activation_hook(__FILE__, 'mon_plugin_creer_tables');
-register_activation_hook(__FILE__, 'monplugin_run_migrations');
+foreach ($files_database as $file) {
+    $file_path = MPS_TOOLS_BDD_DIR . $file;
+    if (file_exists($file_path)) {
+        require_once $file_path;
+    } else {
+        error_log("MPS Tools : fichier de base de donnée manquant : {$file_path}");
+    }
+}
+
+require_once MPS_TOOLS_PARAMETERS_DIR . 'admin-settings.php';
+
+foreach ($includes as $file) {
+    $file_path = MPS_TOOLS_INCLUDES_DIR . $file;
+    if (file_exists($file_path)) {
+        require_once $file_path;
+    } else {
+        error_log("MPS Tools : fichier de fonction manquant : {$file_path}");
+    }
+}
+
+
 
 //------------------------------------------------------------------------------
 // End of File

@@ -9,20 +9,19 @@ if (!defined('ABSPATH')) exit;
 //------------------------------------------------------------------------------
 // IMPORTS
 
-$file = "functions.php";
-require_once plugin_dir_path(__FILE__) . $file;
+require_once MPS_TOOLS_FUNCTIONS_DIR . 'route_callback.php';
 
 //------------------------------------------------------------------------------
 
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/favoris', [
         'methods' => 'POST',
-        'callback' => 'myplugin_add_favoris',
-        'permission_callback' => 'monplugin_verify_csrf',
+        'callback' => 'mps_tools_add_favoris',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
     ]);
 });
 
-function myplugin_add_favoris(WP_REST_Request $request) {
+function mps_tools_add_favoris(WP_REST_Request $request) {
     global $wpdb;
     $table_favoris = $wpdb->prefix . "favoris";
     $table_file = $wpdb->prefix . "source";
@@ -68,12 +67,12 @@ function myplugin_add_favoris(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/favoris', [
         'methods' => 'GET',
-        'callback' => 'myplugin_get_favoris',
-        'permission_callback' => 'monplugin_verify_csrf',
+        'callback' => 'mps_tools_get_favoris',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
     ]);
 });
 
-function myplugin_get_favoris(WP_REST_Request $request) {
+function mps_tools_get_favoris(WP_REST_Request $request) {
     global $wpdb;
     $table_favoris = $wpdb->prefix . "favoris";
     $user_id = get_current_user_id();
@@ -110,12 +109,12 @@ function myplugin_get_favoris(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/favoris/(?P<id>\d+)', [
         'methods' => 'GET',
-        'callback' => 'myplugin_get_favoris_by_user',
-        'permission_callback' => 'monplugin_verify_csrf',
+        'callback' => 'mps_tools_get_favoris_by_user',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
     ]);
 });
 
-function myplugin_get_favoris_by_user(WP_REST_Request $request) {
+function mps_tools_get_favoris_by_user(WP_REST_Request $request) {
     global $wpdb;
     $table_favoris = $wpdb->prefix . "favoris";
     $user_id = (int) $request->get_param('id');
@@ -150,12 +149,12 @@ function myplugin_get_favoris_by_user(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/favoris', [
         'methods' => 'DELETE',
-        'callback' => 'myplugin_delete_favoris',
-        'permission_callback' => 'monplugin_verify_csrf',
+        'callback' => 'mps_tools_delete_favoris',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
     ]);
 });
 
-function myplugin_delete_favoris(WP_REST_Request $request) {
+function mps_tools_delete_favoris(WP_REST_Request $request) {
     global $wpdb;
     $table_favoris = $wpdb->prefix . "favoris";
     $user_id = get_current_user_id();
@@ -205,12 +204,12 @@ function myplugin_delete_favoris(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/favoris/(?P<id>\d+)', [
         'methods' => 'DELETE',
-        'callback' => 'myplugin_delete_all_by_favoris',
-        'permission_callback' => 'monplugin_verify_csrf',
+        'callback' => 'mps_tools_delete_all_by_favoris',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
     ]);
 });
 
-function myplugin_delete_all_by_favoris(WP_REST_Request $request) {
+function mps_tools_delete_all_by_favoris(WP_REST_Request $request) {
     global $wpdb;
     $table_favoris = $wpdb->prefix . "favoris";
     $file_id = (int) $request->get_param('id');

@@ -17,12 +17,12 @@ require_once plugin_dir_path(__FILE__) . $file;
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1','/subscribe/(?P<user_id>\d+)/(?P<event_id>\d+)',[
         'methods' => 'DELETE',
-        'callback' => 'monplugin_delete_subscribe',
-        'permission_callback' => 'monplugin_verify_csrf'
+        'callback' => 'mps_tools_delete_subscribe',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
     ]);
 });
 
-function monplugin_delete_subscribe(WP_REST_Request $request) {
+function mps_tools_delete_subscribe(WP_REST_Request $request) {
     global $wpdb;
     $table_events   = $wpdb->prefix . "events";
     $table_inscrits = $wpdb->prefix . "inscrits";
@@ -72,12 +72,12 @@ function monplugin_delete_subscribe(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1','/subscribe',[
         'methods' => 'POST',
-        'callback' => 'monplugin_create_subscribe',
-        'permission_callback' => 'monplugin_verify_csrf'
+        'callback' => 'mps_tools_create_subscribe',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
     ]);
 });
 
-function monplugin_create_subscribe(WP_REST_Request $request) {
+function mps_tools_create_subscribe(WP_REST_Request $request) {
     global $wpdb;
     $table_events   = $wpdb->prefix . "events";
     $table_inscrits = $wpdb->prefix . "inscrits";
@@ -211,12 +211,12 @@ function monplugin_create_subscribe(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1','/subscribe/(?P<event_id>\d+)/(?P<user_id>\d+)/',[
         'methods' => 'POST',
-        'callback' => 'monplugin_update_subscribe',
-        'permission_callback' => 'monplugin_verify_csrf'
+        'callback' => 'mps_tools_update_subscribe',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
     ]);
 });
 
-function monplugin_update_subscribe(WP_REST_Request $request) {
+function mps_tools_update_subscribe(WP_REST_Request $request) {
     global $wpdb;
     $table_events   = $wpdb->prefix . "events";
     $table_users    = $wpdb->prefix . "users_inscrits";

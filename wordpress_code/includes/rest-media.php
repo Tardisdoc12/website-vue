@@ -4,19 +4,19 @@
 */
 if (!defined('ABSPATH')) exit;
 
-require_once plugin_dir_path(__FILE__) . 'functions.php';
+require_once MPS_TOOLS_FUNCTIONS_DIR . 'route_callback.php';
 
 //------------------------------------------------------------------------------
 
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/medias/thumbnails', [
         'methods' => 'GET',
-        'callback' => 'myplugin_get_medias_thumbnails',
-        'permission_callback' => 'monplugin_verify_csrf'
+        'callback' => 'mps_tools_get_medias_thumbnails',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
     ]);
 });
 
-function myplugin_get_medias_thumbnails(WP_REST_Request $request) {
+function mps_tools_get_medias_thumbnails(WP_REST_Request $request) {
     $urls = $request->get_param('urls');
 
     if (empty($urls) || !is_array($urls)) {
@@ -84,12 +84,12 @@ function myplugin_get_medias_thumbnails(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/medias/directory/(?P<directory_id>\d+)', [
         'methods' => 'GET',
-        'callback' => 'myplugin_get_medias',
-        'permission_callback' => 'monplugin_verify_csrf'
+        'callback' => 'mps_tools_get_medias',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
     ]);
 });
 
-function myplugin_get_medias(WP_REST_Request $request) {
+function mps_tools_get_medias(WP_REST_Request $request) {
     $token = defined('KDRIVE_TOKEN') ? KDRIVE_TOKEN : get_option('mon_plugin_token');
     $kdrive_id = get_option('mon_plugin_kdrive_id');
     $kdrive_directory_default = defined('KDRIVE_DIRECTORY_ID') ? KDRIVE_DIRECTORY_ID : get_option('mon_plugin_kdrive_directory_id');
@@ -157,12 +157,12 @@ function myplugin_get_medias(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/medias', [
         'methods' => 'GET',
-        'callback' => 'myplugin_get_dir_medias',
-        'permission_callback' => 'monplugin_verify_csrf'
+        'callback' => 'mps_tools_get_dir_medias',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
     ]);
 });
 
-function myplugin_get_dir_medias(WP_REST_Request $request) {
+function mps_tools_get_dir_medias(WP_REST_Request $request) {
     global $wpdb;
 
     $table_medias = $wpdb->prefix . "medias";
@@ -203,12 +203,12 @@ function myplugin_get_dir_medias(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/medias', [
         'methods'             => 'POST',
-        'callback'            => 'myplugin_upload_medias',
-        'permission_callback' => 'monplugin_verify_csrf',
+        'callback'            => 'mps_tools_upload_medias',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
     ]);
 });
 
-function myplugin_upload_medias(WP_REST_Request $request) {
+function mps_tools_upload_medias(WP_REST_Request $request) {
     global $wpdb;
 
     $table_medias   = $wpdb->prefix . "medias";
@@ -316,13 +316,13 @@ function myplugin_upload_medias(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/medias/directory', [
         'methods'             => 'POST',
-        'callback'            => 'myplugin_create_directory_medias',
-        'permission_callback' => 'monplugin_verify_csrf',
+        'callback'            => 'mps_tools_create_directory_medias',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
     ]);
 });
 
 
-function myplugin_create_directory_medias(WP_REST_Request $request) {
+function mps_tools_create_directory_medias(WP_REST_Request $request) {
     global $wpdb;
 
     $table_medias = $wpdb->prefix . "medias";
@@ -407,12 +407,12 @@ function myplugin_create_directory_medias(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/medias/(?P<id>\d+)', [
         'methods'             => 'DELETE',
-        'callback'            => 'myplugin_delete_medias',
-        'permission_callback' => 'monplugin_verify_csrf',
+        'callback'            => 'mps_tools_delete_medias',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
     ]);
 });
 
-function myplugin_delete_medias(WP_REST_Request $request) {
+function mps_tools_delete_medias(WP_REST_Request $request) {
     global $wpdb;
 
     $id = intval($request['id']);

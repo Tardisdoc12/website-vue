@@ -16,7 +16,7 @@ add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/notes', [
         'methods' => 'GET',
         'callback' => 'myplugin_get_notes',
-        'permission_callback' => 'monplugin_verify_csrf',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
     ]);
 });
 
@@ -54,12 +54,12 @@ function myplugin_get_notes(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1','/notes',[
         'methods' => 'POST',
-        'callback' => 'monplugin_create_notes',
-        'permission_callback' => 'monplugin_verify_csrf'
+        'callback' => 'mps_tools_create_notes',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
     ]);
 });
 
-function monplugin_create_notes(WP_REST_Request $request) {
+function mps_tools_create_notes(WP_REST_Request $request) {
     global $wpdb;
     $table_notes = $wpdb->prefix . "notes";
     $user_id     = (int) $request->get_param('user_id');
@@ -103,13 +103,13 @@ function monplugin_create_notes(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/notes', [
         'methods' => 'PUT',
-        'callback' => 'monplugin_update_notes',
-        'permission_callback' => 'monplugin_verify_csrf',
+        'callback' => 'mps_tools_update_notes',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
     ]);
 });
 
 // Fonction pour modifier l'événement
-function monplugin_update_notes(WP_REST_Request $request) {
+function mps_tools_update_notes(WP_REST_Request $request) {
     global $wpdb;
     $table = $wpdb->prefix . "notes";
     $user_id = intval($request->get_param('user_id'));

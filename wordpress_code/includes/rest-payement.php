@@ -8,14 +8,15 @@ const HELLOASSO_BASE_URL = 'https://api.helloasso-sandbox.com';
 const HELLOASSO_TOKEN_TRANSIENT_KEY = 'helloasso_encrypted_access_token';
 
 /**
- * Récupère un token d'accès HelloAsso valide, depuis le cache si possible.
+require_once MPS_TOOLS_FUNCTIONS_DIR . 'route_callback.php';
  * Fonction interne uniquement — jamais exposée via une route REST.
  */
+require_once MPS_TOOLS_FUNCTIONS_DIR . 'route_callback.php';
 function helloasso_get_access_token() {
     $cached_encrypted = get_transient(HELLOASSO_TOKEN_TRANSIENT_KEY);
 
     if ($cached_encrypted !== false) {
-        $token = myplugin_decrypt($cached_encrypted);
+        $token = mps_tools_decrypt($cached_encrypted);
         if ($token) {
             return $token;
         }
@@ -106,7 +107,7 @@ function helloasso_fetch_new_access_token() {
     }
 
     $expires_in = $data['expires_in'] ?? 1800;
-    $encrypted = myplugin_encrypt($data['access_token']);
+    $encrypted = mps_tools_encrypt($data['access_token']);
     set_transient(HELLOASSO_TOKEN_TRANSIENT_KEY, $encrypted, max($expires_in - 60, 60));
 
     return $data['access_token'];
@@ -115,13 +116,13 @@ function helloasso_fetch_new_access_token() {
 /**
  * Chiffrement AES-256-CBC, clé dérivée des salts WordPress (jamais stockée séparément)
  */
-function myplugin_get_encryption_key() {
+function mps_tools_get_encryption_key() {
     // wp_salt('auth') est unique par installation WordPress et déjà stockée de façon sécurisée
     return hash('sha256', wp_salt('auth'), true); // 32 bytes, requis pour AES-256
 }
 
-function myplugin_encrypt($plain_text) {
-    $key = myplugin_get_encryption_key();
+function mps_tools_encrypt($plain_text) {
+    $key = mps_tools_get_encryption_key();
     $iv = random_bytes(16);
     $encrypted = openssl_encrypt($plain_text, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
 
@@ -133,8 +134,8 @@ function myplugin_encrypt($plain_text) {
     return base64_encode($iv . $encrypted);
 }
 
-function myplugin_decrypt($encoded) {
-    $key = myplugin_get_encryption_key();
+function mps_tools_decrypt($encoded) {
+    $key = mps_tools_get_encryption_key();
     $data = base64_decode($encoded);
 
     if ($data === false || strlen($data) < 16) {
@@ -153,12 +154,12 @@ function myplugin_decrypt($encoded) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/create_payements', [
         'methods'             => 'POST',
-        'callback'            => 'myplugin_create_payements',
-        'permission_callback' => 'monplugin_verify_csrf',
+        'callback'            => 'mps_tools_create_payements',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
     ]);
 });
 
-function myplugin_create_payements(WP_REST_Request $request) {
+function mps_tools_create_payements(WP_REST_Request $request) {
     global $wpdb;
     $params = $request->get_json_params();
 
@@ -419,7 +420,7 @@ function treat_adherent_payment_by_inscription_id($inscription_ids) {
  * Vérifie et finalise un paiement HelloAsso de façon idempotente.
  * Appelée depuis 3 points d'entrée : returnUrl (utilisateur), webhook, cron.
  */
-function myplugin_finalize_helloasso_payment($checkout_intent_id, $source = 'unknown') {
+function mps_tools_finalize_helloasso_payment($checkout_intent_id, $source = 'unknown') {
     global $wpdb;
     $table_inscrits = $wpdb->prefix . 'inscrits';
 
@@ -502,7 +503,7 @@ function helloasso_run_pending_checkouts_check() {
             continue;
         }
 
-        myplugin_finalize_helloasso_payment($checkout_intent_id, 'cron');
+        mps_tools_finalize_helloasso_payment($checkout_intent_id, 'cron');
 
         // Qu'il ait réussi ou échoué définitivement (abandonné), on arrête de le suivre :
         // s'il a réussi, c'est fait ; s'il a échoué après 50 min, HelloAsso le considère abandonné.
@@ -516,19 +517,19 @@ function helloasso_run_pending_checkouts_check() {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/check_payment', [
         'methods'             => 'GET',
-        'callback'            => 'myplugin_handle_check_payment',
+        'callback'            => 'mps_tools_handle_check_payment',
         'permission_callback' => '__return_true', // accessible sans connexion : l'utilisateur revient d'un paiement, connecté ou pas
     ]);
 });
 
-function myplugin_handle_check_payment(WP_REST_Request $request) {
+function mps_tools_handle_check_payment(WP_REST_Request $request) {
     $checkout_intent_id = absint($request->get_param('checkoutIntentId'));
 
     if (!$checkout_intent_id) {
         return new WP_Error('missing_param', 'checkoutIntentId manquant.', ['status' => 400]);
     }
 
-    $result = myplugin_finalize_helloasso_payment($checkout_intent_id, 'returnUrl');
+    $result = mps_tools_finalize_helloasso_payment($checkout_intent_id, 'returnUrl');
 
     if (is_wp_error($result)) {
         return $result; // conserve son propre code HTTP (404, 500, etc.)

@@ -6,15 +6,14 @@ if (!defined('ABSPATH')) {
 //------------------------------------------------------------------------------
 // IMPORTS
 
-$file = "functions.php";
-require_once plugin_dir_path(__FILE__) . $file;
-$shortcodesHookersPath = "objects/shortcodesHookers.php";
-require_once plugin_dir_path(dirname(__FILE__)) . $shortcodesHookersPath;
+require_once MPS_TOOLS_FUNCTIONS_DIR . 'shortcodes.php';
+require_once MPS_TOOLS_OBJECTS_DIR . "shortcodesHookers.php";
+
 //------------------------------------------------------------------------------
 /**
  * Instanciation de la classe ShortcodesHookers
  */
-$shortcodesHookers = new ShortcodesHookers(get_vue_shortcodes());
+$shortcodesHookers = new ShortcodesHookers(get_mps_tools_shortcodes());
 
 //------------------------------------------------------------------------------
 // End of File

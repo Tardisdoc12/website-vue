@@ -9,20 +9,19 @@ if (!defined('ABSPATH')) exit;
 //------------------------------------------------------------------------------
 // IMPORTS
 
-$file = "functions.php";
-require_once plugin_dir_path(__FILE__) . $file;
+require_once MPS_TOOLS_FUNCTIONS_DIR . 'route_callback.php';
 
 //------------------------------------------------------------------------------
 
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/conseils', [
         'methods' => 'POST',
-        'callback' => 'myplugin_add_conseils',
-        'permission_callback' => 'monplugin_verify_csrf',
+        'callback' => 'mps_tools__add_conseils',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
     ]);
 });
 
-function myplugin_add_conseils(WP_REST_Request $request) {
+function mps_tools__add_conseils(WP_REST_Request $request) {
     global $wpdb;
     $table_conseils = $wpdb->prefix . "conseils";
     $table_file = $wpdb->prefix . "source";
@@ -76,12 +75,12 @@ function myplugin_add_conseils(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/conseils', [
         'methods' => 'GET',
-        'callback' => 'myplugin_get_conseils',
-        'permission_callback' => 'monplugin_verify_csrf',
+        'callback' => 'mps_tools__get_conseils',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
     ]);
 });
 
-function myplugin_get_conseils(WP_REST_Request $request) {
+function mps_tools__get_conseils(WP_REST_Request $request) {
     global $wpdb;
     $table_conseils = $wpdb->prefix . "conseils";
     $user_id = get_current_user_id();
@@ -118,12 +117,12 @@ function myplugin_get_conseils(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/conseils/(?P<id>\d+)', [
         'methods' => 'GET',
-        'callback' => 'myplugin_get_conseils_by_user',
-        'permission_callback' => 'monplugin_verify_csrf',
+        'callback' => 'mps_tools__get_conseils_by_user',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
     ]);
 });
 
-function myplugin_get_conseils_by_user(WP_REST_Request $request) {
+function mps_tools__get_conseils_by_user(WP_REST_Request $request) {
     global $wpdb;
     $table_conseils = $wpdb->prefix . "conseils";
     $user_id = (int) $request->get_param('id');
@@ -158,12 +157,12 @@ function myplugin_get_conseils_by_user(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/conseils', [
         'methods' => 'DELETE',
-        'callback' => 'myplugin_delete_conseils',
-        'permission_callback' => 'monplugin_verify_csrf',
+        'callback' => 'mps_tools__delete_conseils',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
     ]);
 });
 
-function myplugin_delete_conseils(WP_REST_Request $request) {
+function mps_tools__delete_conseils(WP_REST_Request $request) {
     global $wpdb;
     $table_conseils = $wpdb->prefix . "conseils";
     $user_id = get_current_user_id();
@@ -213,12 +212,12 @@ function myplugin_delete_conseils(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/conseils/(?P<user_id>\d+)/(?P<file_id>\d+)', [
         'methods' => 'DELETE',
-        'callback' => 'myplugin_delete_conseils_for_user',
-        'permission_callback' => 'monplugin_verify_csrf',
+        'callback' => 'mps_tools__delete_conseils_for_user',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
     ]);
 });
 
-function myplugin_delete_conseils_for_user(WP_REST_Request $request) {
+function mps_tools__delete_conseils_for_user(WP_REST_Request $request) {
     global $wpdb;
     $table_conseils = $wpdb->prefix . "conseils";
     $user_id = (int) $request->get_param('user_id');
@@ -268,12 +267,12 @@ function myplugin_delete_conseils_for_user(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/conseils/(?P<id>\d+)', [
         'methods' => 'DELETE',
-        'callback' => 'myplugin_delete_all_by_conseils',
-        'permission_callback' => 'monplugin_verify_csrf',
+        'callback' => 'mps_tools__delete_all_by_conseils',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
     ]);
 });
 
-function myplugin_delete_all_by_conseils(WP_REST_Request $request) {
+function mps_tools__delete_all_by_conseils(WP_REST_Request $request) {
     global $wpdb;
     $table_conseils = $wpdb->prefix . "conseils";
     $file_id = (int) $request->get_param('id');

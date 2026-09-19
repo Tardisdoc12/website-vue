@@ -8,14 +8,15 @@ if (!defined('ABSPATH')) exit;
 // IMPORT :
 
 $file = "functions.php";
-require_once plugin_dir_path(__FILE__) . $file;
+require_once MPS_TOOLS_FUNCTIONS_DIR . 'route_callback.php';
+require_once MPS_TOOLS_FUNCTIONS_DIR . "sanitize_field_parameters.php";
 
 //------------------------------------------------------------------------------
 // Enregistre le Custom Post Type "event"
 
-add_action('init', 'monplugin_register_event_cpt');
+add_action('init', 'mps_tools_register_event_cpt');
 
-function monplugin_register_event_cpt() {
+function mps_tools_register_event_cpt() {
     register_post_type('event', [
         'labels' => [
             'name' => 'Événements',
@@ -34,12 +35,12 @@ function monplugin_register_event_cpt() {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/events', [
         'methods' => 'GET',
-        'callback' => 'monplugin_get_events',
-        'permission_callback' => 'monplugin_verify_csrf'
+        'callback' => 'mps_tools_get_events',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
     ]);
 });
 
-function monplugin_get_events(WP_REST_Request $request) {
+function mps_tools_get_events(WP_REST_Request $request) {
     global $wpdb;
     $table_events   = $wpdb->prefix . "events";
     $table_inscrits = $wpdb->prefix . "inscrits";
@@ -115,12 +116,12 @@ function monplugin_get_events(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/events/(?P<user_id>\d+)', [
         'methods'             => 'POST',
-        'callback'            => 'monplugin_get_event_by_user_id',
-        'permission_callback' => 'monplugin_verify_csrf'
+        'callback'            => 'mps_tools_get_event_by_user_id',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
     ]);
 });
 
-function monplugin_get_event_by_user_id(WP_REST_Request $request) {
+function mps_tools_get_event_by_user_id(WP_REST_Request $request) {
     global $wpdb;
     $table_events   = $wpdb->prefix . "events";
     $table_inscrits = $wpdb->prefix . "inscrits";
@@ -150,12 +151,12 @@ function monplugin_get_event_by_user_id(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/events/(?P<id>\d+)', [
         'methods'             => 'GET',
-        'callback'            => 'monplugin_get_event_id',
-        'permission_callback' => 'monplugin_verify_csrf'
+        'callback'            => 'mps_tools_get_event_id',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
     ]);
 });
 
-function monplugin_get_event_id(WP_REST_Request $request) {
+function mps_tools_get_event_id(WP_REST_Request $request) {
     global $wpdb;
     $table_events   = $wpdb->prefix . "events";
     $table_inscrits = $wpdb->prefix . "inscrits";
@@ -225,12 +226,12 @@ function monplugin_get_event_id(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/events/post/(?P<id>\d+)', [
         'methods'             => 'GET',
-        'callback'            => 'monplugin_get_event_post_id',
-        'permission_callback' => 'monplugin_verify_csrf'
+        'callback'            => 'mps_tools_get_event_post_id',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
     ]);
 });
 
-function monplugin_get_event_post_id(WP_REST_Request $request) {
+function mps_tools_get_event_post_id(WP_REST_Request $request) {
     global $wpdb;
     $table_events   = $wpdb->prefix . "events";
     $table_inscrits = $wpdb->prefix . "inscrits";
@@ -312,12 +313,12 @@ function monplugin_get_event_post_id(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1','/events',[
         'methods' => 'POST',
-        'callback' => 'monplugin_create_events',
-        'permission_callback' => 'monplugin_verify_csrf'
+        'callback' => 'mps_tools_create_events',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
     ]);
 });
 
-function monplugin_create_events(WP_REST_Request $request) {
+function mps_tools_create_events(WP_REST_Request $request) {
     global $wpdb;
 
     error_log('HTML brut reçu: ' . $request['description']);
@@ -326,10 +327,10 @@ function monplugin_create_events(WP_REST_Request $request) {
         'post_type'   => 'event',
         'post_title'  => sanitize_text_field($request['title']),
         'post_status' => 'publish',
-        'post_content'=> monplugin_sanitize_rich_text($request['description']),
+        'post_content'=> mps_tools_sanitize_rich_text($request['description']),
     ], true);
 
-    $description = monplugin_sanitize_rich_text($request['description']);
+    $description = mps_tools_sanitize_rich_text($request['description']);
     error_log('Description after kses: ' . $description);
 
 
@@ -345,7 +346,7 @@ function monplugin_create_events(WP_REST_Request $request) {
             'title' => sanitize_text_field($request['title']),
             'start_date' => sanitize_text_field($request['start_date']),
             'end_date' => sanitize_text_field($request['end_date']),
-            'description' => monplugin_sanitize_rich_text($request['description']),
+            'description' => mps_tools_sanitize_rich_text($request['description']),
             'place' => sanitize_text_field($request['place']),
             'category' => sanitize_text_field($request['category']),
             'subscribe_places' => intval($request['subscribe_places']),
@@ -393,13 +394,13 @@ function monplugin_create_events(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/events/(?P<id>\d+)', [
         'methods' => 'PUT',
-        'callback' => 'monplugin_update_event',
-        'permission_callback' => 'monplugin_verify_csrf',
+        'callback' => 'mps_tools_update_event',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
     ]);
 });
 
 // Fonction pour modifier l'événement
-function monplugin_update_event(WP_REST_Request $request) {
+function mps_tools_update_event(WP_REST_Request $request) {
     global $wpdb;
     $table = $wpdb->prefix . "events";
     $id = intval($request['id']);
@@ -430,7 +431,7 @@ function monplugin_update_event(WP_REST_Request $request) {
         'title' => sanitize_text_field($request['title']),
         'start_date' => sanitize_text_field($request['start_date']),
         'end_date' => sanitize_text_field($request['end_date']),
-        'description' =>  monplugin_sanitize_rich_text($request['description']),
+        'description' =>  mps_tools_sanitize_rich_text($request['description']),
         'place' => sanitize_text_field($request['place']),
         'category' => sanitize_text_field($request['category']),
         'subscribe_places' => intval($request['subscribe_places']),
@@ -466,12 +467,12 @@ function monplugin_update_event(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1','/events/(?P<id>\d+)',[
         'methods' => 'DELETE',
-        'callback' => 'monplugin_delete_events',
-        'permission_callback' => 'monplugin_verify_csrf'
+        'callback' => 'mps_tools_delete_events',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
     ]);
 });
 
-function monplugin_delete_events(WP_REST_Request $request) {
+function mps_tools_delete_events(WP_REST_Request $request) {
     global $wpdb;
     $table_events = $wpdb->prefix . "events";
     $table_inscrits = $wpdb->prefix . "inscrits";

@@ -11,12 +11,12 @@ if (!defined('ABSPATH')) exit;
 add_action('rest_api_init', function () {
     register_rest_route('helloasso/v1', '/notification', [
         'methods'             => 'POST',
-        'callback'            => 'myplugin_handle_helloasso_notification',
+        'callback'            => 'mps_tools_handle_helloasso_notification',
         'permission_callback' => '__return_true',
     ]);
 });
 
-function myplugin_handle_helloasso_notification(WP_REST_Request $request) {
+function mps_tools_handle_helloasso_notification(WP_REST_Request $request) {
     $data = $request->get_json_params();
 
     // Vérifiez si les données sont valides

@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) exit;
 //------------------------------------------------------------------------------
 // IMPORTS
 
-require_once plugin_dir_path(__FILE__) . 'functions.php';
+require_once MPS_TOOLS_FUNCTIONS_DIR . 'route_callback.php';
 
 //------------------------------------------------------------------------------
 // ROUTE : Récupération des sous-catégories
@@ -17,12 +17,12 @@ require_once plugin_dir_path(__FILE__) . 'functions.php';
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/subcategories', [
         'methods' => 'GET',
-        'callback' => 'myplugin_get_subcategories',
-        'permission_callback' => '__return_true', // À définir si pas déjà fait
+        'callback' => 'mps_tools_get_subcategories',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt', // À définir si pas déjà fait
     ]);
 });
 
-function myplugin_get_subcategories(WP_REST_Request $request) {
+function mps_tools_get_subcategories(WP_REST_Request $request) {
     global $wpdb;
 
     $table_subcategories = $wpdb->prefix . "subcategories";
@@ -38,12 +38,12 @@ function myplugin_get_subcategories(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/sources', [
         'methods' => 'GET',
-        'callback' => 'myplugin_get_sources',
-        'permission_callback' => 'monplugin_verify_csrf', // même remarque
+        'callback' => 'mps_tools_get_sources',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt', // même remarque
     ]);
 });
 
-function myplugin_get_sources(WP_REST_Request $request) {
+function mps_tools_get_sources(WP_REST_Request $request) {
     global $wpdb;
 
     $table_subcategories = $wpdb->prefix . "subcategories";
@@ -69,12 +69,12 @@ function myplugin_get_sources(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/exercices', [
         'methods' => 'GET',
-        'callback' => 'myplugin_get_sources_exercice',
-        'permission_callback' => 'monplugin_verify_csrf', // même remarque
+        'callback' => 'mps_tools_get_sources_exercice',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt', // même remarque
     ]);
 });
 
-function myplugin_get_sources_exercice(WP_REST_Request $request) {
+function mps_tools_get_sources_exercice(WP_REST_Request $request) {
     global $wpdb;
 
     $table_subcategories = $wpdb->prefix . "subcategories";
@@ -101,12 +101,12 @@ function myplugin_get_sources_exercice(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/subcategories', [
         'methods' => 'POST',
-        'callback' => 'myplugin_add_subcategories',
-        'permission_callback' => 'monplugin_verify_csrf', // même remarque
+        'callback' => 'mps_tools_add_subcategories',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt', // même remarque
     ]);
 });
 
-function myplugin_add_subcategories(WP_REST_Request $request) {
+function mps_tools_add_subcategories(WP_REST_Request $request) {
     global $wpdb;
 
     $table_subcategories = $wpdb->prefix . "subcategories";
@@ -137,12 +137,12 @@ function myplugin_add_subcategories(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/sources', [
         'methods' => 'POST',
-        'callback' => 'myplugin_add_sources',
-        'permission_callback' => 'monplugin_verify_csrf', // même remarque
+        'callback' => 'mps_tools_add_sources',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt', // même remarque
     ]);
 });
 
-function myplugin_add_sources(WP_REST_Request $request) {
+function mps_tools_add_sources(WP_REST_Request $request) {
     global $wpdb;
 
     $table_source = $wpdb->prefix . "source";
@@ -172,12 +172,12 @@ function myplugin_add_sources(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/subcategories/(?P<id>\d+)', [
         'methods' => 'DELETE',
-        'callback' => 'myplugin_rm_subcategories',
-        'permission_callback' => 'monplugin_verify_csrf', // même remarque
+        'callback' => 'mps_tools_rm_subcategories',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt', // même remarque
     ]);
 });
 
-function myplugin_rm_subcategories(WP_REST_Request $request) {
+function mps_tools_rm_subcategories(WP_REST_Request $request) {
     global $wpdb;
     $id = intval($request['id']);
     $table_subcategories = $wpdb->prefix . "subcategories";
@@ -199,12 +199,12 @@ function myplugin_rm_subcategories(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/sources/(?P<id>\d+)', [
         'methods' => 'DELETE',
-        'callback' => 'myplugin_rm_sources',
-        'permission_callback' => 'monplugin_verify_csrf', // même remarque
+        'callback' => 'mps_tools_rm_sources',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt', // même remarque
     ]);
 });
 
-function myplugin_rm_sources(WP_REST_Request $request) {
+function mps_tools_rm_sources(WP_REST_Request $request) {
     global $wpdb;
     $id = intval($request['id']);
     $table_source = $wpdb->prefix . "source";
@@ -226,12 +226,12 @@ function myplugin_rm_sources(WP_REST_Request $request) {
 add_action('rest_api_init', function () {
     register_rest_route('vue-plugin/v1', '/sources/(?P<id>\d+)', [
         'methods' => WP_REST_Server::EDITABLE,
-        'callback' => 'myplugin_update_sources',
-        'permission_callback' => 'monplugin_verify_csrf',
+        'callback' => 'mps_tools_update_sources',
+        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
     ]);
 });
 
-function myplugin_update_sources(WP_REST_Request $request) {
+function mps_tools_update_sources(WP_REST_Request $request) {
     global $wpdb;
 
     $id = intval($request['id']);
