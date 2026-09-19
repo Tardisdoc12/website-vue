@@ -15,7 +15,7 @@ return [
             'label' => 'kDrive Directory ID',
             'type'  => 'text',
         ],
-        'mon_plugin_token' => [
+        'mon_plugin_kdrive_token' => [
             'label' => 'Token',
             'type'  => 'password',
         ],

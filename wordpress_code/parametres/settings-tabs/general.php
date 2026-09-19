@@ -24,7 +24,6 @@ return [
         'accept_cash' => [
             'label' => 'Accepter les paiements en espèces',
             'type' => 'checkbox',
-            'default' => 'yes',
         ],
     ],
 ];

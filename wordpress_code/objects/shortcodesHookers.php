@@ -124,8 +124,30 @@ class ShortcodesHookers {
             $this->shortcodes_name
         );
 
-        wp_localize_script($name_modules, 'MON_PLUGIN_SETTINGS', [
+        // on vérifie les configurations des fonctionnalitées:
+        $isKDriveConfigured = 0;
+        $kdrive_id = get_option('mon_plugin_kdrive_id', '');
+        $kdrive_dir_id = get_option('mon_plugin_kdrive_directory_id', '');
+        $kdrive_token = get_option('mon_plugin_kdrive_token', '');
+        if (!empty($kdrive_id) && !empty($kdrive_dir_id) && !empty($kdrive_token)) {
+            $isKDriveConfigured = 1;
+        }
+
+        $isHelloAssoConfigured = 0;
+        $hello_asso_id = get_option('helloasso_client_id', '');
+        $hello_asso_client_secret = get_option('helloasso_client_secret', '');
+        $hello_asso_return_url = get_option('helloasso_return_url', '');
+        if (!empty($hello_asso_id) && !empty($hello_asso_client_secret) && !empty($hello_asso_return_url)) {
+            $isHelloAssoConfigured = 1;
+        }
+
+        $isCashAllowed = get_option('accept_cash', 0);
+
+        wp_localize_script($name_modules, 'MPS_TOOLS_SETTINGS', [
             'categories'         => get_option('mon_plugin_categories', []),
+            'isKdriveConfigured' => $isKDriveConfigured,
+            'isHelloAssoConfigured' => $isHelloAssoConfigured,
+            'isCashAllowed' => $isCashAllowed,
         ]);
 
         wp_localize_script($name_modules, 'MyPluginData', [

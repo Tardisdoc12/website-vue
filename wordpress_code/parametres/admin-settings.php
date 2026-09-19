@@ -85,6 +85,12 @@ add_action('admin_init', function() {
                     };
                 }
 
+                if ($field['type'] === 'checkbox') {
+                    $args['sanitize_callback'] = function($value){
+                        return !empty($value) ? 1 : 0;
+                    };
+                }
+
             register_setting($group, $key, $args);
         }
     }
@@ -182,6 +188,11 @@ function mon_plugin_render_field($key, $field) {
         return;
     }
 
+    if ($type === 'checkbox') {
+        mon_plugin_render_checkbox_field($key, $field);
+        return;
+    }
+
     $value = get_option($key, $field['default'] ?? '');
     ?>
     <tr>
@@ -197,6 +208,27 @@ function mon_plugin_render_field($key, $field) {
                        name="<?php echo esc_attr($key); ?>"
                        value="<?php echo esc_attr($value); ?>"
                        class="regular-text mon-plugin-global" />
+            <?php endif; ?>
+        </td>
+    </tr>
+    <?php
+}
+
+function mon_plugin_render_checkbox_field($key, $field) {
+    $value = get_option($key, $field['default'] ?? 0);
+    $checked = !empty($value);
+    ?>
+    <tr>
+        <th><label for="<?php echo esc_attr($key); ?>"><?php echo esc_html($field['label']); ?></label></th>
+        <td>
+            <input type="hidden" name="<?php echo esc_attr($key); ?>" value="0" />
+            <input type="checkbox"
+                   id="<?php echo esc_attr($key); ?>"
+                   name="<?php echo esc_attr($key); ?>"
+                   value="1"
+                   <?php checked($checked); ?> />
+            <?php if (!empty($field['description'])): ?>
+                <p class="description"><?php echo esc_html($field['description']); ?></p>
             <?php endif; ?>
         </td>
     </tr>

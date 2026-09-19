@@ -16,7 +16,7 @@ function hexToRgb(hex) {
 
 export default {
     get_color_events_by_categorie(categorie) {
-        let categories = MON_PLUGIN_SETTINGS.categories
+        let categories = MPS_TOOLS_SETTINGS.categories
         let categorie_found = categories.find(cat => cat.nom.toLowerCase() === categorie.toLowerCase())
         if (categorie_found) {
             const { r, g, b } = hexToRgb(categorie_found.couleur);
