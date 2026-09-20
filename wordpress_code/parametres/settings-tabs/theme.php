@@ -68,6 +68,18 @@ return [
             'type' => 'color',
             'default' => '#9ca3af',
         ],
+
+        '_heading_modal' => ['type' => 'heading', 'label' => 'Modale'],
+        'modal_background_color' => [
+            'label' => 'Couleur de fond de la modale',
+            'type' => 'color',
+            'default' => '#ffffff',
+        ],
+        'modal_overlay_color' => [
+            'label' => 'Couleur de l\'overlay de la modale',
+            'type' => 'color',
+            'default' => '#4b4c4ed6',
+        ],
         
         
 

@@ -4,7 +4,7 @@
             <!-- Entete -->
             <div class="encadre">
                 <span>
-                    <label style="color:rgb(255, 255, 255);"> {{ title }} </label>
+                    <label style="color:var(--writing-main-color);"> {{ title }} </label>
                 </span>
                 <button class="appearance-none button-base" :style="{ '--btn-bg': 'var(--cancel-color)', '--btn-hover-bg': 'var(--cancel-hover-color)' }" @click="Cancel">
                     <font-awesome-icon icon="fa-solid fa-xmark" />
@@ -62,8 +62,8 @@ export default {
 
 <style>
 .encadre {
-    background-color: rgba(75, 76, 78, 0.84); 
-    color: rgb(255, 255, 255);
+    background-color: rgba(75, 76, 78, 0.84);
+    color: var(--writing-main-color);
     padding: 0.5rem 1rem;
     position: relative;  
     border-top-left-radius: 8px;
@@ -79,7 +79,7 @@ export default {
     align-items: center;
     justify-content: center;
 
-    background-color: rgba(192, 23, 23, 0.8);
+    background-color: var(--cancel-color);
     color: var(--writing-main-color);
     cursor: pointer;
     border-radius: 4px;
@@ -89,7 +89,8 @@ export default {
 }
 
 .encadre .btn-close:hover {
-  background-color: rgba(255, 0, 0, 0.8); /* couleur au survol */
+  background-color: var(--cancel-hover-color); /* couleur au survol */
+  color: var(--writing-main-color);
 }
 
 .modal {

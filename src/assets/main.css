@@ -40,7 +40,9 @@
 
 .button-base:hover {
   background-color: var(--btn-hover-bg);
+  color: var(--writing-main-color);
 }
+
 /*---------------------------------------------------------*/
 /* Event CSS */
 .background-card {

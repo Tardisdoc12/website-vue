@@ -124,6 +124,31 @@ function mps_tools_render_textarea($key, $field) {
 
 //--------------------------------------------------------------------------------------------------
 
+function mps_tools_render_color($key, $field) {
+    $value = get_option($key, $field['default'] ?? '');
+    ?>
+    <tr>
+        <th><label for="<?php echo esc_attr($key); ?>"><?php echo esc_html($field['label']); ?></label></th>
+        <td>
+            <input type="text"
+                id="<?php echo esc_attr($key); ?>"
+                name="<?php echo esc_attr($key); ?>"
+                value="<?php echo esc_attr($value); ?>"
+                data-type="full"
+                data-alpha-enabled="true"
+                data-alpha-color-type="octohex"
+                class="mps-tools-color-picker" 
+            />
+            <?php if (!empty($field['description'])): ?>
+                <p class="description"><?php echo esc_html($field['description']); ?></p>
+            <?php endif; ?>
+        </td>
+    </tr>
+    <?php
+}
+
+//--------------------------------------------------------------------------------------------------
+
 function mps_tools_render_default($key, $field) {
     $value = get_option($key, $field['default'] ?? '');
     ?>

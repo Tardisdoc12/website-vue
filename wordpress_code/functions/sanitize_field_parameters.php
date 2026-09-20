@@ -23,6 +23,31 @@ function mps_tools_sanitize_checkbox($field, $key){
 
 //--------------------------------------------------------------------------------------------------
 
+function mps_tools_validate_color_value($value, $default = '') {
+    if (empty($value)) {
+        return $default;
+    }
+
+    $value = trim($value);
+
+    if (preg_match('/^#([A-Fa-f0-9]{3,4}|[A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$/', $value)) {
+        return $value;
+    }
+
+    return $default;
+}
+
+//--------------------------------------------------------------------------------------------------
+
+function mps_tools_sanitize_color($field, $key) {
+    $args['sanitize_callback'] = function($value) use ($field) {
+        return mps_tools_validate_color_value($value, $field['default'] ?? '');
+    };
+    return $args;
+}
+
+//--------------------------------------------------------------------------------------------------
+
 function mps_tools_sanitize_number($field, $key){
     $args['sanitize_callback'] = function($value) use ($field) {
         // Si vide ou non numérique, on retombe sur la valeur par défaut
@@ -158,7 +183,8 @@ function mps_tools_sanitize_repeater_callback($value, $columns) {
 
         foreach ($columns as $col_key => $col) {
             $type = $col['type'] ?? 'text';
-            $raw = $row[$col_key] ?? '';
+            $row_default = isset($row['default']) ? $row['default'] : '';
+            $raw = $row[$col_key] ?? $row_default;
 
             // Cas spécial : champs_speciaux (liste séparée par virgules -> tableau)
             if ($col_key === 'champs_speciaux') {
@@ -171,7 +197,7 @@ function mps_tools_sanitize_repeater_callback($value, $columns) {
                         $val = !empty($raw) ? 1 : 0;
                         break;
                     case 'color':
-                        $val = sanitize_hex_color($raw) ?: '';
+                        $val = mps_tools_validate_color_value($raw, $row_default) ?: '#000000';
                         break;
                     default:
                         $val = sanitize_text_field($raw);
