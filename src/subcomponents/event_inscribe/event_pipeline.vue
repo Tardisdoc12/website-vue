@@ -43,6 +43,7 @@
         :users-registered="event.users"
         :event_id="Number(event.event_id)"
         :hasAttente="event.attentePlace > 0"
+        :event-categorie="event.categorie"
         @userDeleted="userToDelete"
         @userUpdated="userToUpdate"
     />
@@ -121,6 +122,7 @@ export default{
     },
 
     data() {
+        console.log(this.event)
         return {
             steps: 0,
             lastParticipants: [],

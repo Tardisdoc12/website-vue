@@ -253,5 +253,131 @@ function mps_tools_render_repeater_row($key, $columns, $index, $row) {
 }
 
 //--------------------------------------------------------------------------------------------------
+
+function mps_tools_render_categories($key, $field) {
+    $columns     = $field['columns'];
+    $sub_columns = $field['sub_columns'] ?? [];
+    $rows        = get_option($key, []);
+    if (!is_array($rows)) $rows = [];
+    ?>
+    <tr>
+        <th><?php echo esc_html($field['label']); ?></th>
+        <td>
+            <div class="mps-tools-categories" data-key="<?php echo esc_attr($key); ?>">
+                <div class="mps-tools-categories-list">
+                    <?php foreach ($rows as $i => $row): ?>
+                        <?php mps_tools_render_category_card($key, $columns, $sub_columns, $i, $row); ?>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <button type="button" class="button mps-tools-add-category" data-key="<?php echo esc_attr($key); ?>">
+                + Ajouter une catégorie
+            </button>
+
+            <template id="tpl-<?php echo esc_attr($key); ?>-category">
+                <?php mps_tools_render_category_card($key, $columns, $sub_columns, '__CAT_INDEX__', []); ?>
+            </template>
+        </td>
+    </tr>
+    <?php
+}
+
+//--------------------------------------------------------------------------------------------------
+
+function mps_tools_render_category_card($key, $columns, $sub_columns, $index, $row) {
+    ?>
+    <div class="mps-tools-category-card">
+        <div class="mps-tools-category-header">
+            <button type="button" class="button-link mps-tools-remove-category">✕ Supprimer cette catégorie</button>
+        </div>
+
+        <?php foreach ($columns as $col_key => $col):
+            if ($col_key === 'champs_speciaux') continue;
+
+            $input_type = $col['type'] ?? 'text';
+            $name       = esc_attr($key) . '[' . esc_attr($index) . '][' . esc_attr($col_key) . ']';
+            $default    = $col['default'] ?? ($input_type === 'color' ? '#000000' : '');
+            $raw_value  = $row[$col_key] ?? $default;
+        ?>
+            <div class="mps-tools-category-field">
+                <label><?php echo esc_html($col['label']); ?></label>
+
+                <?php if ($input_type === 'checkbox'): ?>
+                    <input type="hidden" name="<?php echo $name; ?>" value="0" />
+                    <input type="checkbox" name="<?php echo $name; ?>" value="1" <?php checked(!empty($row[$col_key])); ?> />
+                <?php elseif ($input_type === 'color'): ?>
+                    <input type="text"
+                           name="<?php echo $name; ?>"
+                           value="<?php echo esc_attr($raw_value); ?>"
+                           data-type="full"
+                           data-alpha-enabled="true"
+                           data-alpha-color-type="octohex"
+                           class="mps-tools-color-picker" />
+                <?php else: ?>
+                    <input type="text" name="<?php echo $name; ?>" value="<?php echo esc_attr($raw_value); ?>" class="regular-text" />
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
+
+        <div class="mps-tools-category-field">
+            <label><?php echo esc_html($columns['champs_speciaux']['label'] ?? 'Champs supplémentaires'); ?></label>
+
+            <?php
+            $special_rows = is_array($row['champs_speciaux'] ?? null) ? $row['champs_speciaux'] : [];
+            ?>
+            <table class="widefat mps-tools-repeater mps-tools-sub-repeater">
+                <thead>
+                    <tr>
+                        <?php foreach ($sub_columns as $sub_col): ?>
+                            <th><?php echo esc_html($sub_col['label']); ?></th>
+                        <?php endforeach; ?>
+                        <th style="width:40px;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($special_rows as $j => $sub_row): ?>
+                        <?php mps_tools_render_special_field_row($key, $index, $sub_columns, $j, $sub_row); ?>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+
+            <button type="button" class="button mps-tools-add-special-field">+ Ajouter un champ</button>
+
+            <template class="tpl-special-field">
+                <?php mps_tools_render_special_field_row($key, $index, $sub_columns, '__SUB_INDEX__', []); ?>
+            </template>
+        </div>
+    </div>
+    <?php
+}
+
+//--------------------------------------------------------------------------------------------------
+
+function mps_tools_render_special_field_row($key, $cat_index, $sub_columns, $sub_index, $row) {
+    ?>
+    <tr>
+        <?php foreach ($sub_columns as $col_key => $col):
+            $input_type = $col['type'] ?? 'text';
+            $name       = esc_attr($key) . '[' . esc_attr($cat_index) . '][champs_speciaux][' . esc_attr($sub_index) . '][' . esc_attr($col_key) . ']';
+            $raw_value  = $row[$col_key] ?? '';
+        ?>
+            <td>
+                <?php if ($input_type === 'checkbox'): ?>
+                    <input type="hidden" name="<?php echo $name; ?>" value="0" />
+                    <input type="checkbox" name="<?php echo $name; ?>" value="1" <?php checked(!empty($row[$col_key])); ?> />
+                <?php else: ?>
+                    <input type="text" name="<?php echo $name; ?>" value="<?php echo esc_attr($raw_value); ?>" class="regular-text" />
+                <?php endif; ?>
+            </td>
+        <?php endforeach; ?>
+        <td>
+            <button type="button" class="button mps-tools-remove-row">✕</button>
+        </td>
+    </tr>
+    <?php
+}
+
+//--------------------------------------------------------------------------------------------------
 // End of file
 //--------------------------------------------------------------------------------------------------

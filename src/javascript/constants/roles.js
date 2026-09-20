@@ -31,6 +31,5 @@ export function isAdherent(roles){
 }
 
 export function isNonAdherent(roles) {
-    const isAdherent = isAdherent(roles)
-    return !isAdherent
+    return !isAdherent(roles)
 }

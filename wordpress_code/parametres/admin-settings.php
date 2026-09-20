@@ -133,8 +133,7 @@ function mps_tools_render_settings_page() {
 
     <style>
     .mps-tools-repeater {
-        width: auto;
-        max-width: 800px;
+        width: 90%;
         border-collapse: collapse;
     }
     .mps-tools-repeater th,
@@ -161,11 +160,78 @@ function mps_tools_render_settings_page() {
         border: none;
         cursor: pointer;
     }
+
+    .mps-tools-category-card {
+        border-bottom: 1px solid #ccc;
+        padding: 16px 0;
+    }
+
+    .mps-tools-category-card:first-child {
+        padding-top: 0;
+    }
+
+    .mps-tools-category-header {
+        text-align: right;
+        margin-bottom: 8px;
+    }
+
+    .mps-tools-category-field {
+        margin-bottom: 12px;
+    }
+
+    .mps-tools-category-field label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .mps-tools-sub-repeater {
+        max-width: 600px;
+        margin-bottom: 8px;
+    }
     </style>
 
     <script>
     document.addEventListener('click', function(e) {
-        // Ajouter une ligne
+        // Ajouter une catégorie
+        if (e.target.classList.contains('mps-tools-add-category')) {
+            const key = e.target.dataset.key;
+            const container = document.querySelector(`.mps-tools-categories[data-key="${key}"] .mps-tools-categories-list`);
+            const template = document.getElementById(`tpl-${key}-category`);
+
+            const newIndex = container.children.length;
+            const html = template.innerHTML.replaceAll('__CAT_INDEX__', newIndex);
+
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = html;
+            container.appendChild(wrapper.firstElementChild);
+        }
+
+        // Ajouter un champ spécial (dans la catégorie correspondante)
+        if (e.target.classList.contains('mps-tools-add-special-field')) {
+            const card = e.target.closest('.mps-tools-category-card');
+            const table = card.querySelector('.mps-tools-sub-repeater tbody');
+            const template = card.querySelector('template.tpl-special-field');
+
+            const newIndex = table.children.length;
+            const html = template.innerHTML.replaceAll('__SUB_INDEX__', newIndex);
+
+            const wrapper = document.createElement('tbody');
+            wrapper.innerHTML = html;
+            table.appendChild(wrapper.firstElementChild);
+        }
+
+        // Supprimer une catégorie entière
+        if (e.target.classList.contains('mps-tools-remove-category')) {
+            e.target.closest('.mps-tools-category-card').remove();
+        }
+
+        // Supprimer une ligne de champ spécial (ou un repeater générique classique)
+        if (e.target.classList.contains('mps-tools-remove-row')) {
+            e.target.closest('tr').remove();
+        }
+
+        // Ajouter une ligne (repeater générique classique existant)
         if (e.target.classList.contains('mps-tools-add-row')) {
             const key = e.target.dataset.key;
             const table = document.querySelector(`.mps-tools-repeater[data-key="${key}"] tbody`);
@@ -177,11 +243,6 @@ function mps_tools_render_settings_page() {
             const wrapper = document.createElement('tbody');
             wrapper.innerHTML = html;
             table.appendChild(wrapper.firstElementChild);
-        }
-
-        // Supprimer une ligne
-        if (e.target.classList.contains('mps-tools-remove-row')) {
-            e.target.closest('tr').remove();
         }
     });
     </script>

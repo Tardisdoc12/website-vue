@@ -70,6 +70,7 @@
                     <th v-if="hasGoalIn" class="border border-gray-300 p-2 text-left">Thème demandé</th>
                     <th class="border border-gray-300 p-2 text-left">Expérience</th>
                     <th class="border border-gray-300 p-2 text-center">Encadrant</th>
+                    <th v-for="field in fields_to_show" :key="field.nom" class="border border-gray-300 p-2 text-left">{{ field.nom }}</th>
                     <th class="border border-gray-300 p-2 text-center">Statut</th>
                     <th class="border border-gray-300 p-2 text-center">Paiement</th>
                     <th class="border border-gray-300 p-2 text-center">Actions</th>
@@ -87,6 +88,13 @@
                     <td v-if="hasGoalIn" class="border border-gray-300 p-2">{{ user.specialField?.["Objectif"] ? user.specialField?.["Objectif"] : 'non renseigné' }}</td>
                     <td class="border border-gray-300 p-2">{{ user.experience }}</td>
                     <td class="border border-gray-300 p-2 text-center">{{ user.encadrant }}</td>
+                    <td
+                        v-for="field in fields_to_show"
+                        :key="field.nom"
+                        class="border border-gray-300 p-2 text-center"
+                    >
+                        {{ user.specialField?.[field.nom] ? user.specialField?.[field.nom] : 'non renseigné' }}
+                    </td>
                     <td class="border border-gray-300 p-2 text-center">
                         <button
                             v-if="user.status === 'attente'"
@@ -156,16 +164,28 @@ export default {
         hasAttente: {
             type: Boolean,
             default: false
+        },
+
+        eventCategorie: {
+            type: String,
+            required: false,
+            default: ""
         }
     },
 
     data() {
+        
+        const categorie = this.$settings.categories.find(category => category.nom === this.eventCategorie)
+        const fields_to_show = categorie.champs_speciaux.filter(field => field.affichage_liste)
+        console.log(categorie.champs_speciaux)
+        console.log(fields_to_show)
         return {
-            fields_csv: ["Nom", "Email", "Téléphone", "Thème demandé", "Experience"],
+            fields_csv: ["Nom", "Email", "Téléphone", "Experience"].concat(fields_to_show),
             isPhoneCopied: false,
             isEmailCopied: false,
             isPhoneError: false,
             isEmailError: false,
+            fields_to_show: fields_to_show,
         }
     },
 
@@ -242,12 +262,37 @@ export default {
             const headers = this.fields_csv.map(h => `"${h}"`);
             
             const rows = this.usersRegistered.map(obj => {
+                const isAdherent = obj.is_adherent === "1";
+                const valueSpecialFieldsToShow = Object.entries(obj.specialField)
+                    .filter(([key]) => 
+                    (this.fields_to_show.find(f => f.nom === key)?.affichage_adherent && isAdherent)
+                    ||
+                    (this.fields_to_show.find(f => f.nom === key)?.affichage_non_adherent && !isAdherent)
+                )
+                
+                const valueSpecialFieldToHide= Object.entries(obj.specialField)
+                    .filter(([key]) => 
+                    !(this.fields_to_show.find(f => f.nom === key)?.affichage_adherent && isAdherent)
+                    &&
+                    !(this.fields_to_show.find(f => f.nom === key)?.affichage_non_adherent && !isAdherent)
+                )
+
+                let SpecialFieldsOrdered = [];
+                Object.entries(obj.specialField).forEach(([key, value]) => {
+                    if (valueSpecialFieldsToShow.find(([k]) => k === key)) {
+                        SpecialFieldsOrdered.push(value);
+                    }
+                    if (valueSpecialFieldToHide.find(([k]) => k === key)) {
+                        SpecialFieldsOrdered.push("");
+                    }
+                });
+
                 const values = [
                     obj.user_name,
                     obj.email,
                     obj.phone,
-                    obj.specialField["Objectif"],
-                    obj.is_adherent === "0" ? "" : obj.experience
+                    obj.is_adherent === "0" ? "" : obj.experience,
+                    ...SpecialFieldsOrdered,
                 ].map(value => `"${String(value).replace(/"/g, '""')}"`);
                 return values.join(",");
             });

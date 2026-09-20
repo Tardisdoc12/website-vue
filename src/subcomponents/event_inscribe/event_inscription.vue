@@ -61,8 +61,13 @@
                     <textarea v-model="participants[0].experience" class="w-full border p-1 rounded" rows="3" required></textarea>
                 </div>
                 <div v-for="field in getSpecialFields" :key="field" class="flex flex-col gap-1">
-                    <label class="block font-medium">{{ field }}</label>
-                    <textarea v-model="participants[currentStep].specialField[field]" class="w-full border p-1 rounded" rows="2"></textarea>
+                    <label class="block font-medium">{{ field.nom }}
+                        <span v-if="!!mustResponseSpecialField.find(f => f.nom === field.nom)" style="color:red">*</span></label>
+                    <textarea
+                        v-model="participants[currentStep].specialField[field.nom]"
+                        class="w-full border p-1 rounded" rows="2"
+                        :required="!!mustResponseSpecialField.find(f => f.nom === field.nom)"
+                    ></textarea>
                 </div>
                 <div v-if="isCashAllowed" class="flex flex-col gap-1">
                     <label class="block font-medium">Souhaitez-vous payer en espèces ? <span style="color:red">*</span></label>
@@ -126,8 +131,13 @@
                             <textarea v-model="participants[currentStep].experience" class="w-full border p-1 rounded" rows="3"></textarea>
                         </div>
                         <div v-for="field in getSpecialFields" :key="field" class="flex flex-col gap-1">
-                            <label class="block font-medium">{{ field }}</label>
-                            <textarea v-model="participants[currentStep].specialField[field]" class="w-full border p-1 rounded" rows="2"></textarea>
+                            <label class="block font-medium">{{ field.nom }}
+                                 <span v-if="!!mustResponseSpecialField.find(f => f.nom === field.nom)" style="color:red">*</span></label>
+                            <textarea
+                                v-model="participants[currentStep].specialField[field.nom]"
+                                class="w-full border p-1 rounded" rows="2"
+                                :required="!!mustResponseSpecialField.find(f => f.nom === field.nom)"
+                            ></textarea>
                         </div>
                         <div v-if="isCashAllowed" class="flex flex-col gap-1">
                             <label class="block font-medium">Souhaitez-vous payer en espèces ? <span style="color:red">*</span></label>
@@ -159,8 +169,15 @@
                         <textarea v-model="participants[currentStep].experience" class="w-full border p-1 rounded" rows="3"></textarea>
                     </div>
                     <div v-for="field in getSpecialFields" :key="field" class="flex flex-col gap-1">
-                        <label class="block font-medium">{{ field }}</label>
-                        <textarea v-model="participants[currentStep].specialField[field]" class="w-full border p-1 rounded" rows="2"></textarea>
+                        <label class="block font-medium">
+                            {{ field.nom }} 
+                            <span v-if="!!mustResponseSpecialField.find(f => f.nom === field.nom)" style="color:red">*</span>
+                        </label>
+                        <textarea
+                            v-model="participants[currentStep].specialField[field.nom]"
+                            class="w-full border p-1 rounded" rows="2"
+                            :required="!!mustResponseSpecialField.find(f => f.nom === field.nom)"
+                        ></textarea>
                     </div>
                     <div v-if="isCashAllowed" class="flex flex-col gap-1">
                         <label class="block font-medium">Souhaitez-vous payer en espèces ? <span style="color:red">*</span></label>
@@ -218,7 +235,7 @@
 
 <script>
 import inscritAPI from "@/javascript/api/axios_inscription"
-import { isEncadrant } from "@/javascript/constants/roles"
+import { isEncadrant, isNonAdherent } from "@/javascript/constants/roles"
 import { computed } from 'vue'
 
 function emptyParticipant() {
@@ -280,8 +297,8 @@ export default {
             immediate: true,
             handler(champs) {
                 champs.forEach(champ => {
-                    if (!(champ in this.participants[0].specialField)) {
-                        this.participants[0].specialField[champ] = ''
+                    if (!(champ.nom in this.participants[0].specialField)) {
+                        this.participants[0].specialField[champ.nom] = ''
                     }
                 })
             }
@@ -308,6 +325,19 @@ export default {
     },
 
     computed: {
+        mustResponseSpecialField() {
+            const isAdherent = !isNonAdherent(this.participants[this.currentStep]?.roles ?? ["non_adherent"])
+            const specialFields = this.getSpecialFields
+            const listSpecialFields = specialFields.filter(field => {
+                return (
+                    (isAdherent && Boolean(+field.obligatoire_adherent)) 
+                    ||
+                    (!isAdherent && Boolean(+field.obligatoire_non_adherent))
+                )
+            })
+            return listSpecialFields
+        },
+
         isLastStep() {
             return this.currentStep === this.participants.length - 1
         },
@@ -327,20 +357,26 @@ export default {
 
         isCurrentStepValid() {
             const p = this.participants[this.currentStep]
+
+            const specialFieldsValid = this.mustResponseSpecialField.every(field => {
+                const value = p.specialField?.[field.nom]
+                return value !== undefined && value !== null && String(value).trim() !== ''
+            })
+
             if (this.currentStep === 0) {
                 const base = p.firstName && p.lastName && p.email && p.phone
                 const encadrant = !this.isEncadrantComp || p.wantsEncadrant !== null
-                return base && encadrant
+                return base && encadrant && specialFieldsValid
             }
-            // Étape participant supplémentaire
+
             if (p.hasAccount === null) return false
             if (p.hasAccount === true) {
                 if (p.searchResult !== 'found') return false
                 const exp = this.isAdherentParticipant(this.currentStep) ? true : !!p.experience
-                return exp
+                return exp && specialFieldsValid
             }
-            // hasAccount === false → formulaire classique
-            return !!(p.firstName && p.lastName && p.email && p.phone && p.experience)
+
+            return !!(p.firstName && p.lastName && p.email && p.phone && p.experience) && specialFieldsValid
         }
     },
 
@@ -488,7 +524,6 @@ export default {
 
             try {
                 for (const participant of this.participants) {
-                    console.log("Participant being registered:", participant)
                     const res = await inscritAPI.create_inscrit(this.event.event_id, participant)
                     if (!res?.data?.success) throw new Error("Échec pour " + participant.name)
                     this.$emit('created_inscriptionId', res.data.inscription_id)
