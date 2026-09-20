@@ -287,7 +287,7 @@ function mps_tools_render_categories($key, $field) {
 
 function mps_tools_render_category_card($key, $columns, $sub_columns, $index, $row) {
     ?>
-    <div class="mps-tools-category-card">
+    <div class="mps-tools-category-card" style='margin-bottom:10px;'>
         <div class="mps-tools-category-header">
             <button type="button" class="button-link mps-tools-remove-category">✕ Supprimer cette catégorie</button>
         </div>

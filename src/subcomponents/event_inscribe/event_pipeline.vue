@@ -122,7 +122,6 @@ export default{
     },
 
     data() {
-        console.log(this.event)
         return {
             steps: 0,
             lastParticipants: [],

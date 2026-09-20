@@ -133,7 +133,8 @@ function mps_tools_render_settings_page() {
 
     <style>
     .mps-tools-repeater {
-        width: 90%;
+        width: auto;
+        max-width: 1900px;
         border-collapse: collapse;
     }
     .mps-tools-repeater th,
@@ -142,7 +143,7 @@ function mps_tools_render_settings_page() {
         text-align: left;
     }
     .mps-tools-repeater input[type="text"] {
-        width: 100%;
+        width: 200px;
         box-sizing: border-box;
     }
     .mps-tools-repeater input[type="checkbox"] {
