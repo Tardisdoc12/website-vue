@@ -73,12 +73,12 @@ return [
         'modal_background_color' => [
             'label' => 'Couleur de fond de la modale',
             'type' => 'color',
-            'default' => '#ffffff',
+            'default' => '#4b4c4ed6',
         ],
         'modal_overlay_color' => [
             'label' => 'Couleur de l\'overlay de la modale',
             'type' => 'color',
-            'default' => '#4b4c4ed6',
+            'default' => '#646464e6',
         ],
         
         
@@ -86,6 +86,12 @@ return [
         '_heading_writing' => ['type' => 'heading', 'label' => 'Écriture'],
         'writing_main_color' => [
             'label' => 'Couleur principale de l\'écriture',
+            'type' => 'color',
+            'default' => '#FFFFFF',
+        ],
+
+        'writing_modale_color' => [
+            'label' => 'Couleur de l\'écriture dans les modales',
             'type' => 'color',
             'default' => '#FFFFFF',
         ],

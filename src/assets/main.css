@@ -22,6 +22,10 @@
     --deactivate-button-classic-color: #d4e3ed;
     --cancel-disabled-color: #9ca3af;
     --validate-disabled-color: #9ca3af;
+
+    --modale-background-color: #ffffff;
+    --modale-overlay-color: #4b4c4ed6;
+    --writing-modale-color: #FFFFFF;
 }
 
 /* Bouton CSS */

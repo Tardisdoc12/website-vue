@@ -62,7 +62,7 @@ export default {
 
 <style>
 .encadre {
-    background-color: rgba(75, 76, 78, 0.84);
+    background-color: var(--modale-background-color);
     color: var(--writing-main-color);
     padding: 0.5rem 1rem;
     position: relative;  
@@ -80,7 +80,7 @@ export default {
     justify-content: center;
 
     background-color: var(--cancel-color);
-    color: var(--writing-main-color);
+    color: var(--writing-modale-color);
     cursor: pointer;
     border-radius: 4px;
 
@@ -90,7 +90,7 @@ export default {
 
 .encadre .btn-close:hover {
   background-color: var(--cancel-hover-color); /* couleur au survol */
-  color: var(--writing-main-color);
+  color: var(--writing-modale-color);
 }
 
 .modal {
@@ -98,7 +98,7 @@ export default {
     inset: 0;
     z-index: 2;
 
-    background-color: rgba(100, 100, 100, 0.9);
+    background-color: var(--modale-overlay-color);
 
     
     display: flex;              /* ✅ flex pour centrer */

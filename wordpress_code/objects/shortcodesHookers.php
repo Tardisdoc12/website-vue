@@ -91,6 +91,9 @@ class ShortcodesHookers {
             --color-button-file: " . esc_attr(get_option('color_button_file', '#000000')) . ";
             --cancel-disabled-color: " . esc_attr(get_option('cancel_disabled_color', '#9ca3af')) . ";
             --validate-disabled-color: " . esc_attr(get_option('validate_disabled_color', '#9ca3af')) . ";
+            --modale-background-color: " . esc_attr(get_option('modal_background_color', '#ffffff')) . ";
+            --modale-overlay-color: " . esc_attr(get_option('modal_overlay_color', '#4b4c4ed6')) . ";
+            --writing-modale-color: " . esc_attr(get_option('writing_modale_color', '#FFFFFF')) . ";
         }";
 
         wp_add_inline_style($name_modules, $custom_css);
