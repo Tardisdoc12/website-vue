@@ -4,15 +4,27 @@
             <!-- Entete -->
             <div class="encadre">
                 <span>
-                    <label style="color:var(--writing-main-color);"> {{ title }} </label>
+                    <label style="color:var(--writing-modale-title-color);"> {{ title }} </label>
                 </span>
-                <button class="appearance-none button-base" :style="{ '--btn-bg': 'var(--cancel-color)', '--btn-hover-bg': 'var(--cancel-hover-color)' }" @click="Cancel">
+                <button 
+                    class="appearance-none button-base" 
+                    :style="{ 
+                        '--btn-bg': 'var(--cancel-color)', 
+                        '--btn-hover-bg': 'var(--cancel-hover-color)',
+                        '--btn-color': 'var(--writing-modale-title-color)'
+                    }"
+                    @click="Cancel"
+                >
                     <font-awesome-icon icon="fa-solid fa-xmark" />
                 </button>
             </div>
-
-            <!-- contenu passée -->
-            <slot></slot>
+            <div :style="{
+                'background-color': 'var(--modale-body-background-color)',
+                'color': 'var(--writing-modale-body-color)'
+            }">
+                <!-- contenu passée -->
+                <slot></slot>
+            </div>
         </div>
     </div>
 </template>
@@ -62,8 +74,8 @@ export default {
 
 <style>
 .encadre {
-    background-color: var(--modale-background-color);
-    color: var(--writing-main-color);
+    background-color: var(--modale-header-background-color);
+    color: var(--writing-modale-title-color);
     padding: 0.5rem 1rem;
     position: relative;  
     border-top-left-radius: 8px;
@@ -80,7 +92,7 @@ export default {
     justify-content: center;
 
     background-color: var(--cancel-color);
-    color: var(--writing-modale-color);
+    color: var(--writing-modale-title-color);
     cursor: pointer;
     border-radius: 4px;
 
@@ -90,7 +102,7 @@ export default {
 
 .encadre .btn-close:hover {
   background-color: var(--cancel-hover-color); /* couleur au survol */
-  color: var(--writing-modale-color);
+  color: var(--writing-modale-title-color);
 }
 
 .modal {

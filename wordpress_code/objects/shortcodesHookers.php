@@ -91,9 +91,12 @@ class ShortcodesHookers {
             --color-button-file: " . esc_attr(get_option('color_button_file', '#000000')) . ";
             --cancel-disabled-color: " . esc_attr(get_option('cancel_disabled_color', '#9ca3af')) . ";
             --validate-disabled-color: " . esc_attr(get_option('validate_disabled_color', '#9ca3af')) . ";
-            --modale-background-color: " . esc_attr(get_option('modal_background_color', '#ffffff')) . ";
+            --modale-header-background-color: " . esc_attr(get_option('modal_header_background_color', '#ffffff')) . ";
+            --modale-body-background-color: " . esc_attr(get_option('modal_body_background_color', '#ffffff')) . ";
             --modale-overlay-color: " . esc_attr(get_option('modal_overlay_color', '#4b4c4ed6')) . ";
-            --writing-modale-color: " . esc_attr(get_option('writing_modale_color', '#FFFFFF')) . ";
+            --writing-modale-title-color: " . esc_attr(get_option('writing_modale_title_color', '#FFFFFF')) . ";
+            --writing-modale-body-color: " . esc_attr(get_option('writing_modale_body_color', '#000000')) . ";
+            --writing-secondary-color: " . esc_attr(get_option('writing_secondary_color', '#000000')) . ";
         }";
 
         wp_add_inline_style($name_modules, $custom_css);

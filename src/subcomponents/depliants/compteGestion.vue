@@ -8,7 +8,7 @@
         :is-opoen-forced="true"
         :width="'95%'"
     >
-        <div style="margin-left:25px;margin-top: 10px;">
+        <div style="margin-left:25px;margin-top: 10px;" :style="{'background-color': 'var(--writing-main-color)', 'color': 'var(--writing-secondary-color)'}">
             <div v-if="!isInformationsChange">
                 <li><strong>Nom :</strong> {{ user.lastName || "—" }}</li>
                 <li><strong>Prénom :</strong> {{ user.firstName || "—" }}</li>
@@ -107,13 +107,13 @@
     <DepliantWindow
         :title="titleUrgences"
         :backgroundColorOpen="'var(--secondary-color)'"
-        :writenColorOpen="'#FFFFFF'"
+        :writenColorOpen="'var(--writing-main-color)'"
         :border-color="'var(--secondary-color)'"
         :border-color-open="'var(--secondary-color)'"
         :is-opoen-forced="true"
         :width="'95%'"
     >
-        <div style="margin-left:25px;margin-top: 5px;">
+        <div style="margin-left:25px;margin-top: 5px;" :style="{'background-color': 'var(--writing-main-color)', 'color': 'var(--writing-secondary-color)'}">
             <div v-if="!isUrgencesChange">
                 <p><strong>Nom et Prénom du contact d’urgence :</strong> {{ user.urgence_name || "—" }}</p>
                 <p><strong>Téléphone du contact d’urgence :</strong> {{ user.urgence_phone || "—" }}</p>

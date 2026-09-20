@@ -13,7 +13,7 @@
                 type="button"
                 :style="{
                     display: 'inline-block',
-                    color: activeIndex === i ? 'var(--writing-main-color)' : 'var(--main-color)',
+                    color: activeIndex === i ? 'var(--writing-secondary-color)' : 'var(--main-color)',
                     padding: '1.0rem 1.0rem',
                     borderRadius: '9999px',
                     backgroundColor: activeIndex === i ? 'var(--main-color)' : 'var(--writing-main-color)',

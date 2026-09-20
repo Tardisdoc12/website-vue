@@ -9,7 +9,13 @@
     </div>
 
     <transition name="slide-fade">
-      <div v-if="isOpen" class="accordion-content">
+      <div 
+        v-if="isOpen"
+        class="accordion-content"
+        :style="{
+          'background-color': 'var(--writing-main-color)',
+          'color': 'var(--writing-secondary-color)'
+        }">
         <slot></slot>
       </div>
     </transition>
@@ -197,7 +203,7 @@ export default {
 }
 
 .accordion-content {
-  background-color: #ffffff;
+  background-color: var(--writing-secondary-color);
 }
 
 /* Animation douce pour l'ouverture */

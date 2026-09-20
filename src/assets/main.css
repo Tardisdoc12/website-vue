@@ -23,9 +23,12 @@
     --cancel-disabled-color: #9ca3af;
     --validate-disabled-color: #9ca3af;
 
-    --modale-background-color: #ffffff;
+    --modale-header-background-color: #ffffff;
+    --modale-body-background-color: #ffffff;
     --modale-overlay-color: #4b4c4ed6;
-    --writing-modale-color: #FFFFFF;
+    --writing-modale-title-color: #FFFFFF;
+    --writing-modale-body-color: #000000;
+    --writing-secondary-color: #000000;
 }
 
 /* Bouton CSS */

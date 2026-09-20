@@ -343,6 +343,16 @@ export default{
 
 
 <style>
+.calendar-wrapper {
+  --fc-button-bg-color: var(--main-color);
+  --fc-button-border-color: var(--main-color);
+  --fc-button-hover-bg-color: var(--secondary-color);
+  --fc-button-hover-border-color: var(--secondary-color);
+  --fc-button-active-bg-color: var(--secondary-color);
+  --fc-button-active-border-color: var(--secondary-color);
+  --fc-button-text-color: var(--writing-main-color);
+}
+
 .fc-daygrid-event {
   text-decoration: none !important;
   color: inherit !important;

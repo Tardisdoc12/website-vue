@@ -2,7 +2,7 @@
     <DepliantWindow
         :title="Title"
         :backgroundColorOpen="'var(--secondary-color)'"
-        :writenColorOpen="'#FFFFFF'"
+        :writenColorOpen="'var(--writing-main-color)'"
         :border-color="'var(--secondary-color)'"
         :border-color-open="'var(--secondary-color)'"
         :is-opoen-forced="true"

@@ -70,10 +70,15 @@ return [
         ],
 
         '_heading_modal' => ['type' => 'heading', 'label' => 'Modale'],
-        'modal_background_color' => [
-            'label' => 'Couleur de fond de la modale',
+        'modal_header_background_color' => [
+            'label' => 'Couleur de fond de l\'en-tête de la modale',
             'type' => 'color',
             'default' => '#4b4c4ed6',
+        ],
+        'modal_body_background_color' => [
+            'label' => 'Couleur de fond du corps de la modale',
+            'type' => 'color',
+            'default' => '#ffffff',
         ],
         'modal_overlay_color' => [
             'label' => 'Couleur de l\'overlay de la modale',
@@ -90,10 +95,21 @@ return [
             'default' => '#FFFFFF',
         ],
 
-        'writing_modale_color' => [
-            'label' => 'Couleur de l\'écriture dans les modales',
+        'writing_secondary_color' => [
+            'label' => 'Couleur secondaire de l\'écriture',
             'type' => 'color',
-            'default' => '#FFFFFF',
+            'default' => '#000000',
+        ],
+
+        'writing_modale_title_color' => [
+            'label' => 'Couleur de l\'écriture du titre dans les modales',
+            'type' => 'color',
+            'default' => '#000000',
+        ],
+        'writing_modale_body_color' => [
+            'label' => 'Couleur de l\'écriture du corps dans les modales',
+            'type' => 'color',
+            'default' => '#000000',
         ],
     ],
 ];
