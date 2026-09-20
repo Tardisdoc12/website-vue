@@ -1,17 +1,27 @@
 <?php
+//--------------------------------------------------------------------------------------------------
 /*
-* Gère les paiements HelloAsso
+* FILENAME: payement.php
+* AUTHOR: Jean Anquetil
+* DATE: 2026-09-19
+* DESCRIPTIOn : 
 */
+//--------------------------------------------------------------------------------------------------
+// Imports
+
 if (!defined('ABSPATH')) exit;
+
+require_once MPS_TOOLS_FUNCTIONS_DIR . 'payement.php';
+
+//--------------------------------------------------------------------------------------------------
+// Constants
 
 const HELLOASSO_BASE_URL = 'https://api.helloasso-sandbox.com';
 const HELLOASSO_TOKEN_TRANSIENT_KEY = 'helloasso_encrypted_access_token';
 
-/**
-require_once MPS_TOOLS_FUNCTIONS_DIR . 'route_callback.php';
- * Fonction interne uniquement — jamais exposée via une route REST.
- */
-require_once MPS_TOOLS_FUNCTIONS_DIR . 'route_callback.php';
+//--------------------------------------------------------------------------------------------------
+// Functions OR CLASS
+
 function helloasso_get_access_token() {
     $cached_encrypted = get_transient(HELLOASSO_TOKEN_TRANSIENT_KEY);
 
@@ -25,6 +35,7 @@ function helloasso_get_access_token() {
     return helloasso_fetch_new_access_token();
 }
 
+//--------------------------------------------------------------------------------------------------
 
 function helloasso_curl_fallback_post($url, $body_array) {
     if (!function_exists('curl_init')) {
@@ -52,6 +63,9 @@ function helloasso_curl_fallback_post($url, $body_array) {
 
     return ['code' => $code, 'body' => $body];
 }
+
+//--------------------------------------------------------------------------------------------------
+
 /**
  * Va chercher un nouveau token auprès de HelloAsso et le met en cache chiffré.
  */
@@ -113,6 +127,8 @@ function helloasso_fetch_new_access_token() {
     return $data['access_token'];
 }
 
+//--------------------------------------------------------------------------------------------------
+
 /**
  * Chiffrement AES-256-CBC, clé dérivée des salts WordPress (jamais stockée séparément)
  */
@@ -120,6 +136,8 @@ function mps_tools_get_encryption_key() {
     // wp_salt('auth') est unique par installation WordPress et déjà stockée de façon sécurisée
     return hash('sha256', wp_salt('auth'), true); // 32 bytes, requis pour AES-256
 }
+
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_encrypt($plain_text) {
     $key = mps_tools_get_encryption_key();
@@ -149,15 +167,7 @@ function mps_tools_decrypt($encoded) {
     return $decrypted !== false ? $decrypted : false;
 }
 
-//-----------------------------------------------------------------------------------------------------
-// Routes pour contater HelloAsso et faire des paiements
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/create_payements', [
-        'methods'             => 'POST',
-        'callback'            => 'mps_tools_create_payements',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_create_payements(WP_REST_Request $request) {
     global $wpdb;
@@ -308,219 +318,7 @@ function mps_tools_create_payements(WP_REST_Request $request) {
     ]);
 }
 
-//-----------------------------------------------------------------------------------------------------------
-// Cron du suivi des paiements en attente
-
-add_action('helloasso_check_pending_checkouts', 'helloasso_run_pending_checkouts_check');
-
-if (!wp_next_scheduled('helloasso_check_pending_checkouts')) {
-    wp_schedule_event(time(), 'hourly', 'helloasso_check_pending_checkouts');
-}
-
-function helloasso_track_pending_checkout($checkout_intent_id, $inscription_ids, $event_id, $type = 'event') {
-    $pending = get_option('helloasso_pending_checkouts', []);
-
-    $pending[$checkout_intent_id] = [
-        'inscription_ids' => $inscription_ids,
-        'event_id'       => $event_id,
-        'type'       => $type,
-        'created_at' => time(),
-    ];
-
-    update_option('helloasso_pending_checkouts', $pending, false);
-}
-
-function helloasso_untrack_pending_checkout($checkout_intent_id) {
-    $pending = get_option('helloasso_pending_checkouts', []);
-    if (isset($pending[$checkout_intent_id])) {
-        unset($pending[$checkout_intent_id]);
-        update_option('helloasso_pending_checkouts', $pending, false);
-    }
-}
-
-function helloasso_get_pending_checkouts() {
-    return get_option('helloasso_pending_checkouts', []);
-}
-
-
-function treat_inscription_payment_by_id($inscription_ids) {
-    global $wpdb;
-    $table_inscrits = $wpdb->prefix . 'inscrits';
-
-
-    $errors = [];
-    foreach($inscription_ids as $inscription_id) {
-        $result = $wpdb->update(
-            $table_inscrits,
-            ['payement_status' => 'completed'],
-            ['id' => $inscription_id],
-            ['%s'],
-            ['%d']
-        );
-        if ($result === false) {
-            $errors[] = $inscription_id;
-        }
-    }
-
-    return ['success' => empty($errors), 'inscription_ids' => $inscription_ids, 'errors' => $errors];
-}
-
-function treat_adherent_payment_by_inscription_id($inscription_ids) {
-    global $wpdb;
-    $table_inscrits = $wpdb->prefix . 'inscrits';
-    $table_users_inscrits = $wpdb->prefix . 'users_inscrits';
-
-    // On marque l'inscription comme payée
-    $errors = [];
-    foreach($inscription_ids as $inscription_id) {
-        $result = $wpdb->update(
-            $table_inscrits,
-            ['payement_status' => 'completed'],
-            ['id' => $inscription_id],
-            ['%s'],
-            ['%d']
-        );
-        if ($result === false) {
-            $errors[] = $inscription_id;
-        }
-        // On récupère l'email de l'inscrit pour retrouver/créer le compte WP correspondant
-        $inscrit = $wpdb->get_row(
-            $wpdb->prepare(
-                "SELECT ui.email FROM $table_inscrits i
-                JOIN $table_users_inscrits ui ON ui.id = i.user_id
-                WHERE i.id = %d",
-                $inscription_id
-            )
-        );
-
-        if (!$inscrit) {
-            return new WP_Error('inscrit_not_found', 'Inscrit introuvable pour cette inscription.', ['status' => 404]);
-        }
-
-        $user = get_user_by('email', $inscrit->email);
-
-        if (!$user) {
-            // Pas de compte WP existant : à toi de voir si on en crée un automatiquement ici
-            // (cf. notre discussion précédente sur le cas "adhérent sans compte")
-            error_log("Paiement adhérent confirmé pour {$inscrit->email}, mais aucun compte WP associé.");
-            return ['success' => true, 'message' => 'Paiement confirmé, mais aucun compte WP à mettre à jour.'];
-        }
-
-        $user->add_role('adherent');
-        $user->remove_role('non_adherent');
-        update_user_meta($user->ID, 'subscriber_date', current_time('mysql'));    
-    }
-
-    
-    return ['success' => true, 'user_id' => $user->ID];
-}
-
-
-/**
- * Vérifie et finalise un paiement HelloAsso de façon idempotente.
- * Appelée depuis 3 points d'entrée : returnUrl (utilisateur), webhook, cron.
- */
-function mps_tools_finalize_helloasso_payment($checkout_intent_id, $source = 'unknown') {
-    global $wpdb;
-    $table_inscrits = $wpdb->prefix . 'inscrits';
-
-    // On retrouve l'inscription via le tracking (nécessaire pour connaître l'inscription_id
-    // avant même d'avoir confirmé le paiement auprès de HelloAsso)
-    $pending = helloasso_get_pending_checkouts();
-    $meta = $pending[$checkout_intent_id] ?? null;
-
-    if (!$meta) {
-        error_log("HelloAsso finalize [{$source}] : checkout_intent_id {$checkout_intent_id} introuvable dans le tracking.");
-        return new WP_Error('checkout_not_found', 'Checkout intent inconnu ou déjà traité.', ['status' => 404]);
-    }
-
-    $inscription_ids = $meta['inscription_ids'];
-    $type = $meta['type'] ?? 'event';
-    
-
-    // Vérification ACTIVE auprès de HelloAsso : jamais confiance à une simple URL ou un webhook seul
-    $token = helloasso_get_access_token();
-    if (!$token) {
-        return new WP_Error('helloasso_auth_error', 'Authentification HelloAsso échouée.', ['status' => 500]);
-    }
-
-    $organizationSlug = get_option('helloasso_org_slug', '');
-    $response = wp_remote_get(
-        HELLOASSO_BASE_URL . "/v5/organizations/{$organizationSlug}/checkout-intents/{$checkout_intent_id}",
-        ['headers' => ['Authorization' => 'Bearer ' . $token], 'timeout' => 15]
-    );
-
-    if (is_wp_error($response)) {
-        error_log("HelloAsso finalize [{$source}] : erreur réseau - " . $response->get_error_message());
-        return new WP_Error('helloasso_network_error', 'Erreur réseau HelloAsso.', ['status' => 500]);
-    }
-
-    $body = json_decode(wp_remote_retrieve_body($response), true);
-
-    if (empty($body['order'])) {
-        error_log("HelloAsso finalize [{$source}] : pas de commande pour {$checkout_intent_id}, probablement pending/abandonné.");
-        return ['success' => false, 'message' => 'Paiement non confirmé pour le moment.'];
-    }
-
-    $is_authorized = false;
-    foreach (($body['order']['payments'] ?? []) as $payment) {
-        if ($payment['state'] === 'Authorized') {
-            $is_authorized = true;
-            break;
-        }
-    }
-
-    if (!$is_authorized) {
-        error_log("HelloAsso finalize [{$source}] : commande trouvée mais aucun paiement Authorized pour {$checkout_intent_id}.");
-        return ['success' => false, 'message' => 'Paiement non autorisé.'];
-    }
-
-    // Paiement confirmé côté HelloAsso : on applique la logique métier
-    if ($type === 'adherent') {
-        $result = treat_adherent_payment_by_inscription_id($inscription_ids);
-    } else {
-        $result = treat_inscription_payment_by_id($inscription_ids);
-    }
-
-    if (is_wp_error($result)) {
-        error_log("HelloAsso finalize [{$source}] : erreur métier - " . $result->get_error_message());
-        return $result;
-    }
-
-    helloasso_untrack_pending_checkout($checkout_intent_id);
-
-    error_log("HelloAsso finalize [{$source}] : paiement {$checkout_intent_id} finalisé avec succès.");
-    return ['success' => true, 'message' => 'Paiement finalisé.'];
-}
-
-
-function helloasso_run_pending_checkouts_check() {
-    $pending = helloasso_get_pending_checkouts();
-
-    foreach ($pending as $checkout_intent_id => $meta) {
-        // On ne revérifie que les paiements de plus de 50 minutes (marge sur la limite des 45 min de HelloAsso)
-        if ((time() - $meta['created_at']) < 50 * 60) {
-            continue;
-        }
-
-        mps_tools_finalize_helloasso_payment($checkout_intent_id, 'cron');
-
-        // Qu'il ait réussi ou échoué définitivement (abandonné), on arrête de le suivre :
-        // s'il a réussi, c'est fait ; s'il a échoué après 50 min, HelloAsso le considère abandonné.
-        helloasso_untrack_pending_checkout($checkout_intent_id);
-    }
-}
-
-//-----------------------------------------------------------------------------------------------------------
-//il faut verifier le payement pour le dire à l'utilisateur que son payement a été effectué ou non
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/check_payment', [
-        'methods'             => 'GET',
-        'callback'            => 'mps_tools_handle_check_payment',
-        'permission_callback' => '__return_true', // accessible sans connexion : l'utilisateur revient d'un paiement, connecté ou pas
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_handle_check_payment(WP_REST_Request $request) {
     $checkout_intent_id = absint($request->get_param('checkoutIntentId'));
@@ -538,6 +336,6 @@ function mps_tools_handle_check_payment(WP_REST_Request $request) {
     return new WP_REST_Response($result, 200); // toujours 200 si pas d'erreur technique, même si success: false
 }
 
-//---------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // End of file
-//---------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------

@@ -1,26 +1,20 @@
 <?php
+//--------------------------------------------------------------------------------------------------
 /*
-*
-* Gère les connections des utilisateurs
-*
+* FILENAME: connexion.php
+* AUTHOR: Jean Anquetil
+* DATE: 2026-09-19
+* DESCRIPTIOn : 
 */
+//--------------------------------------------------------------------------------------------------
+// Imports
+
 if (!defined('ABSPATH')) exit;
 
-//------------------------------------------------------------------------------
-// IMPORTS
-
-require_once MPS_TOOLS_FUNCTIONS_DIR . 'route_callback.php';
 require_once MPS_TOOLS_OBJECTS_DIR . "jwt_generator.php";
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/connect', [
-        'methods' => 'POST',
-        'callback' => 'mps_tools_login_user',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
+// Functions
 
 function mps_tools_login_user(WP_REST_Request $request) {
     $email    = sanitize_email($request->get_param('email'));
@@ -61,6 +55,6 @@ function mps_tools_login_user(WP_REST_Request $request) {
     ]);
 }
 
-//------------------------------------------------------------------------------
-// End of File
-//------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+// End of file
+//--------------------------------------------------------------------------------------------------

@@ -1,26 +1,18 @@
 <?php
-/* 
-* Routes REST API pour la gestion des sous-catégories et sources
-* Version : 1.0.0
+//--------------------------------------------------------------------------------------------------
+/*
+* FILENAME: source.php
+* AUTHOR: Jean Anquetil
+* DATE: 2026-09-20
+* DESCRIPTIOn : 
 */
+//--------------------------------------------------------------------------------------------------
+// Imports
 
 if (!defined('ABSPATH')) exit;
 
-//------------------------------------------------------------------------------
-// IMPORTS
-
-require_once MPS_TOOLS_FUNCTIONS_DIR . 'route_callback.php';
-
-//------------------------------------------------------------------------------
-// ROUTE : Récupération des sous-catégories
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/subcategories', [
-        'methods' => 'GET',
-        'callback' => 'mps_tools_get_subcategories',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt', // À définir si pas déjà fait
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
+// Functions 
 
 function mps_tools_get_subcategories(WP_REST_Request $request) {
     global $wpdb;
@@ -32,16 +24,7 @@ function mps_tools_get_subcategories(WP_REST_Request $request) {
     return rest_ensure_response($subcategories);
 }
 
-//------------------------------------------------------------------------------
-// ROUTE : Récupération des sous-catégories + sources associées
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/sources', [
-        'methods' => 'GET',
-        'callback' => 'mps_tools_get_sources',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt', // même remarque
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_get_sources(WP_REST_Request $request) {
     global $wpdb;
@@ -63,16 +46,7 @@ function mps_tools_get_sources(WP_REST_Request $request) {
     return rest_ensure_response($results);
 }
 
-//------------------------------------------------------------------------------
-// ROUTE : Récupération des sous-catégories + sources associées
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/exercices', [
-        'methods' => 'GET',
-        'callback' => 'mps_tools_get_sources_exercice',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt', // même remarque
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_get_sources_exercice(WP_REST_Request $request) {
     global $wpdb;
@@ -96,15 +70,7 @@ function mps_tools_get_sources_exercice(WP_REST_Request $request) {
         ]);
 }
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/subcategories', [
-        'methods' => 'POST',
-        'callback' => 'mps_tools_add_subcategories',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt', // même remarque
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_add_subcategories(WP_REST_Request $request) {
     global $wpdb;
@@ -132,15 +98,7 @@ function mps_tools_add_subcategories(WP_REST_Request $request) {
     return rest_ensure_response(['id' => $wpdb->insert_id]);
 }
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/sources', [
-        'methods' => 'POST',
-        'callback' => 'mps_tools_add_sources',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt', // même remarque
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_add_sources(WP_REST_Request $request) {
     global $wpdb;
@@ -167,15 +125,7 @@ function mps_tools_add_sources(WP_REST_Request $request) {
     return rest_ensure_response(['id' => $wpdb->insert_id]);
 }
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/subcategories/(?P<id>\d+)', [
-        'methods' => 'DELETE',
-        'callback' => 'mps_tools_rm_subcategories',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt', // même remarque
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_rm_subcategories(WP_REST_Request $request) {
     global $wpdb;
@@ -194,15 +144,7 @@ function mps_tools_rm_subcategories(WP_REST_Request $request) {
     return rest_ensure_response(['success' => true, 'deleted_id' => $id]);
 }
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/sources/(?P<id>\d+)', [
-        'methods' => 'DELETE',
-        'callback' => 'mps_tools_rm_sources',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt', // même remarque
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_rm_sources(WP_REST_Request $request) {
     global $wpdb;
@@ -221,15 +163,7 @@ function mps_tools_rm_sources(WP_REST_Request $request) {
     return rest_ensure_response(['success' => true, 'deleted_id' => $id]);
 }
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/sources/(?P<id>\d+)', [
-        'methods' => WP_REST_Server::EDITABLE,
-        'callback' => 'mps_tools_update_sources',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_update_sources(WP_REST_Request $request) {
     global $wpdb;
@@ -297,6 +231,6 @@ function mps_tools_update_sources(WP_REST_Request $request) {
     ];
 }
 
-//------------------------------------------------------------------------------
-// End of File
-//------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+// End of file
+//--------------------------------------------------------------------------------------------------

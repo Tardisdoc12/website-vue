@@ -8,31 +8,38 @@
 
 if (!defined('ABSPATH')) exit;
 
-define('MPS_TOOLS_MAIN_FILE', __FILE__);
-define('MPS_TOOLS_FUNCTIONS_DIR', __DIR__ . '/functions/');
-define('MPS_TOOLS_OBJECTS_DIR', __DIR__ . '/objects/');
-define('MPS_TOOLS_INCLUDES_DIR', __DIR__ . '/includes/');
-define('MPS_TOOLS_BDD_DIR', __DIR__ . '/base_de_donnee/');
-define('MPS_TOOLS_PARAMETERS_DIR', __DIR__ . '/parametres/');
+//--------------------------------------------------------------------------------------------------
+// Définition des constantes pour les chemins des différents répertoires du plugin
 
-// Charger tous les fichiers nécessaires
-$includes = [
+define('MPS_TOOLS_MAIN_FILE',               __FILE__);
+define('MPS_TOOLS_FUNCTIONS_DIR',           __DIR__ . '/functions/');
+define('MPS_TOOLS_OBJECTS_DIR',             __DIR__ . '/objects/');
+define('MPS_TOOLS_WORDPRESS_MODIFIER_DIR',  __DIR__ . '/wordpress_modifier/');
+define('MPS_TOOLS_ROUTES_DIR',              __DIR__ . '/routes/');
+define('MPS_TOOLS_CONTROLLERS_DIR',         __DIR__ . '/controllers/');
+define('MPS_TOOLS_BDD_DIR',                 __DIR__ . '/base_de_donnee/');
+define('MPS_TOOLS_PARAMETERS_DIR',          __DIR__ . '/parametres/');
+
+$files_wordpress_modifier = [
     'shortcodes.php',
-    'rest-fields.php',
-    'rest-events.php',
-    'rest-subscribe.php',
-    'rest-users.php',
-    'rest-auth.php',
-    'rest-source.php',
-    'rest_favoris.php',
-    'events_template.php',
-    'rest-conseils.php',
-    'rest-notes.php',
-    'rest-media.php',
-    'rest-places.php',
-    'rest-payement.php',
+    'cron.php',
+    'events.php',
+    'users.php',
     'rest-notification-helloasso.php',
-    
+];
+
+$files_routes_controllers = [
+    'connexion.php',
+    'conseils.php',
+    'events.php',
+    'favoris.php',
+    'media.php',
+    'notes.php',
+    'payement.php',
+    'places.php',
+    'source.php',
+    'subscribe.php',
+    'users.php',
 ];
 
 $file_functions = [
@@ -40,13 +47,17 @@ $file_functions = [
     'mailing.php',
     'render_field_parameters.php',
     'sanitize_field_parameters.php',
-    'shortcodes.php'
+    'shortcodes.php',
+    'payement.php',
 ];
 
 $files_database = [
     'table_creation.php',
     'table_migration.php',
 ];
+
+//--------------------------------------------------------------------------------------------------
+// A supprimer et ajouter aux paramètres du plugin
 
 add_filter('wp_mail_from', function($email) {
     return get_option('mon_plugin_mail_from') ?: $email;
@@ -56,6 +67,8 @@ add_filter('wp_mail_from_name', function($name) {
     return get_option('mon_plugin_mail_name') ?: $name;
 });
 
+//--------------------------------------------------------------------------------------------------
+// Import des fichiers contenant les fonctions nécessaires
 
 foreach ($file_functions as $file) {
     $file_path = MPS_TOOLS_FUNCTIONS_DIR . $file;
@@ -66,6 +79,9 @@ foreach ($file_functions as $file) {
     }
 }
 
+//--------------------------------------------------------------------------------------------------
+// Import des fichiers de Base de Donnée (création + migration)
+
 foreach ($files_database as $file) {
     $file_path = MPS_TOOLS_BDD_DIR . $file;
     if (file_exists($file_path)) {
@@ -75,18 +91,46 @@ foreach ($files_database as $file) {
     }
 }
 
+//--------------------------------------------------------------------------------------------------
+// Import des fichiers de paramètres
+
 require_once MPS_TOOLS_PARAMETERS_DIR . 'admin-settings.php';
 
-foreach ($includes as $file) {
-    $file_path = MPS_TOOLS_INCLUDES_DIR . $file;
+//--------------------------------------------------------------------------------------------------
+// Import des fichiers WordPress Modifier
+
+foreach ($files_wordpress_modifier as $file) {
+    $file_path = MPS_TOOLS_WORDPRESS_MODIFIER_DIR . $file;
     if (file_exists($file_path)) {
         require_once $file_path;
     } else {
-        error_log("MPS Tools : fichier de fonction manquant : {$file_path}");
+        error_log("MPS Tools : fichier de WordPress Modifier manquant : {$file_path}");
     }
 }
 
+//--------------------------------------------------------------------------------------------------
+// Import des fichiers des controllers (fonctions appelés par les routes)
 
+foreach ($files_routes_controllers as $file) {
+    $file_path = MPS_TOOLS_CONTROLLERS_DIR . $file;
+    if (file_exists($file_path)) {
+        require_once $file_path;
+    } else {
+        error_log("MPS Tools : fichier de controller manquant : {$file_path}");
+    }
+}
+
+//--------------------------------------------------------------------------------------------------
+// Import des fichiers des routes (définition des endpoints)
+
+foreach ($files_routes_controllers as $file) {
+    $file_path = MPS_TOOLS_ROUTES_DIR . $file;
+    if (file_exists($file_path)) {
+        require_once $file_path;
+    } else {
+        error_log("MPS Tools : fichier de route manquant : {$file_path}");
+    }
+}
 
 //------------------------------------------------------------------------------
 // End of File

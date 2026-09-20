@@ -1,25 +1,20 @@
 <?php
+//--------------------------------------------------------------------------------------------------
 /*
-*
-* Gère les conseils des utilisateurs
-*
+* FILENAME: conseils.php
+* AUTHOR: Jean Anquetil
+* DATE: 2026-09-19
+* DESCRIPTIOn : 
 */
+//--------------------------------------------------------------------------------------------------
+// Imports
+
 if (!defined('ABSPATH')) exit;
 
-//------------------------------------------------------------------------------
-// IMPORTS
 
-require_once MPS_TOOLS_FUNCTIONS_DIR . 'route_callback.php';
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/conseils', [
-        'methods' => 'POST',
-        'callback' => 'mps_tools__add_conseils',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
+// Functions OR CLASS
 
 function mps_tools__add_conseils(WP_REST_Request $request) {
     global $wpdb;
@@ -69,16 +64,7 @@ function mps_tools__add_conseils(WP_REST_Request $request) {
     );
 }
 
-//------------------------------------------------------------------------------
-
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/conseils', [
-        'methods' => 'GET',
-        'callback' => 'mps_tools__get_conseils',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools__get_conseils(WP_REST_Request $request) {
     global $wpdb;
@@ -111,16 +97,7 @@ function mps_tools__get_conseils(WP_REST_Request $request) {
     ];
 }
 
-//------------------------------------------------------------------------------
-
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/conseils/(?P<id>\d+)', [
-        'methods' => 'GET',
-        'callback' => 'mps_tools__get_conseils_by_user',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools__get_conseils_by_user(WP_REST_Request $request) {
     global $wpdb;
@@ -152,15 +129,7 @@ function mps_tools__get_conseils_by_user(WP_REST_Request $request) {
     ];
 }
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/conseils', [
-        'methods' => 'DELETE',
-        'callback' => 'mps_tools__delete_conseils',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools__delete_conseils(WP_REST_Request $request) {
     global $wpdb;
@@ -207,15 +176,7 @@ function mps_tools__delete_conseils(WP_REST_Request $request) {
     ];
 }
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/conseils/(?P<user_id>\d+)/(?P<file_id>\d+)', [
-        'methods' => 'DELETE',
-        'callback' => 'mps_tools__delete_conseils_for_user',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools__delete_conseils_for_user(WP_REST_Request $request) {
     global $wpdb;
@@ -262,15 +223,7 @@ function mps_tools__delete_conseils_for_user(WP_REST_Request $request) {
     ];
 }
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/conseils/(?P<id>\d+)', [
-        'methods' => 'DELETE',
-        'callback' => 'mps_tools__delete_all_by_conseils',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools__delete_all_by_conseils(WP_REST_Request $request) {
     global $wpdb;
@@ -296,6 +249,6 @@ function mps_tools__delete_all_by_conseils(WP_REST_Request $request) {
     ];
 }
 
-//------------------------------------------------------------------------------
-// End of File
-//------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+// End of file
+//--------------------------------------------------------------------------------------------------

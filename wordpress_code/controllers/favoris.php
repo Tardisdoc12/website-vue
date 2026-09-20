@@ -1,25 +1,20 @@
 <?php
+//--------------------------------------------------------------------------------------------------
 /*
-*
-* Gère les favoris des utilisateurs
-*
+* FILENAME: favoris.php
+* AUTHOR: Jean Anquetil
+* DATE: 2026-09-19
+* DESCRIPTIOn : 
 */
+//--------------------------------------------------------------------------------------------------
+// Imports
+
 if (!defined('ABSPATH')) exit;
 
-//------------------------------------------------------------------------------
-// IMPORTS
 
-require_once MPS_TOOLS_FUNCTIONS_DIR . 'route_callback.php';
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/favoris', [
-        'methods' => 'POST',
-        'callback' => 'mps_tools_add_favoris',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
+// Functions OR CLASS
 
 function mps_tools_add_favoris(WP_REST_Request $request) {
     global $wpdb;
@@ -61,16 +56,8 @@ function mps_tools_add_favoris(WP_REST_Request $request) {
     );
 }
 
-//------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/favoris', [
-        'methods' => 'GET',
-        'callback' => 'mps_tools_get_favoris',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
-    ]);
-});
 
 function mps_tools_get_favoris(WP_REST_Request $request) {
     global $wpdb;
@@ -103,16 +90,7 @@ function mps_tools_get_favoris(WP_REST_Request $request) {
     ];
 }
 
-//------------------------------------------------------------------------------
-
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/favoris/(?P<id>\d+)', [
-        'methods' => 'GET',
-        'callback' => 'mps_tools_get_favoris_by_user',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_get_favoris_by_user(WP_REST_Request $request) {
     global $wpdb;
@@ -144,15 +122,7 @@ function mps_tools_get_favoris_by_user(WP_REST_Request $request) {
     ];
 }
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/favoris', [
-        'methods' => 'DELETE',
-        'callback' => 'mps_tools_delete_favoris',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_delete_favoris(WP_REST_Request $request) {
     global $wpdb;
@@ -199,15 +169,7 @@ function mps_tools_delete_favoris(WP_REST_Request $request) {
     ];
 }
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/favoris/(?P<id>\d+)', [
-        'methods' => 'DELETE',
-        'callback' => 'mps_tools_delete_all_by_favoris',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_delete_all_by_favoris(WP_REST_Request $request) {
     global $wpdb;
@@ -233,6 +195,6 @@ function mps_tools_delete_all_by_favoris(WP_REST_Request $request) {
     ];
 }
 
-//------------------------------------------------------------------------------
-// End of File
-//------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+// End of file
+//--------------------------------------------------------------------------------------------------

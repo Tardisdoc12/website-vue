@@ -1,20 +1,24 @@
 <?php
-/* 
-* On ajoute la table qui gère les médias
+//--------------------------------------------------------------------------------------------------
+/*
+* FILENAME: media.php
+* AUTHOR: Jean Anquetil
+* DATE: 2026-09-19
+* DESCRIPTIOn : 
 */
+//--------------------------------------------------------------------------------------------------
+// Imports
+
 if (!defined('ABSPATH')) exit;
 
-require_once MPS_TOOLS_FUNCTIONS_DIR . 'route_callback.php';
+//--------------------------------------------------------------------------------------------------
+// Constants
 
-//------------------------------------------------------------------------------
+const BASE_URL_2 = 'https://api.infomaniak.com/2/drive/';
+const BASE_URL_3 = 'https://api.infomaniak.com/3/drive/';
 
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/medias/thumbnails', [
-        'methods' => 'GET',
-        'callback' => 'mps_tools_get_medias_thumbnails',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
+// Functions OR CLASS
 
 function mps_tools_get_medias_thumbnails(WP_REST_Request $request) {
     $urls = $request->get_param('urls');
@@ -78,16 +82,7 @@ function mps_tools_get_medias_thumbnails(WP_REST_Request $request) {
     ]);
 }
 
-//------------------------------------------------------------------------------
-
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/medias/directory/(?P<directory_id>\d+)', [
-        'methods' => 'GET',
-        'callback' => 'mps_tools_get_medias',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_get_medias(WP_REST_Request $request) {
     $token = defined('KDRIVE_TOKEN') ? KDRIVE_TOKEN : get_option('mon_plugin_token');
@@ -101,7 +96,7 @@ function mps_tools_get_medias(WP_REST_Request $request) {
     }
     
 
-    $url = "https://api.infomaniak.com/3/drive/{$kdrive_id}/files/{$kdrive_directory_id}/files";
+    $url = BASE_URL_3 . "{$kdrive_id}/files/{$kdrive_directory_id}/files";
     error_log("Fetching medias from kDrive: $url");
     error_log("Using token: $token");
     
@@ -134,11 +129,11 @@ function mps_tools_get_medias(WP_REST_Request $request) {
     foreach ($medias as $media) {
         if (in_array($media['type'], $supported_types)) {
             if (in_array($media['mime_type'], $image_mime)) {
-                $media['thumbnail_300'] = "https://api.infomaniak.com/2/drive/{$kdrive_id}/files/{$media['id']}/preview";
+                $media['thumbnail_300'] = BASE_URL_2 . "{$kdrive_id}/files/{$media['id']}/preview";
             } else {
-                $media['thumbnail_300'] = "https://api.infomaniak.com/2/drive/{$kdrive_id}/files/{$media['id']}/thumbnail?height=400&width=400";
+                $media['thumbnail_300'] = BASE_URL_2 . "{$kdrive_id}/files/{$media['id']}/thumbnail?height=400&width=400";
             }
-            $media['thumbnail_100'] = "https://api.infomaniak.com/2/drive/{$kdrive_id}/files/{$media['id']}/thumbnail?height=100&width=100";
+            $media['thumbnail_100'] = BASE_URL_2 . "{$kdrive_id}/files/{$media['id']}/thumbnail?height=100&width=100";
         } else {
             $media['thumbnail_300'] = null;
             $media['thumbnail_100'] = null;
@@ -152,15 +147,7 @@ function mps_tools_get_medias(WP_REST_Request $request) {
     ]);
 }
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/medias', [
-        'methods' => 'GET',
-        'callback' => 'mps_tools_get_dir_medias',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_get_dir_medias(WP_REST_Request $request) {
     global $wpdb;
@@ -183,8 +170,8 @@ function mps_tools_get_dir_medias(WP_REST_Request $request) {
         $media->parent_id = sanitize_text_field($media->parent_id);
 
         if (in_array($media->file_type, $supported_types)) {
-            $media->thumbnail_300 = "https://api.infomaniak.com/3/drive/{$drive_id}/files/{$media->kdrive_file_id}/preview";
-            $media->thumbnail_100 = "https://api.infomaniak.com/3/drive/{$drive_id}/files/{$media->kdrive_file_id}/thumbnail?height=100&width=100";
+            $media->thumbnail_300 = BASE_URL_3 . "{$drive_id}/files/{$media->kdrive_file_id}/preview";
+            $media->thumbnail_100 = BASE_URL_3 . "{$drive_id}/files/{$media->kdrive_file_id}/thumbnail?height=100&width=100";
         } else {
             $media->thumbnail_300 = null;
             $media->thumbnail_100 = null;
@@ -198,15 +185,8 @@ function mps_tools_get_dir_medias(WP_REST_Request $request) {
     ]);
 }
 
-//------------------------------------------------------------------------------
 
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/medias', [
-        'methods'             => 'POST',
-        'callback'            => 'mps_tools_upload_medias',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_upload_medias(WP_REST_Request $request) {
     global $wpdb;
@@ -229,15 +209,15 @@ function mps_tools_upload_medias(WP_REST_Request $request) {
         return new WP_Error('missing_params', 'Paramètres manquants.', ['status' => 400]);
     }
 
-    $token = KDRIVE_TOKEN;
-    $drive_id = KDRIVE_DRIVE_ID;
+    $token = get_option('KDRIVE_TOKEN', '');
+    $drive_id = get_option('KDRIVE_DRIVE_ID', '');
 
     if (empty($token) || empty($drive_id)) {
         return new WP_Error('kdrive_config_error', 'Configuration KDrive manquante.', ['status' => 505]);
     }
 
     // 3. Envoyer à kDrive en multipart/form-data (comme Postman)
-    $url = "https://api.infomaniak.com/3/drive/{$drive_id}/upload?"
+    $url = BASE_URL_3 . "{$drive_id}/upload?"
         . http_build_query([
             'total_size'   => $file_size,
             'file_name'    => $file_name,
@@ -245,6 +225,8 @@ function mps_tools_upload_medias(WP_REST_Request $request) {
         ]);
 
     $curl = curl_init();
+    $file_type = isset($file['type']) ? $file['type'] : '';
+    
 
     curl_setopt_array($curl, [
         CURLOPT_URL            => $url,
@@ -311,16 +293,7 @@ function mps_tools_upload_medias(WP_REST_Request $request) {
     ]);
 }
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/medias/directory', [
-        'methods'             => 'POST',
-        'callback'            => 'mps_tools_create_directory_medias',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
-    ]);
-});
-
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_create_directory_medias(WP_REST_Request $request) {
     global $wpdb;
@@ -340,7 +313,7 @@ function mps_tools_create_directory_medias(WP_REST_Request $request) {
     $token = KDRIVE_TOKEN;
     $drive_id = KDRIVE_DRIVE_ID;
 
-    $url_to_create = "https://api.infomaniak.com/3/drive/{$drive_id}/files/team_directory";
+    $url_to_create = BASE_URL_3 . "{$drive_id}/files/team_directory";
     $result = wp_remote_post($url_to_create, [
         'headers' => [
             'Authorization' => 'Bearer ' . $token,
@@ -363,7 +336,7 @@ function mps_tools_create_directory_medias(WP_REST_Request $request) {
 
     $initial_directory_id = sanitize_text_field($body['data']['id']);
     
-    $url_to_move = "https://api.infomaniak.com/3/drive/{$drive_id}/files/{$initial_directory_id}/move/{$parent_id}";
+    $url_to_move = BASE_URL_3 . "{$drive_id}/files/{$initial_directory_id}/move/{$parent_id}";
     $move_result = wp_remote_post($url_to_move, [
         'headers' => [
             'Authorization' => 'Bearer ' . $token,
@@ -402,15 +375,7 @@ function mps_tools_create_directory_medias(WP_REST_Request $request) {
     ]);
 }
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/medias/(?P<id>\d+)', [
-        'methods'             => 'DELETE',
-        'callback'            => 'mps_tools_delete_medias',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_delete_medias(WP_REST_Request $request) {
     global $wpdb;
@@ -433,7 +398,7 @@ function mps_tools_delete_medias(WP_REST_Request $request) {
     $kdrive_drive_id = KDRIVE_DRIVE_ID;
     $token = KDRIVE_TOKEN;
 
-    $url_to_delete = "https://api.infomaniak.com/2/drive/{$kdrive_drive_id}/files/{$kdrive_file_id}";
+    $url_to_delete = BASE_URL_2 . "{$kdrive_drive_id}/files/{$kdrive_file_id}";
 
     $delete_result = wp_remote_request($url_to_delete, [
         'method'  => 'DELETE',
@@ -449,6 +414,6 @@ function mps_tools_delete_medias(WP_REST_Request $request) {
     return rest_ensure_response(['success' => true, 'deleted_id' => $id]);
 }
 
-//------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // End of file
-//------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------

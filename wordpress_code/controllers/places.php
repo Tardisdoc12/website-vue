@@ -1,25 +1,20 @@
 <?php
-/* 
-* Routes REST API pour la gestion des lieux
-* Version : 1.0.0
+//--------------------------------------------------------------------------------------------------
+/*
+* FILENAME: places.php
+* AUTHOR: Jean Anquetil
+* DATE: 2026-09-20
+* DESCRIPTIOn : 
 */
+//--------------------------------------------------------------------------------------------------
+// Imports
 
 if (!defined('ABSPATH')) exit;
 
-//------------------------------------------------------------------------------
-// IMPORTS
 
-require_once MPS_TOOLS_FUNCTIONS_DIR . 'route_callback.php';
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/places', [
-        'methods' => 'GET',
-        'callback' => 'mps_tools_get_places',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
+// Functions OR CLASS
 
 function mps_tools_get_places(WP_REST_Request $request) {
     global $wpdb;
@@ -31,15 +26,7 @@ function mps_tools_get_places(WP_REST_Request $request) {
     return rest_ensure_response(array('success' => true, 'places' => $places));
 }
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/places', [
-        'methods' => 'POST',
-        'callback' => 'mps_tools_create_place',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_create_place(WP_REST_Request $request) {
     global $wpdb;
@@ -63,6 +50,6 @@ function mps_tools_create_place(WP_REST_Request $request) {
     return rest_ensure_response(array('success' => true, 'message' => 'Lieu créé avec succès.', 'place' => array('id' => $wpdb->insert_id, 'name' => $name)));
 }
 
-//------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 // End of file
-//------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------

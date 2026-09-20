@@ -1,26 +1,20 @@
 <?php
-/* 
-* On ajoute des colonnes pour les utilisateurs
+//--------------------------------------------------------------------------------------------------
+/*
+* FILENAME: notes.php
+* AUTHOR: Jean Anquetil
+* DATE: 2026-09-19
+* DESCRIPTIOn : 
 */
+//--------------------------------------------------------------------------------------------------
+// Imports
+
 if (!defined('ABSPATH')) exit;
 
-//------------------------------------------------------------------------------
-// IMPORTS
+//--------------------------------------------------------------------------------------------------
+// Functions OR CLASS
 
-$file = "functions.php";
-require_once plugin_dir_path(__FILE__) . $file;
-
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/notes', [
-        'methods' => 'GET',
-        'callback' => 'myplugin_get_notes',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
-    ]);
-});
-
-function myplugin_get_notes(WP_REST_Request $request) {
+function mps_tools_get_notes(WP_REST_Request $request) {
     global $wpdb;
     $table_notes = $wpdb->prefix . "notes";
     $user_id = (int) $request->get_param('user_id');
@@ -47,17 +41,7 @@ function myplugin_get_notes(WP_REST_Request $request) {
     ];
 }
 
-
-//------------------------------------------------------------------------------
-// Créer une note
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1','/notes',[
-        'methods' => 'POST',
-        'callback' => 'mps_tools_create_notes',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_create_notes(WP_REST_Request $request) {
     global $wpdb;
@@ -98,17 +82,8 @@ function mps_tools_create_notes(WP_REST_Request $request) {
     return ['success' => true];
 }
 
-//------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/notes', [
-        'methods' => 'PUT',
-        'callback' => 'mps_tools_update_notes',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
-    ]);
-});
-
-// Fonction pour modifier l'événement
 function mps_tools_update_notes(WP_REST_Request $request) {
     global $wpdb;
     $table = $wpdb->prefix . "notes";
@@ -145,4 +120,6 @@ function mps_tools_update_notes(WP_REST_Request $request) {
     ];
 }
 
-//------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+// End of file
+//--------------------------------------------------------------------------------------------------

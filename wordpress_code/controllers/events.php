@@ -1,44 +1,20 @@
 <?php
+//--------------------------------------------------------------------------------------------------
 /*
-* Gère les routes des events
+* FILENAME: events.php
+* AUTHOR: Jean Anquetil
+* DATE: 2026-09-19
+* DESCRIPTIOn : 
 */
+//--------------------------------------------------------------------------------------------------
+// Imports
+
 if (!defined('ABSPATH')) exit;
 
-//------------------------------------------------------------------------------
-// IMPORT :
-
-$file = "functions.php";
-require_once MPS_TOOLS_FUNCTIONS_DIR . 'route_callback.php';
 require_once MPS_TOOLS_FUNCTIONS_DIR . "sanitize_field_parameters.php";
 
-//------------------------------------------------------------------------------
-// Enregistre le Custom Post Type "event"
-
-add_action('init', 'mps_tools_register_event_cpt');
-
-function mps_tools_register_event_cpt() {
-    register_post_type('event', [
-        'labels' => [
-            'name' => 'Événements',
-            'singular_name' => 'Événement'
-        ],
-        'public' => true,
-        'rewrite' => ['slug' => 'evenement'],
-        'supports' => ['title', 'editor'],
-        'show_in_rest' => true
-    ]);
-}
-
-//------------------------------------------------------------------------------
-// Récupère tous les events
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/events', [
-        'methods' => 'GET',
-        'callback' => 'mps_tools_get_events',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
+// Functions OR CLASS
 
 function mps_tools_get_events(WP_REST_Request $request) {
     global $wpdb;
@@ -110,16 +86,7 @@ function mps_tools_get_events(WP_REST_Request $request) {
     return [ 'events' => $result ];
 }
 
-//------------------------------------------------------------------------------
-// Récupère un event en particulier via l'email de l'user
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/events/(?P<user_id>\d+)', [
-        'methods'             => 'POST',
-        'callback'            => 'mps_tools_get_event_by_user_id',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_get_event_by_user_id(WP_REST_Request $request) {
     global $wpdb;
@@ -144,17 +111,7 @@ function mps_tools_get_event_by_user_id(WP_REST_Request $request) {
     ];
 }
 
-
-//------------------------------------------------------------------------------
-// Récupère un event en particulier via l'id de l'event
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/events/(?P<id>\d+)', [
-        'methods'             => 'GET',
-        'callback'            => 'mps_tools_get_event_id',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_get_event_id(WP_REST_Request $request) {
     global $wpdb;
@@ -220,16 +177,7 @@ function mps_tools_get_event_id(WP_REST_Request $request) {
     return $result;
 }
 
-//------------------------------------------------------------------------------
-// Récupère un event en particulier via l'id de l'event
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/events/post/(?P<id>\d+)', [
-        'methods'             => 'GET',
-        'callback'            => 'mps_tools_get_event_post_id',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_get_event_post_id(WP_REST_Request $request) {
     global $wpdb;
@@ -307,16 +255,7 @@ function mps_tools_get_event_post_id(WP_REST_Request $request) {
     return $result;
 }
 
-//------------------------------------------------------------------------------
-// Créer un event
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1','/events',[
-        'methods' => 'POST',
-        'callback' => 'mps_tools_create_events',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_create_events(WP_REST_Request $request) {
     global $wpdb;
@@ -388,18 +327,9 @@ function mps_tools_create_events(WP_REST_Request $request) {
         'post_id' => $post_id
     ];
 }
-//------------------------------------------------------------------------------
-// Modifie un évènement
 
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/events/(?P<id>\d+)', [
-        'methods' => 'PUT',
-        'callback' => 'mps_tools_update_event',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
-// Fonction pour modifier l'événement
 function mps_tools_update_event(WP_REST_Request $request) {
     global $wpdb;
     $table = $wpdb->prefix . "events";
@@ -448,8 +378,6 @@ function mps_tools_update_event(WP_REST_Request $request) {
         $data['update_date'] = current_time('mysql');
     }
 
-    
-
     $where = ['id' => $id];
 
     $updated = $wpdb->update($table, $data, $where);
@@ -461,16 +389,7 @@ function mps_tools_update_event(WP_REST_Request $request) {
     return ['id' => $id, 'updated' => $updated];
 }
 
-//-----------------------------------------------------------------------------------
-// Supprime un event
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1','/events/(?P<id>\d+)',[
-        'methods' => 'DELETE',
-        'callback' => 'mps_tools_delete_events',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_delete_events(WP_REST_Request $request) {
     global $wpdb;
@@ -511,6 +430,6 @@ function mps_tools_delete_events(WP_REST_Request $request) {
     ];
 }
 
-//------------------------------------------------------------------------------
-// End of File
-//------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+// End of file
+//--------------------------------------------------------------------------------------------------

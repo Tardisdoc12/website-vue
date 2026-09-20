@@ -1,27 +1,20 @@
 <?php
+//--------------------------------------------------------------------------------------------------
 /*
-*
-* Gère les utilisateurs 
-*
+* FILENAME: users.php
+* AUTHOR: Jean Anquetil
+* DATE: 2026-09-20
+* DESCRIPTIOn : 
 */
+//--------------------------------------------------------------------------------------------------
+// Imports
+
 if (!defined('ABSPATH')) exit;
 
-//------------------------------------------------------------------------------
-// IMPORTS
-
-$file = "functions.php";
-require_once MPS_TOOLS_FUNCTIONS_DIR . 'route_callback.php';
-
-//------------------------------------------------------------------------------
 
 
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1','/users',[
-        'methods' => 'GET',
-        'callback' => 'monplugin_get_users',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
+// Functions OR CLASS
 
 function monplugin_get_users(WP_REST_Request $request) {
     global $wpdb;
@@ -43,16 +36,7 @@ function monplugin_get_users(WP_REST_Request $request) {
     ];
 }
 
-//------------------------------------------------------------------------------
-
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1','/adherents',[
-        'methods' => 'GET',
-        'callback' => 'monplugin_get_adherents',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function monplugin_get_adherents(WP_REST_Request $request) {
     $users = get_users([
@@ -80,15 +64,7 @@ function monplugin_get_adherents(WP_REST_Request $request) {
     ];
 }
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1','/users/(?P<id>\d+)',[
-        'methods' => 'GET',
-        'callback' => 'monplugin_get_user',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function monplugin_get_user(WP_REST_Request $request) {
     $user_id = intval($request['id']);
@@ -120,15 +96,7 @@ function monplugin_get_user(WP_REST_Request $request) {
     ];
 }
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1','/user_connected',[
-        'methods' => 'GET',
-        'callback' => 'monplugin_get_user_connected',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function monplugin_get_user_connected(WP_REST_Request $request) {
     $user_id = get_current_user_id();
@@ -167,15 +135,7 @@ function monplugin_get_user_connected(WP_REST_Request $request) {
     ];
 }
 
-//--------------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/register', [
-        'methods' => 'POST',
-        'callback' => 'mps_tools_register_user',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_register_user(WP_REST_Request $request) {
     $username = sanitize_user($request->get_param('username'));
@@ -216,15 +176,7 @@ function mps_tools_register_user(WP_REST_Request $request) {
     ];
 }
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/users/search', [
-        'methods'             => 'GET',
-        'callback'            => 'monplugin_search_user',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function monplugin_search_user(WP_REST_Request $request) {
     $query = sanitize_text_field($request->get_param('q'));
@@ -268,15 +220,7 @@ function monplugin_search_user(WP_REST_Request $request) {
     ];
 }
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/user/update', [
-        'methods'  => 'POST',
-        'callback' => 'mps_tools_update_user',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_update_user(WP_REST_Request $request) {
 
@@ -333,15 +277,7 @@ function mps_tools_update_user(WP_REST_Request $request) {
     ];
 }
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/psswd/reset', [
-        'methods'  => 'POST',
-        'callback' => 'mps_tools_reset_password',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt',
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_reset_password(WP_REST_Request $request) {
     $email = sanitize_email($request->get_param('email'));
@@ -378,15 +314,7 @@ function mps_tools_reset_password(WP_REST_Request $request) {
     ];
 }
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/check-reset-key', [
-        'methods' => 'POST',
-        'callback' => 'mps_tools_check_reset_key',
-        'permission_callback' => '__return_true',
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_check_reset_key(WP_REST_Request $request) {
     $key = $request->get_param('key');
@@ -401,15 +329,7 @@ function mps_tools_check_reset_key(WP_REST_Request $request) {
     return ['success' => true];
 }
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1', '/password', [
-        'methods' => 'POST',
-        'callback' => 'mps_tools_reset_password_properly',
-        'permission_callback' => '__return_true',
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_reset_password_properly(WP_REST_Request $request) {
     $login    = sanitize_user($request->get_param('login'));
@@ -440,7 +360,6 @@ function mps_tools_reset_password_properly(WP_REST_Request $request) {
     ];
 }
 
-
-//------------------------------------------------------------------------------
-// End of File
-//------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+// End of file
+//--------------------------------------------------------------------------------------------------

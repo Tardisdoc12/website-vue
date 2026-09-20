@@ -1,32 +1,22 @@
 <?php
+//--------------------------------------------------------------------------------------------------
 /*
-* Gère les inscriptions aux events
+* FILENAME: subscribe.php
+* AUTHOR: Jean Anquetil
+* DATE: 2026-09-20
+* DESCRIPTIOn : 
 */
+//--------------------------------------------------------------------------------------------------
+// Imports
 
 if (!defined('ABSPATH')) exit;
 
-//------------------------------------------------------------------------------
-// IMPORTS
-
-$file = "functions.php";
-require_once plugin_dir_path(__FILE__) . $file;
-
-//------------------------------------------------------------------------------
-
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1','/subscribe/(?P<user_id>\d+)/(?P<event_id>\d+)',[
-        'methods' => 'DELETE',
-        'callback' => 'mps_tools_delete_subscribe',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
+// Functions OR CLASS
 
 function mps_tools_delete_subscribe(WP_REST_Request $request) {
     global $wpdb;
-    $table_events   = $wpdb->prefix . "events";
     $table_inscrits = $wpdb->prefix . "inscrits";
-    $table_users    = $wpdb->prefix . "users_inscrits";
     $user_id = intval($request['user_id']);
     $event_id = intval($request['event_id']);
 
@@ -40,42 +30,10 @@ function mps_tools_delete_subscribe(WP_REST_Request $request) {
 
     $wpdb->delete($table_inscrits, ['user_id' => $user_id, 'event_id' => $event_id]);
 
-    $isAdherent = $wpdb->get_var(
-        $wpdb->prepare(
-            "SELECT is_adherent
-             FROM $table_users
-             WHERE id = %d",
-            $user_id
-        )
-    );
-
-    // if ($isAdherent) {
-    //     $subscribe_places = $wpdb->get_var(
-    //         $wpdb->prepare("SELECT subscribe_places FROM $table_events WHERE id = %d", $event_id)
-    //     );
-    //     if($subscribe_places >= 0) {
-    //         $wpdb->query(
-    //             $wpdb->prepare("UPDATE $table_events SET subscribe_places = subscribe_places + 1 WHERE id = %d", $event_id)
-    //         );
-    //     }
-
-    // } else {
-    //     $wpdb->query(
-    //         $wpdb->prepare("UPDATE $table_events SET nonsubscribe_places = nonsubscribe_places + 1 WHERE id = %d", $event_id)
-    //     );
-    // }
     return ['success' => true, 'message' => 'Inscription supprimée et place libérée'];
 }
 
-//-----------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1','/subscribe',[
-        'methods' => 'POST',
-        'callback' => 'mps_tools_create_subscribe',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_create_subscribe(WP_REST_Request $request) {
     global $wpdb;
@@ -206,15 +164,7 @@ function mps_tools_create_subscribe(WP_REST_Request $request) {
     ];
 }
 
-//------------------------------------------------------------------------------
-
-add_action('rest_api_init', function () {
-    register_rest_route('vue-plugin/v1','/subscribe/(?P<event_id>\d+)/(?P<user_id>\d+)/',[
-        'methods' => 'POST',
-        'callback' => 'mps_tools_update_subscribe',
-        'permission_callback' => 'mps_tools_verify_csrf_and_jwt'
-    ]);
-});
+//--------------------------------------------------------------------------------------------------
 
 function mps_tools_update_subscribe(WP_REST_Request $request) {
     global $wpdb;
@@ -295,6 +245,6 @@ function mps_tools_update_subscribe(WP_REST_Request $request) {
     ];
 }
 
-//------------------------------------------------------------------------------
-// End of File
-//------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+// End of file
+//--------------------------------------------------------------------------------------------------
