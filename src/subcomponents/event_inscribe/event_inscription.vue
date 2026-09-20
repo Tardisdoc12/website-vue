@@ -300,6 +300,7 @@ export default {
             immediate: true,
             deep: true,
             handler(newUser) {
+                if (this.participantProblem) return;
                 if (newUser) {
                     this.participants[0] = {
                         ...this.participants[0],
