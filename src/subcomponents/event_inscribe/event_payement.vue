@@ -112,6 +112,7 @@ export default {
             dates :{
                 "8_27_2026" : "stage-de-perfectionnement-27-septembre-2026/widget",
                 "9_11_2026" : "stage-de-perfectionnement-11-octobre-2026/widget",
+                "8_26_2026" : 'matinee-meca-26-septembre-2026/widget'
             },
         }
     },
