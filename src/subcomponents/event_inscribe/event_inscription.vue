@@ -48,10 +48,6 @@
                     <label class="block font-medium">Téléphone <span style="color:red">*</span></label>
                     <input v-model="participants[0].phone" type="tel" class="w-full border p-1 rounded" pattern="[0-9]{10}" required />
                 </div>
-                <div class="flex flex-col gap-1">
-                    <label class="block font-medium">Moto/Cylindré <span style="color:red">*</span></label>
-                    <input v-model="participants[0].bike" type="text" class="w-full border p-1 rounded" required />
-                </div>
                 <div v-if="isEncadrantComp" style="margin-bottom:10px;">
                     <label class="block font-medium">Souhaitez-vous encadrer? <span style="color:red">*</span></label>
                     <select v-model="participants[0].wantsEncadrant" class="w-full border p-1 rounded" required>
@@ -61,7 +57,7 @@
                     </select>
                 </div>
                 <div class="flex flex-col gap-1" v-if="!isAdherent">
-                    <label class="block font-medium">Quelle est votre expérience à moto? <span style="color:red">*</span></label>
+                    <label class="block font-medium">Quelle est votre expérience? <span style="color:red">*</span></label>
                     <textarea v-model="participants[0].experience" class="w-full border p-1 rounded" rows="3" required></textarea>
                 </div>
                 <div v-for="field in getSpecialFields" :key="field" class="flex flex-col gap-1">
@@ -116,7 +112,7 @@
 
                     <!-- Compte trouvé -->
                     <div v-if="participants[currentStep].searchResult === 'found'" class="found-card">
-                        ✓ {{ participants[currentStep].name }} — {{ participants[currentStep].bike }}
+                        ✓ {{ participants[currentStep].name }} — {{ participants[currentStep].phone }}
                     </div>
                     <!-- Compte non trouvé malgré recherche -->
                     <p v-if="participants[currentStep].searchResult === 'not_found'" class="not-found-msg">
@@ -126,7 +122,7 @@
                     <!-- Expérience + champs spéciaux après compte trouvé -->
                     <template v-if="participants[currentStep].searchResult === 'found'">
                         <div class="flex flex-col gap-1" v-if="!isAdherentParticipant(currentStep)">
-                            <label class="block font-medium">Expérience à moto <span style="color:red">*</span></label>
+                            <label class="block font-medium">Expérience<span style="color:red">*</span></label>
                             <textarea v-model="participants[currentStep].experience" class="w-full border p-1 rounded" rows="3"></textarea>
                         </div>
                         <div v-for="field in getSpecialFields" :key="field" class="flex flex-col gap-1">
@@ -159,11 +155,7 @@
                         <input v-model="participants[currentStep].phone" type="tel" class="w-full border p-1 rounded" pattern="[0-9]{10}" />
                     </div>
                     <div class="flex flex-col gap-1">
-                        <label class="block font-medium">Moto/Cylindré <span style="color:red">*</span></label>
-                        <input v-model="participants[currentStep].bike" type="text" class="w-full border p-1 rounded" />
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <label class="block font-medium">Expérience à moto <span style="color:red">*</span></label>
+                        <label class="block font-medium">Expérience<span style="color:red">*</span></label>
                         <textarea v-model="participants[currentStep].experience" class="w-full border p-1 rounded" rows="3"></textarea>
                     </div>
                     <div v-for="field in getSpecialFields" :key="field" class="flex flex-col gap-1">
@@ -235,7 +227,6 @@ function emptyParticipant() {
         lastName: "",
         email: "",
         phone: "",
-        bike: "",
         experience: "",
         wantsEncadrant: null,
         isAdherent: null,
@@ -274,7 +265,6 @@ export default {
                     firstName: this.user?.firstName ?? "",
                     lastName: this.user?.lastName ?? "",
                     phone: this.user?.telephone ?? "",
-                    bike:  this.user?.moto ?? "",
                     isAdherent: this.user?.roles ? (!this.user.roles.includes("non_adherent") ? 1 : 0) : 0,
                     roles: this.user?.roles ?? ["non_adherent"],
                     email: this.user?.email ?? "",
@@ -307,7 +297,6 @@ export default {
                         firstName: newUser.firstName ?? "",
                         lastName: newUser.lastName ?? "",
                         phone: newUser.telephone ?? "",
-                        bike:  newUser.moto ?? "",
                         email: newUser.email ?? "",
                         roles: newUser.roles ?? ["non_adherent"],
                         isAttente: this.isAttente,
@@ -339,7 +328,7 @@ export default {
         isCurrentStepValid() {
             const p = this.participants[this.currentStep]
             if (this.currentStep === 0) {
-                const base = p.firstName && p.lastName && p.email && p.phone && p.bike
+                const base = p.firstName && p.lastName && p.email && p.phone
                 const encadrant = !this.isEncadrantComp || p.wantsEncadrant !== null
                 return base && encadrant
             }
@@ -351,7 +340,7 @@ export default {
                 return exp
             }
             // hasAccount === false → formulaire classique
-            return !!(p.firstName && p.lastName && p.email && p.phone && p.bike && p.experience)
+            return !!(p.firstName && p.lastName && p.email && p.phone && p.experience)
         }
     },
 
@@ -375,7 +364,6 @@ export default {
             this.participants[index].lastName = ""
             this.participants[index].email = ""
             this.participants[index].phone = ""
-            this.participants[index].bike = ""
             this.participants[index].experience = ""
             this.participants[index].specialField = {}
             this.participants[index].wantsCash = false
@@ -404,7 +392,6 @@ export default {
                         lastName: u.lastName,
                         email: u.email,
                         phone: u.telephone,
-                        bike:  u.moto,
                         roles: u.roles ?? ["non_adherent"],
                         searchResult: 'found',
                         wantsCash: false,

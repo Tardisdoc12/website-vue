@@ -68,7 +68,6 @@
                     <th class="border border-gray-300 p-2 text-left">Email</th>
                     <th class="border border-gray-300 p-2 text-left">Téléphone</th>
                     <th v-if="hasGoalIn" class="border border-gray-300 p-2 text-left">Thème demandé</th>
-                    <th class="border border-gray-300 p-2 text-left">Moto</th>
                     <th class="border border-gray-300 p-2 text-left">Expérience</th>
                     <th class="border border-gray-300 p-2 text-center">Encadrant</th>
                     <th class="border border-gray-300 p-2 text-center">Statut</th>
@@ -86,7 +85,6 @@
                     <td class="border border-gray-300 p-2">{{ user.email }}</td>
                     <td class="border border-gray-300 p-2">{{ user.phone }}</td>
                     <td v-if="hasGoalIn" class="border border-gray-300 p-2">{{ user.specialField?.["Objectif"] ? user.specialField?.["Objectif"] : 'non renseigné' }}</td>
-                    <td class="border border-gray-300 p-2">{{ user.bike }}</td>
                     <td class="border border-gray-300 p-2">{{ user.experience }}</td>
                     <td class="border border-gray-300 p-2 text-center">{{ user.encadrant }}</td>
                     <td class="border border-gray-300 p-2 text-center">
@@ -163,7 +161,7 @@ export default {
 
     data() {
         return {
-            fields_csv: ["Nom", "Email", "Téléphone", "Thème demandé", "Moto", "Experience"],
+            fields_csv: ["Nom", "Email", "Téléphone", "Thème demandé", "Experience"],
             isPhoneCopied: false,
             isEmailCopied: false,
             isPhoneError: false,
@@ -187,7 +185,6 @@ export default {
                 email: user.email,
                 phone: user.phone,
                 specialField: user.specialField,
-                bike: user.bike,
                 experience: user.is_adherent === "1" ? "" : user.experience,
                 encadrant: user.encadrement === "1" ? "Oui" : "Non",
                 status: user.status,
@@ -250,9 +247,8 @@ export default {
                     obj.email,
                     obj.phone,
                     obj.specialField["Objectif"],
-                    obj.bike,
                     obj.is_adherent === "0" ? "" : obj.experience
-                ].map(value => `"${String(value).replace(/"/g, '""')}"`); // Échappe les guillemets
+                ].map(value => `"${String(value).replace(/"/g, '""')}"`);
                 return values.join(",");
             });
 

@@ -141,7 +141,6 @@ function mps_tools_create_subscribe(WP_REST_Request $request) {
     $wpdb->insert($table_inscrits, [
         'user_id' => $user_id,
         'event_id' => $event_id,
-        'bike' => isset($user_d['bike']) ? sanitize_text_field($user_d['bike']) : '',
         'champs_speciaux' => wp_json_encode($champs_speciaux),
         'encadrement' => isset($user_d['wantsEncadrant']) ? intval($user_d['wantsEncadrant']) : 0,
         'status' => isset($user_d['status']) && in_array($user_d['status'], ['inscrit', 'attente']) ? sanitize_text_field($user_d['status']) : 'inscrit',

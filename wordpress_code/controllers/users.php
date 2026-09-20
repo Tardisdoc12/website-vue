@@ -25,7 +25,6 @@ function monplugin_get_users(WP_REST_Request $request) {
         $user->firstName  = get_user_meta($user->ID, 'firstName', true);
         $user->lastName   = get_user_meta($user->ID, 'lastName', true);
         $user->telephone  = get_user_meta($user->ID, 'telephone', true);
-        $user->moto       = get_user_meta($user->ID, 'moto', true);
         $user->urgence_phone = get_user_meta($user->ID, 'urgence_phone', true);
         $user->urgence_name  = get_user_meta($user->ID, 'urgence_name', true);
     }
@@ -84,7 +83,6 @@ function monplugin_get_user(WP_REST_Request $request) {
         "firstName"     => get_user_meta($user->ID, 'firstName', true),
         "lastName"      => get_user_meta($user->ID, 'lastName', true),
         "telephone"     => get_user_meta($user->ID, 'telephone', true),
-        "moto"          => get_user_meta($user->ID, 'moto', true),
         "roles"         => $user->roles,
         "urgence_phone" => get_user_meta($user->ID, 'urgence_phone', true),
         "urgence_name"  => get_user_meta($user->ID, 'urgence_name', true),
@@ -123,7 +121,6 @@ function monplugin_get_user_connected(WP_REST_Request $request) {
         "firstName"     => get_user_meta($user->ID, 'firstName', true),
         "lastName"      => get_user_meta($user->ID, 'lastName', true),
         "telephone"     => get_user_meta($user->ID, 'telephone', true),
-        "moto"          => get_user_meta($user->ID, 'moto', true),
         "roles"         => $user->roles,
         "urgence_phone" => get_user_meta($user->ID, 'urgence_phone', true),
         "urgence_name"  => get_user_meta($user->ID, 'urgence_name', true),
@@ -144,7 +141,6 @@ function mps_tools_register_user(WP_REST_Request $request) {
     $firstName = sanitize_text_field($request->get_param('firstName'));
     $lastName  = sanitize_text_field($request->get_param('lastName'));
     $telephone  = sanitize_text_field($request->get_param('telephone'));
-    $moto       = sanitize_text_field($request->get_param('moto'));
 
     if (empty($username) || empty($email) || empty($password)) {
         return new WP_Error('missing_fields', 'Tous les champs sont obligatoires', ['status' => 400]);
@@ -164,7 +160,6 @@ function mps_tools_register_user(WP_REST_Request $request) {
         return $user_id;
     }
 
-    update_user_meta($user_id, 'moto', $moto);
     update_user_meta($user_id, 'telephone', $telephone);
     update_user_meta($user_id, 'firstName', $firstName);
     update_user_meta($user_id, 'lastName', $lastName);
@@ -214,7 +209,6 @@ function monplugin_search_user(WP_REST_Request $request) {
             "firstName" => get_user_meta($user->ID, 'firstName', true),
             "lastName"  => get_user_meta($user->ID, 'lastName', true),
             "telephone" => get_user_meta($user->ID, 'telephone', true),
-            "moto"      => get_user_meta($user->ID, 'moto', true),
             "roles"     => $user->roles,
         ]
     ];
@@ -235,7 +229,6 @@ function mps_tools_update_user(WP_REST_Request $request) {
     $firstName     = sanitize_text_field($request->get_param('firstName'));
     $lastName      = sanitize_text_field($request->get_param('lastName'));
     $telephone     = sanitize_text_field($request->get_param('telephone'));
-    $moto          = sanitize_text_field($request->get_param('moto'));
     $urgence_phone = sanitize_text_field($request->get_param('urgence_phone'));
     $urgence_name  = sanitize_text_field($request->get_param('urgence_name'));
 
@@ -265,7 +258,6 @@ function mps_tools_update_user(WP_REST_Request $request) {
 
     // Mise à jour des metas
     update_user_meta($user_id, 'telephone', $telephone);
-    update_user_meta($user_id, 'moto', $moto);
     update_user_meta($user_id, 'urgence_phone', $urgence_phone);
     update_user_meta($user_id, 'urgence_name', $urgence_name);
     update_user_meta($user_id, 'firstName', $firstName);

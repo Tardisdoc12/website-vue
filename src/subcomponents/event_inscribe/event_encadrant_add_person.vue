@@ -40,7 +40,7 @@
 
             <!-- Compte trouvé -->
             <div v-if="participant.searchResult === 'found'" class="found-card">
-                ✓ {{ participant.name }} — {{ participant.bike }}
+                ✓ {{ participant.name }} — {{ participant.email }}
             </div>
             <!-- Compte non trouvé malgré recherche -->
             <p v-if="participant.searchResult === 'not_found'" class="not-found-msg">
@@ -50,7 +50,7 @@
             <!-- Expérience après compte trouvé -->
             <template v-if="participant.searchResult === 'found'">
                 <div class="flex flex-col gap-1" v-if="!isAdherentParticipant()">
-                    <label class="block font-medium">Expérience à moto <span style="color:red">*</span></label>
+                    <label class="block font-medium">Expérience<span style="color:red">*</span></label>
                     <textarea v-model="participant.experience" class="w-full border p-1 rounded" rows="3"></textarea>
                 </div>
                 <div v-for="field in getSpecialFields()" :key="field" class="flex flex-col gap-1">
@@ -79,11 +79,7 @@
                 <input v-model="participant.phone" type="text" class="w-full border p-1 rounded" />
             </div>
             <div class="flex flex-col gap-1">
-                <label class="block font-medium">Moto/Cylindré</label>
-                <input v-model="participant.bike" type="text" class="w-full border p-1 rounded" />
-            </div>
-            <div class="flex flex-col gap-1">
-                <label class="block font-medium">Expérience à moto</label>
+                <label class="block font-medium">Expérience</label>
                 <textarea v-model="participant.experience" class="w-full border p-1 rounded" rows="3"></textarea>
             </div>
             <div v-for="field in getSpecialFields()" :key="field" class="flex flex-col gap-1">
@@ -151,7 +147,6 @@ export default{
                 name: "",
                 email: "",
                 phone: "",
-                bike: "",
                 experience: "",
                 specialField: {},
                 wantsEncadrant: false,
@@ -182,7 +177,6 @@ export default{
             this.participant.name = ""
             this.participant.email = ""
             this.participant.phone = ""
-            this.participant.bike = ""
             this.participant.experience = ""
             this.participant.specialField = {}
             this.participant.wantsEncadrant = false
@@ -197,7 +191,6 @@ export default{
                         name:  `${u.firstName} ${u.lastName}`,
                         email: u.email,
                         phone: u.telephone,
-                        bike:  u.moto,
                         roles: u.roles ?? ["non_adherent"],
                         searchResult: 'found',
                         canEncadrant: isEncadrant(u.roles ?? []),
@@ -219,7 +212,6 @@ export default{
             try {
                 const isAddAdmin = this.participant.hasAccount === false
                 if(isAddAdmin){
-                    this.participant.bike = this.participant.bike || "Non renseigné"
                     this.participant.experience = this.participant.experience || "Non renseigné"
                     this.participant.phone = this.participant.phone || "0000000000"
                     this.participant.roles = ["non_adherent"]

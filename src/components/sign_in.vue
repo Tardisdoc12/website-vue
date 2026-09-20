@@ -61,20 +61,6 @@
                     />
                 </div>
 
-                <!-- Moto/Cylindré -->
-                <div class="flex flex-col gap-1">
-                    <label class="block font-medium">
-                        Moto/Cylindrée
-                        <span style="color: red;">*</span>
-                    </label>
-                    <input
-                        v-model="formUser.bike"
-                        type="text"
-                        class="w-full border p-1 rounded"
-                        required
-                    />
-                </div>
-
                 <!-- Password -->
                 <div class="flex flex-col gap-1">
                     <label class="block font-medium">
@@ -162,7 +148,6 @@ export default {
                 firstName:"",
                 lastName:"",
                 phone:"",
-                bike:"",
                 email:"",
                 password:"",
                 confirmPassword:"",
@@ -188,7 +173,6 @@ export default {
                     email: this.formUser.email,
                     password: this.formUser.password,
                     telephone: this.formUser.phone,
-                    moto: this.formUser.bike,
             }
             try{
                 const response = await api.create_user(body)
@@ -196,7 +180,6 @@ export default {
                     firstName:"",
                     lastName:"",
                     phone:"",
-                    bike:"",
                     email:"",
                     password:"",
                     confirmPassword:"",

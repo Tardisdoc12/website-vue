@@ -14,7 +14,6 @@
                 <li><strong>Prénom :</strong> {{ user.firstName || "—" }}</li>
                 <li><strong>Email :</strong> {{ user.email || "—" }}</li>
                 <li><strong>Téléphone :</strong> {{ user.telephone || "—" }}</li>
-                <li><strong>Moto :</strong> {{ user.moto || "—" }}</li>
                 <li><strong>Statut :</strong> {{ isAdherentComp ? "Adhérent" : "Non-adhérent" }}</li>
             </div>
             <div
@@ -50,13 +49,6 @@
                     <label><strong>Téléphone :</strong></label>
                     <input
                         v-model="user.telephone"
-                        class="oval-input"
-                    />
-                </li>
-                <li>
-                    <label><strong>Moto :</strong></label>
-                    <input
-                        v-model="user.moto"
                         class="oval-input"
                     />
                 </li>

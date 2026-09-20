@@ -10,7 +10,6 @@ add_action('rest_api_init', function() {
         'lastName',
         'adherentNumber',
         'telephone',
-        'moto',
         'urgence_phone',
         'urgence_name',
         'subscriber_date',

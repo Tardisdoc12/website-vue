@@ -78,6 +78,26 @@ function mps_tools_migration_inscription_table() {
             $wpdb->query("ALTER TABLE $table_inscrits MODIFY payement_status ENUM('pending', 'completed', 'failed', 'cash') NOT NULL DEFAULT 'pending'");
         }
     }
+
+    $column = $wpdb->get_results("SHOW COLUMNS FROM $table_inscrits LIKE 'bike'");
+    if (!empty($column)){
+        $inscrits_avec_bike = $wpdb->get_results(
+            "SELECT id, bike, champs_speciaux FROM $table_inscrits WHERE bike IS NOT NULL AND bike != ''"
+        );
+
+        foreach ($inscrits_avec_bike as $inscrit) {
+            $champs_speciaux = json_decode($inscrit->champs_speciaux, true) ?: [];
+            $champs_speciaux['Moto'] = $inscrit->bike;
+
+            $wpdb->update(
+                $table_inscrits,
+                ['champs_speciaux' => wp_json_encode($champs_speciaux)],
+                ['id' => $inscrit->id]
+            );
+        }
+
+        $wpdb->query("ALTER TABLE $table_inscrits DROP COLUMN bike");
+    }
 }
 
 //--------------------------------------------------------------------------------------------------
