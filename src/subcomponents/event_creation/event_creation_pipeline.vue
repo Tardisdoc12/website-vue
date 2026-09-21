@@ -304,7 +304,6 @@ export default {
                 alert("Évènement modifié avec succés !")
             }
             this.event.event_id = response?.data?.id
-            console.log("Event after creation/update:", this.event)
             this.$emit('validate', this.event)
             this.$emit('cancel')
         },
