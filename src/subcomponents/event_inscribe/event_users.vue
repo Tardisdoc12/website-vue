@@ -67,8 +67,6 @@
                     <th class="border border-gray-300 p-2 text-left">Nom</th>
                     <th class="border border-gray-300 p-2 text-left">Email</th>
                     <th class="border border-gray-300 p-2 text-left">Téléphone</th>
-                    <th v-if="hasGoalIn" class="border border-gray-300 p-2 text-left">Thème demandé</th>
-                    <th class="border border-gray-300 p-2 text-left">Expérience</th>
                     <th class="border border-gray-300 p-2 text-center">Encadrant</th>
                     <th v-for="field in fields_to_show" :key="field.nom" class="border border-gray-300 p-2 text-left">{{ field.nom }}</th>
                     <th class="border border-gray-300 p-2 text-center">Statut</th>
@@ -85,8 +83,6 @@
                     <td class="border border-gray-300 p-2">{{ user.user_name }}</td>
                     <td class="border border-gray-300 p-2">{{ user.email }}</td>
                     <td class="border border-gray-300 p-2">{{ user.phone }}</td>
-                    <td v-if="hasGoalIn" class="border border-gray-300 p-2">{{ user.specialField?.["Objectif"] ? user.specialField?.["Objectif"] : 'non renseigné' }}</td>
-                    <td class="border border-gray-300 p-2">{{ user.experience }}</td>
                     <td class="border border-gray-300 p-2 text-center">{{ user.encadrant }}</td>
                     <td
                         v-for="field in fields_to_show"
@@ -177,8 +173,6 @@ export default {
         
         const categorie = this.$settings.categories.find(category => category.nom === this.eventCategorie)
         const fields_to_show = categorie.champs_speciaux.filter(field => field.affichage_liste)
-        console.log(categorie.champs_speciaux)
-        console.log(fields_to_show)
         return {
             fields_csv: ["Nom", "Email", "Téléphone", "Experience"].concat(fields_to_show),
             isPhoneCopied: false,
@@ -190,14 +184,6 @@ export default {
     },
 
     computed: {
-        hasGoalIn() {
-            for (const user of this.usersToShow) {
-                if (user.specialField && user.specialField?.["Objectif"]) {
-                    return true;
-                }
-            }
-            return false;
-        },
         usersToShow() {
             return this.usersRegistered.map(user => ({
                 id: user.id,
