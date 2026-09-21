@@ -58,7 +58,8 @@ export default {
     methods: {
         async checkPayment() {
             try {
-                const data = await apiPayement.checkPayment(this.checkoutIntentId)
+                const res = await apiPayement.checkPayment(this.checkoutIntentId)
+                const data = res.data
                 const response = { ok: data.success !== undefined }
 
                 if (!response.ok) {

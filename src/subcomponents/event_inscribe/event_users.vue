@@ -172,7 +172,7 @@ export default {
     data() {
         
         const categorie = this.$settings.categories.find(category => category.nom === this.eventCategorie)
-        const fields_to_show = categorie.champs_speciaux.filter(field => field.affichage_liste)
+        const fields_to_show = categorie?.champs_speciaux.filter(field => field.affichage_liste) || []
         return {
             fields_csv: ["Nom", "Email", "Téléphone", "Experience"].concat(fields_to_show),
             isPhoneCopied: false,

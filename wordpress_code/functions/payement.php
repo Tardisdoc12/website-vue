@@ -20,8 +20,6 @@ function mps_tools_finalize_helloasso_payment($checkout_intent_id, $source = 'un
     global $wpdb;
     $table_inscrits = $wpdb->prefix . 'inscrits';
 
-    // On retrouve l'inscription via le tracking (nécessaire pour connaître l'inscription_id
-    // avant même d'avoir confirmé le paiement auprès de HelloAsso)
     $pending = helloasso_get_pending_checkouts();
     $meta = $pending[$checkout_intent_id] ?? null;
 
@@ -32,29 +30,57 @@ function mps_tools_finalize_helloasso_payment($checkout_intent_id, $source = 'un
 
     $inscription_ids = $meta['inscription_ids'];
     $type = $meta['type'] ?? 'event';
-    
 
-    // Vérification ACTIVE auprès de HelloAsso : jamais confiance à une simple URL ou un webhook seul
     $token = helloasso_get_access_token();
     if (!$token) {
         return new WP_Error('helloasso_auth_error', 'Authentification HelloAsso échouée.', ['status' => 500]);
     }
 
     $organizationSlug = get_option('helloasso_org_slug', '');
-    $response = wp_remote_get(
-        HELLOASSO_BASE_URL . "/v5/organizations/{$organizationSlug}/checkout-intents/{$checkout_intent_id}",
-        ['headers' => ['Authorization' => 'Bearer ' . $token], 'timeout' => 15]
-    );
+    $get_url = HELLOASSO_BASE_URL . "/v5/organizations/{$organizationSlug}/checkout-intents/{$checkout_intent_id}";
 
-    if (is_wp_error($response)) {
-        error_log("HelloAsso finalize [{$source}] : erreur réseau - " . $response->get_error_message());
-        return new WP_Error('helloasso_network_error', 'Erreur réseau HelloAsso.', ['status' => 500]);
+    $response = wp_remote_get($get_url, [
+        'headers' => ['Authorization' => 'Bearer ' . $token],
+        'timeout' => 15,
+    ]);
+
+    $code = null;
+    $raw_body = null;
+
+    if (!is_wp_error($response)) {
+        $code = wp_remote_retrieve_response_code($response);
+        $raw_body = wp_remote_retrieve_body($response);
     }
 
-    $body = json_decode(wp_remote_retrieve_body($response), true);
+   $needs_fallback = is_wp_error($response) || $code !== 200;
+
+    if ($needs_fallback) {
+        error_log("HelloAsso finalize [{$source}] : bascule sur cURL direct pour checkout-intents GET.");
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $get_url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer ' . $token]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+
+        $fallback_body = curl_exec($ch);
+        $fallback_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $fallback_error = curl_error($ch);
+        curl_close($ch);
+
+        if ($fallback_error) {
+            error_log("HelloAsso finalize [{$source}] : erreur cURL fallback - " . $fallback_error);
+            return new WP_Error('helloasso_network_error', 'Erreur réseau HelloAsso.', ['status' => 500]);
+        }
+
+        $code = $fallback_code;
+        $raw_body = $fallback_body;
+    }
+
+    $body = json_decode((string) $raw_body, true);
 
     if (empty($body['order'])) {
-        error_log("HelloAsso finalize [{$source}] : pas de commande pour {$checkout_intent_id}, probablement pending/abandonné.");
+        error_log("HelloAsso finalize [{$source}] : pas de commande pour {$checkout_intent_id}, probablement pending/abandonné. Body: " . $raw_body);
         return ['success' => false, 'message' => 'Paiement non confirmé pour le moment.'];
     }
 
@@ -71,7 +97,6 @@ function mps_tools_finalize_helloasso_payment($checkout_intent_id, $source = 'un
         return ['success' => false, 'message' => 'Paiement non autorisé.'];
     }
 
-    // Paiement confirmé côté HelloAsso : on applique la logique métier
     if ($type === 'adherent') {
         $result = treat_adherent_payment_by_inscription_id($inscription_ids);
     } else {

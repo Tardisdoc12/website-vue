@@ -300,7 +300,7 @@ export default {
                 }
             }
             else{
-                const response = await eventsService.updateEvent(this.event.event_id, payload)
+                const response = await eventsService.updateEvent(this.event.event_id, this.event)
                 alert("Évènement modifié avec succés !")
             }
             this.$emit('validate', this.event)

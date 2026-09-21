@@ -16,7 +16,7 @@ require_once MPS_TOOLS_FUNCTIONS_DIR . 'payement.php';
 //--------------------------------------------------------------------------------------------------
 // Constants
 
-const HELLOASSO_BASE_URL = 'https://api.helloasso-sandbox.com';
+const HELLOASSO_BASE_URL = 'https://api.helloasso.com';
 const HELLOASSO_TOKEN_TRANSIENT_KEY = 'helloasso_encrypted_access_token';
 
 //--------------------------------------------------------------------------------------------------
@@ -100,8 +100,7 @@ function helloasso_fetch_new_access_token() {
     }
 
     // Mauvais routage Azure connu (ou erreur réseau) : on retente via cURL direct
-    $needs_fallback = is_wp_error($response)
-        || ($code === 404 && strpos((string) $raw_body, 'Azure Web App') !== false);
+    $needs_fallback = is_wp_error($response) || $code !== 200;
 
     if ($needs_fallback) {
         error_log('HelloAsso : bascule sur cURL direct pour /oauth2/token.');
@@ -272,11 +271,11 @@ function mps_tools_create_payements(WP_REST_Request $request) {
         $raw_body = wp_remote_retrieve_body($response);
     }
 
-    $needs_fallback = is_wp_error($response)
-        || ($code === 404 && strpos((string) $raw_body, 'Azure Web App') !== false);
+    $needs_fallback = is_wp_error($response) || $code !== 200;
 
     if ($needs_fallback) {
         error_log('HelloAsso : bascule sur cURL direct pour /checkout-intents.');
+        error_log('HelloAsso debug — slug: "' . $organizationSlug . '" | token prefix: ' . substr((string)$token, 0, 10) . '... | url: ' . $checkout_url);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $checkout_url);
@@ -287,16 +286,24 @@ function mps_tools_create_payements(WP_REST_Request $request) {
             'Content-Type: application/json',
         ]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HEADER, true); // AVANT curl_exec, pour capturer les headers de réponse
         curl_setopt($ch, CURLOPT_TIMEOUT, 15);
 
-        $fallback_body = curl_exec($ch);
+        $fallback_raw = curl_exec($ch);
         $fallback_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $fallback_error = curl_error($ch);
+        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         curl_close($ch);
 
         if ($fallback_error) {
             error_log('HelloAsso checkout-intent cURL fallback erreur : ' . $fallback_error);
-        } elseif ($fallback_body !== false) {
+        } elseif ($fallback_raw !== false) {
+            $fallback_headers = substr($fallback_raw, 0, $header_size);
+            $fallback_body    = substr($fallback_raw, $header_size);
+
+            error_log('HelloAsso fallback response headers : ' . $fallback_headers);
+            error_log('HelloAsso fallback response body : ' . $fallback_body);
+
             $code = $fallback_code;
             $raw_body = $fallback_body;
         }
