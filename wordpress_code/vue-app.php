@@ -29,6 +29,7 @@ $files_wordpress_modifier = [
     'rest-notification-helloasso.php',
     'couleurs.php',
     'connexion.php',
+    'mailing.php',
 ];
 
 $files_routes_controllers = [
@@ -58,17 +59,6 @@ $files_database = [
     'table_creation.php',
     'table_migration.php',
 ];
-
-//--------------------------------------------------------------------------------------------------
-// A supprimer et ajouter aux paramètres du plugin
-
-add_filter('wp_mail_from', function($email) {
-    return get_option('mon_plugin_mail_from') ?: $email;
-});
-
-add_filter('wp_mail_from_name', function($name) {
-    return get_option('mon_plugin_mail_name') ?: $name;
-});
 
 //--------------------------------------------------------------------------------------------------
 // Import des fichiers contenant les fonctions nécessaires

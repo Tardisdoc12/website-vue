@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) exit;
 return [
     'label' => 'Événements',
     'fields' => [
-        'mon_plugin_categories' => [
+        'mps_tools_categories' => [
             'label'   => 'Catégories',
             'type'    => 'categories',
             'columns' => [

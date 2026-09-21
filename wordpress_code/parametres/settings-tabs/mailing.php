@@ -33,6 +33,18 @@ function monplugin_get_email_tags($context) {
 return [
     'label' => 'Mailing',
     'fields' => [
+        '_heading_senders' => [
+            'type' => 'heading',
+            'label' => 'Email - Expéditeurs',
+        ],
+        'mps_tools_mail_senders' => [
+            'label' => 'Email de l\'expéditeur',
+            'type'  => 'text',
+        ],
+        'mps_tools_name_email' => [
+            'label' => 'Nom de l\'expéditeur à Afficher',
+            'type'  => 'text',
+        ],
         '_heading_modification_events' => [
             'type' => 'heading',
             'label' => 'Email - Modification des événements',
@@ -44,7 +56,7 @@ return [
                 array_keys(monplugin_get_email_tags('modification_events'))
             )),
         ],
-        'mon_plugin_mail_modification_events' => [
+        'mps_tools_mail_modification_events' => [
             'label' => 'Email en cas de modification des événements',
             'type'  => 'textarea',
         ],
@@ -61,7 +73,7 @@ return [
                 array_keys(monplugin_get_email_tags('changement_mot_de_passe'))
             )),
         ],
-        'mon_plugin_mail_password_recuperation' => [
+        'mps_tools_mail_password_recuperation' => [
             'label' => 'Mail pour la récupération du mot de passe',
             'type'  => 'textarea',
             'default' => "Cliquez ici pour réinitialiser votre mot de passe :\n\n{{url_reset}}\n\nSi vous n'avez pas demandé cette réinitialisation, ignorez cet email.",

@@ -39,7 +39,7 @@ function mps_tools_get_medias_thumbnails(WP_REST_Request $request) {
     $multi   = curl_multi_init();
     $handles = [];
 
-    $token = defined('KDRIVE_TOKEN') ? KDRIVE_TOKEN : get_option('mon_plugin_token');
+    $token = defined('KDRIVE_TOKEN') ? KDRIVE_TOKEN : get_option('mps_tools_token');
 
     foreach ($urls as $key => $url) {
         $ch = curl_init($url);
@@ -85,9 +85,9 @@ function mps_tools_get_medias_thumbnails(WP_REST_Request $request) {
 //--------------------------------------------------------------------------------------------------
 
 function mps_tools_get_medias(WP_REST_Request $request) {
-    $token = defined('KDRIVE_TOKEN') ? KDRIVE_TOKEN : get_option('mon_plugin_token');
-    $kdrive_id = get_option('mon_plugin_kdrive_id');
-    $kdrive_directory_default = defined('KDRIVE_DIRECTORY_ID') ? KDRIVE_DIRECTORY_ID : get_option('mon_plugin_kdrive_directory_id');
+    $token = defined('KDRIVE_TOKEN') ? KDRIVE_TOKEN : get_option('mps_tools_token');
+    $kdrive_id = get_option('mps_tools_kdrive_id');
+    $kdrive_directory_default = defined('KDRIVE_DIRECTORY_ID') ? KDRIVE_DIRECTORY_ID : get_option('mps_tools_kdrive_directory_id');
     $request_directory_id = intval($request['directory_id']);
     $kdrive_directory_id = $request_directory_id == 0 ? $kdrive_directory_default : $request_directory_id;
 

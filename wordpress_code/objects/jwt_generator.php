@@ -13,8 +13,8 @@ class AssoSimpleJWT {
      * On le stocke dans les options WP pour qu'il soit stable entre les requêtes.
      */
     private static function get_secret() {
-        if (defined('MON_PLUGIN_JWT_SECRET') && MON_PLUGIN_JWT_SECRET) {
-            return MON_PLUGIN_JWT_SECRET;
+        if (defined('mps_tools_JWT_SECRET') && mps_tools_JWT_SECRET) {
+            return mps_tools_JWT_SECRET;
         }
 
         return null;

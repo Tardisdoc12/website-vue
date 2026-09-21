@@ -132,9 +132,9 @@ class ShortcodesHookers {
 
         // on vérifie les configurations des fonctionnalitées:
         $isKDriveConfigured = 0;
-        $kdrive_id = get_option('mon_plugin_kdrive_id', '');
-        $kdrive_dir_id = get_option('mon_plugin_kdrive_directory_id', '');
-        $kdrive_token = get_option('mon_plugin_kdrive_token', '');
+        $kdrive_id = get_option('mps_tools_kdrive_id', '');
+        $kdrive_dir_id = get_option('mps_tools_kdrive_directory_id', '');
+        $kdrive_token = get_option('mps_tools_kdrive_token', '');
         if (!empty($kdrive_id) && !empty($kdrive_dir_id) && !empty($kdrive_token)) {
             $isKDriveConfigured = 1;
         }
@@ -150,7 +150,7 @@ class ShortcodesHookers {
         $isCashAllowed = get_option('accept_cash', 0);
 
         wp_localize_script($name_modules, 'MPS_TOOLS_SETTINGS', [
-            'categories'         => get_option('mon_plugin_categories', []),
+            'categories'         => get_option('mps_tools_categories', []),
             'isKdriveConfigured' => $isKDriveConfigured,
             'isHelloAssoConfigured' => $isHelloAssoConfigured,
             'isCashAllowed' => $isCashAllowed,
