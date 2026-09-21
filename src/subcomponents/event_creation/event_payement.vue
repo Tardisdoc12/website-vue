@@ -18,7 +18,7 @@
         />
     </div>
 
-    <div v-if="canAdherentPayement" class="flex flex-col gap-1" style="margin-bottom:10px;margin-top:10px;">
+    <div v-if="Boolean(+canAdherentPayement)" class="flex flex-col gap-1" style="margin-bottom:10px;margin-top:10px;">
         <label class="block font-medium">
             Montant du payement pour les Adhérents <span style="color:darkred">*</span>
         </label>
@@ -33,7 +33,7 @@
         />
     </div>
 
-    <div v-if="canNonAdherentPayement" class="flex flex-col gap-1" style="margin-bottom:10px;">
+    <div v-if="Boolean(+canNonAdherentPayement)" class="flex flex-col gap-1" style="margin-bottom:10px;">
         <label class="block font-medium">
             Montant du payement pour les Non-Adhérents <span style="color:darkred">*</span>
         </label>
@@ -89,6 +89,7 @@ export default {
     },
     
     data() {
+        console.log("Initializing data with the payement flags:", this.canAdherentPayement, this.canNonAdherentPayement);
         return {
             isChangedTitle: this.EventPayementTitle !== "",
             payementTitle: this.EventPayementTitle,

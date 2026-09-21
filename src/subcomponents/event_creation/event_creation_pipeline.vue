@@ -207,10 +207,10 @@ export default {
             if (this.HasPayement) {
                 const payementFields = [
                 ]
-                if (this.categorieSelectedForEvent.adherent_payant) {
+                if (Boolean(+this.categorieSelectedForEvent.adherent_payant)) {
                     payementFields.push(this.event.payementAmountAdherent)
                 }
-                if (this.categorieSelectedForEvent.non_adherent_payant) {
+                if (Boolean(+this.categorieSelectedForEvent.non_adherent_payant)) {
                     payementFields.push(this.event.payementAmountNonAdherent)
                 }
 
@@ -239,7 +239,7 @@ export default {
 
         HasPayement: {
             get() {
-                return this.categorieSelectedForEvent.adherent_payant || this.categorieSelectedForEvent.non_adherent_payant
+                return Boolean(+this.categorieSelectedForEvent.adherent_payant) || Boolean(+this.categorieSelectedForEvent.non_adherent_payant)
             },
             set(val) {
                 // This setter can be used if you want to update the underlying data when HasPayement changes
@@ -303,6 +303,7 @@ export default {
                 const response = await eventsService.updateEvent(this.event.event_id, this.event)
                 alert("Évènement modifié avec succés !")
             }
+            this.console.log("Event after creation/update:", this.event)
             this.$emit('validate', this.event)
             this.$emit('cancel')
         },

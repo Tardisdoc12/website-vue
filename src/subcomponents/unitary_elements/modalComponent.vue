@@ -11,7 +11,8 @@
                     :style="{ 
                         '--btn-bg': 'var(--cancel-color)', 
                         '--btn-hover-bg': 'var(--cancel-hover-color)',
-                        '--btn-color': 'var(--writing-modale-title-color)'
+                        '--btn-color': 'var(--writing-modale-title-color)',
+                        '--btn-hover-color': 'var(--writing-modale-title-color)'
                     }"
                     @click="Cancel"
                 >

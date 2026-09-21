@@ -36,6 +36,7 @@
     --btn-bg: var(--main-color);
     --btn-color: var(--writing-main-color);
     --btn-hover-bg: var(--secondary-color);
+    --btn-hover-color: var(--writing-main-color);
 
     background-color: var(--btn-bg);
     color: var(--btn-color);
@@ -47,18 +48,25 @@
 
 .button-base:hover {
   background-color: var(--btn-hover-bg);
-  color: var(--writing-main-color);
+  color: var(--btn-hover-color);
 }
 
 /*---------------------------------------------------------*/
 /* Event CSS */
 .background-card {
+  background-color: rgba(50,255,255,0.2);
   border-radius: 4px;
   padding: 4px 2px;
+  box-sizing: border-box;
+  width: 100%;
+  overflow: hidden; /* sécurité supplémentaire si le contenu texte dépasse aussi */
 }
 
 .event-font {
     font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .event-row {

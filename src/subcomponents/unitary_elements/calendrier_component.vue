@@ -344,12 +344,18 @@ export default{
 
 .event-font {
     font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .background-card {
   background-color: rgba(50,255,255,0.2);
   border-radius: 4px;
   padding: 4px 2px;
+  box-sizing: border-box;
+  width: 100%;
+  overflow: hidden; /* sécurité supplémentaire si le contenu texte dépasse aussi */
 }
 
 .event-row {

@@ -66,11 +66,16 @@ export default {
         }
 
         this.user = connectedUserResult.data.user;
+        if (!this.user || Object.keys(this.user).length === 0) {
+            this.allowedCreateEvent = false;
+            this.user = {'roles': ["non_adherent"]};
+        } 
         if (Object.keys(this.user).length !== 0) {
             const listB = this.user.roles;
             const listA = ['bureau', 'administrator'];
             this.allowedCreateEvent = listB.some(el => listA.includes(el));
         }
+        
     },
 
     computed: {
