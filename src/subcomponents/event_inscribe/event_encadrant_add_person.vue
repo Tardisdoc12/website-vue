@@ -53,9 +53,9 @@
                     <label class="block font-medium">Expérience<span style="color:red">*</span></label>
                     <textarea v-model="participant.experience" class="w-full border p-1 rounded" rows="3"></textarea>
                 </div>
-                <div v-for="field in getSpecialFields()" :key="field" class="flex flex-col gap-1">
-                    <label class="block font-medium">{{ field }}?</label>
-                    <textarea v-model="participant.specialField[field]" class="w-full border p-1 rounded" rows="2"></textarea>
+                <div v-for="field in getSpecialFields" :key="field" class="flex flex-col gap-1">
+                    <label class="block font-medium">{{ field.nom }}?</label>
+                    <textarea v-model="participant.specialField[field.nom]" class="w-full border p-1 rounded" rows="2"></textarea>
                 </div>
                 <div v-if="participant.canEncadrant" style="margin-bottom:10px;">
                     <label class="block font-medium">Souhaitez-vous encadrer? <span style="color:red">*</span></label>
@@ -82,9 +82,9 @@
                 <label class="block font-medium">Expérience</label>
                 <textarea v-model="participant.experience" class="w-full border p-1 rounded" rows="3"></textarea>
             </div>
-            <div v-for="field in getSpecialFields()" :key="field" class="flex flex-col gap-1">
-                <label class="block font-medium">{{ field }}?</label>
-                <textarea v-model="participant.specialField[field]" class="w-full border p-1 rounded" rows="2"></textarea>
+            <div v-for="field in getSpecialFields" :key="field" class="flex flex-col gap-1">
+                <label class="block font-medium">{{ field.nom }}?</label>
+                <textarea v-model="participant.specialField[field.nom]" class="w-full border p-1 rounded" rows="2"></textarea>
             </div>
         </template>
 
@@ -130,8 +130,8 @@ export default{
             immediate: true,
             handler(champs) {
                 champs.forEach(champ => {
-                    if (!(champ in this.participant.specialField)) {
-                        this.participant.specialField[champ] = ''
+                    if (!(champ.nom in this.participant.specialField)) {
+                        this.participant.specialField[champ.nom] = ''
                     }
                 })
             }

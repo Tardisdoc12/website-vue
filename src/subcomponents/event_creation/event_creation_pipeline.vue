@@ -292,18 +292,19 @@ export default {
                     this.$emit('update:placeSelected', response.data.places);
                 }
             }
-
+            let response;
             if(!this.isUpdate){
-                const response = await this.createEvent(this.event)
+                response = await this.createEvent(this.event)
                 if (this.onSuccess) {
                     await this.onSuccess()
                 }
             }
             else{
-                const response = await eventsService.updateEvent(this.event.event_id, this.event)
+                response = await eventsService.updateEvent(this.event.event_id, this.event)
                 alert("Évènement modifié avec succés !")
             }
-            this.console.log("Event after creation/update:", this.event)
+            this.event.event_id = response?.data?.id
+            console.log("Event after creation/update:", this.event)
             this.$emit('validate', this.event)
             this.$emit('cancel')
         },
