@@ -20,7 +20,7 @@ require_once MPS_TOOLS_CONTROLLERS_DIR . 'events.php';
 add_action('rest_api_init', function () {
     $routes = [
         ['GET',     '/events',                  'mps_tools_get_events'],
-        ['GET',     '/events/(?P<user_id>\d+)', 'mps_tools_get_event_by_user_id'],
+        ['POST',     '/events/(?P<user_id>\d+)', 'mps_tools_get_event_by_user_id'],
         ['GET',     '/events/(?P<id>\d+)',      'mps_tools_get_event_id'],
         ['GET',     '/events/post/(?P<id>\d+)', 'mps_tools_get_event_post_id'],
         ['POST',    '/events',                  'mps_tools_create_events'],

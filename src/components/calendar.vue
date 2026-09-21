@@ -53,17 +53,22 @@ export default {
     },
 
     async mounted() {
-        this.events = await eventsService.getAllEvents();
-        const result = await placesApi.get_places();
-        if(result.data.success){
-            this.placesEvent = result.data.places
+        const [eventsData, placesResult, connectedUserResult] = await Promise.all([
+            eventsService.getAllEvents(),
+            placesApi.get_places(),
+            usersApi.get_user_connected()
+        ]);
+
+        this.events = eventsData;
+
+        if (placesResult.data.success) {
+            this.placesEvent = placesResult.data.places;
         }
-        this.user = (await usersApi.get_user_connected()).data.user
-        if(Object.keys(this.user).length !== 0){
-            const eventsInscript = await eventsService.getEventUser(this.user.ID, this.user.email)
-            this.user.events = eventsInscript.results ?? []
-            const listB = this.user.roles
-            const listA = ['bureau', 'administrator']
+
+        this.user = connectedUserResult.data.user;
+        if (Object.keys(this.user).length !== 0) {
+            const listB = this.user.roles;
+            const listA = ['bureau', 'administrator'];
             this.allowedCreateEvent = listB.some(el => listA.includes(el));
         }
     },
@@ -101,7 +106,8 @@ export default {
             )
         },
         userToUpdate(user) {
-            this.events.filter(event => Number(event.id) === Number(this.eventSelected.id)).forEach(event => {
+            this.events.filter(event => Number(event.id) === Number(this.eventSelected.id))
+                .forEach(event => {
                 event.users = event.users.map(user_ => {
                     if (Number(user_.id) === Number(user.id)) {
                         user_.status = user.status;

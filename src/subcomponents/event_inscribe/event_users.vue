@@ -191,7 +191,6 @@ export default {
                 email: user.email,
                 phone: user.phone,
                 specialField: user.specialField,
-                experience: user.is_adherent === "1" ? "" : user.experience,
                 encadrant: user.encadrement === "1" ? "Oui" : "Non",
                 status: user.status,
                 payement_status: user.payement_status,

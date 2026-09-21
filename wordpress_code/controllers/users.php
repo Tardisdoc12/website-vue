@@ -97,6 +97,11 @@ function monplugin_get_user(WP_REST_Request $request) {
 //--------------------------------------------------------------------------------------------------
 
 function monplugin_get_user_connected(WP_REST_Request $request) {
+    global $wpdb;
+    $table_inscrits = $wpdb->prefix . "inscrits";
+    $table_users    = $wpdb->prefix . "users_inscrits";
+    $table_events   = $wpdb->prefix . "events";
+
     $user_id = get_current_user_id();
     if (!$user_id) {
         return [
@@ -114,7 +119,35 @@ function monplugin_get_user_connected(WP_REST_Request $request) {
         ];
     }
 
-    // Construction de l'objet utilisateur
+    $email = $user->user_email;
+
+    // Une seule requête : on récupère directement les events complets, pas juste leurs IDs
+    $events = $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT 
+                e.id AS event_id,
+                e.title,
+                e.start_date,
+                e.end_date,
+                e.place,
+                e.category,
+                e.description,
+                e.subscribe_places,
+                e.nonsubscribe_places,
+                e.attente_places,
+                e.closed_inscription,
+                e.adherent_price,
+                e.non_adherent_price,
+                e.payement_title,
+                e.update_date
+             FROM $table_inscrits i
+             JOIN $table_users u ON u.id = i.user_id
+             JOIN $table_events e ON e.id = i.event_id
+             WHERE u.email = %s",
+            $email
+        )
+    );
+
     $user_data = [
         "ID"            => $user->ID,
         "email"         => $user->user_email,
@@ -124,6 +157,7 @@ function monplugin_get_user_connected(WP_REST_Request $request) {
         "roles"         => $user->roles,
         "urgence_phone" => get_user_meta($user->ID, 'urgence_phone', true),
         "urgence_name"  => get_user_meta($user->ID, 'urgence_name', true),
+        "events"        => $events,
     ];
 
     return [

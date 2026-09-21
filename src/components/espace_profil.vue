@@ -135,7 +135,6 @@ import ModalRemoveSubcategorie from "@/subcomponents/modals/modal_remove_subcate
 import MediaSpace from "@/subcomponents/media_space.vue";
 import PersonalFollowPage from "@/subcomponents/depliants/PersonalFollowPage.vue";
 import apiSources from "@/javascript/api/axios_sources"
-import apiEvents from "@/javascript/api/axios_events"
 import api from "@/javascript/api/users_wp.js"
 import { isEncadrant } from "@/javascript/constants/roles";
 import EspaceAdherent from "@/subcomponents/depliants/adherent_page.vue"
@@ -154,15 +153,11 @@ export default {
                 console.error("Utilisateur non connecté ou introuvable.");
                 return;
             }
-            const events = await apiEvents.getEventUser(this.user.ID,this.user.email)
-            
-            for(const element of events.results){
-                const event = await apiEvents.getEvent(element.event_id)
-                this.user.events.push(event)
-            }
+
             if (this.user.roles.includes("administrator") || this.user.roles.includes("bureau")) {
                 this.isBureau = true
             }
+            
             if (isEncadrant(this.user.roles)){
                 const usersMembers = await api.get_adherents()
                 if (usersMembers?.data?.users){

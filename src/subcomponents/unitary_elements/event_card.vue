@@ -69,6 +69,10 @@
 
 <script>
 export default {
+    signals: [
+        "click-event-card"
+    ],
+
     props: {
         event: {
             type: Object,

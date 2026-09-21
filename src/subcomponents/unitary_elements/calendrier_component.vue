@@ -4,7 +4,25 @@
             :key="allowedCreateEvent"
             ref="fullCalendar"
             :options="calendarOptions"
-        />
+        >
+            <template #eventContent="arg">
+                <EventCard
+                    :event="arg.event.extendedProps"
+                    :hour="arg.timeText"
+                    :title="arg.event.title"
+                    :place="arg.event.extendedProps.place"
+                    :placesAvailable="getPlacesAvailableMessage(arg.event)"
+                    :backgroundColor="getEventColors(arg.event).bg"
+                    :backgroundColorCard="getEventColors(arg.event).card"
+                    :colorWriting="getEventColors(arg.event).text"
+                    :isEncadrant="isEncadrantComp"
+                    :users="arg.event.extendedProps.users ?? []"
+                    :isInscrit="isAlreadyInscrit(arg.event)"
+                    :userConnected="userConnected"
+                    @click-event-card="onEventCardClick(arg.event, $event)"
+                />
+            </template>
+        </FullCalendar>
     </div>
 </template>
 
@@ -14,8 +32,6 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction"
 import listPlugin from '@fullcalendar/list';
 import EventsFunctions from '@/javascript/constants/events_functions'
-import { computed } from 'vue'
-import { createApp, h } from 'vue'
 import EventCard from "@/subcomponents/unitary_elements/event_card.vue"
 import { isEncadrant, isBureau } from "@/javascript/constants/roles";
 
@@ -53,7 +69,6 @@ export default{
         return {
             isMobile: false,
             mediaQuery: null,
-            _calendarApps: [],
         }
     },
 
@@ -69,7 +84,6 @@ export default{
 
     beforeUnmount() {
         this.mediaQuery.removeEventListener("change", this.onChange)
-        this._calendarApps?.forEach(app => app.unmount())
     },
 
     computed: {
@@ -101,7 +115,6 @@ export default{
                 showNonCurrentDates: false,
                 firstDay: 1,
                 contentHeight: 'auto',
-                eventContent: this.renderEvent,
                 buttonText: {
                     today: "Aujourd'hui",
                     month: "Mois",
@@ -172,7 +185,7 @@ export default{
                 });
             }
         },
-    
+
         dayRender(arg) {
             arg.isDisabled = arg.isPast
             if (arg.isPast) {
@@ -183,45 +196,36 @@ export default{
             }
         },
 
-        renderEvent(arg) {
-            const users = Array.isArray(arg.event.extendedProps?.users)
-                ? arg.event.extendedProps.users
+        getPlacesAvailableMessage(event) {
+            const users = Array.isArray(event.extendedProps?.users)
+                ? event.extendedProps.users
                 : [];
-            const nonAdherentsCount = computed(() =>
-                {
-                    if (!users.length) return 0;
-                    return users.filter(u => u.is_adherent === "0" && u.status === "inscrit").length
-                }
-            )
-            const adherentsCount = computed(() =>
-                {
-                    if (!users.length) return 0;
-                    return users.filter(u => u.is_adherent === "1" && u.status === "inscrit").length
-                }
-            )
+
+            const nonAdherentsCount = users.filter(u => u.is_adherent === "0" && u.status === "inscrit").length
+            const adherentsCount = users.filter(u => u.is_adherent === "1" && u.status === "inscrit").length
 
             const isNonAdherent = this.userConnected?.roles?.includes("non_adherent") ?? true;
-            let placesAvailableNonAdherent = parseInt(arg.event.extendedProps.nonsubscribePlace) - nonAdherentsCount.value
-            let placesAvailableAdherent = parseInt(arg.event.extendedProps.subscribePlace) - adherentsCount.value
+            const placesAvailableNonAdherent = parseInt(event.extendedProps.nonsubscribePlace) - nonAdherentsCount
+            const placesAvailableAdherent = parseInt(event.extendedProps.subscribePlace) - adherentsCount
             let placesAvailableMessage = 'inscriptions ouvertes'
-            const alreadyInscript = this.userEvents?.some(obj => Number(obj.event_id) === Number(arg.event.extendedProps.event_id)) ?? false
+            const alreadyInscript = this.isAlreadyInscrit(event)
 
             if(isNonAdherent && placesAvailableNonAdherent <= 0) {
                 placesAvailableMessage = 'complet'
             }
 
-            if(!isNonAdherent && placesAvailableAdherent <= 0 && parseInt(arg.event.extendedProps.subscribePlace) > 0) {
+            if(!isNonAdherent && placesAvailableAdherent <= 0 && parseInt(event.extendedProps.subscribePlace) > 0) {
                 placesAvailableMessage = 'complet'
             }
 
-            if (isOutdated(arg.event)) {
+            if (isOutdated(event)) {
                 placesAvailableMessage = "inscriptions fermées"
             }
-            
-            if(Number(arg.event.extendedProps.closed_inscription) === 1) {
+
+            if(Number(event.extendedProps.closed_inscription) === 1) {
                 placesAvailableMessage = "inscriptions fermées"
             }
-            else if(Number(arg.event.extendedProps.closed_inscription) === 2) {
+            else if(Number(event.extendedProps.closed_inscription) === 2) {
                 if (isBureau(this.userConnected?.roles ?? [])) {
                     placesAvailableMessage = "rendu complet"
                 }
@@ -229,18 +233,24 @@ export default{
                     placesAvailableMessage = "complet"
                 }
             }
-            else if(Number(arg.event.extendedProps.closed_inscription) === 3) {
+            else if(Number(event.extendedProps.closed_inscription) === 3) {
                 placesAvailableMessage = "évènement dépassé"
             }
             if(alreadyInscript) {
                 placesAvailableMessage = "vous êtes inscrit"
             }
+
+            return placesAvailableMessage
+        },
+
+        getEventColors(event) {
             let bgColor;
             let backgroundColorCard;
             let colorWritting = "rgba(0, 0, 0, 1)";
-            if(new Date() < arg.event.start) {
-                let categorie = arg.event.extendedProps.categorie
-                if(arg.event.extendedProps.categorie === "") {
+
+            if(new Date() < event.start) {
+                let categorie = event.extendedProps.categorie
+                if(event.extendedProps.categorie === "") {
                     categorie = "Seance"
                 }
                 const duoColor = EventsFunctions.get_color_events_by_categorie(categorie)
@@ -253,40 +263,21 @@ export default{
                 colorWritting = "rgba(12, 12, 12, 0.68)"
             }
 
-            arg.event.event_id = arg.event.extendedProps.event_id
+            return { bg: bgColor, card: backgroundColorCard, text: colorWritting }
+        },
 
+        isAlreadyInscrit(event) {
+            return this.userEvents?.some(obj => Number(obj.event_id) === Number(event.extendedProps.event_id)) ?? false
+        },
 
-            const wrapper = document.createElement('div')
-            wrapper.style.width = "100%"
-            const app = createApp({
-                render: () => h(EventCard, {
-                    event: arg.event.extendedProps,
-                    hour: arg.timeText,
-                    title: arg.event.title,
-                    place: arg.event.extendedProps.place,
-                    placesAvailable: placesAvailableMessage,
-                    backgroundColor: bgColor,
-                    backgroundColorCard: backgroundColorCard,
-                    colorWriting: colorWritting,
-                    isEncadrant: this.isEncadrantComp,
-                    users: arg.event.extendedProps.users ?? [],
-                    isInscrit: alreadyInscript,
-                    userConnected: this.userConnected,
-                    onClickEventCard: (event) => this.handleSelect({ 
-                        event: {
-                            extendedProps: event,
-                            title: arg.event.title,
-                            start: arg.event.start,
-                        }
-                    })
-                })
+        onEventCardClick(event, extendedProps) {
+            this.handleSelect({
+                event: {
+                    extendedProps: extendedProps,
+                    title: event.title,
+                    start: event.start,
+                }
             })
-
-            app.mount(wrapper)
-            this._calendarApps = this._calendarApps ?? []
-            this._calendarApps.push(app)
-
-            return { domNodes: [wrapper] }
         },
 
         handleSelect(e){
@@ -297,25 +288,12 @@ export default{
                     return;
                 } 
             }
-            const nonAdherentsCount = computed(() => {
-                const users = e.event.extendedProps?.users ?? []
-                return users.filter(u => u.is_adherent === "0" && u.status === "inscrit").length
-            })
 
-            const adherentsCount = computed(() => {
-                const users = e.event.extendedProps?.users ?? []
-                return users.filter(u => u.is_adherent === "1" && u.status === "inscrit").length
-            })
+            const users = e.event.extendedProps?.users ?? []
+            const nonAdherentsCount = users.filter(u => u.is_adherent === "0" && u.status === "inscrit").length
+            const adherentsCount = users.filter(u => u.is_adherent === "1" && u.status === "inscrit").length
+            const nbr_attentes = users.filter(u => u.status === "attente").length
 
-            const nbr_attentes = computed(() =>
-                {
-                    const users = e.event.extendedProps?.users ?? []
-                    if (!users.length) return 0;
-                    return users.filter(u => u.status === "attente").length
-                }
-            )
-
-            
             this.seeModalEvent = !this.seeModalEvent
             const alreadyInscript = this.userEvents.some(obj => Number(obj.event_id) === Number(e.event.extendedProps.event_id))
             const eventSelected = {
@@ -324,17 +302,18 @@ export default{
                 nonsubscribePlace: e.event.extendedProps.nonsubscribePlace,
                 subscribePlace: e.event.extendedProps.subscribePlace,
                 title:e.event.title,
-                nbr_adherents: adherentsCount.value,
-                nbr_non_adherents: nonAdherentsCount.value,
-                nbr_attente: nbr_attentes.value,
+                nbr_adherents: adherentsCount,
+                nbr_non_adherents: nonAdherentsCount,
+                nbr_attente: nbr_attentes,
             }
             this.$emit("eventSelect", eventSelected)
         },
-    
+
     },
-    
+
     components: {
         FullCalendar,
+        EventCard,
     }
 
 }
