@@ -85,7 +85,6 @@ function mps_tools_create_subscribe(WP_REST_Request $request) {
             "user_name" => isset($user_d['name']) ? sanitize_text_field($user_d['name']) : '',
             "phone" => isset($user_d['phone']) ? sanitize_text_field($user_d['phone']) : '0000000000',
             "email" => $email,
-            "experience" => isset($user_d['experience']) ? sanitize_text_field($user_d['experience']) : '',
             "is_adherent" => $isAdherent
         ]);
         if ($wpdb->last_error) {
@@ -100,7 +99,6 @@ function mps_tools_create_subscribe(WP_REST_Request $request) {
             $table_users,
             [
                 'is_adherent' => $isAdherent,
-                'experience'  => !empty($user_d['experience']) ? sanitize_text_field($user_d['experience']) : $user->experience,
             ],
             ['id' => $user_id]
         );

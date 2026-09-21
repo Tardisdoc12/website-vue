@@ -26,7 +26,6 @@ function mps_tools_create_users_inscrits_table() {
         user_name VARCHAR(200) NOT NULL,
         phone VARCHAR(10) NOT NULL,
         email VARCHAR(200) NOT NULL,
-        experience VARCHAR(200) NOT NULL,
         is_adherent TINYINT(1) NOT NULL DEFAULT 0,
         urgence_phone VARCHAR(10),
         urgence_name VARCHAR(200),

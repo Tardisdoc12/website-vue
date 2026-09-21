@@ -37,8 +37,7 @@ function mps_tools_get_events(WP_REST_Request $request) {
                 u.id, 
                 u.user_name, 
                 u.email, 
-                u.phone, 
-                u.experience,
+                u.phone,
                 u.is_adherent,
                 i.status,
                 i.encadrement,
@@ -137,7 +136,7 @@ function mps_tools_get_event_id(WP_REST_Request $request) {
     // Récupérer les utilisateurs inscrits
     $users_to_add = $wpdb->get_results(
         $wpdb->prepare(
-            "SELECT u.id, u.user_name, u.email, u.phone, u.experience, u.is_adherent, i.status, i.date_inscrit, i.payement_status, i.champs_speciaux
+            "SELECT u.id, u.user_name, u.email, u.phone, u.is_adherent, i.status, i.date_inscrit, i.payement_status, i.champs_speciaux
              FROM $table_inscrits i
              JOIN $table_users u ON u.id = i.user_id
              WHERE i.event_id = %d",
@@ -207,7 +206,6 @@ function mps_tools_get_event_post_id(WP_REST_Request $request) {
                 u.user_name, 
                 u.email,
                 u.phone,
-                u.experience,
                 u.is_adherent,
                 i.status,
                 i.date_inscrit,
