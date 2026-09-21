@@ -28,6 +28,7 @@ $files_wordpress_modifier = [
     'users.php',
     'rest-notification-helloasso.php',
     'couleurs.php',
+    'connexion.php',
 ];
 
 $files_routes_controllers = [
