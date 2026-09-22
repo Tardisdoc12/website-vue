@@ -98,14 +98,13 @@ return [
             )),
         ],
         'mps_tools_mailing_manual' => [
-            'label' => 'Mailing Manuel',
-            'type' => 'categories',
-            'ajout' => 'Ajouter un template',
+            'label' => 'Templates de mailing',
+            'type' => 'template_manager',
             'columns' => [
-                'name_template' => ['label' => 'Nom du template', 'type'=> 'text'],
-                'objet_template' => ['label' => 'Objet du template', 'type'=> 'text'],
-                'template' => ['label' => 'Template du mail', 'type'=> 'textarea']
-            ]
-        ]
+                'name_template' => ['label' => 'Nom du template', 'type' => 'text'],
+                'objet'          => ['label' => 'Objet',           'type' => 'text'],
+                'template'       => ['label' => 'Corps du mail',    'type' => 'textarea'],
+            ],
+        ],
     ],
 ];

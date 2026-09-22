@@ -390,6 +390,72 @@ function mps_tools_render_special_field_row($key, $cat_index, $sub_columns, $sub
     </tr>
     <?php
 }
+//--------------------------------------------------------------------------------------------------
+
+function mps_tools_render_template_manager($key, $field) {
+    $columns = $field['columns'];
+    $rows = get_option($key, []);
+    if (!is_array($rows)) $rows = [];
+    $name_col_key = array_key_first($columns); // 1ère colonne = nom affiché dans le select
+    ?>
+    <tr>
+        <th><?php echo esc_html($field['label']); ?></th>
+        <td>
+            <div class="mps-tools-template-manager" data-key="<?php echo esc_attr($key); ?>" data-name-col="<?php echo esc_attr($name_col_key); ?>">
+
+                <select class="mps-tools-template-select">
+                    <?php foreach ($rows as $i => $row): ?>
+                        <option value="<?php echo esc_attr($i); ?>">
+                            <?php echo esc_html($row[$name_col_key] ?? "Template {$i}"); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <button type="button" class="button mps-tools-add-template" data-key="<?php echo esc_attr($key); ?>">
+                    + Nouveau template
+                </button>
+                <button type="button" class="button-link mps-tools-remove-template" style="color:#b32d2e; margin-left:8px;">
+                    ✕ Supprimer ce template
+                </button>
+
+                <div class="mps-tools-template-blocks">
+                    <?php foreach ($rows as $i => $row): ?>
+                        <?php mps_tools_render_template_manager_block($key, $columns, $i, $row); ?>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <template id="tpl-<?php echo esc_attr($key); ?>-template">
+                <?php mps_tools_render_template_manager_block($key, $columns, '__TPL_INDEX__', []); ?>
+            </template>
+        </td>
+    </tr>
+    <?php
+}
+
+//--------------------------------------------------------------------------------------------------
+
+function mps_tools_render_template_manager_block($key, $columns, $index, $row) {
+    ?>
+    <div class="mps-tools-template-block" data-index="<?php echo esc_attr($index); ?>" style="display:none;">
+        <?php foreach ($columns as $col_key => $col):
+            $input_type = $col['type'] ?? 'text';
+            $name       = esc_attr($key) . '[' . esc_attr($index) . '][' . esc_attr($col_key) . ']';
+            $default    = $col['default'] ?? '';
+            $raw_value  = $row[$col_key] ?? $default;
+        ?>
+            <div class="mps-tools-category-field">
+                <label><?php echo esc_html($col['label']); ?></label>
+
+                <?php if ($input_type === 'textarea'): ?>
+                    <textarea name="<?php echo $name; ?>" rows="6" class="large-text mps-tools-template-field"><?php echo esc_textarea($raw_value); ?></textarea>
+                <?php else: ?>
+                    <input type="text" name="<?php echo $name; ?>" value="<?php echo esc_attr($raw_value); ?>" class="regular-text mps-tools-template-field" />
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
+    <?php
+}
 
 //--------------------------------------------------------------------------------------------------
 // End of file

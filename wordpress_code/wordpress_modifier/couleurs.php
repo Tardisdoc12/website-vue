@@ -22,7 +22,7 @@ function mps_tools_enqueue_color_picker($hook) {
 
     wp_enqueue_script(
         'wp-color-picker-alpha',
-        plugin_dir_url(MPS_TOOLS_MAIN_FILE) . 'javascript/wp-color-picker-alpha.min.js',
+        MPS_TOOLS_PLUGIN_ASSETS_URL . 'javascript/wp-color-picker-alpha.min.js',
         array('wp-color-picker'),
         '3.0.0',
         true
@@ -30,7 +30,7 @@ function mps_tools_enqueue_color_picker($hook) {
 
     wp_enqueue_script(
         'mps-tools-color-picker-init',
-        plugin_dir_url(MPS_TOOLS_MAIN_FILE) . 'javascript/couleurs.js',
+        MPS_TOOLS_PLUGIN_ASSETS_URL . 'javascript/couleurs.js',
         array('wp-color-picker', 'wp-color-picker-alpha', 'jquery'),
         '1.0.0',
         true

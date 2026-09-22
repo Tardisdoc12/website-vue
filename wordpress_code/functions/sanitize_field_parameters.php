@@ -217,6 +217,57 @@ function mps_tools_sanitize_repeater_callback($value, $columns) {
 
     return $clean;
 }
+//--------------------------------------------------------------------------------------------------
+
+function mps_tools_sanitize_template_manager($field, $key) {
+    $args['sanitize_callback'] = function($value) use ($field) {
+        $columns = $field['columns'] ?? [];
+        return mps_tools_sanitize_template_manager_callback($value, $columns);
+    };
+    return $args;
+}
+
+//--------------------------------------------------------------------------------------------------
+
+function mps_tools_sanitize_template_manager_callback($value, $columns) {
+    if (!is_array($value)) return [];
+
+    $clean = [];
+    foreach ($value as $row) {
+        if (!is_array($row)) continue;
+
+        $clean_row = [];
+        $has_content = false;
+
+        foreach ($columns as $col_key => $col) {
+            $type = $col['type'] ?? 'text';
+            $default = $col['default'] ?? '';
+            $raw = $row[$col_key] ?? $default;
+
+            switch ($type) {
+                case 'checkbox':
+                    $val = !empty($raw) ? 1 : 0;
+                    break;
+                case 'color':
+                    $val = mps_tools_validate_color_value($raw, $default) ?: '#000000';
+                    break;
+                case 'textarea':
+                    $val = sanitize_textarea_field($raw);
+                    break;
+                default:
+                    $val = sanitize_text_field($raw);
+            }
+
+            $clean_row[$col_key] = $val;
+
+            if ($val !== '') $has_content = true;
+        }
+
+        if ($has_content) $clean[] = $clean_row;
+    }
+
+    return array_values($clean);
+}
 
 //--------------------------------------------------------------------------------------------------
 // End of file
