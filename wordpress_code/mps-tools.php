@@ -20,6 +20,8 @@ define('MPS_TOOLS_CONTROLLERS_DIR',         __DIR__ . '/controllers/');
 define('MPS_TOOLS_BDD_DIR',                 __DIR__ . '/base_de_donnee/');
 define('MPS_TOOLS_PARAMETERS_DIR',          __DIR__ . '/parametres/');
 define('MPS_TOOLS_JAVASCRIPT_DIR',          __DIR__ . '/javascript/');
+define('MPS_TOOLS_PLUGIN_URL',              plugin_dir_url(__FILE__));
+define('MPS_TOOLS_PLUGIN_ASSETS_URL',        plugin_dir_url(__FILE__) . 'assets/');
 
 $files_wordpress_modifier = [
     'shortcodes.php',
