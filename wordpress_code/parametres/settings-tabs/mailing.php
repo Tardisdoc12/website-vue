@@ -25,6 +25,16 @@ function monplugin_get_email_tags($context) {
                 'date'  => '',
             ]);
 
+        case 'email_to_one_user':
+            return array_merge($common, [
+                'event_name'        => '', // rempli au moment de l'envoi
+                'modification_date'       => '',
+                'event_date'  => '',
+                'event_place'       => '',
+                'user_firstName'       => '',
+                'user_lastName'       => '',
+            ]);
+
         default:
             return $common;
     }
@@ -78,5 +88,24 @@ return [
             'type'  => 'textarea',
             'default' => "Cliquez ici pour réinitialiser votre mot de passe :\n\n{{url_reset}}\n\nSi vous n'avez pas demandé cette réinitialisation, ignorez cet email.",
         ],
+
+        '_heading_mail_to_inscrits' => ['label' => 'Email - Template pour les envois manuels', 'type'=>'heading'],
+        '_info_balise_manuel' => [
+            'type' => 'paragraph',
+            'text' => 'Balises disponibles : ' . implode(', ', array_map(
+                fn($tag) => '{{' . $tag . '}}',
+                array_keys(monplugin_get_email_tags('email_to_one_user'))
+            )),
+        ],
+        'mps_tools_mailing_manual' => [
+            'label' => 'Mailing Manuel',
+            'type' => 'categories',
+            'ajout' => 'Ajouter un template',
+            'columns' => [
+                'name_template' => ['label' => 'Nom du template', 'type'=> 'text'],
+                'objet_template' => ['label' => 'Objet du template', 'type'=> 'text'],
+                'template' => ['label' => 'Template du mail', 'type'=> 'textarea']
+            ]
+        ]
     ],
 ];

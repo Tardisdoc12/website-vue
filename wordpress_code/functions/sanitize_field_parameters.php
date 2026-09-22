@@ -199,6 +199,9 @@ function mps_tools_sanitize_repeater_callback($value, $columns) {
                     case 'color':
                         $val = mps_tools_validate_color_value($raw, $row_default) ?: '#000000';
                         break;
+                    case 'textarea':
+                        $val = sanitize_textarea_field($raw);
+                        break;
                     default:
                         $val = sanitize_text_field($raw);
                 }

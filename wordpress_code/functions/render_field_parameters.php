@@ -258,6 +258,7 @@ function mps_tools_render_categories($key, $field) {
     $columns     = $field['columns'];
     $sub_columns = $field['sub_columns'] ?? [];
     $rows        = get_option($key, []);
+    $ajout       = $field['ajout'] ?? 'Ajouter une catégorie';
     if (!is_array($rows)) $rows = [];
     ?>
     <tr>
@@ -272,7 +273,7 @@ function mps_tools_render_categories($key, $field) {
             </div>
 
             <button type="button" class="button mps-tools-add-category" data-key="<?php echo esc_attr($key); ?>">
-                + Ajouter une catégorie
+                <?php echo esc_html($ajout); ?>
             </button>
 
             <template id="tpl-<?php echo esc_attr($key); ?>-category">
@@ -314,40 +315,52 @@ function mps_tools_render_category_card($key, $columns, $sub_columns, $index, $r
                            data-alpha-enabled="true"
                            data-alpha-color-type="octohex"
                            class="mps-tools-color-picker" />
+                <?php elseif ($input_type === 'textarea'): ?>
+                     <textarea
+                        id="<?php echo $name; ?>"
+                        name="<?php echo $name; ?>"
+                        rows="6"
+                        class="large-text"
+                    ><?php echo esc_textarea($raw_value); ?></textarea>
+                    <?php if (!empty($col['description'])): ?>
+                        <p class="description"><?php echo esc_html($col['description']); ?></p>
+                    <?php endif; ?>
                 <?php else: ?>
                     <input type="text" name="<?php echo $name; ?>" value="<?php echo esc_attr($raw_value); ?>" class="regular-text" />
                 <?php endif; ?>
             </div>
         <?php endforeach; ?>
 
-        <div class="mps-tools-category-field">
-            <label><?php echo esc_html($columns['champs_speciaux']['label'] ?? 'Champs supplémentaires'); ?></label>
+        <?php if ($sub_columns != []): ?>
+            <div class="mps-tools-category-field">
+                <label><?php echo esc_html($columns['champs_speciaux']['label'] ?? 'Champs supplémentaires'); ?></label>
 
-            <?php
-            $special_rows = is_array($row['champs_speciaux'] ?? null) ? $row['champs_speciaux'] : [];
-            ?>
-            <table class="widefat mps-tools-repeater mps-tools-sub-repeater">
-                <thead>
-                    <tr>
-                        <?php foreach ($sub_columns as $sub_col): ?>
-                            <th><?php echo esc_html($sub_col['label']); ?></th>
+                <?php
+                $special_rows = is_array($row['champs_speciaux'] ?? null) ? $row['champs_speciaux'] : [];
+                ?>
+                <table class="widefat mps-tools-repeater mps-tools-sub-repeater">
+                    <thead>
+                        <tr>
+                            <?php foreach ($sub_columns as $sub_col): ?>
+                                <th><?php echo esc_html($sub_col['label']); ?></th>
+                            <?php endforeach; ?>
+                            <th style="width:40px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($special_rows as $j => $sub_row): ?>
+                            <?php mps_tools_render_special_field_row($key, $index, $sub_columns, $j, $sub_row); ?>
                         <?php endforeach; ?>
-                        <th style="width:40px;"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($special_rows as $j => $sub_row): ?>
-                        <?php mps_tools_render_special_field_row($key, $index, $sub_columns, $j, $sub_row); ?>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
 
-            <button type="button" class="button mps-tools-add-special-field">+ Ajouter un champ</button>
+                <button type="button" class="button mps-tools-add-special-field">+ Ajouter un champ</button>
 
-            <template class="tpl-special-field">
-                <?php mps_tools_render_special_field_row($key, $index, $sub_columns, '__SUB_INDEX__', []); ?>
-            </template>
-        </div>
+                <template class="tpl-special-field">
+                    <?php mps_tools_render_special_field_row($key, $index, $sub_columns, '__SUB_INDEX__', []); ?>
+                </template>
+            </div>
+        <?php endif; ?>
     </div>
     <?php
 }
