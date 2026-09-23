@@ -259,10 +259,10 @@ export default{
                 )
 
                 //toujours paiement
-                if (found && found.adherent_payant && found.non_adherent_payant) return
+                if (found && Boolean(+found.adherent_payant) && Boolean(+found.non_adherent_payant)) return
 
                 // Séance → paiement si au moins un non-adhérent parmi les inscrits
-                if (found && found.non_adherent_payant && hasNonAdherent) return
+                if (found && Boolean(+found.non_adherent_payant) && hasNonAdherent) return
 
                 // Tous les autres cas → ferme
                 this.$emit("cancelSignal", this.isCancel)

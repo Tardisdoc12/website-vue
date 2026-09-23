@@ -149,11 +149,20 @@ class ShortcodesHookers {
 
         $isCashAllowed = get_option('accept_cash', 0);
 
+        $isMailingConfigured = 0;
+        $mailing_email = get_option('mps_tools_mail_senders', '');
+        $mailing_name = get_option('mps_tools_name_email', '');
+        if (!empty($mailing_email) && !empty($mailing_name)) {
+            $isMailingConfigured = 1;
+        }
+
         wp_localize_script($name_modules, 'MPS_TOOLS_SETTINGS', [
             'categories'         => get_option('mps_tools_categories', []),
             'isKdriveConfigured' => $isKDriveConfigured,
             'isHelloAssoConfigured' => $isHelloAssoConfigured,
             'isCashAllowed' => $isCashAllowed,
+            'isMailingConfigured' => $isMailingConfigured,
+            'ManualMailsTemplates' => get_option('mps_tools_mailing_manual', []),
         ]);
 
         wp_localize_script($name_modules, 'MyPluginData', [

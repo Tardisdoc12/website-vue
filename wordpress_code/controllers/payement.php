@@ -17,7 +17,9 @@ require_once MPS_TOOLS_FUNCTIONS_DIR . 'payement.php';
 // Constants
 
 const HELLOASSO_BASE_URL = 'https://api.helloasso.com';
+const HELLOASSO_BASE_URL_TEST = 'https://api.helloasso-sandbox.com';
 const HELLOASSO_TOKEN_TRANSIENT_KEY = 'helloasso_encrypted_access_token';
+const HELLOASSO_TOKEN_TRANSIENT_KEY_TEST = 'helloasso_encrypted_access_token_test';
 
 //--------------------------------------------------------------------------------------------------
 // Functions OR CLASS
@@ -254,6 +256,7 @@ function mps_tools_create_payements(WP_REST_Request $request) {
 
     $token = helloasso_get_access_token();
     if (!$token) {
+        error_log('HelloAsso : échec de l\'authentification, impossible d\'obtenir le token.');
         return new WP_Error('helloasso_auth_error', 'Authentification HelloAsso échouée.', ['status' => 500]);
     }
 

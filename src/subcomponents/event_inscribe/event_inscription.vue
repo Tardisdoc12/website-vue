@@ -450,14 +450,14 @@ export default {
             if (participant.wantsCash) return 'cash'
 
             //toujours paiement
-            if (found && found.adherent_payant && found.non_adherent_payant) {
+            if (found && Boolean(+found.adherent_payant) && Boolean(+found.non_adherent_payant)) {
                 return 'pending'
             }
 
             // Categorie seulement payante pour un non-adhérent ce qui est le cas
-            if (found && found.non_adherent_payant && isNonAdherent) return 'pending'
+            if (found && Boolean(+found.non_adherent_payant) && isNonAdherent) return 'pending'
 
-            if (found && found.adherent_payant && !isNonAdherent) return 'pending'
+            if (found && Boolean(+found.adherent_payant) && !isNonAdherent) return 'pending'
 
             return 'completed'
         },
