@@ -1,24 +1,7 @@
-.mps-tools-repeater {
-    width: auto;
-    max-width: 1900px;
-    border-collapse: collapse;
-}
-.mps-tools-repeater th,
-.mps-tools-repeater td {
-    padding: 8px 12px;
-    text-align: left;
-}
-.mps-tools-repeater input[type="text"] {
-    width: 200px;
-    box-sizing: border-box;
-}
-.mps-tools-repeater input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-}
+@import "class/repeater.css";
+@import "class/categorie.css";
+
 .mps-tools-global {
-    /* styles communs à tous les champs globaux, si besoin */
 }
 .mps-tools-global[type="color"] {
     width: 60px;
@@ -26,33 +9,4 @@
     padding: 0;
     border: none;
     cursor: pointer;
-}
-
-.mps-tools-category-card {
-    border-bottom: 1px solid #ccc;
-    padding: 16px 0;
-}
-
-.mps-tools-category-card:first-child {
-    padding-top: 0;
-}
-
-.mps-tools-category-header {
-    text-align: right;
-    margin-bottom: 8px;
-}
-
-.mps-tools-category-field {
-    margin-bottom: 12px;
-}
-
-.mps-tools-category-field label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 4px;
-}
-
-.mps-tools-sub-repeater {
-    max-width: 600px;
-    margin-bottom: 8px;
 }

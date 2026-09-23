@@ -1,0 +1,19 @@
+.mps-tools-repeater {
+    width: auto;
+    max-width: 1900px;
+    border-collapse: collapse;
+}
+.mps-tools-repeater th,
+.mps-tools-repeater td {
+    padding: 8px 12px;
+    text-align: left;
+}
+.mps-tools-repeater input[type="text"] {
+    width: 200px;
+    box-sizing: border-box;
+}
+.mps-tools-repeater input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}

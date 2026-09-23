@@ -1,0 +1,28 @@
+.mps-tools-category-card {
+    border-bottom: 1px solid #ccc;
+    padding: 16px 0;
+}
+
+.mps-tools-category-card:first-child {
+    padding-top: 0;
+}
+
+.mps-tools-category-header {
+    text-align: right;
+    margin-bottom: 8px;
+}
+
+.mps-tools-category-field {
+    margin-bottom: 12px;
+}
+
+.mps-tools-category-field label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.mps-tools-sub-repeater {
+    max-width: 600px;
+    margin-bottom: 8px;
+}
