@@ -6,19 +6,15 @@
         <div style="display:flex; gap:8px; justify-content:center;">
             <button
                 type="button"
-                class="apparence-none button-base"
+                class="button-cancel"
                 @click="CancelInscription"
-                :style="{
-                    '--btn-bg': 'var(--cancel-color)',
-                    '--btn-hover-bg': 'var(--cancel-hover-color)'
-                }"
             >
                 {{ "Annuler l'inscription" }}
             </button>
 
             <button
                 type="button"
-                class="apparence-none button-base"
+                class="button-base"
                 @click="ContinueInscription"
             >
                 {{ "Continuer sans cet utilisateur" }}

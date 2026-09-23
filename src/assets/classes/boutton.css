@@ -1,0 +1,71 @@
+/*-----------------------------------------------------------------------------------------------------------------*/
+/**
+ * Styles des Boutons
+ */
+/*-----------------------------------------------------------------------------------------------------------------*/
+
+/* Styles communs à tous les boutons */
+.button-base,
+.button-confirm,
+.button-cancel {
+    --btn-bg: var(--main-color);
+    --btn-color: var(--writing-main-color);
+    --btn-hover-bg: var(--secondary-color);
+    --btn-hover-color: var(--writing-main-color);
+    --btn-disabled-bg: var(--btn-bg);
+    --btn-disabled-color: var(--btn-color);
+
+    appearance: none;
+    background-color: var(--btn-bg);
+    color: var(--btn-color);
+
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+}
+
+.button-base:hover,
+.button-confirm:hover,
+.button-cancel:hover {
+    background-color: var(--btn-hover-bg);
+    color: var(--btn-hover-color);
+}
+
+.button-base:disabled,
+.button-confirm:disabled,
+.button-cancel:disabled {
+    background-color: var(--deactivate-button-classic-color);
+    color: var(--writing-main-color);
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/*-----------------------------------------------------------------------------------------------------------------*/
+
+.button-cancel {
+    --btn-bg: var(--cancel-color);
+    --btn-hover-bg: var(--cancel-hover-color);
+}
+
+/*-----------------------------------------------------------------------------------------------------------------*/
+
+.button-confirm {
+    --btn-bg: var(--validate-color);
+    --btn-hover-bg: var(--validate-hover-color);
+}
+
+/*-----------------------------------------------------------------------------------------------------------------*/
+
+.button-cancel:disabled {
+    background-color: var(--cancel-disabled-color);
+}
+
+/*-----------------------------------------------------------------------------------------------------------------*/
+
+.button-confirm:disabled {
+    background-color: var(--validate-disabled-bg);
+}
+
+/*-----------------------------------------------------------------------------------------------------------------*/
+/* End of File                                                                                                     */
+/*-----------------------------------------------------------------------------------------------------------------*/

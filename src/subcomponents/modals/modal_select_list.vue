@@ -16,11 +16,7 @@
                 <button
                     :disabled="isDisable"
                     @click="Validate"
-                    class="appearance-none button-base"
-                    :style="{
-                        '--btn-bg' : isDisable ? 'var(--deactivate-button-classic-color)' : 'var(--main-color)',
-                        '--btn-hover-bg' : isDisable ? 'var(--deactivate-button-classic-color)' : 'var(--secondary-color)'
-                    }"
+                    class="button-base"
                 >
                     Valider le choix
                 </button>

@@ -101,11 +101,7 @@
                         <button
                             :disabled="isDisable"
                             type="submit"
-                            class="appearance-none button-base"
-                            :style="{
-                                '--btn-bg' : isDisable ? 'var(--disable-main-color)' : 'var(--main-color)',
-                                '--btn-hover-bg' : isDisable ? 'var(--disable-main-color)' : 'var(--secondary-color)',
-                            }"
+                            class="button-base"
                         >
                             Mettre à jour le document
                         </button>

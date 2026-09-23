@@ -263,19 +263,6 @@ export default {
     font-style: italic;
 }
 
-.button-base {
-    padding: 8px 20px;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: opacity 0.2s;
-}
-
-.button-base:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-}
-
 .button-secondary {
     background: #f0f0f0;
     color: #444;

@@ -22,7 +22,7 @@
             <button
                 v-if="canBeUpdated"
                 @click="UpdateFile(file)"
-                class="appearance-none button-base"
+                class="button-base"
                 :style="{
                     '--btn-bg':'var(--color-button-file)',
                     '--btn-hover-bg': 'var(--color-button-file)',
@@ -33,17 +33,13 @@
             <button
                 v-if="canBeUpdated"
                 @click="DeleteFile(file)"
-                class="appearance-none button-base"
-                :style="{
-                    '--btn-bg':'var(--cancel-color)',
-                    '--btn-hover-bg': 'var(--cancel-hover-color)',
-                }"
+                class="button-cancel"
             >
                 <font-awesome-icon icon="fa-solid fa-trash"/>
             </button>
             <button
                 @click="openUrl(file.url_file, file.path_file)"
-                class="appearance-none button-base"
+                class="button-base"
                 :style="{
                     '--btn-bg':'var(--color-button-file)',
                     '--btn-hover-bg': 'var(--color-button-file)',
@@ -54,7 +50,7 @@
             <button
                 v-if="file.path_file !== ''"
                 @click="DownloadUrl(file)"
-                class="appearance-none button-base"
+                class="button-base"
                 :style="{
                     '--btn-bg':'var(--color-button-file)',
                     '--btn-hover-bg': 'var(--color-button-file)',

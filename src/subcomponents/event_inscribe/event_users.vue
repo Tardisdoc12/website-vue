@@ -14,11 +14,7 @@
             <!-- bouton pour copier téléphone des inscrits -->
             <button
                 type="button"
-                class="appearance-none button-base"
-                :style="{
-                    '--btn-bg': 'var(--validate-color)',
-                    '--btn-hover-bg':'var(--validate-hover-color)',
-                }"
+                class="button-confirm"
                 @click="CopyPhoneOrEmail(true)"
             >
                 <font-awesome-icon icon="fa-solid fa-phone-volume" v-if="!isPhoneCopied && !isPhoneError"/>
@@ -29,11 +25,7 @@
             <!-- button pour copier mail inscrits -->
             <button
                 type="button"
-                class="appearance-none button-base"
-                :style="{
-                    '--btn-bg': 'var(--validate-color)',
-                    '--btn-hover-bg':'var(--validate-hover-color)',
-                }"
+                class="button-confirm"
                 @click="CopyPhoneOrEmail(false)"
             >
                 <font-awesome-icon icon="fa-solid fa-envelope" v-if="!isEmailCopied && !isEmailError"/>
@@ -45,11 +37,7 @@
             <button
                 v-if="usersToShow.length !== 0"
                 type="button"
-                class="appearance-none button-base"
-                :style="{
-                    '--btn-bg': 'var(--validate-color)',
-                    '--btn-hover-bg':'var(--validate-hover-color)',
-                }"
+                class="button-confirm"
                 @click="downloadCSV"
             >
                 <font-awesome-icon icon="fa-solid fa-download" />
@@ -96,7 +84,7 @@
                             v-if="user.status === 'attente'"
                             @click="UpdateUser(user)"
                             :disabled="!hasAttente"
-                            class="appearance-none button-base"
+                            class="button-base"
                             :style="{
                                 '--btn-bg': hasAttente ? 'var(--main-color)' : 'var(--deactivate-button-classic-color)',
                                 '--btn-hover-bg': hasAttente ? 'var(--secondary-color)' : 'var(--deactivate-button-classic-color)'
@@ -107,12 +95,11 @@
                         <button
                             v-if="user.status === 'inscrit'"
                             @click="UpdateUser(user)"
-                            class="appearance-none button-base"
+                            class="button-base"
                             :disabled="!hasAttente"
                             :style="{
                                 '--btn-bg': hasAttente ? 'var(--main-color)' : 'var(--deactivate-button-classic-color)',
                                 '--btn-hover-bg': hasAttente ? 'var(--secondary-color)' : 'var(--deactivate-button-classic-color)',
-                                '--btn-color': '#000000'
                             }"
                         >
                             {{user.status === 'attente' ? 'liste d\'attente' : 'inscrit'}}
@@ -126,7 +113,7 @@
                     <td class="border border-gray-300 p-2 text-center">
                         <button 
                         @click="DeleteUser(user)"
-                        class="appearance-none button-base"
+                        class="button-base"
                         :style="{
                             '--btn-bg': 'var(--cancel-color)',
                             '--btn-hover-bg': 'var(--cancel-hover-color)'

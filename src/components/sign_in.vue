@@ -120,7 +120,7 @@
                 </div>
 
                 <div class="flex items-center justify-center" style="margin-top: 20px;">
-                    <button type="submit" class="appearance-none button-base">
+                    <button type="submit" class="button-base">
                         Créer son compte
                     </button>
                 </div>

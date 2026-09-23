@@ -43,7 +43,7 @@
                     <button
                         :disabled="isDisable"
                         type="submit"
-                        class="appearance-none button-base"
+                        class="button-cancel"
                         :style="{
                             '--btn-bg': isDisable ? 'var(--cancel-disabled-color)' : 'var(--cancel-color)',
                             '--btn-hover-bg' : isDisable ? 'var(--cancel-disabled-color)' : 'var(--cancel-hover-color)',

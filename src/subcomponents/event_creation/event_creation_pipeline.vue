@@ -61,11 +61,7 @@
         <div style="margin-top:10px;margin-bottom:10px;" class="flex justify-center gap-3">
             <button
                 type="button"
-                class="appearance-none button-base"
-                :style="{
-                    '--btn-bg':'var(--cancel-color)',
-                    '--btn-hover-bg':'var(--cancel-hover-color)'
-                }"
+                class="button-cancel"
                 @click="handleCancel"
             >
                 Annuler
@@ -74,12 +70,8 @@
             <button
                 type="button"
                 @click="handleCreate"
-                class="appearance-none button-base"
+                class="button-confirm"
                 :disabled="!checkRequireField"
-                :style="{
-                    '--btn-bg': checkRequireField ? 'var(--validate-color)' : 'var(--validate-disabled-color)',
-                    '--btn-hover-bg': checkRequireField ? 'var(--validate-hover-color)' : 'var(--validate-disabled-color)',
-                }"
             >
                 {{ !isUpdate ? "Créer" : "Modifier"}}
             </button>

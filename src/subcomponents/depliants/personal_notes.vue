@@ -16,7 +16,7 @@
             </p>
             <div v-if="canUpdate" class="center-element" style="margin-top: 5px; margin-bottom: 5px;">
                 <button
-                    class="appearance-none button-base"
+                    class="button-base"
                     @click="()=>{isModify=true}"
                 >
                     {{ "Modifier" }}
@@ -34,7 +34,7 @@
         
             <div class="center-element" style="margin-top: 5px; margin-bottom: 5px;">
                 <button
-                    class="appearance-none button-base"
+                    class="button-base"
                     @click="SaveNotes"
                 >
                     {{ "Sauvegarder" }}

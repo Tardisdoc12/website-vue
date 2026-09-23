@@ -50,29 +50,29 @@
         <!-- Sous-Boutons de chaque Boutons -->
         <div class="flex items-center justify-center gap-4" style="margin-top: 20px;" v-if="activeIndex === 1 && isBureau">
             <button
-                class="appearance-none button-base"
+                class="button-base"
                 @click="() => {isAddingCategories=true;}"
             >{{ "Ajouter une catégorie" }}</button>
             <button
-                class="appearance-none button-base"
+                class="button-base"
                 @click="() => {isAddingFiles=true;}"
             >{{ "Ajouter un fichier" }}</button>
             <button
                 @click="() => {isRemovingCategories=true;}"
-                class="appearance-none button-base"
+                class="button-base"
             >{{ "Supprimer une Catégorie" }}</button>
         </div>
 
         <div class="flex items-center justify-center gap-4" style="margin-top: 20px;" v-if="activeIndex === 0">
             <button
-                class="appearance-none button-base"
+                class="button-base"
                 @click="() => {isInMyFollowPage=true;}"
             >
                 {{ "Accéder à ma fiche de suivi" }}
             </button>
             <button
                 v-if="isEncadrantComp"
-                class="appearance-none button-base"
+                class="button-base"
                 @click="()=>{showListMembers = true}"
             >
                 {{ "Liste des Membres" }}

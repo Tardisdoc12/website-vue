@@ -56,7 +56,7 @@
 
             <div class="flex items-center justify-center" style="margin-top: 20px;">
                 <button type="submit"
-                    class="appearance-none button-base"
+                    class="button-base"
                 >
                     Réinitialiser le mot de passe
                 </button>

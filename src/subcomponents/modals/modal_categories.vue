@@ -37,7 +37,7 @@
                     <button
                         :disabled="isDisable"
                         type="submit"
-                        class="appearance-none button-base"
+                        class="button-base"
                         :style="{
                             '--btn-bg' : isDisable ? 'var(--deactivate-button-classic-color)' : 'var(--main-color)',
                             '--btn-hover-bg' : isDisable ? 'var(--deactivate-button-classic-color)' : 'var(--secondary-color)'

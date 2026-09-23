@@ -1,0 +1,7 @@
+/** Personal Notes CSS */
+
+.center-element{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

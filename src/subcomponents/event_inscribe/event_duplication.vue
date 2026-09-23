@@ -7,7 +7,7 @@
         <button 
             type="button"
             @click="addRange" 
-            class="appearance-none button-base"
+            class="button-base"
         >
             <font-awesome-icon icon="fa-solid fa-plus" />
         </button>
@@ -34,7 +34,7 @@
                 '--btn-hover-bg': 'var(--cancel-hover-color)'
             }"
             @click="removeRange(currentStep)"
-            class="appearance-none button-base"
+            class="button-base"
         >
             <font-awesome-icon icon="fa-solid fa-trash" />
         </button>
@@ -88,22 +88,14 @@
             type="button"
             @click="previousStep"
             :disabled="currentStep === 0"
-            class="appearance-none button-base"
-            :style="{
-                '--btn-bg': 'var(--validate-color)',
-                '--btn-hover-bg': 'var(--validate-hover-color)'
-            }"
+            class="button-confirm"
         >
             Précédent
         </button>
         <button
             type="button"
             @click="Cancel"
-            class="appearance-none button-base"
-            :style="{
-                '--btn-bg': 'var(--cancel-color)',
-                '--btn-hover-bg': 'var(--cancel-hover-color)'
-            }"
+            class="button-cancel"
         >
             Annuler
         </button>
@@ -111,11 +103,7 @@
             v-if="!isLastStep"
             type="button"
             @click="nextStep"
-            class="appearance-none button-base"
-            :style="{
-                '--btn-bg': 'var(--validate-color)',
-                '--btn-hover-bg': 'var(--validate-hover-color)'
-            }"
+            class="button-confirm"
         >
             Suivant
         </button>
@@ -123,11 +111,7 @@
             v-else
             type="button"
             @click="CreateEvents"
-            class="appearance-none button-base"
-            :style="{
-                '--btn-bg': 'var(--validate-color)',
-                '--btn-hover-bg': 'var(--validate-hover-color)'
-            }"
+            class="button-confirm"
         >
             Dupliquer les évènements
         </button>

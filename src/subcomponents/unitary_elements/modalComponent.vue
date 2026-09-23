@@ -6,11 +6,9 @@
                 <span>
                     <label style="color:var(--writing-modale-title-color);"> {{ title }} </label>
                 </span>
-                <button 
-                    class="appearance-none button-base" 
-                    :style="{ 
-                        '--btn-bg': 'var(--cancel-color)', 
-                        '--btn-hover-bg': 'var(--cancel-hover-color)',
+                <button
+                    class="button-cancel" 
+                    :style="{
                         '--btn-color': 'var(--writing-modale-title-color)',
                         '--btn-hover-color': 'var(--writing-modale-title-color)'
                     }"

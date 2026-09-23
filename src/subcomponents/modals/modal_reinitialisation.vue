@@ -15,11 +15,7 @@
                 class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <button @click="handleRequest" :disabled="!email"
-                class="appearance-none button-base"
-                :style="{
-                    '--btn-bg' : !email ? 'var(--deactivate-button-classic-color)' : 'var(--main-color)',
-                    '--btn-hover-bg' : !email ? 'var(--deactivate-button-classic-color)' : 'var(--secondary-color)'
-                }"
+                class="button-base"
             >Envoyer</button>
         </div>
     </Modal>

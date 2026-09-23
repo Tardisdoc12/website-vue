@@ -16,7 +16,7 @@
                     '--btn-hover-bg': 'var(--cancel-hover-color)'
                 }"
                 @click="RemoveEvent"
-                class="appearance-none button-base"
+                class="button-base"
             >
                 <font-awesome-icon icon="fa-solid fa-trash" />
             </button>
@@ -28,7 +28,7 @@
                     '--btn-hover-bg': Number(event.closed_inscription) === 1 ? 'var(--cancel-hover-color)' : 'var(--secondary-color)'
                 }"
                 @click="LockEvent"
-                class="appearance-none button-base"
+                class="button-base"
             >
                 <font-awesome-icon
                     v-if="Number(event.closed_inscription) !== 1"
@@ -47,7 +47,7 @@
                     '--btn-hover-bg': Number(event.closed_inscription) === 2 ? 'var(--cancel-hover-color)' : 'var(--secondary-color)'
                 }"
                 @click="FullEvent"
-                class="appearance-none button-base"
+                class="button-base"
             >
                 <font-awesome-icon
                         v-if="Number(event.closed_inscription) !== 2"
@@ -67,7 +67,7 @@
                     '--btn-hover-bg': 'var(--secondary-color)'
                 }"
                 @click="ajoutPerson"
-                class="appearance-none button-base"
+                class="button-base"
             >
                 <font-awesome-icon icon="fa-solid fa-user-plus"/>
             </button>
@@ -79,7 +79,7 @@
                     '--btn-hover-bg': 'var(--secondary-color)'
                 }"
                 @click="CopyEvent"
-                class="appearance-none button-base"
+                class="button-base"
             >
                 <font-awesome-icon icon="fa-solid fa-clone"/>
             </button>
@@ -116,7 +116,7 @@
             <button
                 :disabled="disableSubscribe"
                 type="button"
-                class="appearance-none button-base"
+                class="button-base"
                 :style="{
                     '--btn-color': 'var(--writing-main-color)',
                     '--btn-bg': colorButton,
@@ -130,7 +130,7 @@
             <a
                 v-if="canBeRedirected"
                 :href="event.url_post"
-                class="appearance-none button-base"
+                class="button-base"
             >
                 {{ "Voir la page" }}
             </a> -->
@@ -138,7 +138,7 @@
             <button
                 v-if="isBureauComp || isEncadrantComp"
                 type="button"
-                class="appearance-none button-base"
+                class="button-base"
                 @click="VisualizeInscrit"
             >
                 <font-awesome-icon icon="fa-solid fa-clipboard-list" />
@@ -148,7 +148,7 @@
             <button
                 v-if="isBureauComp"
                 type="button"
-                class="appearance-none button-base"
+                class="button-base"
                 @click="updateEvent"
             >
                 Modifier l'évènement

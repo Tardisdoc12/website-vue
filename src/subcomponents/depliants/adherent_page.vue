@@ -46,7 +46,7 @@
     >
         <button
             @click="CancelFollowPage"
-            class="appearance-none button-base"
+            class="button-base"
         >
             {{ "Retour à mon profil" }}
         </button>
@@ -54,7 +54,7 @@
         <button
             v-if="activeIndex === 1"
             @click="startAddConseil"
-            class="appearance-none button-base"
+            class="button-base"
         >
             {{ 'Ajouter un exercice' }}
         </button>
@@ -62,7 +62,7 @@
         <button
             v-if="activeIndex === 1"
             @click="startSuppression"
-            class="appearance-none button-base"
+            class="button-base"
         >
             {{ 'Supprimer un exercice' }}
         </button>
