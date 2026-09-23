@@ -25,5 +25,10 @@ return [
             'label' => 'Accepter les paiements en espèces',
             'type' => 'checkbox',
         ],
+
+        'mps_tools_rest_url' => [
+            'label' => 'Lien url pour réinitialiser le mot de passe',
+            'type' => 'text',
+        ]
     ],
 ];
