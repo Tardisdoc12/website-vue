@@ -46,6 +46,7 @@ $files_routes_controllers = [
     'source.php',
     'subscribe.php',
     'users.php',
+    'mailing.php',
 ];
 
 $file_functions = [

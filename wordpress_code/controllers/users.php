@@ -404,5 +404,29 @@ function mps_tools_reset_password_properly(WP_REST_Request $request) {
 }
 
 //--------------------------------------------------------------------------------------------------
+
+function mps_tools_delete_user(WP_REST_Request $request) {
+    global $wpdb;
+    $id = intval($request['id']);
+    $table_users_inscrits = $wpdb->prefix . "users_inscrits";
+
+    if (!$id) {
+        return new WP_Error('missing_fields', 'Champs manquants', ['status' => 400]);
+    }
+
+    $user_exists = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $table_users_inscrits WHERE id = %d", $id));
+    if (!$user_exists) {
+        return new WP_Error('invalid_user', 'Utilisateur invalide', ['status' => 400]);
+    }
+
+    $wpdb->delete($table_users_inscrits, ['id' => $id], ['%d']);
+
+    return [
+        'success' => true,
+        'message' => 'Utilisateur supprimé avec succès',
+    ];
+}
+
+//--------------------------------------------------------------------------------------------------
 // End of file
 //--------------------------------------------------------------------------------------------------

@@ -29,13 +29,18 @@
                 <ShowProfil/>
             </div>
         </div>
-        <div class="w-full max-w-md text-center">
+        <div class="w-full max-w-md text-center" v-if="Boolean(+isMailingConfigured)">
             <p
                 v-if="!isAuthenticated && hasAccount"
                 @click="StartForgetPwd"
                 class="cursor-pointer"
             >
                 J'ai oublié mon mot de passe
+            </p>
+        </div>
+        <div v-else class="w-full max-w-md text-center">
+            <p v-if="!isAuthenticated && hasAccount" class="cursor-pointer text-gray-400">
+                Si vous avez perdu votre mot de passe, merci de vous addressez à l'administrateur du site.
             </p>
         </div>
         <!-- Bouton déconnexion si connecté -->
@@ -58,6 +63,7 @@ export default {
     
     data() {
         return {
+            isMailingConfigured: this.$settings.isMailingConfigured,
             hasAccount: true,
             token: localStorage.getItem("mps_moto"),
             isForgetPassword: false,

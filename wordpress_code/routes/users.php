@@ -28,7 +28,8 @@ add_action('rest_api_init', function () {
         ['POST', '/user/update',       'mps_tools_update_user',             'mps_tools_verify_csrf_and_jwt'],
         ['POST', '/psswd/reset',       'mps_tools_reset_password',          'mps_tools_verify_csrf_and_jwt'],
         ['POST', '/check-reset-key',   'mps_tools_check_reset_key',         '__return_true'],
-        ['POST', '/password',          'mps_tools_reset_password_properly', '__return_true']
+        ['POST', '/password',          'mps_tools_reset_password_properly', '__return_true'],
+        ['DELETE', '/user/(?P<id>\d+)', 'mps_tools_delete_user', 'mps_tools_verify_csrf_and_jwt']
     ];
 
     foreach ($routes as [$method, $path, $callback, $permission_callback]) {
