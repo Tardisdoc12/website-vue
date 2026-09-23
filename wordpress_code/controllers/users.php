@@ -317,22 +317,32 @@ function mps_tools_reset_password(WP_REST_Request $request) {
         return new WP_Error('user_not_found', 'Utilisateur non trouvé', ['status' => 404]);
     }
 
+    $reset_url_base = get_option('mps_tools_rest_url', site_url('/reset-password'));
+
     // Générer une key pour le lien de réinitialisation (optionnel, peut être utilisé pour vérifier la validité du reset)
     $key = get_password_reset_key($user);
 
+    if (is_wp_error($key)) {
+        error_log('get_password_reset_key error: ' . $key->get_error_message());
+        return new WP_Error('reset_key_error', 'Erreur lors de la génération du lien.', ['status' => 500]);
+    }
 
     $reset_url = add_query_arg([
         'key'   => $key,
         'login' => rawurlencode($user->user_login),
-    ], site_url('/reset-password'));
+    ], $reset_url_base);
 
     // Envoyer un email à l'utilisateur avec le nouveau mot de passe
     $subject = 'Votre nouveau mot de passe';
-    wp_mail(
+    $mail_sent = wp_mail(
         $user->user_email,
         $subject,
         "Cliquez ici pour réinitialiser votre mot de passe :\n\n$reset_url\n\nSi vous n'avez pas demandé cette réinitialisation, ignorez cet email."
     );
+
+    if (!$mail_sent) {
+        error_log("mps_tools_reset_password : échec d'envoi d'email pour {$user->user_email}");
+    }
 
     return [
         'success' => true,
