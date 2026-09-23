@@ -11,7 +11,7 @@
 
 if (!defined('ABSPATH')) exit;
 
-
+require_once MPS_TOOLS_FUNCTIONS_DIR . 'mailing.php';
 
 //--------------------------------------------------------------------------------------------------
 // Functions OR CLASS
@@ -332,12 +332,19 @@ function mps_tools_reset_password(WP_REST_Request $request) {
         'login' => rawurlencode($user->user_login),
     ], $reset_url_base);
 
+
+    $template_body = get_option(
+        'mps_tools_mail_password_recuperation',
+        "Cliquez ici pour réinitialiser votre mot de passe :\n\n{{url_reset}}\n\nSi vous n'avez pas demandé cette réinitialisation, ignorez cet email."
+    );
+    $template_body = mps_tools_render_email_template($template_body, ['url_reset' => $reset_url]);
+
     // Envoyer un email à l'utilisateur avec le nouveau mot de passe
-    $subject = 'Votre nouveau mot de passe';
-    $mail_sent = wp_mail(
+    $subject = get_option('mps_tools_mail_password_recuperation_objet', 'Votre nouveau mot de passe');
+    $mail_sent = mps_tools_send_email(
         $user->user_email,
         $subject,
-        "Cliquez ici pour réinitialiser votre mot de passe :\n\n$reset_url\n\nSi vous n'avez pas demandé cette réinitialisation, ignorez cet email."
+        $template_body
     );
 
     if (!$mail_sent) {

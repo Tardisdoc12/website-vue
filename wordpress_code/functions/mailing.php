@@ -33,6 +33,15 @@ function mps_tools_render_email_template($template, $data = []) {
 }
 
 
+//--------------------------------------------------------------------------------------------------
+
+function mps_tools_send_email($to, $subject, $message, $headers = [], $attachments = []) {
+    if (empty($to) || empty($subject) || empty($message)) {
+        return false;
+    }
+
+    return wp_mail($to, $subject, $message, $headers, $attachments);
+}
 
 //--------------------------------------------------------------------------------------------------
 // End of file
