@@ -1,19 +1,10 @@
 <template>
     <div style="margin-left: 20px; margin-right: 20px;margin-top: 10px;">
          <!-- Onglets de navigation -->
-        <div class="steps-tabs">
-            <button
-                v-for="(tab, index) in OngletList"
-                :key="index"
-                type="button"
-                class="step-tab"
-                :class="{ active: steps === index }"
-                @click="goToStep(index)"
-            >
-                <span class="step-tab-index">{{ index + 1 }}</span>
-                <span class="step-tab-text" >{{ tab }}</span>
-            </button>
-        </div>
+        <OngletsComponents
+            :OngletList="OngletList"
+            v-model:steps="steps"
+        />
 
         <div v-if="!checkRequireField">
             <p style="color: red;">Veuillez remplir tous les champs requis.</p>
@@ -90,6 +81,7 @@ import EventKind from './event_kind.vue';
 import EventGeneral from './event_general.vue';
 import EventSlot from './event_slot.vue';
 import EventPayement from './event_payement.vue';
+import OngletsComponents from '@/subcomponents/unitary_elements/onglets_components.vue';
 
 import eventsService from '@/javascript/api/axios_events.js';
 import placesApi from '@/javascript/api/axios_places.js'
@@ -259,10 +251,6 @@ export default {
             return response;
         },
 
-        goToStep(index) {
-            this.steps = index
-        },
-
         formatDateFr(dateString) {
             if (!dateString) return ''
             const date = new Date(dateString)
@@ -310,71 +298,7 @@ export default {
         EventKind,
         EventSlot,
         EventPayement,
+        OngletsComponents,
     }
 }
 </script>
-
-<style scoped>
-.steps-tabs {
-    display: flex;
-    gap: 4px;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #e0e0e0;
-}
-
-.step-tab {
-    appearance: none;
-    background: none;
-    border: none;
-    padding: 10px 16px;
-    font-size: 0.9rem;
-    color: #888;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    transition: color 0.15s ease, border-color 0.15s ease;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-
-    min-width: 0;   /* Permet au bouton de descendre en dessous de la taille de son texte */
-    flex: 1 1 0%;
-}
-
-.step-tab:hover {
-    color: var(--main-color, #333);
-}
-
-.step-tab.active {
-    color: var(--main-color, #333);
-    font-weight: 600;
-    border-bottom-color: var(--main-color, #333);
-}
-
-.step-tab-index {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #e0e0e0;
-    color: #666;
-    font-size: 0.75rem;
-    font-weight: 600;
-    flex-shrink: 0;
-}
-
-
-/* Le texte de l'onglet */
-.step-tab-text {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    min-width: 0; /* Force le calcul du texte pour l'ellipse */
-}
-
-.step-tab.active .step-tab-index {
-    background: var(--main-color, #333);
-    color: white;
-}
-</style>
