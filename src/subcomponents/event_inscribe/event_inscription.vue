@@ -7,11 +7,17 @@
                 :key="index"
                 class="step-dot"
                 :class="{ active: currentStep === index, done: currentStep > index }"
-                @click="currentStep > index ? currentStep = index : null"
+                @click="currentStep = index"
             >
                 <span v-if="currentStep > index">✓</span>
                 <span v-else>{{ index + 1 }}</span>
             </div>
+            <div
+                class="step-dot"
+                :class="{done: true}"
+                @click="addParticipant"
+                :disabled="participants.length >= 3"
+            >+</div>
         </div>
 
         <!-- Supprimer le participant courant (jamais sur l'étape 0) -->
@@ -32,47 +38,11 @@
 
             <!-- ───── ÉTAPE 0 : formulaire principal (toi) ───── -->
             <template v-if="currentStep === 0">
-                <div class="flex flex-col gap-1">
-                    <label class="block font-medium">Prénom<span style="color:red">*</span></label>
-                    <input v-model="participants[0].firstName" type="text" class="w-full border p-1 rounded" required />
-                </div>
-                <div class="flex flex-col gap-1">
-                    <label class="block font-medium">Nom<span style="color:red">*</span></label>
-                    <input v-model="participants[0].lastName" type="text" class="w-full border p-1 rounded" required />
-                </div>
-                <div class="flex flex-col gap-1">
-                    <label class="block font-medium">E-mail <span style="color:red">*</span></label>
-                    <input v-model="participants[0].email" type="email" class="w-full border p-1 rounded" required />
-                </div>
-                <div class="flex flex-col gap-1">
-                    <label class="block font-medium">Téléphone <span style="color:red">*</span></label>
-                    <input v-model="participants[0].phone" type="tel" class="w-full border p-1 rounded" pattern="[0-9]{10}" required />
-                </div>
-                <div v-if="isEncadrantComp" style="margin-bottom:10px;">
-                    <label class="block font-medium">Souhaitez-vous encadrer? <span style="color:red">*</span></label>
-                    <select v-model="participants[0].wantsEncadrant" class="w-full border p-1 rounded" required>
-                        <option disabled value="">-- Choisir --</option>
-                        <option :value="1">Je viens encadrer</option>
-                        <option :value="0">Je ne viens pas encadrer</option>
-                    </select>
-                </div>
-                <div class="flex flex-col gap-1" v-if="!isAdherent">
-                    <label class="block font-medium">Quelle est votre expérience? <span style="color:red">*</span></label>
-                    <textarea v-model="participants[0].experience" class="w-full border p-1 rounded" rows="3" required></textarea>
-                </div>
-                <div v-for="field in getSpecialFields" :key="field" class="flex flex-col gap-1">
-                    <label class="block font-medium">{{ field.nom }}
-                        <span v-if="!!mustResponseSpecialField.find(f => f.nom === field.nom)" style="color:red">*</span></label>
-                    <textarea
-                        v-model="participants[currentStep].specialField[field.nom]"
-                        class="w-full border p-1 rounded" rows="2"
-                        :required="!!mustResponseSpecialField.find(f => f.nom === field.nom)"
-                    ></textarea>
-                </div>
-                <div v-if="isCashAllowed" class="flex flex-col gap-1">
-                    <label class="block font-medium">Souhaitez-vous payer en espèces ? <span style="color:red">*</span></label>
-                    <input type="checkbox" v-model="participants[currentStep].wantsCash"/>
-                </div>
+                <InscriptionFormulaireComponent
+                    :key="'step-' + currentStep"
+                    v-model:currentParticipant="participants[currentStep]"
+                    :eventCategorie="event.categorie"
+                />
             </template>
 
             <!-- ───── ÉTAPES 1+ : participants supplémentaires ───── -->
@@ -126,63 +96,21 @@
 
                     <!-- Expérience + champs spéciaux après compte trouvé -->
                     <template v-if="participants[currentStep].searchResult === 'found'">
-                        <div class="flex flex-col gap-1" v-if="!isAdherentParticipant(currentStep)">
-                            <label class="block font-medium">Expérience<span style="color:red">*</span></label>
-                            <textarea v-model="participants[currentStep].experience" class="w-full border p-1 rounded" rows="3"></textarea>
-                        </div>
-                        <div v-for="field in getSpecialFields" :key="field" class="flex flex-col gap-1">
-                            <label class="block font-medium">{{ field.nom }}
-                                 <span v-if="!!mustResponseSpecialField.find(f => f.nom === field.nom)" style="color:red">*</span></label>
-                            <textarea
-                                v-model="participants[currentStep].specialField[field.nom]"
-                                class="w-full border p-1 rounded" rows="2"
-                                :required="!!mustResponseSpecialField.find(f => f.nom === field.nom)"
-                            ></textarea>
-                        </div>
-                        <div v-if="isCashAllowed" class="flex flex-col gap-1">
-                            <label class="block font-medium">Souhaitez-vous payer en espèces ? <span style="color:red">*</span></label>
-                            <input type="checkbox" v-model="participants[currentStep].wantsCash"/>
-                        </div>
+                        <InscriptionFormulaireComponent
+                            v-model:currentParticipant="participants[currentStep]"
+                            :eventCategorie="event.categorie"
+                            :key="'step-' + currentStep"
+                        />
                     </template>
                 </template>
 
                 <!-- 2b. NON → formulaire classique -->
                 <template v-if="participants[currentStep].hasAccount === false">
-                    <div class="flex flex-col gap-1">
-                        <label class="block font-medium">Prénom<span style="color:red">*</span></label>
-                        <input v-model="participants[currentStep].firstName" type="text" class="w-full border p-1 rounded" />
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <label class="block font-medium">Nom<span style="color:red">*</span></label>
-                        <input v-model="participants[currentStep].lastName" type="text" class="w-full border p-1 rounded" />
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <label class="block font-medium">E-mail <span style="color:red">*</span></label>
-                        <input v-model="participants[currentStep].email" type="email" class="w-full border p-1 rounded" />
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <label class="block font-medium">Téléphone <span style="color:red">*</span></label>
-                        <input v-model="participants[currentStep].phone" type="tel" class="w-full border p-1 rounded" pattern="[0-9]{10}" />
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <label class="block font-medium">Expérience<span style="color:red">*</span></label>
-                        <textarea v-model="participants[currentStep].experience" class="w-full border p-1 rounded" rows="3"></textarea>
-                    </div>
-                    <div v-for="field in getSpecialFields" :key="field" class="flex flex-col gap-1">
-                        <label class="block font-medium">
-                            {{ field.nom }} 
-                            <span v-if="!!mustResponseSpecialField.find(f => f.nom === field.nom)" style="color:red">*</span>
-                        </label>
-                        <textarea
-                            v-model="participants[currentStep].specialField[field.nom]"
-                            class="w-full border p-1 rounded" rows="2"
-                            :required="!!mustResponseSpecialField.find(f => f.nom === field.nom)"
-                        ></textarea>
-                    </div>
-                    <div v-if="isCashAllowed" class="flex flex-col gap-1">
-                        <label class="block font-medium">Souhaitez-vous payer en espèces ? <span style="color:red">*</span></label>
-                        <input type="checkbox" v-model="participants[currentStep].wantsCash"/>
-                    </div>
+                    <InscriptionFormulaireComponent
+                        v-model:currentParticipant="participants[currentStep]"
+                        :eventCategorie="event.categorie"
+                        :key="'step-' + currentStep"
+                    />
                 </template>
 
             </template>
@@ -194,39 +122,12 @@
             <!-- Bouton Étape suivante / Terminer -->
             <div style="display:flex; gap:8px; justify-content:center;">
                 <button
-                    v-if="currentStep > 0"
-                    type="button"
-                    class="button-base button-secondary"
-                    @click="currentStep--"
-                >
-                    ← Retour
-                </button>
-
-                <button
-                    v-if="!isLastStep"
                     type="button"
                     class="button-base"
-                    :disabled="!isCurrentStepValid"
-                    @click="nextStep"
-                >
-                    Suivant →
-                </button>
-
-                <button
-                    v-if="isLastStep"
-                    type="button"
-                    class="button-base"
-                    :disabled="!isCurrentStepValid || isSubmitting"
+                    :disabled="!isAllStepValid || isSubmitting"
                     @click="handleSubmit"
                 >
                     {{ isSubmitting ? 'Inscription...' : 'Confirmer l\'inscription' }}
-                </button>
-            </div>
-
-            <!-- Ajouter un participant -->
-            <div style="text-align:center;" v-if="isLastStep && participants.length < maxParticipants">
-                <button type="button" class="button-add" @click="addParticipant">
-                    + Ajouter un participant
                 </button>
             </div>
         </div>
@@ -236,6 +137,7 @@
 <script>
 import inscritAPI from "@/javascript/api/axios_inscription"
 import { isEncadrant, isNonAdherent } from "@/javascript/constants/roles"
+import InscriptionFormulaireComponent from "@/subcomponents/inscription_formulaire/event_inscription_formulaire.vue"
 import { computed } from 'vue'
 
 function emptyParticipant() {
@@ -296,10 +198,12 @@ export default {
         getSpecialFields: {
             immediate: true,
             handler(champs) {
-                champs.forEach(champ => {
-                    if (!(champ.nom in this.participants[0].specialField)) {
-                        this.participants[0].specialField[champ.nom] = ''
-                    }
+                this.participants.forEach(participant => {
+                    champs.forEach(champ => {
+                        if (!(champ.nom in participant.specialField)) {
+                            participant.specialField[champ.nom] = ''
+                        }
+                    })
                 })
             }
         },
@@ -330,9 +234,11 @@ export default {
             const specialFields = this.getSpecialFields
             const listSpecialFields = specialFields.filter(field => {
                 return (
-                    (isAdherent && Boolean(+field.obligatoire_adherent)) 
+                    (isAdherent && field.mandatory_response === "only_adherent" ) 
                     ||
-                    (!isAdherent && Boolean(+field.obligatoire_non_adherent))
+                    (!isAdherent && field.mandatory_response === "only_non_adherent")
+                    ||
+                    (field.mandatory_response === "everybody")
                 )
             })
             return listSpecialFields
@@ -354,35 +260,48 @@ export default {
         isAdherent() {
             return this.user?.roles ? !this.user.roles.includes("non_adherent") : false
         },
+        
+        isAllStepValid() {
+            let isAllParticipantsValid = true
+            this.participants.forEach((participant, index) => {
+                const p = participant
 
-        isCurrentStepValid() {
-            const p = this.participants[this.currentStep]
+                const specialFieldsValid = this.mustResponseSpecialField.every(field => {
+                    const value = p.specialField?.[field.nom]
+                    const isValid = value !== undefined && value !== null && String(value).trim() !== ''
+                    return isValid
+                })
 
-            const specialFieldsValid = this.mustResponseSpecialField.every(field => {
-                const value = p.specialField?.[field.nom]
-                return value !== undefined && value !== null && String(value).trim() !== ''
+                if (this.currentStep === 0) {
+                    const base = p.firstName && p.lastName && p.email && p.phone
+                    const encadrant = !this.isEncadrantComp || p.wantsEncadrant !== null
+                    isAllParticipantsValid = isAllParticipantsValid && base && encadrant && specialFieldsValid
+                    return
+                }
+
+                if (p.hasAccount === null) isAllParticipantsValid = false
+                if (p.hasAccount === true) {
+                    if (p.searchResult !== 'found') isAllParticipantsValid = false
+                    const exp = this.isAdherentParticipant(index) ? true : !!p.experience
+                    isAllParticipantsValid = isAllParticipantsValid && exp && specialFieldsValid
+                    return
+                }
+
+                isAllParticipantsValid = isAllParticipantsValid && (!!(p.firstName && p.lastName && p.email && p.phone && p.experience) && specialFieldsValid)
             })
-
-            if (this.currentStep === 0) {
-                const base = p.firstName && p.lastName && p.email && p.phone
-                const encadrant = !this.isEncadrantComp || p.wantsEncadrant !== null
-                return base && encadrant && specialFieldsValid
-            }
-
-            if (p.hasAccount === null) return false
-            if (p.hasAccount === true) {
-                if (p.searchResult !== 'found') return false
-                const exp = this.isAdherentParticipant(this.currentStep) ? true : !!p.experience
-                return exp && specialFieldsValid
-            }
-
-            return !!(p.firstName && p.lastName && p.email && p.phone && p.experience) && specialFieldsValid
+            return isAllParticipantsValid
         }
     },
 
     methods: {
         addParticipant() {
-            this.participants.push(emptyParticipant())
+            const newParticipant = emptyParticipant()
+            this.getSpecialFields.forEach(champ => {
+                if (!(champ.nom in newParticipant.specialField)) {
+                    newParticipant.specialField[champ.nom] = ''
+                }
+            })
+            this.participants.push(newParticipant)
             this.currentStep = this.participants.length - 1
         },
 
@@ -401,7 +320,9 @@ export default {
             this.participants[index].email = ""
             this.participants[index].phone = ""
             this.participants[index].experience = ""
-            this.participants[index].specialField = {}
+            this.getSpecialFields.forEach(champ => {
+                this.participants[index].specialField[champ.nom] = ''
+            })
             this.participants[index].wantsCash = false
         },
 
@@ -535,7 +456,12 @@ export default {
                 this.isSubmitting = false
             }
         }
-    }
+    },
+
+    components: {
+        InscriptionFormulaireComponent
+    },
+
 }
 </script>
 
@@ -558,7 +484,7 @@ export default {
     font-weight: 600;
     border: 2px solid #ccc;
     color: #aaa;
-    cursor: default;
+    cursor: pointer;
     transition: all 0.2s;
 }
 
