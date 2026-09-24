@@ -254,6 +254,10 @@ function mps_tools_sanitize_template_manager_callback($value, $columns) {
                 case 'textarea':
                     $val = sanitize_textarea_field($raw);
                     break;
+                case 'file':
+                    $attachment_id = absint($raw);
+                    $val = ($attachment_id && get_post($attachment_id)) ? $attachment_id : 0;
+                    break;
                 default:
                     $val = sanitize_text_field($raw);
             }
@@ -267,6 +271,52 @@ function mps_tools_sanitize_template_manager_callback($value, $columns) {
     }
 
     return array_values($clean);
+}
+
+
+//--------------------------------------------------------------------------------------------------
+
+function mps_tools_sanitize_radio($field, $key) {
+    $args['sanitize_callback'] = function($value) use ($field) {
+        $allowed = array_keys($field['options'] ?? []);
+        return in_array($value, $allowed, true) ? $value : ($field['default'] ?? '');
+    };
+    return $args;
+}
+
+//--------------------------------------------------------------------------------------------------
+
+function mps_tools_sanitize_checkbox_group($field, $key) {
+    $args['sanitize_callback'] = function($value) use ($field) {
+        if (!is_array($value)) return [];
+        $allowed = array_keys($field['options'] ?? []);
+        $clean = array_values(array_intersect($value, $allowed));
+        return $clean;
+    };
+    return $args;
+}
+
+//--------------------------------------------------------------------------------------------------
+
+function mps_tools_sanitize_file($field, $key) {
+    $args['sanitize_callback'] = function($value) {
+        $attachment_id = absint($value);
+        // Vérifie que l'attachment existe réellement, pour éviter d'enregistrer un ID invalide
+        if ($attachment_id && !get_post($attachment_id)) {
+            return 0;
+        }
+        return $attachment_id;
+    };
+    return $args;
+}
+
+//--------------------------------------------------------------------------------------------------
+
+function mps_tools_sanitize_url($field, $key) {
+    $args['sanitize_callback'] = function($value) use ($field) {
+        return sanitize_url($value) ?: ($field['default'] ?? '');
+    };
+    return $args;
 }
 
 //--------------------------------------------------------------------------------------------------

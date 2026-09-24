@@ -147,11 +147,86 @@
     }
 
     /* ============================================
+    FILE PICKER (médiathèque WordPress)
+    ============================================ */
+
+    /* ============================================
+   FILE PICKER (générique — fonctionne partout : champ simple, repeater, sous-repeater)
+   ============================================ */
+
+    function initFilePickers() {
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('mps-tools-file-select')) {
+                e.preventDefault();
+
+                const scope = e.target.closest('td') || e.target.closest('.mps-tools-category-field');
+                const hiddenInput = scope.querySelector('.mps-tools-file-attachment-id');
+                const preview = scope.querySelector('.mps-tools-file-preview');
+                const accept = e.target.dataset.accept;
+
+                const frame = wp.media({
+                    title: 'Choisir un fichier',
+                    button: { text: 'Utiliser ce fichier' },
+                    library: accept ? { type: accept } : {},
+                    multiple: false,
+                });
+
+                frame.on('select', function() {
+                    const attachment = frame.state().get('selection').first().toJSON();
+                    hiddenInput.value = attachment.id;
+                    preview.innerHTML = '<a href="' + attachment.url + '" target="_blank" class="mps-tools-file-preview-link">📄 ' + attachment.filename + '</a>';
+                });
+
+                frame.open();
+            }
+
+            if (e.target.classList.contains('mps-tools-file-remove')) {
+                e.preventDefault();
+
+                const scope = e.target.closest('td') || e.target.closest('.mps-tools-category-field');
+                const hiddenInput = scope.querySelector('.mps-tools-file-attachment-id');
+                const preview = scope.querySelector('.mps-tools-file-preview');
+
+                hiddenInput.value = '';
+                preview.innerHTML = '<span class="mps-tools-file-preview-empty">Aucun fichier</span>';
+            }
+        });
+    }
+
+    /* ============================================
+    TOGGLE PDF / URL (radio règlement)
+    ============================================ */
+
+    function toggleReglementSourceFields() {
+        const radios = document.querySelectorAll('.mps-tools-radio-source-type');
+        if (radios.length === 0) return;
+
+        function updateVisibility() {
+            const checked = document.querySelector('.mps-tools-radio-source-type:checked');
+            const value = checked ? checked.value : 'pdf';
+
+            const pdfRow = document.getElementById('mps_tools_reglement_pdf')?.closest('tr');
+            const urlRow = document.getElementById('mps_tools_reglement_url')?.closest('tr');
+
+            if (pdfRow) pdfRow.style.display = (value === 'pdf') ? '' : 'none';
+            if (urlRow) urlRow.style.display = (value === 'url') ? '' : 'none';
+        }
+
+        radios.forEach(function(radio) {
+            radio.addEventListener('change', updateVisibility);
+        });
+
+        updateVisibility(); // état initial au chargement
+    }
+
+    /* ============================================
        INITIALISATION
        ============================================ */
 
     document.addEventListener('DOMContentLoaded', function() {
         initTemplateManagers();
+        initFilePickers();
+        toggleReglementSourceFields();
     });
 
     document.addEventListener('click', function(e) {

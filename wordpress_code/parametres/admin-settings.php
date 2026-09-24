@@ -29,6 +29,7 @@ function mps_tools_get_settings_fields() {
         'kdrive',
         'helloasso',
         'mailing',
+        // 'reglement',
         'documentation'
     ];
     $tabs = [];
@@ -102,13 +103,14 @@ add_action('admin_enqueue_scripts', function($hook) {
         return;
     }
 
+    wp_enqueue_media();
+
     wp_enqueue_style(
         'mps-tools-admin-settings',
         MPS_TOOLS_PLUGIN_ASSETS_URL . 'css/admin-settings.css',
         [],
         '1.0.1'
     );
-
 
     wp_enqueue_script(
         'mps-tools-admin-settings',
@@ -117,6 +119,7 @@ add_action('admin_enqueue_scripts', function($hook) {
         '1.0.1',
         true
     );
+
 });
 
 

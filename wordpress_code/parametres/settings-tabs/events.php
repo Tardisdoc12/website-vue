@@ -26,6 +26,17 @@ return [
                 'affichage_non_adherent' => ['label' => 'Affichage des réponses des non-adhérents', 'type' => 'checkbox'],
                 'obligatoire_adherent'     => ['label' => 'Obligatoire pour les adhérents', 'type' => 'checkbox'],
                 'obligatoire_non_adherent' => ['label' => 'Obligatoire pour les non-adhérents', 'type' => 'checkbox'],
+                'choix d\'un document' => ['label' => 'Choix d\'un document', 'type' => 'file'],
+                'choix du type de champ' => [
+                    'label' => 'Choix du type de champ',
+                    'type' => 'select',
+                    'options' => [
+                        'texte' => 'Texte',
+                        'nombre' => 'Nombre',
+                        'date' => 'Date',
+                        'checkbox' => 'Case à cocher'
+                    ]
+                ],
             ],
         ],
     ],

@@ -1,0 +1,11 @@
+.mps-tools-file-preview {
+    display: inline-block;
+    margin-right: 8px;
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+.mps-tools-file-preview-empty {
+    color: #777;
+    vertical-align: middle;
+}

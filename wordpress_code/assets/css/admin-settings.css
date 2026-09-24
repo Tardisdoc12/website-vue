@@ -1,5 +1,6 @@
 @import "class/repeater.css";
 @import "class/categorie.css";
+@import "class/file_selector.css";
 
 .mps-tools-global {
 }
@@ -10,3 +11,4 @@
     border: none;
     cursor: pointer;
 }
+

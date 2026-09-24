@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MPS Tools
  * Description: Plugin wordpress permettant de gérer divers outils et fonctionnalités pour association.
- * Version: 1.5.2
+ * Version: 1.5.6
  * Author: Jean
  */
 

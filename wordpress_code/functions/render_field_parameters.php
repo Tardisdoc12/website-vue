@@ -379,6 +379,40 @@ function mps_tools_render_special_field_row($key, $cat_index, $sub_columns, $sub
                 <?php if ($input_type === 'checkbox'): ?>
                     <input type="hidden" name="<?php echo $name; ?>" value="0" />
                     <input type="checkbox" name="<?php echo $name; ?>" value="1" <?php checked(!empty($row[$col_key])); ?> />
+                <?php elseif ($input_type === 'file'): ?>
+                    <?php
+                        $attachment_id = absint($raw_value);
+                        $file_url  = $attachment_id ? wp_get_attachment_url($attachment_id) : '';
+                        $file_name = $attachment_id ? basename(get_attached_file($attachment_id)) : '';
+                    ?>
+                    <input type="hidden"
+                        name="<?php echo $name; ?>"
+                        value="<?php echo esc_attr($attachment_id); ?>"
+                        class="mps-tools-file-attachment-id" />
+
+                    <div class="mps-tools-file-preview">
+                        <?php if ($file_url): ?>
+                            <a href="<?php echo esc_url($file_url); ?>" target="_blank" class="mps-tools-file-preview-link">
+                                📄 <?php echo esc_html($file_name); ?>
+                            </a>
+                        <?php else: ?>
+                            <span class="mps-tools-file-preview-empty">Aucun fichier</span>
+                        <?php endif; ?>
+                    </div>
+
+                    <button type="button" class="button button-small mps-tools-file-select"
+                            data-accept="<?php echo esc_attr($col['accept'] ?? ''); ?>">
+                        Choisir
+                    </button>
+                    <button type="button" class="button-link mps-tools-file-remove" style="vertical-align: middle;">✕</button>
+                <?php elseif ($input_type === 'select'): ?>
+                    <select name="<?php echo $name; ?>" class="regular-text">
+                        <?php foreach ($col['options'] as $opt_value => $opt_label): ?>
+                            <option value="<?php echo esc_attr($opt_value); ?>" <?php selected($raw_value, $opt_value); ?>>
+                                <?php echo esc_html($opt_label); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 <?php else: ?>
                     <input type="text" name="<?php echo $name; ?>" value="<?php echo esc_attr($raw_value); ?>" class="regular-text" />
                 <?php endif; ?>
@@ -390,6 +424,7 @@ function mps_tools_render_special_field_row($key, $cat_index, $sub_columns, $sub
     </tr>
     <?php
 }
+
 //--------------------------------------------------------------------------------------------------
 
 function mps_tools_render_template_manager($key, $field) {
@@ -456,6 +491,104 @@ function mps_tools_render_template_manager_block($key, $columns, $index, $row) {
     </div>
     <?php
 }
+
+//--------------------------------------------------------------------------------------------------
+
+function mps_tools_render_radio($key, $field) {
+    $value = get_option($key, $field['default'] ?? '');
+    ?>
+    <tr>
+        <th><label><?php echo esc_html($field['label']); ?></label></th>
+        <td>
+            <?php foreach ($field['options'] as $opt_value => $opt_label): ?>
+                <label style="margin-right: 20px; display: inline-flex; align-items: center; gap: 6px;">
+                    <input type="radio"
+                           name="<?php echo esc_attr($key); ?>"
+                           value="<?php echo esc_attr($opt_value); ?>"
+                           class="mps-tools-radio-source-type"
+                           data-group="<?php echo esc_attr($key); ?>"
+                           <?php checked($value, $opt_value); ?> />
+                    <?php echo esc_html($opt_label); ?>
+                </label>
+            <?php endforeach; ?>
+            <?php if (!empty($field['description'])): ?>
+                <p class="description"><?php echo esc_html($field['description']); ?></p>
+            <?php endif; ?>
+        </td>
+    </tr>
+    <?php
+}
+
+//--------------------------------------------------------------------------------------------------
+
+function mps_tools_render_checkbox_group($key, $field) {
+    $values = get_option($key, []);
+    if (!is_array($values)) $values = [];
+    ?>
+    <tr>
+        <th><label><?php echo esc_html($field['label']); ?></label></th>
+        <td>
+            <?php foreach ($field['options'] as $opt_value => $opt_label): ?>
+                <label style="display: block; margin-bottom: 8px;">
+                    <input type="checkbox"
+                           name="<?php echo esc_attr($key); ?>[]"
+                           value="<?php echo esc_attr($opt_value); ?>"
+                           <?php checked(in_array($opt_value, $values)); ?> />
+                    <?php echo esc_html($opt_label); ?>
+                </label>
+            <?php endforeach; ?>
+            <?php if (!empty($field['description'])): ?>
+                <p class="description"><?php echo esc_html($field['description']); ?></p>
+            <?php endif; ?>
+        </td>
+    </tr>
+    <?php
+}
+
+//--------------------------------------------------------------------------------------------------
+
+function mps_tools_render_file($key, $field) {
+    $attachment_id = absint(get_option($key, 0));
+    $file_url = $attachment_id ? wp_get_attachment_url($attachment_id) : '';
+    $file_name = $attachment_id ? basename(get_attached_file($attachment_id)) : '';
+    ?>
+    <tr>
+        <th><label><?php echo esc_html($field['label']); ?></label></th>
+        <td>
+            <input type="hidden"
+                   id="<?php echo esc_attr($key); ?>"
+                   name="<?php echo esc_attr($key); ?>"
+                   value="<?php echo esc_attr($attachment_id); ?>"
+                   class="mps-tools-file-attachment-id" />
+
+            <div class="mps-tools-file-preview" style="margin-bottom:8px;">
+                <?php if ($file_url): ?>
+                    <a href="<?php echo esc_url($file_url); ?>" target="_blank" class="mps-tools-file-preview-link">
+                        📄 <?php echo esc_html($file_name); ?>
+                    </a>
+                <?php else: ?>
+                    <span class="mps-tools-file-preview-empty" style="color:#777;">Aucun fichier sélectionné</span>
+                <?php endif; ?>
+            </div>
+
+            <button type="button"
+                    class="button mps-tools-file-select"
+                    data-target="<?php echo esc_attr($key); ?>"
+                    data-accept="<?php echo esc_attr($field['accept'] ?? ''); ?>">
+                Choisir un fichier
+            </button>
+            <button type="button" class="button-link mps-tools-file-remove" data-target="<?php echo esc_attr($key); ?>" style="margin-left:12px; color:#b32d2e;">
+                ✕ Retirer
+            </button>
+
+            <?php if (!empty($field['description'])): ?>
+                <p class="description"><?php echo esc_html($field['description']); ?></p>
+            <?php endif; ?>
+        </td>
+    </tr>
+    <?php
+}
+
 
 //--------------------------------------------------------------------------------------------------
 // End of file
