@@ -14,9 +14,9 @@
             </div>
             <div
                 class="step-dot"
+                v-if="!isFullStep"
                 :class="{done: true}"
                 @click="addParticipant"
-                :disabled="isFullStep"
             >+</div>
         </div>
 
