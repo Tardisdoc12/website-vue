@@ -1,10 +1,10 @@
 <template>
     <Modal
         :title="titleName"
-        :width="'60%'"
+        :width="isModalMobile"
         @changeBool="HandleCancel"
     >
-        <EventCreationPipeline 
+        <EventCreationPipeline
             :eventSelected="eventSelected" 
             :placesEvent="placesEvent" 
             @validate="HandleValidate"
@@ -40,13 +40,35 @@ export default {
         },
     },
 
+    mounted(){
+        this.mediaQuery = window.matchMedia("(max-width: 768px)")
+        this.isMobile = this.mediaQuery.matches
+        this.mediaQuery.addEventListener("change", this.onChange)
+    },
+
+    beforeUnmount() {
+        this.mediaQuery.removeEventListener("change", this.onChange)
+    },
+
+
     data() {
         return {
             titleName: "Création d'évènement",
+            isMobile: false,
+            mediaQuery: null,
+        }
+    },
+
+    computed: {
+        isModalMobile() {
+            return this.isMobile ? '100%' : '60%'
         }
     },
 
     methods: {
+        onChange(event) {
+            this.isMobile = event.matches
+        },
         HandleCancel(){
             this.$emit('cancelSignal', !this.isOpen)
         },

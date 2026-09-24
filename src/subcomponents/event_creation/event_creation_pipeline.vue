@@ -11,7 +11,7 @@
                 @click="goToStep(index)"
             >
                 <span class="step-tab-index">{{ index + 1 }}</span>
-                {{ tab }}
+                <span class="step-tab-text" >{{ tab }}</span>
             </button>
         </div>
 
@@ -335,6 +335,9 @@ export default {
     display: flex;
     align-items: center;
     gap: 6px;
+
+    min-width: 0;   /* Permet au bouton de descendre en dessous de la taille de son texte */
+    flex: 1 1 0%;
 }
 
 .step-tab:hover {
@@ -358,6 +361,16 @@ export default {
     color: #666;
     font-size: 0.75rem;
     font-weight: 600;
+    flex-shrink: 0;
+}
+
+
+/* Le texte de l'onglet */
+.step-tab-text {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    min-width: 0; /* Force le calcul du texte pour l'ellipse */
 }
 
 .step-tab.active .step-tab-index {

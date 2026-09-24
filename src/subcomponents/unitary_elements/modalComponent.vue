@@ -116,6 +116,6 @@ export default {
     align-items: center;        /* ✅ centrage vertical */
     justify-content: center;      /* plus de flex centering */
     overflow-y: auto;     /* scroll sur toute la page si besoin */
-    padding: 2rem;        /* espace autour de la fenêtre */
+    /* padding: 2rem;        espace autour de la fenêtre */
 }
 </style>
