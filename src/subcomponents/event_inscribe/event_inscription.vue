@@ -16,7 +16,7 @@
                 class="step-dot"
                 :class="{done: true}"
                 @click="addParticipant"
-                :disabled="participants.length >= 3"
+                :disabled="isFullStep"
             >+</div>
         </div>
 
@@ -79,8 +79,14 @@
                                 placeholder="ex: jean@mail.com ou 0612345678"
                                 @input="participants[currentStep].searchResult = null"
                             />
-                            <button type="button" class="button-base" style="white-space:nowrap;" @click="searchParticipant(currentStep)">
-                                Rechercher
+                            <button
+                                type="button"
+                                class="button-base"
+                                style="white-space:nowrap;"
+                                @click="searchParticipant(currentStep)" 
+                                :disabled="isSearching"
+                            >
+                                {{ isSearching ? 'Recherche en cours...' : 'Rechercher' }}
                             </button>
                         </div>
                     </div>
@@ -174,6 +180,7 @@ export default {
 
     data() {
         return {
+            isSearching: false,
             isCashAllowed: Boolean(Number(MPS_TOOLS_SETTINGS.isCashAllowed)),
             currentStep: this.participantProblem ? this.participantProblem.length - 1 : 0,
             maxParticipants: 3,
@@ -229,6 +236,9 @@ export default {
     },
 
     computed: {
+        isFullStep() {
+            return this.participants.length >= 3
+        },
         mustResponseSpecialField() {
             const isAdherent = !isNonAdherent(this.participants[this.currentStep]?.roles ?? ["non_adherent"])
             const specialFields = this.getSpecialFields
@@ -338,6 +348,7 @@ export default {
         async searchParticipant(index) {
             const query = this.participants[index].searchQuery?.trim()
             if (!query) return
+            this.isSearching = true
             try {
                 // Remplace par ton API réelle
                 const res = await inscritAPI.find_user(query)
@@ -358,6 +369,8 @@ export default {
                 }
             } catch {
                 this.participants[index].searchResult = 'not_found'
+            } finally {
+                this.isSearching = false
             }
         },
 
