@@ -406,7 +406,7 @@ function mps_tools_render_special_field_row($key, $cat_index, $sub_columns, $sub
                     </button>
                     <button type="button" class="button-link mps-tools-file-remove" style="vertical-align: middle;">✕</button>
                 <?php elseif ($input_type === 'select'): ?>
-                    <select name="<?php echo $name; ?>" class="regular-text">
+                    <select name="<?php echo $name; ?>" class="mps-tools-select-inline">
                         <?php foreach ($col['options'] as $opt_value => $opt_label): ?>
                             <option value="<?php echo esc_attr($opt_value); ?>" <?php selected($raw_value, $opt_value); ?>>
                                 <?php echo esc_html($opt_label); ?>

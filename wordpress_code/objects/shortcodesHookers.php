@@ -156,8 +156,20 @@ class ShortcodesHookers {
             $isMailingConfigured = 1;
         }
 
+        $categories = get_option('mps_tools_categories', []);
+        foreach ($categories as $key => $category) {
+            $special_rows = $category['champs_speciaux'] ?? [];
+
+            foreach ($special_rows as $sub_index => $sub_row) {
+                $file_id = $sub_row['document_choice'] ?? '';
+                if (empty($file_id)) continue;
+
+                $categories[$key]['champs_speciaux'][$sub_index]['document_choice'] = wp_get_attachment_url($file_id);
+            }
+        }
+
         wp_localize_script($name_modules, 'MPS_TOOLS_SETTINGS', [
-            'categories'         => get_option('mps_tools_categories', []),
+            'categories'         => $categories,
             'isKdriveConfigured' => $isKDriveConfigured,
             'isHelloAssoConfigured' => $isHelloAssoConfigured,
             'isCashAllowed' => $isCashAllowed,

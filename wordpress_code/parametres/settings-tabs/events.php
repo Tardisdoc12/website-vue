@@ -21,13 +21,38 @@ return [
             ],
             'sub_columns' => [
                 'nom'             => ['label' => 'Nom', 'type' => 'text'],
-                'affichage_liste' => ['label' => 'Affichage du champ dans la liste des inscrits', 'type' => 'checkbox'],
-                'affichage_adherent' => ['label' => 'Affichage des réponses des adhérents', 'type' => 'checkbox'],
-                'affichage_non_adherent' => ['label' => 'Affichage des réponses des non-adhérents', 'type' => 'checkbox'],
-                'obligatoire_adherent'     => ['label' => 'Obligatoire pour les adhérents', 'type' => 'checkbox'],
-                'obligatoire_non_adherent' => ['label' => 'Obligatoire pour les non-adhérents', 'type' => 'checkbox'],
-                'choix d\'un document' => ['label' => 'Choix d\'un document', 'type' => 'file'],
-                'choix du type de champ' => [
+                'affichage_list_inscrit' => [
+                    'label' => 'Décider des Affichages dans la liste des inscrits',
+                    'type' => 'select',
+                    'options' => [
+                        'all_inscrits' => 'Tous les inscrits',
+                        'only_adherents' => 'Seulement les adhérents',
+                        'only_non_adherents' => 'Seulement les non-adhérents',
+                        'nobody' => 'Personne'
+                    ], 
+                ],
+                'mandatory_response' => [
+                    'label' => 'Réponse obligatoire',
+                    'type' => 'select',
+                    'options' => [
+                        'everybody' => 'Tout le monde',
+                        'only_adherents' => 'Seulement les adhérents',
+                        'only_non_adherents' => 'Seulement les non-adhérents',
+                        'nobody' => 'Personne'
+                    ],
+                ],
+                'affichage_formulaire' => [
+                    'label' => 'Décider des Affichages dans le formulaire',
+                    'type' => 'select',
+                    'options' => [
+                        'all_inscrits' => 'Tous les inscrits',
+                        'only_adherents' => 'Seulement les adhérents',
+                        'only_non_adherents' => 'Seulement les non-adhérents',
+                        'nobody' => 'Personne'
+                    ], 
+                ],
+                'document_choice' => ['label' => 'Choix d\'un document', 'type' => 'file'],
+                'type_field' => [
                     'label' => 'Choix du type de champ',
                     'type' => 'select',
                     'options' => [
