@@ -77,7 +77,7 @@
                         :key="field.nom"
                         class="border border-gray-300 p-2 text-center"
                     >
-                        {{ user.specialField?.[field.nom] ? user.specialField?.[field.nom] : 'non renseigné' }}
+                        {{ afficherInformations(field, user) ? user.specialField?.[field.nom] : 'non renseigné' }}
                     </td>
                     <td class="border border-gray-300 p-2 text-center">
                         <button
@@ -159,7 +159,7 @@ export default {
     data() {
         
         const categorie = this.$settings.categories.find(category => category.nom === this.eventCategorie)
-        const fields_to_show = categorie?.champs_speciaux.filter(field => field.affichage_liste) || []
+        const fields_to_show = categorie?.champs_speciaux.filter(field => field.affichage_list_inscrit !== 'nobody') || []
         return {
             fields_csv: ["Nom", "Email", "Téléphone", "Experience"].concat(fields_to_show),
             isPhoneCopied: false,
@@ -180,6 +180,7 @@ export default {
                 specialField: user.specialField,
                 encadrant: user.encadrement === "1" ? "Oui" : "Non",
                 status: user.status,
+                is_adherent: user.is_adherent === "1",
                 payement_status: user.payement_status,
                 wp_user_id: user.wp_user_id
             }))
@@ -187,6 +188,20 @@ export default {
     },
 
     methods: {
+        afficherInformations(field,user) {
+            console.log(field, user)
+            const isAdherent = user.is_adherent;
+            const valueSpecialFieldsToShow = ((field.affichage_list_inscrit === 'only_adherents' && isAdherent)
+                ||
+                (field.affichage_list_inscrit === 'only_non_adherents' && !isAdherent)
+                ||
+                (field.affichage_list_inscrit === 'everybody')
+            )
+            console.log(valueSpecialFieldsToShow)
+            console.log(isAdherent)
+            return valueSpecialFieldsToShow
+        },
+
         async UpdateUser(user) {
             const response = await api.change_status_inscrit(this.event_id, user.id)
             if(response.data.success) {
@@ -237,16 +252,18 @@ export default {
                 const isAdherent = obj.is_adherent === "1";
                 const valueSpecialFieldsToShow = Object.entries(obj.specialField)
                     .filter(([key]) => 
-                    (this.fields_to_show.find(f => f.nom === key)?.affichage_adherent && isAdherent)
+                    (this.fields_to_show.find(f => f.nom === key)?.affichage_list_inscrit === 'only_adherent' && isAdherent)
                     ||
-                    (this.fields_to_show.find(f => f.nom === key)?.affichage_non_adherent && !isAdherent)
+                    (this.fields_to_show.find(f => f.nom === key)?.affichage_list_inscrit === 'only_non_adherent' && !isAdherent)
+                    ||
+                    (this.fields_to_show.find(f => f.nom === key)?.affichage_list_inscrit === 'everybody')
                 )
                 
                 const valueSpecialFieldToHide= Object.entries(obj.specialField)
                     .filter(([key]) => 
-                    !(this.fields_to_show.find(f => f.nom === key)?.affichage_adherent && isAdherent)
+                    !(this.fields_to_show.find(f => f.nom === key)?.affichage_list_inscrit === 'only_adherent' && isAdherent)
                     &&
-                    !(this.fields_to_show.find(f => f.nom === key)?.affichage_non_adherent && !isAdherent)
+                    !(this.fields_to_show.find(f => f.nom === key)?.affichage_list_inscrit === 'only_non_adherent' && !isAdherent)
                 )
 
                 let SpecialFieldsOrdered = [];

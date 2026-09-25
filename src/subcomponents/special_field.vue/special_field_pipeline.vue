@@ -71,16 +71,17 @@ export default {
 
     data() {
         let specificitySpecialFieldsToDraw = {}
+        const participantIsAdherentValue = isAdherent(this.roles);
         Object.entries(this.specialsFieldsSpecificity).forEach(
             ([key, value]) => {
                 specificitySpecialFieldsToDraw[value.nom] = {};
                 if (value.affichage_formulaire === 'nobody') {
                     return
                 }
-                else if (value.affichage_formulaire === 'only_adherent' && this.participantIsAdherent) {
+                else if (value.affichage_formulaire === 'only_adherents' && participantIsAdherentValue) {
                     specificitySpecialFieldsToDraw[value.nom].isDrawable = true;
                 }
-                else if(value.affichage_formulaire === 'only_non_adherent' && !this.participantIsAdherent) {
+                else if(value.affichage_formulaire === 'only_non_adherents' && !participantIsAdherentValue) {
                     specificitySpecialFieldsToDraw[value.nom].isDrawable = true;
                 }
                 else {
@@ -90,13 +91,12 @@ export default {
                 if (value.mandatory_response === "everybody") {
                     specificitySpecialFieldsToDraw[value.nom].isMandatory = true;
                 }
-                else if (value.mandatory_response === "only_adherent" && this.participantIsAdherent) {
+                else if (value.mandatory_response === "only_adherents" && participantIsAdherentValue) {
                     specificitySpecialFieldsToDraw[value.nom].isMandatory = true;
                 }
-                else if (value.mandatory_response === "only_non_adherent" && !this.participantIsAdherent) {
+                else if (value.mandatory_response === "only_non_adherents" && !participantIsAdherentValue) {
                     specificitySpecialFieldsToDraw[value.nom].isMandatory = true;
                 }
-
                 specificitySpecialFieldsToDraw[value.nom].document_choice = value.document_choice;
 
                 specificitySpecialFieldsToDraw[value.nom].type_field = value.type_field;
@@ -114,13 +114,6 @@ export default {
             handler(newValue) {
                 this.$emit('update:specialsFieldsParticipant', {...newValue});
             }
-        }
-    },
-
-    computed: {
-        
-        participantIsAdherent() {
-            return isAdherent(this.roles);
         }
     },
 

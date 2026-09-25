@@ -25,7 +25,7 @@ return [
                     'label' => 'Décider des Affichages dans la liste des inscrits',
                     'type' => 'select',
                     'options' => [
-                        'all_inscrits' => 'Tous les inscrits',
+                        'everybody' => 'Tous les inscrits',
                         'only_adherents' => 'Seulement les adhérents',
                         'only_non_adherents' => 'Seulement les non-adhérents',
                         'nobody' => 'Personne'
@@ -45,7 +45,7 @@ return [
                     'label' => 'Décider des Affichages dans le formulaire',
                     'type' => 'select',
                     'options' => [
-                        'all_inscrits' => 'Tous les inscrits',
+                        'everybody' => 'Tous les inscrits',
                         'only_adherents' => 'Seulement les adhérents',
                         'only_non_adherents' => 'Seulement les non-adhérents',
                         'nobody' => 'Personne'

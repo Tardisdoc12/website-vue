@@ -122,7 +122,6 @@ export default{
     },
 
     data() {
-        console.log("Categorie loaded", this.$settings.categories)
         return {
             steps: 0,
             lastParticipants: [],

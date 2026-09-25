@@ -51,7 +51,7 @@ export default {
             cat => cat.nom.toLowerCase() === this.eventCategorie.toLowerCase()
         )
         let onglets = ['Informations Personnelles']
-        if ((specialsFields.length > 0 || isEncadrantComp)) onglets.push('Informations Complémentaires');
+        if ((categorie.champs_speciaux.length > 0 || isEncadrantComp)) onglets.push('Informations Complémentaires');
         return {
             steps: 0,
             infoParticipant: this.currentParticipant,
