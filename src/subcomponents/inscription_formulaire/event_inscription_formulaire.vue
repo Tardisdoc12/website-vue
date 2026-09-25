@@ -50,13 +50,12 @@ export default {
         const categorie= this.$settings.categories.find(
             cat => cat.nom.toLowerCase() === this.eventCategorie.toLowerCase()
         )
+        let onglets = ['Informations Personnelles']
+        if ((specialsFields.length > 0 || isEncadrantComp)) onglets.push('Informations Complémentaires');
         return {
             steps: 0,
             infoParticipant: this.currentParticipant,
-            onglets: [
-                'Informations Personnelles',
-                'Informations Complémentaires'
-            ],
+            onglets: onglets,
             isEncadrantComp: isEncadrant(this.currentParticipant.roles || ['non_adherent']),
             specialsFields: categorie.champs_speciaux,
         };
