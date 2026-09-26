@@ -1,43 +1,45 @@
 <template>
     <div v-for="(value, key) in specialsFieldsData" :key="key">
-        <div
-            v-if="specificitySpecialFieldsToDraw[key].type_field === 'checkbox'"
-            class="flex items-center gap-2"
-            style="margin-top:10px;"
-        >
-            <label class="font-medium">
-                {{ key }}
-                <span v-if="specificitySpecialFieldsToDraw[key].isMandatory" style="color:red">*</span>
-                <a 
-                    v-if="specificitySpecialFieldsToDraw[key].document_choice !== '0'"
-                    style="color:blue"
-                    :href="specificitySpecialFieldsToDraw[key].document_choice"
-                >
-                    Voir le document
-                </a>
-            </label>
+        <template v-if="specificitySpecialFieldsToDraw[key].isDrawable">
+            <div
+                v-if="specificitySpecialFieldsToDraw[key].type_field === 'checkbox'"
+                class="flex items-center gap-2"
+                style="margin-top:10px;"
+            >
+                <label class="font-medium">
+                    {{ key }}
+                    <span v-if="specificitySpecialFieldsToDraw[key].isMandatory" style="color:red">*</span>
+                    <a 
+                        v-if="specificitySpecialFieldsToDraw[key].document_choice !== '0'"
+                        style="color:blue"
+                        :href="specificitySpecialFieldsToDraw[key].document_choice"
+                    >
+                        Voir le document
+                    </a>
+                </label>
 
-            <input
-                v-model="specialsFieldsData[key]"
-                type="checkbox"
-                class="w-5 h-5"
-                :required="specificitySpecialFieldsToDraw[key].isMandatory"
-            />
-        </div>
+                <input
+                    v-model="specialsFieldsData[key]"
+                    type="checkbox"
+                    class="w-5 h-5"
+                    :required="specificitySpecialFieldsToDraw[key].isMandatory"
+                />
+            </div>
 
-        <div v-else>
-            <label class="block font-medium">
-                {{ key }}
-                <span v-if="specificitySpecialFieldsToDraw[key].isMandatory" style="color:red">*</span>
-            </label>
+            <div v-else>
+                <label class="block font-medium">
+                    {{ key }}
+                    <span v-if="specificitySpecialFieldsToDraw[key].isMandatory" style="color:red">*</span>
+                </label>
 
-            <input
-                v-model="specialsFieldsData[key]"
-                :type="specificitySpecialFieldsToDraw[key].type_field"
-                class="w-full border p-1 rounded"
-                :required="specificitySpecialFieldsToDraw[key].isMandatory"
-            />
-        </div>
+                <input
+                    v-model="specialsFieldsData[key]"
+                    :type="specificitySpecialFieldsToDraw[key].type_field"
+                    class="w-full border p-1 rounded"
+                    :required="specificitySpecialFieldsToDraw[key].isMandatory"
+                />
+            </div>
+    </template>
     </div>
 </template>
 
@@ -74,8 +76,8 @@ export default {
         Object.entries(this.specialsFieldsSpecificity).forEach(
             ([key, value]) => {
                 specificitySpecialFieldsToDraw[value.nom] = {};
-                if (value.affichage_formulaire === 'nobody') {
-                    return
+                if (value.affichage_formulaire === 'everybody') {
+                    specificitySpecialFieldsToDraw[value.nom].isDrawable = true;
                 }
                 else if (value.affichage_formulaire === 'only_adherents' && participantIsAdherentValue) {
                     specificitySpecialFieldsToDraw[value.nom].isDrawable = true;
@@ -84,8 +86,10 @@ export default {
                     specificitySpecialFieldsToDraw[value.nom].isDrawable = true;
                 }
                 else {
-                    specificitySpecialFieldsToDraw[value.nom].isDrawable = true;
+                    specificitySpecialFieldsToDraw[value.nom].isDrawable = false;
                 }
+
+                console.log(value.nom, specificitySpecialFieldsToDraw[value.nom].isDrawable);
 
                 if (value.mandatory_response === "everybody") {
                     specificitySpecialFieldsToDraw[value.nom].isMandatory = true;
