@@ -1,8 +1,7 @@
 <template>
-    <div v-for="(value, key) in specialsFieldsData">
+    <div v-for="(value, key) in specialsFieldsData" :key="key">
         <div
             v-if="specificitySpecialFieldsToDraw[key].type_field === 'checkbox'"
-            :key="getID(1, 1000000)"
             class="flex items-center gap-2"
             style="margin-top:10px;"
         >
@@ -26,7 +25,7 @@
             />
         </div>
 
-        <div v-else :key="getID(1, 1000000)">
+        <div v-else>
             <label class="block font-medium">
                 {{ key }}
                 <span v-if="specificitySpecialFieldsToDraw[key].isMandatory" style="color:red">*</span>
