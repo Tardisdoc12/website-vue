@@ -20,7 +20,7 @@
             :background-color="args.backgroundColor"
             :background-color-card="args.backgroundColorCard"
             :color-writing="args.colorWriting"
-            :key="args.event.id"
+            :key="args.event.event_id"
             :is-show="false"
             :user-connected="user"
             :isInscrit="true"
@@ -45,13 +45,9 @@ import EventsFunctions from '@/javascript/constants/events_functions'
 
 function isOutdated(event) {
     const now = new Date();
-    // Ajoute 1 heure à l'heure actuelle
     const limit = new Date(now.getTime() + 60 * 60 * 1000);
-
-    if (event.start < limit) {
-        return true; // Bloque seulement si on est à moins d'une heure
-    }
-    return false
+    const eventStart = new Date(event.start_date);
+    return eventStart < limit;
 }
 
 export default{
@@ -81,7 +77,7 @@ export default{
             );
 
             let events = this.user.events.filter(event => {
-                const eventDate = new Date(event.startDate);
+                const eventDate = new Date(event.start_date);
 
                 const eventDateOnly = new Date(
                     eventDate.getFullYear(),
@@ -94,7 +90,7 @@ export default{
             });
 
             // Tri du plus proche au plus lointain
-            events.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+            events.sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
 
             events = events.map(event => {
                 return this.returnCorrectedEvent(event);
@@ -148,11 +144,8 @@ export default{
             let bgColor;
             let backgroundColorCard;
             let colorWritting = "rgba(0, 0, 0, 1)";
-            if(new Date() < new Date(event.startDate)) {
-                let categorie = event.categorie
-                if(event.categorie === "") {
-                    categorie = "seance"
-                }
+            if(new Date() < new Date(event.start_date)) {
+                let categorie = event.category
                 const duoColor = EventsFunctions.get_color_events_by_categorie(categorie)
                 bgColor = duoColor[0]
                 backgroundColorCard = duoColor[1]
@@ -165,7 +158,7 @@ export default{
 
             return {
                 event: event,
-                hour: event.startDate,
+                hour: event.start_date,
                 title: event.title,
                 place: event.place,
                 placesAvailable: places_available,
@@ -184,7 +177,7 @@ export default{
         },
 
         deleteEvent(eventId) {
-            const eventIndex = this.user.events.findIndex(event => event.id === eventId);
+            const eventIndex = this.user.events.findIndex(event => event.event_id === eventId);
             if (eventIndex !== -1) {
                 this.user.events.splice(eventIndex, 1);
             }

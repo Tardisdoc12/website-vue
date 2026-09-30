@@ -144,7 +144,6 @@ export default {
     async mounted() {
         const results_2 = await apiSources.get_sources()
         const data = results_2.data
-        // On recherche qui est l'utilisateur connecté pour afficher les bonnes informations
         const token = localStorage.getItem("mps_moto")
         if (token) {
             this.user.events = []
