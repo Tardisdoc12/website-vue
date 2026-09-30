@@ -251,6 +251,25 @@ export default {
             return response;
         },
 
+        async updateEvent(event) {
+            if (event.endDate !== '') {
+                if (new Date(event.startDate) >= new Date(event.endDate)) {
+                    alert("La date de fin doit être après la date de début.")
+                    return
+                }
+            }
+            else {
+                event.endDate = null;
+            }
+
+            this.event.description = this.descriptionForm
+            if (!this.event.payementTitle){
+                this.event.payementTitle = this.event.title + " - " + formatDateFr(this.event.startDate)
+            }
+            response = await eventsService.updateEvent(this.event.event_id, this.event)
+            return response
+        },
+
         formatDateFr(dateString) {
             if (!dateString) return ''
             const date = new Date(dateString)
@@ -280,7 +299,7 @@ export default {
                 }
             }
             else{
-                response = await eventsService.updateEvent(this.event.event_id, this.event)
+                const response_update = await this.updateEvent(this.event)
                 alert("Évènement modifié avec succés !")
             }
             this.event.event_id = response?.data?.id
