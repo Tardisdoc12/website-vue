@@ -46,6 +46,7 @@
         :event-categorie="event.categorie"
         @userDeleted="userToDelete"
         @userUpdated="userToUpdate"
+        @sendEmailToUsers="onSendEmailToUsers"
     />
     <EncadrantAddPerson
         v-if="stepsComputed == 5"
@@ -65,6 +66,12 @@
         @cancelSignal="Cancel"
         @continueSignal="ContinueInscribe"
     />
+    <EventMailing
+        v-if="stepsComputed == 8"
+        :templates="templates"
+        @cancel="cancelSendingMail"
+        :email-list="event.users.map(user => user.email)"
+    />
 </template>
 
 <script>
@@ -76,6 +83,7 @@ import UsersInEvent from "@/subcomponents/event_inscribe/event_users.vue"
 import InscriptionEvent from "@/subcomponents/event_inscribe/event_inscription.vue"
 import EncadrantAddPerson from "@/subcomponents/event_inscribe/event_encadrant_add_person.vue"
 import EventProblemPlace from "@/subcomponents/event_inscribe/event_problem_place.vue"
+import EventMailing from "@/subcomponents/event_inscribe/event_mailing.vue"
 
 import DuplicationPipeline from "@/subcomponents/event_duplication/duplication_pipeline.vue"
 
@@ -130,6 +138,7 @@ export default{
             userToPay: {},
             inscriptionId: [],
             participantProblem: null,
+            templates : this.$settings.ManualMailsTemplates,
         }
     },
 
@@ -268,6 +277,16 @@ export default{
                 this.$emit("cancelSignal", this.isCancel)
             }
         },
+
+        onSendEmailToUsers() {
+            this.steps = 8
+            this.$emit("incrementSteps", this.steps)
+        },
+
+        cancelSendingMail() {
+            this.steps = 0
+            this.$emit("incrementSteps", this.steps)
+        },
         
         addUser() {
             this.steps = 5
@@ -321,7 +340,8 @@ export default{
         InscriptionEvent,
         EncadrantAddPerson,
         DuplicationPipeline,
-        EventProblemPlace
+        EventProblemPlace,
+        EventMailing
     }
 }
 </script>

@@ -42,6 +42,14 @@
             >
                 <font-awesome-icon icon="fa-solid fa-download" />
             </button>
+
+            <button
+                type="button"
+                class="button-confirm"
+                @click="sendEmailToUsers()"
+            >
+                <font-awesome-icon icon="fa-solid fa-envelope"/>
+            </button>
         </div>
 
         <div v-if="usersToShow.length === 0" style="margin-top: 10px;">
@@ -243,6 +251,10 @@ export default {
                     this.isEmailError = true;
                 }
             }
+        },
+
+        sendEmailToUsers() {
+            this.$emit("sendEmailToUsers");
         },
 
         downloadCSV() {
