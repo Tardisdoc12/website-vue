@@ -8,6 +8,26 @@
 
 if (!defined('ABSPATH')) exit;
 
+const MPS_TOOLS_VERSION = '1.5.8'; // à incrémenter à chaque release
+
+add_action('plugins_loaded', 'mps_tools_maybe_upgrade');
+
+function mps_tools_maybe_upgrade() {
+    $installed = get_option('mps_tools_version', '');
+
+    if ($installed === MPS_TOOLS_VERSION) {
+        return;
+    }
+
+    helloasso_clear_cached_token();
+    update_option('mps_tools_version', MPS_TOOLS_VERSION, true);
+}
+
+function helloasso_clear_cached_token() {
+    delete_transient(HELLOASSO_TOKEN_TRANSIENT_KEY);
+    delete_transient(HELLOASSO_TOKEN_TRANSIENT_KEY_TEST);
+}
+
 //--------------------------------------------------------------------------------------------------
 // Définition des constantes pour les chemins des différents répertoires du plugin
 
