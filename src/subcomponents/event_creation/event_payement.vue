@@ -89,7 +89,6 @@ export default {
     },
     
     data() {
-        console.log("Initializing data with the payement flags:", this.canAdherentPayement, this.canNonAdherentPayement);
         return {
             isChangedTitle: this.EventPayementTitle !== "",
             payementTitle: this.EventPayementTitle,

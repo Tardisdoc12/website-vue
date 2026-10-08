@@ -197,7 +197,6 @@ export default {
 
     methods: {
         afficherInformations(field,user) {
-            console.log(field, user)
             const isAdherent = user.is_adherent;
             const valueSpecialFieldsToShow = ((field.affichage_list_inscrit === 'only_adherents' && isAdherent)
                 ||
@@ -205,8 +204,6 @@ export default {
                 ||
                 (field.affichage_list_inscrit === 'everybody')
             )
-            console.log(valueSpecialFieldsToShow)
-            console.log(isAdherent)
             return valueSpecialFieldsToShow
         },
 
