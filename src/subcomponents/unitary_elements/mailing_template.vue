@@ -68,7 +68,7 @@
         <textarea
             v-model="message"
             class="w-full border p-1 rounded"
-        ></textarea>  
+        ></textarea>
     </div>
 
     <div style="margin-bottom: 1rem;">

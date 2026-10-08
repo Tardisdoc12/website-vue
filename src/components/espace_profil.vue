@@ -77,6 +77,12 @@
             >
                 {{ "Liste des Membres" }}
             </button>
+            <button
+                @click="() => {wantSendEmail=true}"
+                class="button-base"
+            >
+                {{ "Envoyer un Courriel" }}
+            </button>
         </div>
 
         <!-- Modals -->
@@ -108,6 +114,12 @@
             @cancel-signal="()=>{showListMembers=false}"
             @select="selectUser"
         />
+        <ModalsMailing
+            v-if="wantSendEmail"
+            :emailList="listMembersEmail"
+            :templates="emailTemplates"
+            @cancel="()=>{wantSendEmail=false}"
+        />
     </div>
     <div
         v-else-if="!isInMyFollowPage && isInOtherFollowPage"
@@ -129,6 +141,7 @@
 import ProfilInformation from "@/subcomponents/depliants/compteGestion.vue"
 import RessourceGestion from "@/subcomponents/depliants/ressourceGestion.vue";
 import ModalCategories from "@/subcomponents/modals/modal_categories.vue";
+import ModalsMailing from "@/subcomponents/modals/modals_mailing.vue";
 import ModalSearch from "@/subcomponents/modals/modal_search.vue"
 import ModalFilesAccount from "@/subcomponents/modals/modal_files_account.vue";
 import ModalRemoveSubcategorie from "@/subcomponents/modals/modal_remove_subcategorie.vue";
@@ -161,6 +174,7 @@ export default {
                 const usersMembers = await api.get_adherents()
                 if (usersMembers?.data?.users){
                     this.listMembers = usersMembers.data.users.filter(el => Number(el.ID) !== 1)
+                    this.listMembersEmail = this.listMembers.map(member => member.email)
                 }
             }
         }
@@ -223,13 +237,16 @@ export default {
             showListMembers: false,
             isInMyFollowPage: false,
             isInOtherFollowPage:false,
+            wantSendEmail: false,
             isBureau: false,
             listColumn: {
                 "firstName":"Prénom",
                 "lastName":"Nom",
             },
             listMembers: [],
+            listMembersEmail: [],
             otherUser: null,
+            emailTemplates: this.$settings.ManualMailsTemplates,
         }
     },
 
@@ -298,6 +315,7 @@ export default {
         ModalFilesAccount,
         ModalCategories,
         ModalRemoveSubcategorie,
+        ModalsMailing,
         MediaSpace,
         ModalSearch,
         PersonalFollowPage,
