@@ -24,13 +24,21 @@ function monplugin_get_email_tags($context) {
                 'url_reset'       => '',
                 'date'  => '',
             ]);
-
+        case 'validation_inscription_event':
+            return array_merge($common, [
+                'event_name'        => '', // rempli au moment de l'envoi
+                'event_date'  => '',
+                'event_place'      => '',
+                'user_name'       => '',
+                'inscription_date'       => '',
+                'payment_status'       => '',
+            ]);
         case 'email_to_one_user':
             return array_merge($common, [
                 'event_name'        => '', // rempli au moment de l'envoi
                 'modification_date'       => '',
                 'event_date'  => '',
-                'event_place'       => '',
+                'event_place'      => '',
                 'user_firstName'       => '',
                 'user_lastName'       => '',
             ]);
@@ -111,7 +119,7 @@ return [
             'type' => 'paragraph',
             'text' => 'Balises disponibles : ' . implode(', ', array_map(
                 fn($tag) => '{{' . $tag . '}}',
-                array_keys(monplugin_get_email_tags('email_to_one_user'))
+                array_keys(monplugin_get_email_tags('validation_inscription_event'))
             )),
         ],
         'mps_tools_mail_validation_inscription_event_objet' => ['label' => 'Objet', 'type' => 'text'],

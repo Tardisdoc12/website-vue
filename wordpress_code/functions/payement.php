@@ -11,7 +11,7 @@
 
 if (!defined('ABSPATH')) exit;
 
-
+require_once MPS_TOOLS_FUNCTIONS_DIR . 'mailing.php';
 
 //--------------------------------------------------------------------------------------------------
 // Functions OR CLASS
@@ -185,10 +185,72 @@ function treat_inscription_payment_by_id($inscription_ids) {
         );
         if ($result === false) {
             $errors[] = $inscription_id;
+            continue; // ne pas envoyer l'email
+        }
+        if ($result > 0) {
+            send_email_inscription($inscription_id);
         }
     }
 
     return ['success' => empty($errors), 'inscription_ids' => $inscription_ids, 'errors' => $errors];
+}
+
+//--------------------------------------------------------------------------------------------------
+
+function send_email_inscription($inscription_id) {
+    global $wpdb;
+    $table_inscription = $wpdb->prefix . 'inscrits';
+    $table_users_inscrits = $wpdb->prefix . 'users_inscrits';
+    $table_events = $wpdb->prefix . 'events';
+    $inscription_data = $wpdb->get_row(
+        $wpdb->prepare(
+            "SELECT 
+            $table_users_inscrits.user_name,
+            $table_users_inscrits.email,
+            $table_events.title,
+            $table_events.place,
+            $table_events.start_date,
+            $table_inscription.date_inscription,
+            $table_inscription.payement_status
+            FROM $table_inscription
+            LEFT JOIN $table_users_inscrits
+            ON $table_inscription.user_id = $table_users_inscrits.id
+            LEFT JOIN $table_events
+            ON $table_inscription.event_id = $table_events.id
+            WHERE $table_inscription.id = %d",
+            $inscription_id
+        ),
+        ARRAY_A
+    );
+    if (!$inscription_data) {
+        error_log('Inscription introuvable: ' . $inscription_id); // un email qui ne se lance pas ne doit rien bloqué pour la pipeline
+    }
+
+    $balises_to_modify = [
+        'user_name' => $inscription_data['user_name'],
+        'event_name' => $inscription_data['title'],
+        'event_place' => $inscription_data['place'],
+        'event_date' => $inscription_data['start_date'],
+        'inscription_date' => $inscription_data['date_inscription'],
+        'payment_status' => $inscription_data['payement_status'],
+    ];
+
+    $body_email = get_option('mps_tools_mail_validation_inscription_event', '');
+    if ($body_email) {
+        $body_email = mps_tools_render_email_template($body_email, $balises_to_modify);
+    }
+    $to = sanitize_email($inscription_data['email']);
+    $subject = get_option('mps_tools_mail_validation_inscription_event_objet', '');
+    if ($to && $body_email) {
+        $mail_sent = mps_tools_send_email($to, $subject, $body_email);
+        if (!$mail_sent) {
+            error_log('Échec de l\'envoi de l\'email à : ' . $to); // un email qui ne se lance pas ne doit rien bloqué pour la pipeline
+        }
+    }
+    else {
+        error_log('Échec de l\'envoi de l\'email : destinataire ou corps du message manquant'); // un email qui ne se lance pas ne doit rien bloqué pour la pipeline
+    }
+
 }
 
 //--------------------------------------------------------------------------------------------------
