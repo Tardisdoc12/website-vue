@@ -69,6 +69,7 @@
     <EventMailing
         v-if="stepsComputed == 8"
         :templates="templates"
+        :eventId="event.event_id"
         @cancel="cancelSendingMail"
         :email-list="event.users.map(user => user.email)"
     />

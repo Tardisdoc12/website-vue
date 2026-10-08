@@ -77,6 +77,26 @@ function mps_tools_send_custom_email(WP_REST_Request $request) {
         }
     }
 
+    if ($request->get_param('eventId')) {
+        global $wpdb;
+        $table_events = $wpdb->prefix . 'events';
+        $event_id = intval($request->get_param('eventId'));
+        $event = $wpdb->get_row(
+            $wpdb->prepare("SELECT * FROM $table_events WHERE id = %d", $event_id)
+        );
+
+        if (!$event) {
+            return new WP_Error(
+                'event_not_found',
+                'Aucun événement trouvé avec cet ID',
+                ['status' => 404]
+            );
+        }
+        $data['event_date'] = $event->start_date;
+        $data['event_place'] = $event->place ?? '';
+        $data['event_name'] = $event->title ?? '';
+    }
+
     $message = mps_tools_render_email_template($message, $data);
     $mail_sent = mps_tools_send_email($to, $subject, $message, $headers, $attachments);
 

@@ -5,6 +5,7 @@
             v-model:email="email"
             :usersEmails="emailList"
             :templates="templates"
+            :eventId="eventId"
             :style="{
                 padding: '1rem'
             }"
@@ -48,6 +49,10 @@ export default {
         templates: {
             type: Array,
             required: true
+        },
+        eventId: {
+            type: Number,
+            required: false
         }
     },
 
@@ -69,6 +74,7 @@ export default {
             this.email.to.forEach(addr => formData.append('to[]', addr))
             formData.append('subject', this.email.subject)
             formData.append('message', this.email.message)
+            formData.append('eventId', this.eventId)
 
             if (this.email.attachments) {
                 formData.append('attachments', this.email.attachments)

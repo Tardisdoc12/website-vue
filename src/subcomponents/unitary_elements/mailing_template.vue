@@ -65,6 +65,10 @@
         <label class="block font-medium">
             Message :
         </label>
+        <p v-pre v-if="!eventId">{{ "vous pouvez utiliser les balises suivantes: {{user_firstName}}, {{user_lastName}}, et {{date}}" }}</p>
+        <p v-pre v-else>
+            {{ "vous pouvez utiliser les balises suivantes: {{user_firstName}}, {{user_lastName}}, {{date}}, {{event_date}}, {{event_place}} et {{event_name}}" }}
+        </p>
         <textarea
             v-model="message"
             class="w-full border p-1 rounded"
@@ -100,7 +104,11 @@ export default {
       type: Array,
       default: () => []
     },
-    usersEmails: { type: Array, default: () => [] }
+    usersEmails: { type: Array, default: () => [] },
+    eventId: {
+        type: Number,
+        required: false
+    }
   },
 
   emits: ["update:email"],
