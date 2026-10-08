@@ -65,6 +65,19 @@ function mps_tools_send_custom_email(WP_REST_Request $request) {
         $attachments[] = $uploaded['file']; // chemin absolu sur le serveur
     }
 
+    $data = [
+        'date' => current_time('mysql'),
+    ];
+
+    if (count($to) == 1) {
+        $existing_user = get_user_by('email', $to[0]);
+        if ($existing_user) {
+            $data['user_firstName'] = get_user_meta($existing_user->ID, 'first_name', true);
+            $data['user_lastName'] = get_user_meta($existing_user->ID, 'last_name', true);
+        }
+    }
+
+    $message = mps_tools_render_email_template($message, $data);
     $mail_sent = mps_tools_send_email($to, $subject, $message, $headers, $attachments);
 
     // Supprimer le fichier temporaire après l'envoi
