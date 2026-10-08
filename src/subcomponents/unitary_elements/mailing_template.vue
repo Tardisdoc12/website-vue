@@ -65,9 +65,11 @@
         <label class="block font-medium">
             Message :
         </label>
-        <p v-pre v-if="!eventId">{{ "vous pouvez utiliser les balises suivantes: {{user_firstName}}, {{user_lastName}}, et {{date}}" }}</p>
-        <p v-pre v-else>
-            {{ "vous pouvez utiliser les balises suivantes: {{user_firstName}}, {{user_lastName}}, {{date}}, {{event_date}}, {{event_place}} et {{event_name}}" }}
+        <p v-if="!eventId">
+            <span v-pre>Vous pouvez utiliser les balises suivantes : {{user_firstName}}, {{user_lastName}} et {{date}}</span>
+        </p>
+        <p v-else>
+            <span v-pre>Vous pouvez utiliser les balises suivantes : {{user_firstName}}, {{user_lastName}}, {{date}}, {{event_date}}, {{event_place}} et {{event_name}}</span>
         </p>
         <textarea
             v-model="message"
