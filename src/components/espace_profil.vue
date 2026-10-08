@@ -115,7 +115,7 @@
             @select="selectUser"
         />
         <ModalsMailing
-            v-if="wantSendEmail"
+            v-if="wantSendEmail && isMailingConfigured"
             :emailList="listMembersEmail"
             :templates="emailTemplates"
             @cancel="()=>{wantSendEmail=false}"
@@ -222,7 +222,7 @@ export default {
         return {
             labels: 
             !Boolean(Number(this.$settings.isKdriveConfigured)) ? ['Profil', 'Ressources'] : ['Profil', 'Ressources', 'Médias'],
-            
+            isMailingConfigured: this.$settings.isMailingConfigured,
             structuresRessources: {
                 0:{"categorie_title":RessourcesCategories[0],"subcats":{}},
                 1:{"categorie_title":RessourcesCategories[1],"subcats":{}},

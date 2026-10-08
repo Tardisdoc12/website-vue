@@ -44,6 +44,7 @@
             </button>
 
             <button
+                v-if="isMailingConfigured"
                 type="button"
                 class="button-confirm"
                 @click="sendEmailToUsers()"
@@ -169,6 +170,7 @@ export default {
         const categorie = this.$settings.categories.find(category => category.nom === this.eventCategorie)
         const fields_to_show = categorie?.champs_speciaux.filter(field => field.affichage_list_inscrit !== 'nobody') || []
         return {
+            isMailingConfigured: this.$settings.isMailingConfigured,
             fields_csv: ["Nom", "Email", "Téléphone", "Experience"].concat(fields_to_show),
             isPhoneCopied: false,
             isEmailCopied: false,
