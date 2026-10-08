@@ -56,14 +56,25 @@ export default {
             email: {
                 to: [],
                 subject: "",
-                message: ""
+                message: "",
+                attachments: null,
             }
         }
     },
 
     methods: {
         async sendEmailToUsers() {
-            const response = await sendCustomEmail(this.email);
+            const formData = new FormData()
+
+            this.email.to.forEach(addr => formData.append('to[]', addr))
+            formData.append('subject', this.email.subject)
+            formData.append('message', this.email.message)
+
+            if (this.email.attachments) {
+                formData.append('attachments', this.email.attachments)
+            }
+
+            const response = await sendCustomEmail(formData);
             if (response?.data?.success){
                 console.log("Email sent successfully:", response.data);
             }

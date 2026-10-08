@@ -69,7 +69,19 @@
             v-model="message"
             class="w-full border p-1 rounded"
         ></textarea>  
+    </div>
+
+    <div style="margin-bottom: 1rem;">
+        <label>{{ "Fichier à joindre (PDF/JPG/PNG)" }}</label>
+        <div class="border border-gray-300 rounded-lg p-3 flex items-center justify-between">
+            <input
+                type="file"
+                accept="application/pdf,image/png,image/jpeg"
+                @change="handleFileUpload"
+                @cancel.stop
+            />
         </div>
+    </div>
   </div>
 </template>
 
@@ -82,7 +94,7 @@ export default {
     isAllPerson: { type: Boolean, default: true },
     email: {
       type: Object,
-      default: () => ({ to: [], subject: '', message: '' })
+      default: () => ({ to: [], subject: '', message: '', attachments: null })
     },
     templates: {
       type: Array,
@@ -111,12 +123,18 @@ export default {
       set(value) { this.update('message', value); }
     },
 
+    attachments: {
+      get() { return this.email.attachments ?? null; },
+      set(value) { this.update('attachments', value); }
+    },
+
     selectedTemplate: {
       get() { return this.email.selectedTemplate ?? null; },
       set(value) {
         this.updateMany({
           selectedTemplate: value,
           subject: value?.objet ?? '',
+          attachments: this.email.attachments ?? null,
           message: value?.template ?? ''
         });
       }
@@ -124,6 +142,9 @@ export default {
   },
 
   methods: {
+    handleFileUpload(event) {
+        this.attachments = event.target.files[0]
+    },
     update(field, value) {
         this.$emit('update:email', { ...this.email, [field]: value });
     },
