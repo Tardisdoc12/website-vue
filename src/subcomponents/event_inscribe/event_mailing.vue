@@ -20,7 +20,7 @@
             
             <button
                 class="button-confirm"
-                @click="sendEmailToUsers"
+                @click="sendEmailToUsers()"
             >
                 Send Email
             </button>
@@ -30,6 +30,8 @@
 
 <script>
 import MailingTemplate from '@/subcomponents/unitary_elements/mailing_template.vue'
+import { sendCustomEmail } from '@/javascript/api/api_mailing'
+
 
 export default {
     name: "EventMailing",
@@ -60,8 +62,14 @@ export default {
     },
 
     methods: {
-        sendEmailToUsers() {
-            console.log("Sending email to users:", this.email);
+        async sendEmailToUsers() {
+            const response = await sendCustomEmail(this.email);
+            if (response?.data?.success){
+                console.log("Email sent successfully:", response.data);
+            }
+            else {
+                console.error("Failed to send email!");
+            }
             this.$emit("cancel", this.email);
         }
     },
