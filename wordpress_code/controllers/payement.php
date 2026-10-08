@@ -25,7 +25,7 @@ const HELLOASSO_TOKEN_TRANSIENT_KEY_TEST = 'helloasso_encrypted_access_token_tes
 // Functions OR CLASS
 
 function helloasso_get_access_token() {
-    $cached_encrypted = get_transient(HELLOASSO_TOKEN_TRANSIENT_KEY);
+    $cached_encrypted = get_transient(HELLOASSO_TOKEN_TRANSIENT_KEY_TEST);
 
     if ($cached_encrypted !== false) {
         $token = mps_tools_decrypt($cached_encrypted);
@@ -80,7 +80,7 @@ function helloasso_fetch_new_access_token() {
         return false;
     }
 
-    $token_url = HELLOASSO_BASE_URL . '/oauth2/token';
+    $token_url = HELLOASSO_BASE_URL_TEST . '/oauth2/token';
     $body_array = [
         'client_id'     => $client_id,
         'client_secret' => $client_secret,
@@ -123,7 +123,7 @@ function helloasso_fetch_new_access_token() {
 
     $expires_in = $data['expires_in'] ?? 1800;
     $encrypted = mps_tools_encrypt($data['access_token']);
-    set_transient(HELLOASSO_TOKEN_TRANSIENT_KEY, $encrypted, max($expires_in - 60, 60));
+    set_transient(HELLOASSO_TOKEN_TRANSIENT_KEY_TEST, $encrypted, max($expires_in - 60, 60));
 
     return $data['access_token'];
 }
@@ -173,66 +173,79 @@ function mps_tools_decrypt($encoded) {
 function mps_tools_create_payements(WP_REST_Request $request) {
     global $wpdb;
     $params = $request->get_json_params();
+    $type = sanitize_text_field($params['type'] ?? 'event');
+    if (!in_array($type, ['event', 'adherent'], true)) {
+        return new WP_Error('invalid_params', 'Type de paiement invalide.', ['status' => 400]);
+    }
 
-    $required = ['totalAmount', 'initialAmount', 'itemName', 'event_id', 'firstName', 'lastName', 'email', 'inscription_id'];
+    $required = ['itemName', 'firstName', 'lastName', 'email'];
+    if ($type === 'event') {
+        array_push($required, 'event_id', 'totalAmount', 'initialAmount', 'inscription_id');
+    }
+
     foreach ($required as $field) {
         if (!isset($params[$field]) || $params[$field] === '') {
             return new WP_Error('invalid_params', "Champ manquant : {$field}", ['status' => 400]);
         }
     }
 
-    $totalAmount    = intval($params['totalAmount']);
-    $initialAmount  = intval($params['initialAmount']);
+    $totalAmount    = ($type=='event') ? intval($params['totalAmount']) : intval(get_option('helloasso_org_price_adhesion'));
+    $initialAmount  = ($type=='event') ? intval($params['initialAmount']) : intval(get_option('helloasso_org_price_adhesion'));
     $itemName       = sanitize_text_field($params['itemName']);
     $event_id       = intval($params['event_id']);
     $firstName      = sanitize_text_field($params['firstName']);
     $lastName       = sanitize_text_field($params['lastName']);
     $email          = sanitize_email($params['email']);
-    if (!isset($params['inscription_id']) || !is_array($params['inscription_id']) || empty($params['inscription_id'])) {
-        return new WP_Error('invalid_params', 'inscription_id doit être un tableau non vide.', ['status' => 400]);
-    }
+    
 
-    $inscription_ids = array_map('intval', $params['inscription_id']);
-    $inscription_ids = array_filter($inscription_ids); // retire les 0/valeurs invalides après intval
-    $inscription_ids = array_values(array_unique($inscription_ids)); // dédoublonne, réindexe
+    
 
-    if (empty($inscription_ids)) {
-        return new WP_Error('invalid_params', 'Aucun inscription_id valide fourni.', ['status' => 400]);
-    }
-    $type           = sanitize_text_field($params['type'] ?? 'event');
+    if($type == 'event') {
+        if (!isset($params['inscription_id']) || !is_array($params['inscription_id']) || empty($params['inscription_id'])) {
+            return new WP_Error('invalid_params', 'inscription_id doit être un tableau non vide.', ['status' => 400]);
+        }
+        $inscription_ids = array_map('intval', $params['inscription_id']);
+        $inscription_ids = array_filter($inscription_ids); // retire les 0/valeurs invalides après intval
+        $inscription_ids = array_values(array_unique($inscription_ids)); // dédoublonne, réindexe
 
-    if (!is_email($email)) {
-        return new WP_Error('invalid_email', 'Adresse email invalide.', ['status' => 400]);
-    }
+        if (empty($inscription_ids)) {
+            return new WP_Error('invalid_params', 'Aucun inscription_id valide fourni.', ['status' => 400]);
+        }
 
-    $table_inscrits = $wpdb->prefix . 'inscrits';
+        if (!is_email($email)) {
+            return new WP_Error('invalid_email', 'Adresse email invalide.', ['status' => 400]);
+        }
+        $table_inscrits = $wpdb->prefix . 'inscrits';
 
-    // On construit dynamiquement les placeholders %d pour la clause IN (...)
-    $placeholders = implode(',', array_fill(0, count($inscription_ids), '%d'));
+        // On construit dynamiquement les placeholders %d pour la clause IN (...)
+        $placeholders = implode(',', array_fill(0, count($inscription_ids), '%d'));
+        
+        $query_args = array_merge($inscription_ids, [$event_id]);
+        $inscriptions = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT * FROM $table_inscrits WHERE id IN ($placeholders) AND event_id = %d",
+                ...$query_args
+            )
+        );
 
-    $query_args = array_merge($inscription_ids, [$event_id]);
-    $inscriptions = $wpdb->get_results(
-        $wpdb->prepare(
-            "SELECT * FROM $table_inscrits WHERE id IN ($placeholders) AND event_id = %d",
-            ...$query_args
-        )
-    );
+        if (count($inscriptions) !== count($inscription_ids)) {
+            return new WP_Error('inscription_not_found', 'Une ou plusieurs inscriptions sont introuvables pour cet événement.', ['status' => 404]);
+        }
 
-    if (count($inscriptions) !== count($inscription_ids)) {
-        return new WP_Error('inscription_not_found', 'Une ou plusieurs inscriptions sont introuvables pour cet événement.', ['status' => 404]);
-    }
-
-    foreach ($inscriptions as $inscription) {
-        if ($inscription->payement_status === 'completed') {
-            return new WP_Error('already_paid', "L'inscription {$inscription->id} est déjà payée.", ['status' => 400]);
+        foreach ($inscriptions as $inscription) {
+            if ($inscription->payement_status === 'completed') {
+                return new WP_Error('already_paid', "L'inscription {$inscription->id} est déjà payée.", ['status' => 400]);
+            }
         }
     }
-
+    else {
+        $inscription_ids = [wp_generate_uuid4()];
+    }
     $organizationSlug = get_option('helloasso_org_slug', '');
     $urlSite = esc_url_raw(get_site_url());
     $backUrl = get_option('helloasso_return_url', $urlSite);
 
-    $checkout_url = HELLOASSO_BASE_URL . "/v5/organizations/{$organizationSlug}/checkout-intents";
+    $checkout_url = HELLOASSO_BASE_URL_TEST . "/v5/organizations/{$organizationSlug}/checkout-intents";
 
     $body = [
         'totalAmount'      => $totalAmount,
@@ -248,11 +261,14 @@ function mps_tools_create_payements(WP_REST_Request $request) {
             'email'     => $email,
         ],
         'metadata' => [
-            'inscription_ids' => $inscription_ids,
+            'inscription_ids' => $inscription_ids, // TODO: à dégager si type == 'adherent'
             'type'            => $type,
-            'event_id'        => $event_id,
         ],
     ];
+
+    if ($type == 'event') {
+        $body['metadata']['event_id'] = $event_id;
+    }
 
     $token = helloasso_get_access_token();
     if (!$token) {

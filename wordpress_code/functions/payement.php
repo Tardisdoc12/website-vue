@@ -28,7 +28,7 @@ function mps_tools_finalize_helloasso_payment($checkout_intent_id, $source = 'un
         return new WP_Error('checkout_not_found', 'Checkout intent inconnu ou déjà traité.', ['status' => 404]);
     }
 
-    $inscription_ids = $meta['inscription_ids'];
+    $inscription_ids = $meta['inscription_ids']; // TODO : si $type == 'adherent', ce sera un UUID généré plutôt qu'un tableau d'IDs
     $type = $meta['type'] ?? 'event';
 
     $token = helloasso_get_access_token();
@@ -92,13 +92,15 @@ function mps_tools_finalize_helloasso_payment($checkout_intent_id, $source = 'un
         }
     }
 
+    $user_email = $body['order']['payer']['email'] ?? null;
+
     if (!$is_authorized) {
         error_log("HelloAsso finalize [{$source}] : commande trouvée mais aucun paiement Authorized pour {$checkout_intent_id}.");
         return ['success' => false, 'message' => 'Paiement non autorisé.'];
     }
 
     if ($type === 'adherent') {
-        $result = treat_adherent_payment_by_inscription_id($inscription_ids);
+        $result = treat_adherent_payment_by_inscription_id($user_email);
     } else {
         $result = treat_inscription_payment_by_id($inscription_ids);
     }
@@ -117,54 +119,25 @@ function mps_tools_finalize_helloasso_payment($checkout_intent_id, $source = 'un
 //--------------------------------------------------------------------------------------------------
 
 
-function treat_adherent_payment_by_inscription_id($inscription_ids) {
-    global $wpdb;
-    $table_inscrits = $wpdb->prefix . 'inscrits';
-    $table_users_inscrits = $wpdb->prefix . 'users_inscrits';
-
-    // On marque l'inscription comme payée
-    $errors = [];
-    foreach($inscription_ids as $inscription_id) {
-        $result = $wpdb->update(
-            $table_inscrits,
-            ['payement_status' => 'completed'],
-            ['id' => $inscription_id],
-            ['%s'],
-            ['%d']
-        );
-        if ($result === false) {
-            $errors[] = $inscription_id;
-        }
-        // On récupère l'email de l'inscrit pour retrouver/créer le compte WP correspondant
-        $inscrit = $wpdb->get_row(
-            $wpdb->prepare(
-                "SELECT ui.email FROM $table_inscrits i
-                JOIN $table_users_inscrits ui ON ui.id = i.user_id
-                WHERE i.id = %d",
-                $inscription_id
-            )
-        );
-
-        if (!$inscrit) {
-            return new WP_Error('inscrit_not_found', 'Inscrit introuvable pour cette inscription.', ['status' => 404]);
-        }
-
-        $user = get_user_by('email', $inscrit->email);
-
-        if (!$user) {
-            // Pas de compte WP existant : à toi de voir si on en crée un automatiquement ici
-            // (cf. notre discussion précédente sur le cas "adhérent sans compte")
-            error_log("Paiement adhérent confirmé pour {$inscrit->email}, mais aucun compte WP associé.");
-            return ['success' => true, 'message' => 'Paiement confirmé, mais aucun compte WP à mettre à jour.'];
-        }
-
-        $user->add_role('adherent');
-        $user->remove_role('non_adherent');
-        update_user_meta($user->ID, 'subscriber_date', current_time('mysql'));    
+function treat_adherent_payment_by_inscription_id($email) {
+    $user = get_user_by('email', $email);
+    if (!$user) {
+        return new WP_Error('user_not_found', 'Utilisateur introuvable.', ['status' => 404]);
     }
 
+    $user->add_role('adherent');
+    $user->remove_role('non_adherent');
+    
+    update_user_meta($user->ID, 'subscriber_date', current_time('mysql'));
+    update_user_meta($user->ID, 'adherentNumber', generate_adherent_number());
     
     return ['success' => true, 'user_id' => $user->ID];
+}
+
+//--------------------------------------------------------------------------------------------------
+
+function generate_adherent_number() {
+    return 'ADH-' . strtoupper( wp_generate_password( 8, false ) );
 }
 
 //--------------------------------------------------------------------------------------------------

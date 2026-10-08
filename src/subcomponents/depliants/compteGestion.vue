@@ -14,7 +14,16 @@
                 <li><strong>Prénom :</strong> {{ user.firstName || "—" }}</li>
                 <li><strong>Email :</strong> {{ user.email || "—" }}</li>
                 <li><strong>Téléphone :</strong> {{ user.telephone || "—" }}</li>
-                <li><strong>Statut :</strong> {{ isAdherentComp ? "Adhérent" : "Non-adhérent" }}</li>
+                <li v-if="isAdherentComp"><strong>Statut :</strong> {{ "Adhérent" }}</li>
+                <li v-else>
+                    <strong>Statut :</strong>
+                    <button
+                        class="button-base"
+                        @click="paymentAdherent"
+                    >
+                        {{ "Non-adhérent" }}
+                    </button>
+                </li>
             </div>
             <div
                 v-if="isInformationsChange"
@@ -175,6 +184,8 @@ import DepliantWindow from '@/subcomponents/unitary_elements/depliantWindow.vue'
 import EventsUser from '@/subcomponents/depliants/depliant_events.vue'
 import { isAdherent } from "@/javascript/constants/roles"
 
+import apiPayment from '@/javascript/api/api_payement';
+
 export default {
     emits: [
         'userChange'
@@ -229,6 +240,33 @@ export default {
             } catch (err) {
                 console.error(err)
                 return
+            }
+        },
+
+        async paymentAdherent() {
+            const data_to_send = {
+                'totalAmount' : 0,
+                'initialAmount' : 0,
+                'itemName' : "Adhésion",
+                'firstName' : this.user.firstName,
+                'lastName' : this.user.lastName,
+                'email' : this.user.email,
+                'type' : "adherent",
+            };
+            try {
+                const result = await apiPayment.createPaymentIntent(data_to_send);
+                if (result?.data?.redirectUrl) {
+                    const redirectUrl = result.data.redirectUrl;
+                    this.loading = false;
+                    window.location.href = redirectUrl;
+                } else {
+                    this.loading = false;
+                    this.error = true;
+                }
+            } catch (err) {
+                this.loading = false;
+                this.error = true;
+                console.error('Erreur création paiement :', err);
             }
         },
 
