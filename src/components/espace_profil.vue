@@ -173,7 +173,7 @@ export default {
             if (isEncadrant(this.user.roles)){
                 const usersMembers = await api.get_adherents()
                 if (usersMembers?.data?.users){
-                    this.listMembers = usersMembers.data.users.filter(el => Number(el.ID) !== 1)
+                    this.listMembers = usersMembers.data.users
                     this.listMembersEmail = this.listMembers.map(member => member.email)
                 }
             }
