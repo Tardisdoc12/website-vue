@@ -25,7 +25,7 @@ const HELLOASSO_TOKEN_TRANSIENT_KEY_TEST = 'helloasso_encrypted_access_token_tes
 // Functions OR CLASS
 
 function helloasso_get_access_token() {
-    $cached_encrypted = get_transient(HELLOASSO_TOKEN_TRANSIENT_KEY_TEST);
+    $cached_encrypted = get_transient(HELLOASSO_TOKEN_TRANSIENT_KEY);
 
     if ($cached_encrypted !== false) {
         $token = mps_tools_decrypt($cached_encrypted);
@@ -80,7 +80,7 @@ function helloasso_fetch_new_access_token() {
         return false;
     }
 
-    $token_url = HELLOASSO_BASE_URL_TEST . '/oauth2/token';
+    $token_url = HELLOASSO_BASE_URL . '/oauth2/token';
     $body_array = [
         'client_id'     => $client_id,
         'client_secret' => $client_secret,
@@ -123,7 +123,7 @@ function helloasso_fetch_new_access_token() {
 
     $expires_in = $data['expires_in'] ?? 1800;
     $encrypted = mps_tools_encrypt($data['access_token']);
-    set_transient(HELLOASSO_TOKEN_TRANSIENT_KEY_TEST, $encrypted, max($expires_in - 60, 60));
+    set_transient(HELLOASSO_TOKEN_TRANSIENT_KEY, $encrypted, max($expires_in - 60, 60));
 
     return $data['access_token'];
 }
@@ -245,7 +245,7 @@ function mps_tools_create_payements(WP_REST_Request $request) {
     $urlSite = esc_url_raw(get_site_url());
     $backUrl = get_option('helloasso_return_url', $urlSite);
 
-    $checkout_url = HELLOASSO_BASE_URL_TEST . "/v5/organizations/{$organizationSlug}/checkout-intents";
+    $checkout_url = HELLOASSO_BASE_URL . "/v5/organizations/{$organizationSlug}/checkout-intents";
 
     $body = [
         'totalAmount'      => $totalAmount,
