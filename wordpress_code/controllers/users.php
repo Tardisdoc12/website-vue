@@ -148,6 +148,34 @@ function monplugin_get_user_connected(WP_REST_Request $request) {
         )
     );
 
+    $roles = array_values(array_unique(array_map('sanitize_text_field', (array) $user->roles)));
+
+    $is_non_adherent = in_array('non_adherent', $roles, true);
+    $is_admin        = in_array('administrator', $roles, true);
+    $date_adherent = get_user_meta($user->ID, 'subscriber_date', true);
+
+    if (!$is_non_adherent && !$is_admin) {
+        if (empty($date_adherent)) {
+            // Pas de date : on démarre l'adhésion aujourd'hui
+            update_user_meta($user->ID, 'subscriber_date', current_time('mysql'));
+        }
+        elseif (strtotime($date_adherent . ' +1 year') < strtotime(current_time('mysql'))) {
+            // Adhésion expirée (plus d'un an)
+            delete_user_meta($user->ID, 'subscriber_date');
+            $user->add_role('non_adherent');
+            $user->remove_role('adherent');
+            $user->remove_role('bureau');
+            $user->remove_role('encadrant');
+        }
+    }
+    elseif ($is_non_adherent && !$is_admin && !empty($date_adherent)) {
+        // L'utilisateur est non adhérent mais a une date d'adhésion : on la supprime
+        delete_user_meta($user->ID, 'subscriber_date');
+        $user->remove_role('adherent');
+        $user->remove_role('bureau');
+        $user->remove_role('encadrant');
+    }
+
     $user_data = [
         "ID"            => $user->ID,
         "email"         => $user->user_email,
