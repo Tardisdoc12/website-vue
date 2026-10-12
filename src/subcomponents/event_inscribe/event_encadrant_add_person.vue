@@ -193,7 +193,7 @@ export default{
                         phone: u.telephone,
                         roles: u.roles ?? ["non_adherent"],
                         searchResult: 'found',
-                        canEncadrant: isEncadrant(u.roles ?? []),
+                        canEncadrant: this.participant?.caps?.includes("mps_help_for_events") ?? false,
                     }
                 } else {
                     this.participant.searchResult = 'not_found'
@@ -204,7 +204,7 @@ export default{
         },
 
         isAdherentParticipant() {
-            return this.participant?.roles ? !this.participant.roles.includes("non_adherent") : false
+            return this.participant?.caps?.includes("mps_has_access") ?? false
         },
 
         async handleSubmit() {

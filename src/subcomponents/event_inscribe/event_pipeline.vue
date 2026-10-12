@@ -2,7 +2,7 @@
     <PresentationsEvent
         v-if="stepsComputed == 0"
         :event="event"
-        :roles="userConnected?.roles"
+        :roles="userConnected?.caps"
         :can-be-redirected="canBeRedirectedComputed"
         @cancelSignal="Cancel"
         @updateEvent="updateEvent"
@@ -166,7 +166,7 @@ export default{
             const isListAttente = this.event.attentePlace > 0 && this.event.attentePlace - this.event.nbr_attente > 0
             const isFullAdherent = this.event.subscribePlace > 0 && this.event.subscribePlace - (this.event.nbr_adherents) <= 0
             const isFullNonAdherent = this.event.nonsubscribePlace - (this.event.nbr_non_adherents) <= 0
-            const isAdherent = this.userConnected.roles?.includes("adherent") || this.userConnected.roles?.includes("bureau") || this.userConnected.roles?.includes("administrator")
+            const isAdherent = this.userConnected.caps?.includes("mps_has_access") ?? false
             const isFull = isAdherent ? isFullAdherent : isFullNonAdherent
             if(isFull && isListAttente){
                 return true
@@ -203,7 +203,7 @@ export default{
             let adherentWantsCash = 0
             let nonAdherentWantsCash = 0
             for (const participant of participants) {
-                if (participant.roles?.includes("adherent") ) {
+                if (participant.caps?.includes("mps_has_access") ?? false) {
                     adherentWantsCash += participant.wantsCash ? 1 : 0
                     if(isFulladherent){
                         participant.status = "attente"
@@ -265,7 +265,7 @@ export default{
 
 
                 const hasNonAdherent = this.lastParticipants.some(p =>
-                    p.roles?.includes("non_adherent")
+                    p.caps?.includes("mps_has_access")
                 )
 
                 //toujours paiement

@@ -2,7 +2,7 @@
     <!-- Corps de l'annonce -->
     <div class="body">
         <div
-            v-if="isBureauComp"
+            v-if="manageEvents"
             class="flex items-center justify-center"
             :style="{
                 gap: '10px',
@@ -95,12 +95,12 @@
             <span style="padding: 15px">{{ event.place }}</span>
         </p>
 
-        <p v-if="isEncadrantComp" style="margin-bottom: 10px;">
+        <p v-if="manageEvents" style="margin-bottom: 10px;">
             <span style="font-weight: bold; text-decoration: underline;">{{ "Adhérents inscrit :" }}</span>
             <span style="padding: 15px">{{ placeAdherents }}</span>
         </p>
 
-        <p v-if="isEncadrantComp" style="margin-bottom: 10px;">
+        <p v-if="manageEvents" style="margin-bottom: 10px;">
             <span style="font-weight: bold; text-decoration: underline;">{{ "Non Adhérents inscrit :" }}</span>
             <span style="padding: 15px">{{ placeNonAdherents }}</span>
         </p>
@@ -136,7 +136,7 @@
             </a> -->
             <!-- visualisation -->
             <button
-                v-if="isBureauComp || isEncadrantComp"
+                v-if="manageInscrits"
                 type="button"
                 class="button-base"
                 @click="VisualizeInscrit"
@@ -146,7 +146,7 @@
 
             <!-- events -->
             <button
-                v-if="isBureauComp"
+                v-if="manageEvents"
                 type="button"
                 class="button-base"
                 @click="updateEvent"
@@ -159,7 +159,6 @@
 
 <script>
 import api from "@/javascript/api/axios_events"
-import { isAdherent, isEncadrant, isBureau } from "@/javascript/constants/roles";
 
 function formatDate(d) {
     const year = d.getFullYear();
@@ -177,7 +176,7 @@ export default {
             required: true,
         },
 
-        roles: {
+        caps: {
             type: Array,
             required: false,
             default: ["non_adherent"]
@@ -206,16 +205,12 @@ export default {
         placeNonAdherents() {
             return `${this.event.nbr_non_adherents}/${this.event.nonsubscribePlace}`
         },
-        isBureauComp() {
-            return isBureau(this.roles);
+        manageInscrits() {
+            return this.caps?.includes("mps_manage_inscrits");
         },
 
-        isAdherentComp() {
-            return isAdherent(this.roles);
-        },
-
-        isEncadrantComp() {
-            return isEncadrant(this.roles)
+        manageEvents() {
+            return this.caps?.includes("mps_manage_events") ?? false;
         },
 
         description(){

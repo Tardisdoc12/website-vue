@@ -142,7 +142,6 @@
 
 <script>
 import inscritAPI from "@/javascript/api/axios_inscription"
-import { isEncadrant, isNonAdherent } from "@/javascript/constants/roles"
 import InscriptionFormulaireComponent from "@/subcomponents/inscription_formulaire/event_inscription_formulaire.vue"
 import { computed } from 'vue'
 
@@ -161,6 +160,7 @@ function emptyParticipant() {
         searchResult: null, // null | 'found' | 'not_found'
         specialField: {},
         wantsCash: false,
+        caps: [],
     }
 }
 
@@ -191,11 +191,12 @@ export default {
                     firstName: this.user?.firstName ?? "",
                     lastName: this.user?.lastName ?? "",
                     phone: this.user?.telephone ?? "",
-                    isAdherent: this.user?.roles ? (!this.user.roles.includes("non_adherent") ? 1 : 0) : 0,
+                    isAdherent: this.user?.caps ? (this.user.caps.includes("mps_has_access") ? 1 : 0) : 0,
                     roles: this.user?.roles ?? ["non_adherent"],
                     email: this.user?.email ?? "",
                     isAttente: this.isAttente,
                     wantsCash: false,
+                    caps: this.user?.caps,
                 }
             ]
         }
@@ -240,7 +241,7 @@ export default {
             return this.participants.length >= 3
         },
         mustResponseSpecialField() {
-            const isAdherent = !isNonAdherent(this.participants[this.currentStep]?.roles ?? ["non_adherent"])
+            const isAdherent = this.participants[this.currentStep]?.caps?.includes("mps_has_access")
             const specialFields = this.getSpecialFields
             const listSpecialFields = specialFields.filter(field => {
                 return (
@@ -259,7 +260,7 @@ export default {
         },
 
         isEncadrantComp() {
-            return isEncadrant(this.user?.roles ?? [])
+            return this.participants[this.currentStep]?.caps?.includes("mps_help_for_events") ?? false
         },
 
         getSpecialFields() {
@@ -268,7 +269,7 @@ export default {
         },
 
         isAdherent() {
-            return this.user?.roles ? !this.user.roles.includes("non_adherent") : false
+            return this.user?.caps?.includes("mps_has_access") ?? false
         },
         
         isAllStepValid() {
@@ -337,8 +338,8 @@ export default {
         },
 
         isAdherentParticipant(index) {
-            const roles = this.participants[index].roles ?? []
-            return !roles.includes("non_adherent")
+            const roles = this.participants[index].caps ?? []
+            return roles.includes("mps_has_access")
         },
 
         nextStep() {
@@ -379,7 +380,7 @@ export default {
             const found = this.$settings.categories.find(c => c.nom.toLowerCase() === categorie.toLowerCase())
 
 
-            const isNonAdherent = participant.roles?.includes("non_adherent")
+            const isNonAdherent = !participant.caps?.includes("mps_has_access")
 
             if (participant.wantsCash) return 'cash'
 
@@ -429,7 +430,7 @@ export default {
                 participant.name = `${participant.firstName} ${participant.lastName}`
 
 
-                const isAdherent = !participant.roles?.includes("non_adherent")
+                const isAdherent = participant.caps?.includes("mps_has_access") ?? false
 
                 let probleme= {
                     'participant_problem': participant,

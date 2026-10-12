@@ -182,7 +182,6 @@
 import api_user from "@/javascript/api/users_wp.js"
 import DepliantWindow from '@/subcomponents/unitary_elements/depliantWindow.vue';
 import EventsUser from '@/subcomponents/depliants/depliant_events.vue'
-import { isAdherent } from "@/javascript/constants/roles"
 
 import apiPayment from '@/javascript/api/api_payement';
 
@@ -217,7 +216,7 @@ export default {
             return this.DataUser
         },
         isAdherentComp() {
-            return isAdherent(this.user.roles)
+            return this.user?.caps?.includes("mps_has_access") ?? false
         }
     },
 

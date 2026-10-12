@@ -40,7 +40,7 @@
             <div
                 v-else-if="activeIndex === 1 && isNonAdherent"
             >
-                <p class="flex-1 text-center"> Les Ressources ne sont disponibles que pour les personnes de l'Associations.²</p>
+                <p class="flex-1 text-center"> Les Ressources ne sont disponibles que pour les personnes de l'Associations.</p>
             </div>
             <MediaSpace
                 v-if="activeIndex === 2"
@@ -78,6 +78,7 @@
                 {{ "Liste des Membres" }}
             </button>
             <button
+                v-if="manageInscrit"
                 @click="() => {wantSendEmail=true}"
                 class="button-base"
             >
@@ -149,7 +150,6 @@ import MediaSpace from "@/subcomponents/media_space.vue";
 import PersonalFollowPage from "@/subcomponents/depliants/PersonalFollowPage.vue";
 import apiSources from "@/javascript/api/axios_sources"
 import api from "@/javascript/api/users_wp.js"
-import { isEncadrant } from "@/javascript/constants/roles";
 import EspaceAdherent from "@/subcomponents/depliants/adherent_page.vue"
 import apiFavoris from "@/javascript/api/axios_favoris"
 
@@ -157,28 +157,24 @@ export default {
     async mounted() {
         const results_2 = await apiSources.get_sources()
         const data = results_2.data
-        const token = localStorage.getItem("mps_moto")
-        if (token) {
-            this.user.events = []
-            this.user = (await api.get_user_connected())?.data?.user
-            if (!this.user) {
-                console.error("Utilisateur non connecté ou introuvable.");
-                return;
-            }
-
-            if (this.user.roles.includes("administrator") || this.user.roles.includes("bureau")) {
-                this.isBureau = true
-            }
-            
-            if (isEncadrant(this.user.roles)){
-                const usersMembers = await api.get_adherents()
-                if (usersMembers?.data?.users){
-                    this.listMembers = usersMembers.data.users
-                    this.listMembersEmail = this.listMembers.map(member => member.email)
-                }
-            }
+        this.user.events = []
+        this.user = (await api.get_user_connected())?.data?.user
+        if (!this.user) {
+            console.error("Utilisateur non connecté ou introuvable.");
+            return;
         }
 
+        if (this.user.caps.includes("mps_file_gestionnaire")) {
+            this.isBureau = true
+        }
+
+        if (this.user.caps.includes("mps_give_advice")){
+            const usersMembers = await api.get_adherents()
+            if (usersMembers?.data?.users){
+                this.listMembers = usersMembers.data.users
+                this.listMembersEmail = this.listMembers.map(member => member.email)
+            }
+        }
         const res = await apiFavoris.get_favoris()
         let favoris = []
         if(res?.data?.success){
@@ -252,12 +248,16 @@ export default {
 
     computed:{
         isEncadrantComp(){
-            return isEncadrant(this.user.roles)
+            return this.user?.caps?.includes('mps_give_advice') || false
         },
 
         isNonAdherent() {
-            return this.user?.roles?.includes("non_adherent") || false;
+            return !this.user?.caps?.includes("mps_file_viewer") || false;
         },
+
+        manageInscrit() {
+            return this.user?.caps?.includes("mps_manage_inscrits") || false;
+        }
     },
 
     methods: {

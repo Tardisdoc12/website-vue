@@ -72,7 +72,7 @@ export default {
 
     data() {
         let specificitySpecialFieldsToDraw = {}
-        const participantIsAdherentValue = isAdherent(this.roles);
+        const participantIsAdherentValue = this.roles.includes("mps_has_access") ?? false;
         Object.entries(this.specialsFieldsSpecificity).forEach(
             ([key, value]) => {
                 specificitySpecialFieldsToDraw[value.nom] = {};

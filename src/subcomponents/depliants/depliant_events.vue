@@ -113,15 +113,13 @@ export default{
             if (number <= 0) {
                 places_available = "complet"
             }
-            if (this.userConnected?.roles) {
-                if(!this.userConnected.roles.includes("non_adherent")) {
-                    number = parseInt(event.subscribePlace) - adherentsCount;
-                    if(number === 0){
-                        places_available = "complet"
-                    }
-                    else {
-                        places_available = "inscriptions ouvertes"
-                    }
+            if(!this.userConnected.caps.includes("mps_has_access")) {
+                number = parseInt(event.subscribePlace) - adherentsCount;
+                if(number === 0){
+                    places_available = "complet"
+                }
+                else {
+                    places_available = "inscriptions ouvertes"
                 }
             }
             if (isOutdated(event)) {

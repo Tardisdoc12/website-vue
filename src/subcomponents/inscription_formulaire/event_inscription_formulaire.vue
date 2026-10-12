@@ -25,7 +25,6 @@ import InformationsPersonnellesComponent from '@/subcomponents/inscription_formu
 import OngletsComponents from '@/subcomponents/unitary_elements/onglets_components.vue';
 import InformationsComplementairesComponent from '@/subcomponents/inscription_formulaire/informations_complementaires.vue';
 
-import { isEncadrant } from '@/javascript/constants/roles';
 
 export default {
     name: 'EventInscriptionFormulaire',
@@ -56,7 +55,7 @@ export default {
             steps: 0,
             infoParticipant: this.currentParticipant,
             onglets: onglets,
-            isEncadrantComp: isEncadrant(this.currentParticipant.roles || ['non_adherent']),
+            isEncadrantComp: this.currentParticipant.caps?.includes("mps_help_for_events") ?? false,
             specialsFields: categorie.champs_speciaux,
         };
     },

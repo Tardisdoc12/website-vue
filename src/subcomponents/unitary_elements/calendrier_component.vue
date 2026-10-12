@@ -33,7 +33,6 @@ import interactionPlugin from "@fullcalendar/interaction"
 import listPlugin from '@fullcalendar/list';
 import EventsFunctions from '@/javascript/constants/events_functions'
 import EventCard from "@/subcomponents/unitary_elements/event_card.vue"
-import { isEncadrant, isBureau } from "@/javascript/constants/roles";
 
 function isOutdated(event) {
     const now = new Date();
@@ -90,13 +89,9 @@ export default{
         userEvents() {
             return this.userConnected?.events ?? []
         },
-        isAdherent() {
-            const roles = this.userConnected?.roles ?? []
-            return !roles.includes("non_adherent")
-        },
         isEncadrantComp() {
-            const roles = this.userConnected?.roles ?? []
-            return isEncadrant(roles)
+            const roles = this.userConnected?.caps ?? []
+            return roles.includes('mps_manage_inscrits') || false;
         },
         calendarOptions() {
             const customButtons = this.getCustomButtons()
@@ -204,7 +199,7 @@ export default{
             const nonAdherentsCount = users.filter(u => u.is_adherent === "0" && u.status === "inscrit").length
             const adherentsCount = users.filter(u => u.is_adherent === "1" && u.status === "inscrit").length
 
-            const isNonAdherent = this.userConnected?.roles?.includes("non_adherent") ?? true;
+            const isNonAdherent = !this.userConnected?.roles?.includes("mps_has_access") ?? true;
             const placesAvailableNonAdherent = parseInt(event.extendedProps.nonsubscribePlace) - nonAdherentsCount
             const placesAvailableAdherent = parseInt(event.extendedProps.subscribePlace) - adherentsCount
             let placesAvailableMessage = 'inscriptions ouvertes'
@@ -226,7 +221,7 @@ export default{
                 placesAvailableMessage = "inscriptions fermées"
             }
             else if(Number(event.extendedProps.closed_inscription) === 2) {
-                if (isBureau(this.userConnected?.roles ?? [])) {
+                if (this.userConnected?.caps?.includes('mps_manage_inscrits') ?? false) {
                     placesAvailableMessage = "rendu complet"
                 }
                 else{
@@ -281,7 +276,7 @@ export default{
         },
 
         handleSelect(e){
-            const isBureau = this.userConnected?.roles ? this.userConnected.roles.includes("bureau") : false
+            const isBureau = this.userConnected?.caps ? this.userConnected.caps.includes("mps_manage_inscrits") : false
 
             if (isOutdated(e.event)) {
                 if (!isBureau) {

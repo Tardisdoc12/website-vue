@@ -6,15 +6,18 @@ if (!defined('ABSPATH')) exit;
 // Liste FIXE des droits que la page peut attribuer
 function mps_tools_available_caps() {
     return [
-        'read'                => 'Accès de base (connexion, profil)',
-        'mps_manage_events'   => 'Gérer les événements',
-        'mps_view_inscrits'   => 'Voir les inscrits',
-        'mps_manage_inscrits' => 'Gérer les inscrits',
-        'mps_manage_members'  => 'Gérer les adhérents',
-        'mps_manage_settings' => 'Gérer les paramètres',
-        'mps_show_in_list'    => 'Visibilité dans les listes du sites',
-        'mps_give_advice'     => 'Peut écrire des notes dans les fiches de suivis des autres utilisateurs.',
-        'mps_file_gestionnaire' => 'Peut gérer les fichiers des Ressources',
+        'read'                  =>  'Accès de base (connexion, profil)',
+        'mps_manage_events'     =>  'Gérer les événements',
+        'mps_help_for_events'   =>  'Peut encadrer pour les événements',
+        'mps_view_inscrits'     =>  'Voir les inscrits',
+        'mps_manage_inscrits'   =>  'Gérer les inscrits',
+        'mps_manage_members'    =>  'Gérer les adhérents',
+        'mps_manage_settings'   =>  'Gérer les paramètres',
+        'mps_show_in_list'      =>  'Visibilité dans les listes du sites',
+        'mps_give_advice'       =>  'Peut écrire des notes dans les fiches de suivis des autres utilisateurs.',
+        'mps_file_gestionnaire' =>  'Peut gérer les fichiers des Ressources',
+        'mps_file_viewer'       =>  'Peut voir les fichiers des Ressources',
+        'mps_has_access'        =>  'Peut accéder aux événements en tant qu\'adhérent',
     ];
 }
 
