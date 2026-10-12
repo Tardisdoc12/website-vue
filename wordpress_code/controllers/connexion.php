@@ -12,6 +12,7 @@
 if (!defined('ABSPATH')) exit;
 
 require_once MPS_TOOLS_OBJECTS_DIR . "jwt_generator.php";
+require_once MPS_TOOLS_FUNCTIONS_DIR . "roles.php";
 
 //--------------------------------------------------------------------------------------------------
 // Functions
@@ -77,10 +78,11 @@ function mps_tools_login_user(WP_REST_Request $request) {
     }
 
     return rest_ensure_response([
-        'token'   => $token,
-        'user_id' => $user->ID,
-        'email'   => $user->user_email,
+        'token'        => $token,
+        'user_id'      => $user->ID,
+        'email'        => $user->user_email,
         'display_name' => $user->display_name,
+        'caps'         => mps_tools_get_user_caps($user),
     ]);
 }
 

@@ -12,6 +12,7 @@
 if (!defined('ABSPATH')) exit;
 
 require_once MPS_TOOLS_FUNCTIONS_DIR . 'mailing.php';
+require_once MPS_TOOLS_FUNCTIONS_DIR . "roles.php";
 
 //--------------------------------------------------------------------------------------------------
 // Functions OR CLASS
@@ -38,9 +39,18 @@ function monplugin_get_users(WP_REST_Request $request) {
 //--------------------------------------------------------------------------------------------------
 
 function monplugin_get_adherents(WP_REST_Request $request) {
+    $all = wp_roles()->roles;
+    $roles_with_show_in_list = [];
+    foreach ($all as $slug => $def) {
+        if (mps_tools_has_caps_roles(get_role($slug), ['mps_show_in_list'])) {
+            // Do something if the role has all available caps
+            $roles_with_show_in_list[] = $slug;
+        }
+    }
     $users = get_users([
-        'role__in' => ['administrator', 'bureau', 'encadrant','adherent'],
+        'role__in' => $roles_with_show_in_list,
     ]);
+
 
     $result = [];
 
@@ -101,12 +111,15 @@ function monplugin_get_user_connected(WP_REST_Request $request) {
     $table_inscrits = $wpdb->prefix . "inscrits";
     $table_users    = $wpdb->prefix . "users_inscrits";
     $table_events   = $wpdb->prefix . "events";
+    
+    $role = get_role(get_option('default_role'));
 
     $user_id = get_current_user_id();
     if (!$user_id) {
         return [
             "message" => "Utilisateur non connecté",
-            "user"    => null
+            "user"    => null,
+            "caps"    => mps_tools_get_role_caps($role)
         ];
     }
 
@@ -115,7 +128,8 @@ function monplugin_get_user_connected(WP_REST_Request $request) {
     if (!$user) {
         return [
             "message" => "Utilisateur non trouvé",
-            "user"    => null
+            "user"    => null,
+            "caps"    => mps_tools_get_role_caps($role)
         ];
     }
 
@@ -175,6 +189,7 @@ function monplugin_get_user_connected(WP_REST_Request $request) {
         $user->remove_role('bureau');
         $user->remove_role('encadrant');
     }
+    $user = get_userdata($user_id);
 
     $user_data = [
         "ID"            => $user->ID,
@@ -186,6 +201,7 @@ function monplugin_get_user_connected(WP_REST_Request $request) {
         "urgence_phone" => get_user_meta($user->ID, 'urgence_phone', true),
         "urgence_name"  => get_user_meta($user->ID, 'urgence_name', true),
         "events"        => $events,
+        'caps'         => mps_tools_get_user_caps($user),
     ];
 
     return [

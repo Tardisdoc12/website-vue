@@ -40,6 +40,7 @@ define('MPS_TOOLS_CONTROLLERS_DIR',         __DIR__ . '/controllers/');
 define('MPS_TOOLS_BDD_DIR',                 __DIR__ . '/base_de_donnee/');
 define('MPS_TOOLS_PARAMETERS_DIR',          __DIR__ . '/parametres/');
 define('MPS_TOOLS_JAVASCRIPT_DIR',          __DIR__ . '/javascript/');
+define('MPS_TOOLS_ADMIN_DIR',               __DIR__ . '/admin_role/');
 define('MPS_TOOLS_PLUGIN_URL',              plugin_dir_url(__FILE__));
 define('MPS_TOOLS_PLUGIN_ASSETS_URL',        plugin_dir_url(__FILE__) . 'assets/');
 
@@ -69,6 +70,11 @@ $files_routes_controllers = [
     'mailing.php',
 ];
 
+$files_admin = [
+    'gestion.php',
+    'render_page.php',
+];
+
 $file_functions = [
     'route_callback.php',
     'mailing.php',
@@ -76,6 +82,7 @@ $file_functions = [
     'sanitize_field_parameters.php',
     'shortcodes.php',
     'payement.php',
+    'roles.php',
 ];
 
 $files_database = [
@@ -147,6 +154,24 @@ foreach ($files_routes_controllers as $file) {
         error_log("MPS Tools : fichier de route manquant : {$file_path}");
     }
 }
+
+//-----------------------------------------------------------------------------
+
+if (is_admin()) {
+    foreach ($files_admin as $file) {
+        $file_path = MPS_TOOLS_ADMIN_DIR . $file;
+        if (file_exists($file_path)) {
+            require_once $file_path;
+        } else {
+            error_log("MPS Tools : fichier admin manquant : {$file_path}");
+        }
+    }
+}
+
+//-----------------------------------------------------------------------------
+// On setup les rôles à l'activation du plugin
+
+register_activation_hook(__FILE__, 'mps_tools_install_roles');
 
 //------------------------------------------------------------------------------
 // End of File

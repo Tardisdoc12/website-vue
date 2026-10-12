@@ -29,7 +29,6 @@ function mps_tools_get_settings_fields() {
         'kdrive',
         'helloasso',
         'mailing',
-        // 'reglement',
         'documentation'
     ];
     $tabs = [];
