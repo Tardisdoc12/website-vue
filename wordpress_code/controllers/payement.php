@@ -196,9 +196,36 @@ function mps_tools_create_payements(WP_REST_Request $request) {
     $firstName      = sanitize_text_field($params['firstName']);
     $lastName       = sanitize_text_field($params['lastName']);
     $email          = sanitize_email($params['email']);
+    $promo_value    = isset($params['promo_value']) ? floatval($params['promo_value']) : 0;
+    $promo_type     = isset($params['promo_type']) ? sanitize_text_field($params['promo_type']) : 'percent';
     
+    if ($promo_value > 0) {
+        if ($promo_type === 'percent') {
+            $totalAmount = $totalAmount * (1 - $promo_value / 100);
+            $initialAmount = $initialAmount * (1 - $promo_value / 100);
+        } elseif ($promo_type === 'fixed') {
+            $totalAmount = max(0, $totalAmount - $promo_value);
+            $initialAmount = max(0, $initialAmount - $promo_value);
+        }
+    }
 
-    
+    if ($totalAmount <= 0 && $type === 'adherent') {
+        $user = get_user_by('email', $email);
+        $user->add_role('adherent');
+        $user->remove_role('non_adherent');
+        return rest_ensure_response([
+            'success' => true,
+            'message' => 'Le montant total vaut 0',
+            'redirectUrl' => '',
+        ]);
+    }
+    if ($totalAmount <= 0 && $type === 'event') {
+        return rest_ensure_response([
+            'success' => true,
+            'message' => 'Le montant total vaut 0',
+            'redirectUrl' => '',
+        ]);
+    }
 
     if($type == 'event') {
         if (!isset($params['inscription_id']) || !is_array($params['inscription_id']) || empty($params['inscription_id'])) {

@@ -68,6 +68,7 @@ $files_routes_controllers = [
     'subscribe.php',
     'users.php',
     'mailing.php',
+    'code_promos.php',
 ];
 
 $files_admin = [

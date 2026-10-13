@@ -19,9 +19,10 @@
                     <strong>Statut :</strong>
                     <button
                         class="button-base"
-                        @click="paymentAdherent"
+                        @click="startPromoCode()"
+                        :disabled="startPayement"
                     >
-                        {{ "Non-adhérent" }}
+                        {{ startPayement ? "Traitement en cours..." : "Non-adhérent" }}
                     </button>
                 </li>
             </div>
@@ -176,12 +177,19 @@
             </button>
         </div>
     </DepliantWindow>
+
+    <ModalPromo
+        v-if="showModalPromo"
+        @cancel="showModalPromo = false"
+        @promoVerified="paymentAdherent"
+    />
 </template>
 
 <script>
 import api_user from "@/javascript/api/users_wp.js"
 import DepliantWindow from '@/subcomponents/unitary_elements/depliantWindow.vue';
 import EventsUser from '@/subcomponents/depliants/depliant_events.vue'
+import ModalPromo from '@/subcomponents/modals/modal_promo.vue';
 
 import apiPayment from '@/javascript/api/api_payement';
 
@@ -208,6 +216,8 @@ export default {
             titleUrgences: "Urgences",
             isInformationsChange: false,
             isUrgencesChange: false,
+            showModalPromo: false,
+            startPayement: false,
         }
     },
 
@@ -221,6 +231,10 @@ export default {
     },
 
     methods: {
+        startPromoCode() {
+            this.showModalPromo = true;
+        },
+
         async validationChangement() {
             if(this.isInformationsChange)
             {
@@ -242,7 +256,9 @@ export default {
             }
         },
 
-        async paymentAdherent() {
+        async paymentAdherent(promo) {
+            this.startPayement = true;
+            this.showModalPromo = false;
             const data_to_send = {
                 'totalAmount' : 0,
                 'initialAmount' : 0,
@@ -251,9 +267,16 @@ export default {
                 'lastName' : this.user.lastName,
                 'email' : this.user.email,
                 'type' : "adherent",
+                'promo_value' : promo?.value ?? 0,
+                'promo_type' : promo?.type ?? 'percent',
             };
             try {
                 const result = await apiPayment.createPaymentIntent(data_to_send);
+                if (result?.data?.message === 'Le montant total vaut 0' )
+                {
+                    this.loading = false;
+                    this.error = false;
+                }
                 if (result?.data?.redirectUrl) {
                     const redirectUrl = result.data.redirectUrl;
                     this.loading = false;
@@ -266,6 +289,9 @@ export default {
                 this.loading = false;
                 this.error = true;
                 console.error('Erreur création paiement :', err);
+            }
+            finally {
+                this.startPayement = false;
             }
         },
 
@@ -280,7 +306,8 @@ export default {
 
     components: {
         DepliantWindow,
-        EventsUser
+        EventsUser,
+        ModalPromo
     }
 }
 
