@@ -267,8 +267,8 @@ export default {
                 'lastName' : this.user.lastName,
                 'email' : this.user.email,
                 'type' : "adherent",
-                'promo_value' : promo?.value ?? 0,
-                'promo_type' : promo?.type ?? 'percent',
+                'promo_value' : promo?.promo_value ?? 0,
+                'promo_type' : promo?.promo_type ?? 'percent',
             };
             try {
                 const result = await apiPayment.createPaymentIntent(data_to_send);
