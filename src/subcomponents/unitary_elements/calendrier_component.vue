@@ -199,7 +199,7 @@ export default{
             const nonAdherentsCount = users.filter(u => u.is_adherent === "0" && u.status === "inscrit").length
             const adherentsCount = users.filter(u => u.is_adherent === "1" && u.status === "inscrit").length
 
-            const isNonAdherent = !this.userConnected?.roles?.includes("mps_has_access") ?? true;
+            const isNonAdherent = !this.userConnected?.caps?.includes("mps_has_access") ?? true;
             const placesAvailableNonAdherent = parseInt(event.extendedProps.nonsubscribePlace) - nonAdherentsCount
             const placesAvailableAdherent = parseInt(event.extendedProps.subscribePlace) - adherentsCount
             let placesAvailableMessage = 'inscriptions ouvertes'

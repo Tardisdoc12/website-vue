@@ -113,7 +113,7 @@ export default{
             if (number <= 0) {
                 places_available = "complet"
             }
-            if(!this.userConnected.caps.includes("mps_has_access")) {
+            if(!this.userConnected?.caps?.includes("mps_has_access")) {
                 number = parseInt(event.subscribePlace) - adherentsCount;
                 if(number === 0){
                     places_available = "complet"

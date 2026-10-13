@@ -2,7 +2,7 @@
     <PresentationsEvent
         v-if="stepsComputed == 0"
         :event="event"
-        :roles="userConnected?.caps"
+        :caps="userConnected?.caps"
         :can-be-redirected="canBeRedirectedComputed"
         @cancelSignal="Cancel"
         @updateEvent="updateEvent"

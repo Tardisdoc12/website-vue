@@ -196,6 +196,9 @@ export default {
     },
 
     computed: {
+        isAdherentComp() {
+            return this.caps?.includes("mps_has_access") ?? false;
+        },
         placeAdherents() {
             if(Number(this.event.subscribePlace) < 0 ){
                 return `${this.event.nbr_adherents}/∞`
