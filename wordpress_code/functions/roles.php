@@ -18,6 +18,7 @@ function mps_tools_available_caps() {
         'mps_file_gestionnaire' =>  'Peut gérer les fichiers des Ressources',
         'mps_file_viewer'       =>  'Peut voir les fichiers des Ressources',
         'mps_has_access'        =>  'Peut accéder aux événements en tant qu\'adhérent',
+        'manage_promo_code'     =>  'Gérer les codes promo',
     ];
 }
 

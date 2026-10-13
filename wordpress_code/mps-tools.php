@@ -73,6 +73,8 @@ $files_routes_controllers = [
 $files_admin = [
     'gestion.php',
     'render_page.php',
+    'promos_code.php',
+    'promos_code_gestion.php',
 ];
 
 $file_functions = [

@@ -24,7 +24,8 @@ $tables = [
     'places',
     'source',
     'subcategories',
-    'users_inscrits'
+    'users_inscrits',
+    'code_promos',
 ];
 
 foreach ($tables as $table) {
