@@ -122,6 +122,20 @@
             </template>
         </div>
 
+        <div
+            style="margin-left: 20px; margin-right: 20px;margin-top: 10px;"
+        >
+            <div class="flex flex-col gap-1" style="margin-bottom:10px;">
+                <label class="block font-medium">Code de Promotion :</label>
+                <input v-model="promoCode" placeholder="Enter promo code"
+                class="w-full border p-1 rounded"
+                />
+            </div>
+            <div v-if="loading">Checking promo code...</div>
+            <p v-if="error">{{ message }}</p>
+            <p v-else-if="message">{{ message }}</p>
+        </div>
+
         <!-- ───── Actions ───── -->
         <div style="margin: 16px 20px 10px; display:flex; flex-direction:column; gap:8px;">
 
@@ -144,6 +158,7 @@
 import inscritAPI from "@/javascript/api/axios_inscription"
 import InscriptionFormulaireComponent from "@/subcomponents/inscription_formulaire/event_inscription_formulaire.vue"
 import { computed } from 'vue'
+import { verifyPromo } from '@/javascript/api/api_promo'
 
 function emptyParticipant() {
     return {
@@ -168,7 +183,8 @@ export default {
     signals:[
         'inscrit',
         'created_inscriptionId',
-        'no_places_available'
+        'no_places_available',
+        'update:promo'
     ],
 
     props: {
@@ -176,6 +192,7 @@ export default {
         user:   { type: Object, required: true },
         isAttente: { type: Boolean, required: false, default: false },
         participantProblem: { type: Object, required: false, default: null },
+        promo: { type: Object, required: false, default: () => ({}) },
     },
 
     data() {
@@ -185,6 +202,10 @@ export default {
             currentStep: this.participantProblem ? this.participantProblem.length - 1 : 0,
             maxParticipants: 3,
             isSubmitting: false,
+            loading: false,
+            error: false,
+            message: '',
+            promoCode: '',
             participants: this.participantProblem ? this.participantProblem.map(p => ({...p })) : [
                 {
                     ...emptyParticipant(),
@@ -237,6 +258,14 @@ export default {
     },
 
     computed: {
+        promoCodeComp: {
+            get() {
+                return this.promo
+            },
+            set(value) {
+                this.$emit('update:promo', value)
+            }
+        },
         isFullStep() {
             return this.participants.length >= 3
         },
@@ -305,6 +334,32 @@ export default {
     },
 
     methods: {
+        async checkPromo(promoCode, eventId) {
+            if (!promoCode || promoCode.trim() === '') return true
+            try {
+                this.loading = true;
+                this.error = false;
+                this.message = '';
+                const result = await verifyPromo(promoCode, eventId);
+                if (result.success) {
+                    this.loading = false;
+                    this.promoCodeComp = result.promo
+                    return true
+                }
+                else {
+                    this.error = true;
+                    this.loading = false;
+                    this.message = result.message;
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error verifying promo code:', error);
+                this.message = 'Error verifying promo code';
+                this.loading = false
+                return false;
+            }
+        },
+
         addParticipant() {
             const newParticipant = emptyParticipant()
             this.getSpecialFields.forEach(champ => {
@@ -398,6 +453,10 @@ export default {
         },
 
         async handleSubmit() {
+            const hasValidPromo = await this.checkPromo(this.promoCode, this.event.event_id)
+            if(!hasValidPromo) {
+                return
+            }
             this.isSubmitting = true
             const nonAdherentsCount = computed(() =>
                 {

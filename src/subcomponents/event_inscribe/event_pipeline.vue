@@ -18,6 +18,7 @@
         :event="event"
         :user="userConnected"
         :participant-problem="participantProblem"
+        v-model:promo="promo"
         :isAttente="isAttenteComp"
         @inscrit="onInscrit"
         @created_inscriptionId="onInscriptionId"
@@ -140,6 +141,7 @@ export default{
             inscriptionId: [],
             participantProblem: null,
             templates : this.$settings.ManualMailsTemplates,
+            promo: {},
         }
     },
 
@@ -239,6 +241,15 @@ export default{
             let totalQuantityAdherent = quantityAdherent - adherentWantsCash
             let totalQuantityNonAdherent = quantityNonAdherent - nonAdherentWantsCash
             this.totalAmountPrice = (totalQuantityAdherent * this.event.payementAmountAdherent) + (totalQuantityNonAdherent * this.event.payementAmountNonAdherent)
+            if (this.promo) {
+                if (this.promo.promo_type === 'percent') {
+                    this.totalAmountPrice = this.totalAmountPrice * (1 - this.promo.value / 100)
+                }
+                if (this.promo.promo_type === 'fixed') {
+                    this.totalAmountPrice = this.totalAmountPrice - this.promo.value
+                }
+            }
+            
             let firstConnected = participants[0]
             this.userToPay = {
                 'email' : firstConnected.email,

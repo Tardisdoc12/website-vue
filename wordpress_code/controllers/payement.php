@@ -219,13 +219,7 @@ function mps_tools_create_payements(WP_REST_Request $request) {
             'redirectUrl' => '',
         ]);
     }
-    if ($totalAmount <= 0 && $type === 'event') {
-        return rest_ensure_response([
-            'success' => true,
-            'message' => 'Le montant total vaut 0',
-            'redirectUrl' => '',
-        ]);
-    }
+    
 
     if($type == 'event') {
         if (!isset($params['inscription_id']) || !is_array($params['inscription_id']) || empty($params['inscription_id'])) {
@@ -263,6 +257,19 @@ function mps_tools_create_payements(WP_REST_Request $request) {
             if ($inscription->payement_status === 'completed') {
                 return new WP_Error('already_paid', "L'inscription {$inscription->id} est déjà payée.", ['status' => 400]);
             }
+        }
+
+        if ($totalAmount <= 0) {
+            $result = treat_inscription_payment_by_id($inscription_ids);
+            if (!$result['success']) {
+                return new WP_Error('payment_error', 'Erreur lors du traitement du paiement.', ['status' => 500]);
+            }
+
+            return rest_ensure_response([
+                'success' => true,
+                'message' => 'Le montant total vaut 0',
+                'redirectUrl' => '',
+            ]);
         }
     }
     else {
