@@ -20,6 +20,7 @@ function mps_tools_render_promos_page() {
 
     $promos = mps_tools_get_promos();
     $events = mps_tools_get_events_for_promo();
+    $categories = get_option('mps_tools_categories', []);
     ?>
     <div class="wrap">
         <h1>Codes Promo MPS Tools</h1>
@@ -42,7 +43,7 @@ function mps_tools_render_promos_page() {
                 <p>Date d'expiration : <?php if ($promo->expiration_date && $promo->expiration_date!='0000-00-00') { echo esc_html($promo->expiration_date); } else { echo 'Aucune'; } ?></p>
                 <p>Nombre maximum d'utilisations : <?php if ($promo->max_uses) { echo esc_html($promo->max_uses); } else { echo 'Illimité'; } ?></p>
                 <p>ID de l'événement : <?php if ($promo->event_id) { echo esc_html($promo->event_id); } else { echo 'Aucun'; } ?></p>
-
+                <p>Type d'événement : <?php if ($promo->event_type) { echo esc_html($promo->event_type); } else { echo 'Aucun'; } ?></p>
                 <p>
                     <button type="submit" class="button"><?php echo $promo->active ? 'Désactiver' : 'Activer'; ?></button>
                     <a class="button button-link-delete"
@@ -66,6 +67,16 @@ function mps_tools_render_promos_page() {
             </p>
             <p><input type="date" name="expiration_date" placeholder="Date d'expiration"></p>
             <p><input type="number" name="max_uses" placeholder="Nombre maximum d'utilisations"></p>
+            <p>
+                <select name="category_name" required>
+                    <option value="">Sélectionner une catégorie</option>
+                    <?php foreach ($categories as $category): ?>
+                        <option value="<?php echo esc_attr($category['nom']); ?>">
+                            <?php echo esc_html($category['nom']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </p>
             <p>
                 <select name="event_id">
                     <option value="">Sélectionner un événement</option>

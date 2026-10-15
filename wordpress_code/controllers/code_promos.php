@@ -6,6 +6,7 @@ function mps_tools_verify_promo(WP_REST_Request $request) {
     global $wpdb;
     $promo_code = $request->get_param('promo_code');
     $event_id = $request->get_param('event_id');
+    $event_categorie = $request->get_param('event_categorie');
     $table_code_promo = $wpdb->prefix . 'promo_codes';
 
     $promo = $wpdb->get_row($wpdb->prepare(
@@ -20,10 +21,10 @@ function mps_tools_verify_promo(WP_REST_Request $request) {
         ];
     }
 
-    if ($promo->event_id != $event_id) {
+    if (($promo->event_id != $event_id && $event_categorie == null) || ($promo->event_type != $event_categorie && $event_id == null)) {
         return [
             'success' => false,
-            'message' => 'Promo code is not valid for this event.',
+            'message' => 'Promo code is not valid for this event or this kind of event.',
         ];
     }
 

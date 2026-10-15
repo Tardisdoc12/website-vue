@@ -196,6 +196,7 @@ export default {
     },
 
     data() {
+        console.log(this.event)
         return {
             isSearching: false,
             isCashAllowed: Boolean(Number(MPS_TOOLS_SETTINGS.isCashAllowed)),
@@ -340,7 +341,7 @@ export default {
                 this.loading = true;
                 this.error = false;
                 this.message = '';
-                const result = await verifyPromo(promoCode, eventId);
+                const result = await verifyPromo(promoCode, eventId, this.event.categorie);
                 if (result.success) {
                     this.loading = false;
                     this.promoCodeComp = result.promo

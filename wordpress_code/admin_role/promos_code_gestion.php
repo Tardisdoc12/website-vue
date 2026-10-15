@@ -21,7 +21,7 @@ function mps_tools_get_events_for_promo() {
 }
 
 
-function mps_tools_create_promo($label, $code, $discount, $type, $expiration_date, $usage_limit, $event_id = null) {
+function mps_tools_create_promo($label, $code, $discount, $type, $expiration_date, $usage_limit, $event_id = null, $event_type = null) {
     global $wpdb;
     $ok = $wpdb->insert(
         $wpdb->prefix . 'promo_codes',
@@ -33,6 +33,7 @@ function mps_tools_create_promo($label, $code, $discount, $type, $expiration_dat
             'expiration_date' => $expiration_date,
             'max_uses'        => $usage_limit,
             'event_id'        => $event_id,
+            'event_type'      => $event_type,
             'active'          => 1,
         ]
     );
@@ -96,6 +97,7 @@ add_action('admin_post_mps_tools_create_promo', function () {
     $code  = strtoupper(trim(sanitize_text_field(wp_unslash($_POST['promo_code'] ?? ''))));
     $type  = sanitize_key($_POST['discount_type'] ?? '');
     $date  = sanitize_text_field(wp_unslash($_POST['expiration_date'] ?? ''));
+    $event_type = sanitize_text_field($_POST['category_name'] ?? null);
 
     $raw_value = (float) ($_POST['discount_value'] ?? 0);
     $value = $type === 'fixed' ? (int) round($raw_value * 100) : (int) $raw_value; // euros -> centimes
@@ -110,7 +112,7 @@ add_action('admin_post_mps_tools_create_promo', function () {
     if ($value < 1 || ($type === 'percent' && $value > 100))
         mps_tools_promos_redirect(['error' => 'Valeur de remise invalide.']);
 
-    if (!mps_tools_create_promo($label, $code, $value, $type, $date, $max_uses, $event_id))
+    if (!mps_tools_create_promo($label, $code, $value, $type, $date, $max_uses, $event_id, $event_type))
         mps_tools_promos_redirect(['error' => 'Création impossible (code déjà existant ?).']);
 
     mps_tools_promos_redirect(['updated' => 1]);

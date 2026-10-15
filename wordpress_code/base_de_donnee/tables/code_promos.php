@@ -15,6 +15,7 @@ function mps_tools_create_code_promos_table() {
         used_count INT UNSIGNED NOT NULL DEFAULT 0,
         expiration_date DATE NULL,
         event_id BIGINT UNSIGNED NULL,
+        event_type VARCHAR(50) NULL,
         active TINYINT(1) NOT NULL DEFAULT 1,
         PRIMARY KEY  (id),
         UNIQUE KEY code_hash (code_hash)
