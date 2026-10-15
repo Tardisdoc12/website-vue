@@ -7,7 +7,10 @@
         <iframe class="center-helloasso" :src="getBilleterieURL" style="border: none; width: 100%; height: 700px;">
         </iframe>
     </div>
-
+    
+    <div v-if="message_validation_inscription" class="status-info">
+        <p>{{ message_validation_inscription }}</p>
+    </div>
     <!-- Nouveau système de paiement -->
     <div v-else>
         <div v-if="loading" class="status-pending">
@@ -68,6 +71,11 @@ export default {
         user: {
             type: Object,
             required: true,
+        },
+
+        promo:{
+            type: Object,
+            required: false,
         }
     },
 
@@ -85,9 +93,19 @@ export default {
             firstName: this.user.firstName,
             lastName: this.user.lastName,
             email: this.user.email,
+            promo_value: this.promo?.promo_value ?? 0,
+            promo_type: this.promo?.promo_type ?? 'percent',
         }
+
+        console.log('Data to send for payment intent:', data_to_send);
         try {
             const result = await apiPayment.createPaymentIntent(data_to_send);
+            if(result?.data?.message==='Le montant total vaut 0') {
+                this.loading = false;
+                this.error = false;
+                this.message_validation_inscription = 'Vous n\'avez rien à payer pour cette inscription.';
+                return;
+            }
             if (result?.data?.redirectUrl) {
                 this.redirectUrl = result.data.redirectUrl;
                 this.loading = false;
@@ -108,6 +126,7 @@ export default {
             title: this.payement_title || "Règlement",
             loading: true,
             error: false,
+            message_validation_inscription: '',
             redirectUrl: '',
             dates :{
                 "8_27_2026" : "stage-de-perfectionnement-27-septembre-2026/widget",

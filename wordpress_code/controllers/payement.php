@@ -222,6 +222,7 @@ function mps_tools_create_payements(WP_REST_Request $request) {
     
 
     if($type == 'event') {
+        error_log("Processing event payment for event ID: $event_id");
         if (!isset($params['inscription_id']) || !is_array($params['inscription_id']) || empty($params['inscription_id'])) {
             return new WP_Error('invalid_params', 'inscription_id doit être un tableau non vide.', ['status' => 400]);
         }

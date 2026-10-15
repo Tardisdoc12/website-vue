@@ -196,7 +196,6 @@ export default {
     },
 
     data() {
-        console.log(this.event)
         return {
             isSearching: false,
             isCashAllowed: Boolean(Number(MPS_TOOLS_SETTINGS.isCashAllowed)),
@@ -354,7 +353,6 @@ export default {
                     return false;
                 }
             } catch (error) {
-                console.error('Error verifying promo code:', error);
                 this.message = 'Error verifying promo code';
                 this.loading = false
                 return false;
